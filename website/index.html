@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glue — Built for you, not bought by you</title>
+    <meta name="description" content="Glue is a consulting-to-build studio that creates custom software tools for account management and sales teams.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Cursor follower -->
+    <div class="cursor-glow"></div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <span class="logo-text">Glue</span>
+            </a>
+            <div class="nav-links">
+                <a href="#about" class="nav-link">About</a>
+                <a href="#services" class="nav-link">Services</a>
+                <a href="#approach" class="nav-link">Approach</a>
+                <a href="#team" class="nav-link">Team</a>
+                <a href="#contact" class="btn btn-nav">Get in Touch</a>
+            </div>
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg">
+            <div class="hero-gradient"></div>
+            <div class="hero-grid"></div>
+            <div class="hero-orb hero-orb-1"></div>
+            <div class="hero-orb hero-orb-2"></div>
+            <div class="hero-orb hero-orb-3"></div>
+        </div>
+        <div class="container hero-content">
+            <div class="hero-badge" data-animate="fade-up">
+                <span class="badge-dot"></span>
+                Consulting-to-Build Studio
+            </div>
+            <h1 data-animate="fade-up" data-delay="100">
+                <span class="hero-line">Tap into your</span>
+                <span class="hero-line hero-highlight">whitespace</span>
+            </h1>
+            <p class="hero-subtitle" data-animate="fade-up" data-delay="200">
+                Custom software tools for account management and sales teams.<br>
+                <span class="text-accent">Built for you, not bought by you.</span>
+            </p>
+            <div class="hero-cta" data-animate="fade-up" data-delay="300">
+                <a href="#contact" class="btn btn-primary btn-large">
+                    <span>Start a Conversation</span>
+                    <svg class="btn-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+                <a href="#services" class="btn btn-ghost btn-large">
+                    See What We Build
+                </a>
+            </div>
+            <div class="hero-scroll" data-animate="fade-up" data-delay="400">
+                <div class="scroll-indicator">
+                    <div class="scroll-dot"></div>
+                </div>
+                <span>Scroll to explore</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Banner -->
+    <section class="stats-banner">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item" data-animate="fade-up">
+                    <span class="stat-number">Weeks</span>
+                    <span class="stat-label">Not quarters to deliver</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item" data-animate="fade-up" data-delay="100">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Custom-built for you</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item" data-animate="fade-up" data-delay="200">
+                    <span class="stat-number">$150K+</span>
+                    <span class="stat-label">Saved vs. full-time dev</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="problem" id="about">
+        <div class="container">
+            <div class="section-header" data-animate="fade-up">
+                <span class="section-label">The Problem</span>
+                <h2>Your growth is stuck<br>in spreadsheets</h2>
+            </div>
+            <p class="section-lead" data-animate="fade-up" data-delay="100">
+                Account management and sales teams know where their opportunities are. But the tools to act on them? They're either too expensive, too rigid, or simply don't exist.
+            </p>
+            <div class="problem-grid">
+                <div class="problem-card" data-animate="fade-up" data-delay="150">
+                    <div class="card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="3" y="3" width="18" height="18" rx="2"/>
+                            <path d="M3 9h18M9 21V9"/>
+                        </svg>
+                    </div>
+                    <h3>Enterprise platforms</h3>
+                    <p>Gainsight, Gong, Salesforce — powerful but bloated, expensive, and built for someone else's workflow.</p>
+                    <div class="card-tag">$50K+ / year</div>
+                </div>
+                <div class="problem-card" data-animate="fade-up" data-delay="200">
+                    <div class="card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                        </svg>
+                    </div>
+                    <h3>Manual processes</h3>
+                    <p>Spreadsheets and slide decks that break, don't scale, and waste hours on work that should be automated.</p>
+                    <div class="card-tag">Error-prone</div>
+                </div>
+                <div class="problem-card" data-animate="fade-up" data-delay="250">
+                    <div class="card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                    </div>
+                    <h3>The $150K question</h3>
+                    <p>Full-time developers are costly and hard to hire. And they don't understand your revenue workflows anyway.</p>
+                    <div class="card-tag">6+ month hire</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution Section -->
+    <section class="solution">
+        <div class="container">
+            <div class="solution-layout">
+                <div class="solution-content">
+                    <span class="section-label" data-animate="fade-up">What We Do</span>
+                    <h2 data-animate="fade-up" data-delay="50">Strategy meets<br>execution</h2>
+                    <p class="solution-lead" data-animate="fade-up" data-delay="100">
+                        Glue is a consulting-to-build studio. We combine deep account management expertise with rapid software development to deliver tools that actually get used.
+                    </p>
+                    <div class="solution-features">
+                        <div class="feature" data-animate="fade-up" data-delay="150">
+                            <div class="feature-marker"></div>
+                            <div class="feature-content">
+                                <h3>Custom-built, not configured</h3>
+                                <p>Every tool is built around your process, your data, your branding. It fits you — you don't have to fit it.</p>
+                            </div>
+                        </div>
+                        <div class="feature" data-animate="fade-up" data-delay="200">
+                            <div class="feature-marker"></div>
+                            <div class="feature-content">
+                                <h3>Weeks, not quarters</h3>
+                                <p>Modern development approaches let us move fast without sacrificing quality. Working tools in your hands quickly.</p>
+                            </div>
+                        </div>
+                        <div class="feature" data-animate="fade-up" data-delay="250">
+                            <div class="feature-marker"></div>
+                            <div class="feature-content">
+                                <h3>We speak your language</h3>
+                                <p>Our founders have lived in account management and customer success. We know the pain points firsthand.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="solution-visual" data-animate="fade-up" data-delay="100">
+                    <div class="visual-card">
+                        <div class="visual-header">
+                            <div class="visual-dots">
+                                <span></span><span></span><span></span>
+                            </div>
+                            <span class="visual-title">whitespace_visualizer.app</span>
+                        </div>
+                        <div class="visual-content">
+                            <div class="visual-chart">
+                                <div class="chart-bar" style="--height: 65%"><span>Q1</span></div>
+                                <div class="chart-bar" style="--height: 85%"><span>Q2</span></div>
+                                <div class="chart-bar active" style="--height: 95%"><span>Q3</span></div>
+                                <div class="chart-bar" style="--height: 75%"><span>Q4</span></div>
+                            </div>
+                            <div class="visual-metrics">
+                                <div class="metric">
+                                    <span class="metric-value">$2.4M</span>
+                                    <span class="metric-label">Whitespace identified</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-value">89%</span>
+                                    <span class="metric-label">Coverage score</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <div class="services-bg"></div>
+        <div class="container">
+            <div class="section-header center" data-animate="fade-up">
+                <span class="section-label">What We Build</span>
+                <h2>Tools that drive revenue</h2>
+                <p class="section-intro">From quick-deploy calculators to deeply integrated dashboards, we build what your team actually needs.</p>
+            </div>
+
+            <div class="services-showcase">
+                <div class="service-card service-card-featured" data-animate="fade-up" data-delay="100">
+                    <div class="service-card-inner">
+                        <span class="service-tag">Most Popular</span>
+                        <h3>Whitespace Visualizer</h3>
+                        <p>See exactly where growth opportunities live across your accounts. Interactive maps that turn data into action.</p>
+                        <ul class="service-features">
+                            <li>Account-level opportunity mapping</li>
+                            <li>Product penetration analysis</li>
+                            <li>Priority scoring algorithms</li>
+                            <li>Export to your CRM</li>
+                        </ul>
+                        <div class="service-visual">
+                            <div class="service-preview">
+                                <div class="preview-grid">
+                                    <div class="preview-cell active"></div>
+                                    <div class="preview-cell"></div>
+                                    <div class="preview-cell active"></div>
+                                    <div class="preview-cell"></div>
+                                    <div class="preview-cell active"></div>
+                                    <div class="preview-cell active"></div>
+                                    <div class="preview-cell"></div>
+                                    <div class="preview-cell active"></div>
+                                    <div class="preview-cell"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-grid">
+                    <div class="service-card" data-animate="fade-up" data-delay="150">
+                        <div class="service-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                            </svg>
+                        </div>
+                        <h3>ROI Calculator</h3>
+                        <p>Custom calculators that speak your customer's language and prove value in their terms.</p>
+                    </div>
+                    <div class="service-card" data-animate="fade-up" data-delay="200">
+                        <div class="service-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M3 3v18h18"/>
+                                <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/>
+                            </svg>
+                        </div>
+                        <h3>Work-back Planner</h3>
+                        <p>Visual timelines that align your team and customer on what needs to happen when.</p>
+                    </div>
+                    <div class="service-card" data-animate="fade-up" data-delay="250">
+                        <div class="service-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="16" y1="2" x2="16" y2="6"/>
+                                <line x1="8" y1="2" x2="8" y2="6"/>
+                                <line x1="3" y1="10" x2="21" y2="10"/>
+                            </svg>
+                        </div>
+                        <h3>QBR Prep Tools</h3>
+                        <p>Automated data pulls and presentation builders that cut prep time by 80%.</p>
+                    </div>
+                    <div class="service-card" data-animate="fade-up" data-delay="300">
+                        <div class="service-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                            </svg>
+                        </div>
+                        <h3>Account Health Dashboard</h3>
+                        <p>Real-time health scores based on the signals that actually matter for your business.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="services-cta" data-animate="fade-up">
+                <p>Don't see what you need?</p>
+                <a href="#contact" class="btn btn-secondary">Let's design it together</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Approach Section -->
+    <section class="approach" id="approach">
+        <div class="container">
+            <div class="section-header center" data-animate="fade-up">
+                <span class="section-label">Our Approach</span>
+                <h2>Consulting to build</h2>
+            </div>
+
+            <div class="approach-comparison">
+                <div class="comparison-card comparison-old" data-animate="fade-up" data-delay="100">
+                    <div class="comparison-header">
+                        <span class="comparison-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                        </span>
+                        <h3>Traditional Consultants</h3>
+                    </div>
+                    <p>Give you a strategy deck and leave. Insights without execution. You're left figuring out how to actually build it.</p>
+                    <div class="comparison-outcome negative">
+                        <span>Strategy</span>
+                        <span class="outcome-x">✕</span>
+                        <span>Execution</span>
+                    </div>
+                </div>
+
+                <div class="comparison-vs">
+                    <span>vs</span>
+                </div>
+
+                <div class="comparison-card comparison-old" data-animate="fade-up" data-delay="200">
+                    <div class="comparison-header">
+                        <span class="comparison-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <polyline points="16 18 22 12 16 6"/>
+                                <polyline points="8 6 2 12 8 18"/>
+                            </svg>
+                        </span>
+                        <h3>Traditional Developers</h3>
+                    </div>
+                    <p>Build exactly what you spec without questioning if it's the right thing. No strategic context, just code.</p>
+                    <div class="comparison-outcome negative">
+                        <span>Strategy</span>
+                        <span class="outcome-x">✕</span>
+                        <span>Execution</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="comparison-glue" data-animate="fade-up" data-delay="300">
+                <div class="glue-glow"></div>
+                <div class="glue-content">
+                    <div class="glue-badge">The Glue Way</div>
+                    <h3>Strategy + Execution<br>in one engagement</h3>
+                    <p>We consult to understand the real problem, then build the exact tool to solve it. No handoffs, no gaps, no waiting.</p>
+                    <div class="comparison-outcome positive">
+                        <span>Strategy</span>
+                        <span class="outcome-plus">+</span>
+                        <span>Execution</span>
+                        <span class="outcome-equals">=</span>
+                        <span class="outcome-result">Results</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Who We Serve -->
+    <section class="audience">
+        <div class="container">
+            <div class="audience-layout">
+                <div class="audience-content" data-animate="fade-up">
+                    <span class="section-label">Who We Serve</span>
+                    <h2>Built for teams<br>like yours</h2>
+                    <p class="audience-lead">Companies sophisticated enough to want better tools, but underserved by enterprise solutions.</p>
+                </div>
+                <div class="audience-cards">
+                    <div class="audience-card" data-animate="fade-up" data-delay="100">
+                        <div class="audience-icon">
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <rect x="4" y="4" width="24" height="24" rx="4"/>
+                                <circle cx="16" cy="14" r="4"/>
+                                <path d="M8 26c0-4 4-6 8-6s8 2 8 6"/>
+                            </svg>
+                        </div>
+                        <h3>10–50 employees</h3>
+                        <p>Growing teams that need scalable processes but can't justify enterprise software or full-time developers.</p>
+                    </div>
+                    <div class="audience-card" data-animate="fade-up" data-delay="150">
+                        <div class="audience-icon">
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M16 4l12 6v12l-12 6L4 22V10l12-6z"/>
+                                <path d="M16 10v12M10 13l12 6M22 13l-12 6"/>
+                            </svg>
+                        </div>
+                        <h3>Revenue teams</h3>
+                        <p>Account managers, customer success, sales reps, and RevOps professionals who drive growth.</p>
+                    </div>
+                    <div class="audience-card" data-animate="fade-up" data-delay="200">
+                        <div class="audience-icon">
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <circle cx="16" cy="16" r="12"/>
+                                <path d="M16 8v8l6 3"/>
+                            </svg>
+                        </div>
+                        <h3>Ready to move fast</h3>
+                        <p>Leaders who want results in weeks, not quarters, and tools that work on day one.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team" id="team">
+        <div class="team-bg"></div>
+        <div class="container">
+            <div class="section-header center" data-animate="fade-up">
+                <span class="section-label">The Team</span>
+                <h2>Founders who've been<br>in your shoes</h2>
+                <p class="section-intro">We've lived in account management and customer success roles. We know the workflows, the incentives, and the blockers — because we've experienced them firsthand.</p>
+            </div>
+            <div class="team-grid">
+                <div class="team-member" data-animate="fade-up" data-delay="100">
+                    <div class="member-card">
+                        <div class="member-avatar">
+                            <span>J</span>
+                            <div class="avatar-ring"></div>
+                        </div>
+                        <h3>Jayne</h3>
+                        <p class="member-title">Co-Founder</p>
+                    </div>
+                </div>
+                <div class="team-member" data-animate="fade-up" data-delay="150">
+                    <div class="member-card">
+                        <div class="member-avatar">
+                            <span>R</span>
+                            <div class="avatar-ring"></div>
+                        </div>
+                        <h3>Ravi</h3>
+                        <p class="member-title">Co-Founder</p>
+                    </div>
+                </div>
+                <div class="team-member" data-animate="fade-up" data-delay="200">
+                    <div class="member-card">
+                        <div class="member-avatar">
+                            <span>P</span>
+                            <div class="avatar-ring"></div>
+                        </div>
+                        <h3>Panveer</h3>
+                        <p class="member-title">Co-Founder</p>
+                    </div>
+                </div>
+                <div class="team-member" data-animate="fade-up" data-delay="250">
+                    <div class="member-card">
+                        <div class="member-avatar">
+                            <span>S</span>
+                            <div class="avatar-ring"></div>
+                        </div>
+                        <h3>Shayan</h3>
+                        <p class="member-title">Co-Founder</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta" id="contact">
+        <div class="cta-bg">
+            <div class="cta-gradient"></div>
+            <div class="cta-grid"></div>
+        </div>
+        <div class="container">
+            <div class="cta-content" data-animate="fade-up">
+                <h2>Ready to stop<br>compromising?</h2>
+                <p>Let's talk about what you're building and how we can help.</p>
+                <a href="mailto:hello@buildwithglue.com" class="btn btn-primary btn-large btn-glow">
+                    <span>hello@buildwithglue.com</span>
+                    <svg class="btn-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="logo logo-footer">Glue</span>
+                    <p>Built for you, not bought by you.</p>
+                </div>
+                <div class="footer-links">
+                    <a href="#about">About</a>
+                    <a href="#services">Services</a>
+                    <a href="#approach">Approach</a>
+                    <a href="#team">Team</a>
+                    <a href="#contact">Contact</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Glue. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
