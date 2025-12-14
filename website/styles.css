@@ -2104,6 +2104,129 @@ p {
 }
 
 /* ==========================================================================
+   Tool Library
+   ========================================================================== */
+
+.tool-library {
+    padding: var(--space-3xl) 0;
+    background: linear-gradient(180deg, var(--color-bg) 0%, rgba(99, 102, 241, 0.03) 50%, var(--color-bg) 100%);
+}
+
+.tool-categories {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xl);
+    flex-wrap: wrap;
+}
+
+.tool-category-btn {
+    padding: 0.6rem 1.25rem;
+    border: 1px solid var(--glass-border);
+    background: var(--glass-bg);
+    border-radius: var(--radius-full);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.tool-category-btn:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.tool-category-btn.active {
+    background: var(--gradient-primary);
+    border-color: transparent;
+    color: white;
+}
+
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+}
+
+.tool-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding: var(--space-lg);
+    border-radius: var(--radius-lg);
+    transition: var(--transition-base);
+    overflow: hidden;
+}
+
+.tool-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(99, 102, 241, 0.3);
+}
+
+.tool-card.hidden {
+    display: none;
+}
+
+.tool-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gradient-primary);
+    border-radius: var(--radius-md);
+    color: white;
+}
+
+.tool-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.tool-content h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 0.25rem;
+}
+
+.tool-content p {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+}
+
+.tool-tag {
+    position: absolute;
+    top: var(--space-sm);
+    right: var(--space-sm);
+    padding: 0.25rem 0.6rem;
+    background: var(--gradient-primary);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 600;
+    border-radius: var(--radius-full);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.tool-cta {
+    text-align: center;
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--glass-border);
+}
+
+.tool-cta p {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-md);
+}
+
+/* ==========================================================================
    Footer
    ========================================================================== */
 
@@ -2258,6 +2381,10 @@ p {
     }
 
     .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .tools-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }
@@ -2589,6 +2716,55 @@ p {
 
     .service-card {
         padding: var(--space-lg);
+    }
+
+    /* Tools Grid Mobile */
+    .tools-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-sm);
+    }
+
+    .tool-card {
+        padding: var(--space-md);
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    .tool-icon {
+        width: 40px;
+        height: 40px;
+        flex-shrink: 0;
+    }
+
+    .tool-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .tool-content h4 {
+        font-size: 0.95rem;
+    }
+
+    .tool-content p {
+        font-size: 0.8rem;
+    }
+
+    .tool-tag {
+        font-size: 0.6rem;
+        padding: 0.2rem 0.5rem;
+    }
+
+    .tool-categories {
+        gap: var(--space-xs);
+    }
+
+    .tool-category-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+
+    .tool-library {
+        padding: var(--space-2xl) 0;
     }
 
     /* Team Grid Mobile */

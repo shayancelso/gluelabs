@@ -378,6 +378,33 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ==========================================================================
+    // Tool Library Category Filter
+    // ==========================================================================
+
+    const toolCategoryBtns = document.querySelectorAll('.tool-category-btn');
+    const toolCards = document.querySelectorAll('.tool-card');
+
+    toolCategoryBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Update active button
+            toolCategoryBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const category = btn.dataset.category;
+
+            // Filter tools
+            toolCards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.classList.remove('hidden');
+                    card.style.animation = 'fadeIn 0.3s ease forwards';
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        });
+    });
+
+    // ==========================================================================
     // Heatmap Cell Animation
     // ==========================================================================
 
