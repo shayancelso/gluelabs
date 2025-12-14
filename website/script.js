@@ -1,46 +1,9 @@
 /**
  * Glue Website — Premium Interactions
- * Smooth animations, cursor effects, and micro-interactions
+ * Interactive demos, counters, FAQ accordion, and smooth animations
  */
 
 document.addEventListener('DOMContentLoaded', function() {
-
-    // ==========================================================================
-    // Cursor Glow Effect
-    // ==========================================================================
-
-    const cursorGlow = document.querySelector('.cursor-glow');
-    let mouseX = 0, mouseY = 0;
-    let glowX = 0, glowY = 0;
-
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-    });
-
-    function animateCursor() {
-        // Smooth follow with easing
-        glowX += (mouseX - glowX) * 0.08;
-        glowY += (mouseY - glowY) * 0.08;
-
-        if (cursorGlow) {
-            cursorGlow.style.left = glowX + 'px';
-            cursorGlow.style.top = glowY + 'px';
-        }
-
-        requestAnimationFrame(animateCursor);
-    }
-
-    animateCursor();
-
-    // Hide cursor glow when mouse leaves window
-    document.addEventListener('mouseleave', () => {
-        if (cursorGlow) cursorGlow.style.opacity = '0';
-    });
-
-    document.addEventListener('mouseenter', () => {
-        if (cursorGlow) cursorGlow.style.opacity = '0.3';
-    });
 
     // ==========================================================================
     // Navigation
@@ -50,22 +13,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
     const navLinks = document.querySelector('.nav-links');
 
-    // Scroll effect
-    let lastScroll = 0;
-
     window.addEventListener('scroll', () => {
-        const currentScroll = window.pageYOffset;
-
-        if (currentScroll > 50) {
+        if (window.pageYOffset > 50) {
             nav.classList.add('scrolled');
         } else {
             nav.classList.remove('scrolled');
         }
-
-        lastScroll = currentScroll;
     });
 
-    // Mobile menu
     if (mobileMenuBtn && navLinks) {
         mobileMenuBtn.addEventListener('click', () => {
             navLinks.classList.toggle('active');
@@ -79,6 +34,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 mobileMenuBtn.classList.remove('active');
                 document.body.style.overflow = '';
             });
+        });
+
+        // Close menu when clicking on backdrop (the ::before pseudo-element area)
+        document.addEventListener('click', (e) => {
+            if (navLinks.classList.contains('active') &&
+                !navLinks.contains(e.target) &&
+                !mobileMenuBtn.contains(e.target)) {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.classList.remove('active');
+                document.body.style.overflow = '';
+            }
         });
     }
 
@@ -94,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const target = document.querySelector(href);
             if (target) {
                 e.preventDefault();
-                const navHeight = nav.offsetHeight;
+                const navHeight = nav ? nav.offsetHeight : 0;
                 const targetPosition = target.offsetTop - navHeight - 20;
 
                 window.scrollTo({
@@ -111,12 +77,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const animatedElements = document.querySelectorAll('[data-animate]');
 
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px 0px -10% 0px',
-        threshold: 0.1
-    };
-
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -127,15 +87,183 @@ document.addEventListener('DOMContentLoaded', function() {
                 observer.unobserve(entry.target);
             }
         });
-    }, observerOptions);
+    }, {
+        root: null,
+        rootMargin: '0px 0px -10% 0px',
+        threshold: 0.1
+    });
 
     animatedElements.forEach(el => observer.observe(el));
+
+    // ==========================================================================
+    // Counter Animations
+    // ==========================================================================
+
+    function animateCounter(element) {
+        const target = parseInt(element.dataset.count) || 0;
+        const prefix = element.dataset.prefix || '';
+        const suffix = element.dataset.suffix || '';
+        const duration = 2000;
+        const startTime = performance.now();
+
+        function update(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const easeOut = 1 - Math.pow(1 - progress, 3);
+            const current = Math.round(target * easeOut);
+
+            if (target >= 1000000) {
+                element.textContent = prefix + '$' + (current / 1000000).toFixed(1) + 'M';
+            } else if (target >= 1000) {
+                element.textContent = prefix + (current / 1000).toFixed(0) + 'K' + suffix;
+            } else {
+                element.textContent = prefix + current + suffix;
+            }
+
+            if (progress < 1) {
+                requestAnimationFrame(update);
+            }
+        }
+
+        requestAnimationFrame(update);
+    }
+
+    const counters = document.querySelectorAll('[data-count]');
+
+    const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateCounter(entry.target);
+                counterObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    counters.forEach(counter => counterObserver.observe(counter));
+
+    // ==========================================================================
+    // Demo Tabs
+    // ==========================================================================
+
+    const demoTabs = document.querySelectorAll('.demo-tab');
+    const demoPanels = document.querySelectorAll('.demo-panel');
+
+    demoTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const targetId = tab.dataset.tab;
+
+            demoTabs.forEach(t => t.classList.remove('active'));
+            demoPanels.forEach(p => p.classList.remove('active'));
+
+            tab.classList.add('active');
+            const targetPanel = document.getElementById(`demo-${targetId}`);
+            if (targetPanel) {
+                targetPanel.classList.add('active');
+            }
+        });
+    });
+
+    // ==========================================================================
+    // Demo ROI Calculator (in demo section)
+    // ==========================================================================
+
+    const calcTeam = document.getElementById('calc-team');
+    const calcDeal = document.getElementById('calc-deal');
+    const calcHours = document.getElementById('calc-hours');
+    const calcSolution = document.getElementById('calc-solution');
+
+    const calcTeamValue = document.getElementById('calc-team-value');
+    const calcHoursValue = document.getElementById('calc-hours-value');
+
+    const calcTime = document.getElementById('calc-time');
+    const calcProductivity = document.getElementById('calc-productivity');
+    const calcDev = document.getElementById('calc-dev');
+    const calcRoi = document.getElementById('calc-roi');
+
+    const HOURLY_RATE = 100;
+    const DEVELOPER_COST = 150000;
+    const GLUE_COST = 30000;
+    const WEEKS_PER_YEAR = 52;
+
+    function calculateDemoROI() {
+        if (!calcTeam || !calcDeal || !calcHours) return;
+
+        const teamSize = parseInt(calcTeam.value) || 10;
+        const avgDeal = parseInt(calcDeal.value) || 25000;
+        const hoursWasted = parseInt(calcHours.value) || 8;
+
+        if (calcTeamValue) calcTeamValue.textContent = teamSize;
+        if (calcHoursValue) calcHoursValue.textContent = hoursWasted + ' hrs';
+
+        const timeSavedPerWeek = hoursWasted * 0.7 * teamSize;
+        const timeSavedAnnual = Math.round(timeSavedPerWeek * WEEKS_PER_YEAR);
+        const productivityValue = timeSavedAnnual * HOURLY_RATE;
+        const devSavings = DEVELOPER_COST - GLUE_COST;
+        const totalValue = productivityValue + devSavings;
+        const roi = Math.round((totalValue / GLUE_COST) * 100);
+
+        if (calcTime) calcTime.textContent = timeSavedAnnual.toLocaleString() + ' hours';
+        if (calcProductivity) calcProductivity.textContent = '$' + productivityValue.toLocaleString();
+        if (calcDev) calcDev.textContent = '$' + devSavings.toLocaleString();
+        if (calcRoi) calcRoi.textContent = roi.toLocaleString() + '%';
+    }
+
+    if (calcTeam) calcTeam.addEventListener('input', calculateDemoROI);
+    if (calcDeal) calcDeal.addEventListener('input', calculateDemoROI);
+    if (calcHours) calcHours.addEventListener('input', calculateDemoROI);
+    if (calcSolution) calcSolution.addEventListener('change', calculateDemoROI);
+
+    calculateDemoROI();
+
+    // ==========================================================================
+    // FAQ Accordion
+    // ==========================================================================
+
+    const faqItems = document.querySelectorAll('.faq-item');
+
+    faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+
+        if (question) {
+            question.addEventListener('click', () => {
+                const isActive = item.classList.contains('active');
+
+                faqItems.forEach(i => i.classList.remove('active'));
+
+                if (!isActive) {
+                    item.classList.add('active');
+                }
+            });
+        }
+    });
+
+    // ==========================================================================
+    // Demo Visualizer Interactions
+    // ==========================================================================
+
+    const filterBtns = document.querySelectorAll('.filter-btn');
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
+
+    const accountItems = document.querySelectorAll('.viz-accounts .account-item');
+
+    accountItems.forEach(item => {
+        item.addEventListener('click', () => {
+            accountItems.forEach(i => i.classList.remove('selected'));
+            item.classList.add('selected');
+        });
+    });
 
     // ==========================================================================
     // Interactive Chart Bars
     // ==========================================================================
 
-    const chartBars = document.querySelectorAll('.chart-bar');
+    const chartBars = document.querySelectorAll('.chart-bar, .glue-bar');
 
     chartBars.forEach(bar => {
         bar.addEventListener('mouseenter', () => {
@@ -145,75 +273,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ==========================================================================
-    // Preview Grid Animation
-    // ==========================================================================
-
-    const previewCells = document.querySelectorAll('.preview-cell');
-    let cellInterval;
-
-    function animatePreviewGrid() {
-        const randomIndex = Math.floor(Math.random() * previewCells.length);
-        previewCells.forEach((cell, index) => {
-            if (index === randomIndex) {
-                cell.classList.toggle('active');
-            }
-        });
-    }
-
-    // Start animation when services section is visible
-    const servicesSection = document.querySelector('.services');
-
-    if (servicesSection) {
-        const servicesObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    cellInterval = setInterval(animatePreviewGrid, 800);
-                } else {
-                    clearInterval(cellInterval);
-                }
-            });
-        }, { threshold: 0.2 });
-
-        servicesObserver.observe(servicesSection);
-    }
-
-    // ==========================================================================
-    // Magnetic Buttons
-    // ==========================================================================
-
-    const magneticButtons = document.querySelectorAll('.btn-primary, .btn-nav');
-
-    magneticButtons.forEach(btn => {
-        btn.addEventListener('mousemove', (e) => {
-            const rect = btn.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width / 2;
-            const y = e.clientY - rect.top - rect.height / 2;
-
-            btn.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
-        });
-
-        btn.addEventListener('mouseleave', () => {
-            btn.style.transform = 'translate(0, 0)';
-        });
-    });
-
-    // ==========================================================================
-    // Parallax Orbs
-    // ==========================================================================
-
-    const orbs = document.querySelectorAll('.hero-orb');
-
-    window.addEventListener('scroll', () => {
-        const scrollY = window.pageYOffset;
-
-        orbs.forEach((orb, index) => {
-            const speed = (index + 1) * 0.1;
-            orb.style.transform = `translateY(${scrollY * speed}px)`;
-        });
-    });
-
-    // ==========================================================================
-    // Text Reveal Animation
+    // Hero Title Animation
     // ==========================================================================
 
     const heroTitle = document.querySelector('.hero h1');
@@ -233,91 +293,129 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ==========================================================================
-    // Stats Counter Animation
+    // Card Hover Effects (Desktop Only)
     // ==========================================================================
 
-    const statNumbers = document.querySelectorAll('.stat-number');
+    const cards = document.querySelectorAll('.service-card, .member-card, .case-card, .testimonial-card');
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-    const statsObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const el = entry.target;
-                const text = el.textContent;
+    if (!isTouchDevice) {
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / 30;
+                const rotateY = (centerX - x) / 30;
 
-                // Only animate if it contains a number
-                if (text.includes('$') || text.includes('%')) {
-                    el.style.opacity = '0';
-                    el.style.transform = 'translateY(20px)';
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+            });
 
-                    setTimeout(() => {
-                        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                        el.style.opacity = '1';
-                        el.style.transform = 'translateY(0)';
-                    }, 200);
-                }
-
-                statsObserver.unobserve(el);
-            }
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+            });
         });
-    }, { threshold: 0.5 });
-
-    statNumbers.forEach(stat => statsObserver.observe(stat));
+    }
 
     // ==========================================================================
-    // Card Tilt Effect
+    // Magnetic Buttons (Desktop Only)
     // ==========================================================================
 
-    const tiltCards = document.querySelectorAll('.problem-card, .service-card, .member-card');
+    const magneticButtons = document.querySelectorAll('.btn-primary, .btn-nav');
 
-    tiltCards.forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
+    if (!isTouchDevice) {
+        magneticButtons.forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
 
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
+                btn.style.transform = `translate(${x * 0.1}px, ${y * 0.1}px)`;
+            });
 
-            const rotateX = (y - centerY) / 20;
-            const rotateY = (centerX - x) / 20;
-
-            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transform = 'translate(0, 0)';
+            });
         });
-
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
-        });
-    });
+    }
 
     // ==========================================================================
-    // Smooth Entry Animation
+    // Parallax Orbs (Desktop Only - disabled on mobile for performance)
     // ==========================================================================
 
-    // Add initial page load animation
-    document.body.style.opacity = '0';
+    const orbs = document.querySelectorAll('.orb');
 
-    window.addEventListener('load', () => {
-        document.body.style.transition = 'opacity 0.5s ease';
-        document.body.style.opacity = '1';
-    });
+    if (!isTouchDevice && window.innerWidth > 768) {
+        window.addEventListener('scroll', throttle(() => {
+            const scrollY = window.pageYOffset;
+
+            orbs.forEach((orb, index) => {
+                const speed = (index + 1) * 0.03;
+                orb.style.transform = `translate(${scrollY * speed * 0.5}px, ${scrollY * speed}px)`;
+            });
+        }, 16));
+    }
 
     // ==========================================================================
-    // Keyboard Navigation Enhancement
+    // Page Load Animation (handled via CSS to prevent flash)
+    // ==========================================================================
+
+    // Remove loading class once DOM is ready
+    document.body.classList.add('loaded');
+
+    // ==========================================================================
+    // Keyboard Navigation
     // ==========================================================================
 
     document.addEventListener('keydown', (e) => {
-        // Close mobile menu on Escape
-        if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+        if (e.key === 'Escape' && navLinks && navLinks.classList.contains('active')) {
             navLinks.classList.remove('active');
-            mobileMenuBtn.classList.remove('active');
+            if (mobileMenuBtn) mobileMenuBtn.classList.remove('active');
             document.body.style.overflow = '';
         }
     });
 
+    // ==========================================================================
+    // Heatmap Cell Animation
+    // ==========================================================================
+
+    const heatmapCells = document.querySelectorAll('.heatmap-cell');
+    let heatmapInterval;
+
+    function animateHeatmap() {
+        const randomIndex = Math.floor(Math.random() * heatmapCells.length);
+        heatmapCells.forEach((cell, index) => {
+            if (index === randomIndex) {
+                const classes = ['hot', 'warm', 'cold'];
+                const newClass = classes[Math.floor(Math.random() * classes.length)];
+                cell.classList.remove('hot', 'warm', 'cold');
+                cell.classList.add(newClass);
+            }
+        });
+    }
+
+    const heroSection = document.querySelector('.hero');
+
+    if (heroSection && heatmapCells.length > 0) {
+        const heroObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    heatmapInterval = setInterval(animateHeatmap, 1500);
+                } else {
+                    clearInterval(heatmapInterval);
+                }
+            });
+        }, { threshold: 0.2 });
+
+        heroObserver.observe(heroSection);
+    }
+
 });
 
 // ==========================================================================
-// Performance: Throttle scroll events
+// Utility: Throttle
 // ==========================================================================
 
 function throttle(func, limit) {
