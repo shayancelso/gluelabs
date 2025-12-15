@@ -2739,17 +2739,30 @@ p {
 }
 
 .member-avatar {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     margin: 0 auto var(--space-md);
-    display: flex;
-    align-items: center;
-    justify-content: center;
     border-radius: 50%;
-    font-family: var(--font-display);
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: white;
+    overflow: hidden;
+    border: 3px solid rgba(99, 102, 241, 0.2);
+    transition: all 0.3s ease;
+}
+
+.member-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    transition: transform 0.3s ease;
+}
+
+.member-card:hover .member-avatar {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+}
+
+.member-card:hover .member-avatar img {
+    transform: scale(1.05);
 }
 
 .member-card h3 {
@@ -3866,9 +3879,8 @@ p {
     }
 
     .member-avatar {
-        width: 60px;
-        height: 60px;
-        font-size: 1.25rem;
+        width: 70px;
+        height: 70px;
     }
 
     /* FAQ Mobile */
