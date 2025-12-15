@@ -2990,10 +2990,18 @@ p {
     justify-content: center;
     width: 28px;
     height: 28px;
-    background: var(--gradient-primary);
+    background: rgba(99, 102, 241, 0.08);
+    border: 1.5px solid rgba(99, 102, 241, 0.25);
     border-radius: var(--radius-sm);
-    color: white;
+    color: var(--color-primary);
     flex-shrink: 0;
+    transition: all var(--transition-fast);
+}
+
+.tool-chip:hover .chip-icon {
+    background: var(--gradient-primary);
+    border-color: transparent;
+    color: white;
 }
 
 .chip-icon svg {
