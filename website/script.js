@@ -186,20 +186,54 @@ document.addEventListener('DOMContentLoaded', function() {
     const demoTabs = document.querySelectorAll('.demo-tab');
     const demoPanels = document.querySelectorAll('.demo-panel');
 
-    demoTabs.forEach(tab => {
+    demoTabs.forEach((tab, index) => {
         tab.addEventListener('click', () => {
-            const targetId = tab.dataset.tab;
+            activateTab(tab);
+        });
 
-            demoTabs.forEach(t => t.classList.remove('active'));
-            demoPanels.forEach(p => p.classList.remove('active'));
+        // Keyboard navigation
+        tab.addEventListener('keydown', (e) => {
+            let targetIndex;
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                e.preventDefault();
+                targetIndex = (index + 1) % demoTabs.length;
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                targetIndex = (index - 1 + demoTabs.length) % demoTabs.length;
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                targetIndex = 0;
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                targetIndex = demoTabs.length - 1;
+            }
 
-            tab.classList.add('active');
-            const targetPanel = document.getElementById(`demo-${targetId}`);
-            if (targetPanel) {
-                targetPanel.classList.add('active');
+            if (targetIndex !== undefined) {
+                demoTabs[targetIndex].focus();
+                activateTab(demoTabs[targetIndex]);
             }
         });
     });
+
+    function activateTab(tab) {
+        const targetId = tab.dataset.tab;
+
+        demoTabs.forEach(t => {
+            t.classList.remove('active');
+            t.setAttribute('aria-selected', 'false');
+            t.setAttribute('tabindex', '-1');
+        });
+        demoPanels.forEach(p => p.classList.remove('active'));
+
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+        tab.setAttribute('tabindex', '0');
+
+        const targetPanel = document.getElementById(`demo-${targetId}`);
+        if (targetPanel) {
+            targetPanel.classList.add('active');
+        }
+    }
 
     // ==========================================================================
     // Demo ROI Calculator (in demo section)
