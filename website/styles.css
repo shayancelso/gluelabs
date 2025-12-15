@@ -2091,6 +2091,7 @@ p {
     font-size: 0.9rem;
     line-height: 1.6;
     color: var(--color-text-secondary);
+    padding-right: 50px;
 }
 
 /* Card Icon */
