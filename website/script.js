@@ -96,24 +96,29 @@ document.addEventListener('DOMContentLoaded', function() {
     animatedElements.forEach(el => observer.observe(el));
 
     // ==========================================================================
-    // Process Timeline V2 Animation
+    // Process Modern Animation
     // ==========================================================================
 
-    const processTimeline = document.querySelector('.process-timeline-v2');
-    const processSteps = document.querySelectorAll('.process-step-v2');
+    const processModern = document.querySelector('.process-modern');
+    const processCards = document.querySelectorAll('.process-card');
+    const processConnectors = document.querySelectorAll('.process-connector');
 
-    if (processTimeline && processSteps.length > 0) {
+    if (processModern && processCards.length > 0) {
         const processObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    // Add animate class to timeline to trigger line progress
-                    processTimeline.classList.add('animate');
-
-                    // Stagger the visibility of each step
-                    processSteps.forEach((step, index) => {
+                    // Animate cards with stagger
+                    processCards.forEach((card, index) => {
                         setTimeout(() => {
-                            step.classList.add('visible');
-                        }, index * 150);
+                            card.classList.add('visible');
+                        }, index * 200);
+                    });
+
+                    // Animate connectors after cards
+                    processConnectors.forEach((connector, index) => {
+                        setTimeout(() => {
+                            connector.classList.add('visible');
+                        }, (index + 1) * 200 + 100);
                     });
 
                     processObserver.unobserve(entry.target);
@@ -121,11 +126,11 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }, {
             root: null,
-            rootMargin: '0px 0px -15% 0px',
+            rootMargin: '0px 0px -10% 0px',
             threshold: 0.1
         });
 
-        processObserver.observe(processTimeline);
+        processObserver.observe(processModern);
     }
 
     // ==========================================================================
