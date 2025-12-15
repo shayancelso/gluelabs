@@ -216,6 +216,61 @@ document.addEventListener('DOMContentLoaded', function() {
     calculateDemoROI();
 
     // ==========================================================================
+    // Work-back Planner Interactivity
+    // ==========================================================================
+
+    const timelinePhases = document.querySelectorAll('.timeline-phase');
+    const workbackProgress = document.querySelector('.workback-progress .progress-value');
+    const timelineProgress = document.querySelector('.timeline-progress');
+    const timelineToday = document.querySelector('.timeline-today');
+
+    // Click to expand/collapse phase details on mobile
+    timelinePhases.forEach(phase => {
+        phase.addEventListener('click', () => {
+            // On mobile, toggle active state for task visibility
+            if (window.innerWidth <= 768) {
+                const wasActive = phase.classList.contains('expanded');
+                timelinePhases.forEach(p => p.classList.remove('expanded'));
+                if (!wasActive) {
+                    phase.classList.add('expanded');
+                }
+            }
+        });
+    });
+
+    // Animate progress on scroll into view
+    const workbackPanel = document.getElementById('demo-workback');
+    if (workbackPanel) {
+        const workbackObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Animate the progress ring
+                    const ring = workbackPanel.querySelector('.progress-ring .ring-fill');
+                    if (ring) {
+                        ring.style.transition = 'stroke-dashoffset 1s ease-out';
+                    }
+                    // Animate the timeline progress bar
+                    if (timelineProgress) {
+                        timelineProgress.style.transition = 'width 1s ease-out';
+                    }
+                }
+            });
+        }, { threshold: 0.3 });
+
+        workbackObserver.observe(workbackPanel);
+    }
+
+    // Hover effect to highlight related tasks
+    timelinePhases.forEach(phase => {
+        phase.addEventListener('mouseenter', () => {
+            phase.style.transform = 'translateY(-2px)';
+        });
+        phase.addEventListener('mouseleave', () => {
+            phase.style.transform = 'translateY(0)';
+        });
+    });
+
+    // ==========================================================================
     // FAQ Accordion
     // ==========================================================================
 
