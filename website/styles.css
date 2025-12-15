@@ -1916,6 +1916,7 @@ p {
     background: var(--color-bg-alt);
 }
 
+/* Original process timeline (deprecated) */
 .process-timeline {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -1970,6 +1971,431 @@ p {
 
 .process-step:last-child .step-line {
     display: none;
+}
+
+/* ==========================================================================
+   Process Timeline V2 - Redesigned with Animations
+   ========================================================================== */
+
+.process-timeline-v2 {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+    margin-top: var(--space-2xl);
+    padding: var(--space-xl) 0;
+}
+
+/* Central timeline line */
+.timeline-line {
+    position: absolute;
+    left: 24px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg,
+        rgba(99, 102, 241, 0.1) 0%,
+        rgba(99, 102, 241, 0.3) 20%,
+        rgba(99, 102, 241, 0.3) 80%,
+        rgba(99, 102, 241, 0.1) 100%
+    );
+    border-radius: 2px;
+}
+
+.timeline-line-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0%;
+    background: var(--gradient-primary);
+    border-radius: 2px;
+    transition: height 1s ease-out;
+}
+
+.process-timeline-v2.animate .timeline-line-progress {
+    height: 100%;
+}
+
+/* Process step container */
+.process-step-v2 {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-lg);
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.process-step-v2.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Staggered animation delays */
+.process-step-v2[data-step="1"] { transition-delay: 0.1s; }
+.process-step-v2[data-step="2"] { transition-delay: 0.25s; }
+.process-step-v2[data-step="3"] { transition-delay: 0.4s; }
+.process-step-v2[data-step="4"] { transition-delay: 0.55s; }
+
+/* Step marker with ring animation */
+.step-marker {
+    position: relative;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xs);
+    z-index: 2;
+}
+
+.step-marker-ring {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--color-bg);
+    border: 2px solid rgba(99, 102, 241, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: all 0.4s ease;
+}
+
+.step-marker-ring::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        var(--color-primary) 0deg,
+        var(--color-primary) 0deg,
+        transparent 0deg
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.process-step-v2.visible .step-marker-ring::before {
+    opacity: 1;
+    animation: ringFill 1s ease-out forwards;
+}
+
+@keyframes ringFill {
+    0% {
+        background: conic-gradient(
+            from 0deg,
+            var(--color-primary) 0deg,
+            transparent 0deg
+        );
+    }
+    100% {
+        background: conic-gradient(
+            from 0deg,
+            var(--color-primary) 360deg,
+            transparent 360deg
+        );
+    }
+}
+
+.step-marker-ring.infinity::before {
+    animation: ringPulse 2s ease-in-out infinite;
+}
+
+@keyframes ringPulse {
+    0%, 100% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+}
+
+.step-marker-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--gradient-primary);
+    position: relative;
+    z-index: 1;
+    transition: transform 0.3s ease;
+}
+
+.process-step-v2:hover .step-marker-dot {
+    transform: scale(1.2);
+}
+
+.step-marker-dot::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    background: rgba(99, 102, 241, 0.2);
+    opacity: 0;
+    animation: dotPulse 2s ease-in-out infinite;
+}
+
+.process-step-v2.visible .step-marker-dot::after {
+    opacity: 1;
+}
+
+@keyframes dotPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+.step-number-v2 {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    opacity: 0.7;
+}
+
+/* Step card with glassmorphism */
+.step-card {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    border-radius: var(--radius-lg);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.step-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(99, 102, 241, 0.15);
+}
+
+.step-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 0;
+    background: var(--gradient-primary);
+    transition: height 0.5s ease-out;
+}
+
+.process-step-v2.visible .step-card::before {
+    height: 100%;
+}
+
+.step-decoration {
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.6s ease;
+    pointer-events: none;
+}
+
+.process-step-v2:hover .step-decoration {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Step icon with animation */
+.step-icon-v2 {
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gradient-subtle);
+    border-radius: var(--radius-md);
+    color: var(--color-primary);
+    transition: all 0.4s ease;
+}
+
+.step-card:hover .step-icon-v2 {
+    background: var(--gradient-primary);
+    color: white;
+    transform: rotate(-5deg) scale(1.05);
+}
+
+.step-icon-v2 svg {
+    transition: transform 0.4s ease;
+}
+
+.step-card:hover .step-icon-v2 svg {
+    transform: scale(1.1);
+}
+
+/* Step content */
+.step-content-v2 h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: var(--space-xs);
+    color: var(--color-text);
+    transition: color 0.3s ease;
+}
+
+.step-card:hover .step-content-v2 h3 {
+    color: var(--color-primary);
+}
+
+.step-content-v2 p {
+    font-size: 0.95rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+}
+
+/* Process Timeline V2 - Tablet */
+@media (max-width: 968px) {
+    .process-timeline-v2 {
+        padding-left: 0;
+    }
+
+    .timeline-line {
+        left: 23px;
+    }
+
+    .step-card {
+        flex-direction: column;
+        gap: var(--space-sm);
+    }
+
+    .step-icon-v2 {
+        width: 44px;
+        height: 44px;
+    }
+}
+
+/* Process Timeline V2 - Mobile */
+@media (max-width: 768px) {
+    .process-timeline-v2 {
+        gap: var(--space-lg);
+        padding: var(--space-md) 0;
+    }
+
+    .timeline-line {
+        left: 19px;
+    }
+
+    .step-marker-ring {
+        width: 40px;
+        height: 40px;
+    }
+
+    .step-marker-dot {
+        width: 12px;
+        height: 12px;
+    }
+
+    .step-number-v2 {
+        font-size: 0.65rem;
+    }
+
+    .process-step-v2 {
+        gap: var(--space-md);
+    }
+
+    .step-card {
+        padding: var(--space-md);
+    }
+
+    .step-icon-v2 {
+        width: 40px;
+        height: 40px;
+    }
+
+    .step-icon-v2 svg {
+        width: 22px;
+        height: 22px;
+    }
+
+    .step-content-v2 h3 {
+        font-size: 1rem;
+    }
+
+    .step-content-v2 p {
+        font-size: 0.875rem;
+    }
+
+    /* Disable hover effects on touch */
+    .step-card:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .step-card:hover .step-icon-v2 {
+        background: var(--gradient-subtle);
+        color: var(--color-primary);
+        transform: none;
+    }
+
+    .process-step-v2:hover .step-marker-dot {
+        transform: none;
+    }
+}
+
+/* Process Timeline V2 - Small Mobile */
+@media (max-width: 480px) {
+    .process-timeline-v2 {
+        gap: var(--space-md);
+    }
+
+    .timeline-line {
+        left: 15px;
+    }
+
+    .step-marker-ring {
+        width: 32px;
+        height: 32px;
+    }
+
+    .step-marker-dot {
+        width: 10px;
+        height: 10px;
+    }
+
+    .step-marker-ring::before {
+        inset: -3px;
+    }
+
+    .step-card {
+        padding: var(--space-sm) var(--space-md);
+    }
+
+    .step-icon-v2 {
+        width: 36px;
+        height: 36px;
+    }
+
+    .step-icon-v2 svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .step-content-v2 h3 {
+        font-size: 0.95rem;
+    }
+
+    .step-content-v2 p {
+        font-size: 0.8rem;
+        line-height: 1.5;
+    }
 }
 
 /* ==========================================================================
