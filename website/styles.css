@@ -2737,10 +2737,107 @@ p {
 .tool-library {
     padding: var(--space-3xl) 0;
     background: linear-gradient(180deg, var(--color-bg) 0%, rgba(99, 102, 241, 0.03) 50%, var(--color-bg) 100%);
+    overflow: hidden;
 }
 
-.tool-categories {
+/* Tools Carousel */
+.tools-carousel {
+    margin: var(--space-xl) 0;
     display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.carousel-row {
+    overflow: hidden;
+    position: relative;
+    -webkit-mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+    mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+}
+
+.carousel-track {
+    display: flex;
+    gap: var(--space-sm);
+    width: max-content;
+}
+
+/* Left scrolling animation */
+.carousel-row[data-direction="left"] .carousel-track {
+    animation: scrollLeft 40s linear infinite;
+}
+
+/* Right scrolling animation */
+.carousel-row[data-direction="right"] .carousel-track {
+    animation: scrollRight 40s linear infinite;
+}
+
+@keyframes scrollLeft {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+@keyframes scrollRight {
+    0% {
+        transform: translateX(-50%);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+/* Pause animation on hover */
+.carousel-row:hover .carousel-track {
+    animation-play-state: paused;
+}
+
+/* Tool Chip Styles */
+.tool-chip {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: 0.75rem 1.25rem;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--color-text);
+    white-space: nowrap;
+    transition: all 0.3s ease;
+    cursor: default;
+}
+
+.tool-chip:hover {
+    border-color: var(--color-primary);
+    background: rgba(99, 102, 241, 0.05);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+}
+
+.chip-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: var(--gradient-primary);
+    border-radius: var(--radius-sm);
+    color: white;
+    flex-shrink: 0;
+}
+
+.chip-icon svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* Old tool categories - hidden but kept for JS compatibility */
+.tool-categories {
+    display: none;
     justify-content: center;
     gap: var(--space-sm);
     margin-bottom: var(--space-xl);
@@ -2843,14 +2940,60 @@ p {
 
 .tool-cta {
     text-align: center;
-    padding-top: var(--space-lg);
-    border-top: 1px solid var(--glass-border);
+    margin-top: var(--space-xl);
 }
 
 .tool-cta p {
-    font-size: 1rem;
+    font-size: 1.1rem;
     color: var(--color-text-secondary);
     margin-bottom: var(--space-md);
+}
+
+.tool-cta p strong {
+    color: var(--color-primary);
+}
+
+/* Carousel Mobile Responsive */
+@media (max-width: 768px) {
+    .tools-carousel {
+        margin: var(--space-lg) 0;
+    }
+
+    .tool-chip {
+        padding: 0.6rem 1rem;
+        font-size: 0.8rem;
+    }
+
+    .chip-icon {
+        width: 24px;
+        height: 24px;
+    }
+
+    .chip-icon svg {
+        width: 12px;
+        height: 12px;
+    }
+
+    .carousel-row[data-direction="left"] .carousel-track,
+    .carousel-row[data-direction="right"] .carousel-track {
+        animation-duration: 25s;
+    }
+}
+
+@media (max-width: 480px) {
+    .tool-chip {
+        padding: 0.5rem 0.85rem;
+        font-size: 0.75rem;
+    }
+
+    .chip-icon {
+        width: 22px;
+        height: 22px;
+    }
+
+    .tool-cta p {
+        font-size: 1rem;
+    }
 }
 
 /* ==========================================================================
