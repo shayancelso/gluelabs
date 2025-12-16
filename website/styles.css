@@ -964,6 +964,18 @@ p {
     position: relative;
 }
 
+.demo-cta {
+    text-align: center;
+    margin-top: var(--space-xl);
+    padding-top: var(--space-lg);
+}
+
+.demo-cta-note {
+    margin-top: var(--space-sm);
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+}
+
 .demo-panel {
     display: none;
     opacity: 0;
