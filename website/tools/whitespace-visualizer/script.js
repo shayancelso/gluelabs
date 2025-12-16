@@ -270,14 +270,14 @@ document.addEventListener('DOMContentLoaded', function() {
         // Handle modules view differently
         if (viewType === 'modules') {
             const adoption = calculateModuleAdoption(account);
-            const gaps = getModuleGaps(account);
+            const whitespace = calculateModuleWhitespace(account);
 
             // Update labels for module view
-            document.querySelector('.summary-card.highlight .summary-label').textContent = 'Module Gaps';
+            document.querySelector('.summary-card.highlight .summary-label').textContent = 'ARR Potential';
             document.querySelector('.summary-card:nth-child(2) .summary-label').textContent = 'Adoption Rate';
             document.querySelector('.summary-card:nth-child(3) .summary-label').textContent = 'Modules Active';
 
-            totalWhitespaceEl.textContent = gaps.length + ' gaps';
+            totalWhitespaceEl.textContent = formatCurrency(whitespace);
             coverageScoreEl.textContent = adoption.percentage + '%';
             priorityRankEl.textContent = adoption.adopted + ' of ' + adoption.total;
             return;

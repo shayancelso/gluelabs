@@ -334,12 +334,12 @@ p {
 
 /* Filter Tabs */
 .filter-tabs {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: var(--space-xs);
 }
 
 .filter-tab {
-    flex: 1;
     padding: var(--space-xs) var(--space-sm);
     background: var(--color-bg);
     border: 1px solid var(--color-border);
@@ -349,6 +349,7 @@ p {
     color: var(--color-text-secondary);
     cursor: pointer;
     transition: var(--transition-fast);
+    white-space: nowrap;
 }
 
 .filter-tab:hover {

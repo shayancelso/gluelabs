@@ -3,18 +3,18 @@
  * This file can be swapped for API calls or CSV parsing later
  */
 
-// Available modules in the platform
+// Available modules in the platform with ARR potential per module
 const MODULES = [
-    { id: 'payments', name: 'Payments' },
-    { id: 'mass_payments', name: 'Mass Payments' },
-    { id: 'supplier_mgmt', name: 'Supplier Management' },
-    { id: 'tax_compliance', name: 'Tax Compliance' },
-    { id: 'invoice_mgmt', name: 'Invoice Management' },
-    { id: 'purchase_orders', name: 'Purchase Orders' },
-    { id: 'procurement', name: 'Procurement' },
-    { id: 'expense_mgmt', name: 'Expense Management' },
-    { id: 'bill_pay', name: 'Bill Pay' },
-    { id: 'analytics', name: 'Analytics' }
+    { id: 'payments', name: 'Payments', arrPotential: 15000 },
+    { id: 'mass_payments', name: 'Mass Payments', arrPotential: 12000 },
+    { id: 'supplier_mgmt', name: 'Supplier Management', arrPotential: 18000 },
+    { id: 'tax_compliance', name: 'Tax Compliance', arrPotential: 22000 },
+    { id: 'invoice_mgmt', name: 'Invoice Management', arrPotential: 16000 },
+    { id: 'purchase_orders', name: 'Purchase Orders', arrPotential: 14000 },
+    { id: 'procurement', name: 'Procurement', arrPotential: 25000 },
+    { id: 'expense_mgmt', name: 'Expense Management', arrPotential: 18000 },
+    { id: 'bill_pay', name: 'Bill Pay', arrPotential: 12000 },
+    { id: 'analytics', name: 'Analytics', arrPotential: 20000 }
 ];
 
 const DEMO_ACCOUNTS = [
@@ -271,7 +271,7 @@ function getLikelihoodColor(likelihood) {
 }
 
 function calculateModuleAdoption(account) {
-    if (!account.modules) return { adopted: 0, total: MODULES.length };
+    if (!account.modules) return { adopted: 0, total: MODULES.length, percentage: 0 };
     const adopted = Object.values(account.modules).filter(v => v === true).length;
     return { adopted, total: MODULES.length, percentage: Math.round((adopted / MODULES.length) * 100) };
 }
@@ -279,4 +279,12 @@ function calculateModuleAdoption(account) {
 function getModuleGaps(account) {
     if (!account.modules) return MODULES.map(m => m.id);
     return MODULES.filter(m => !account.modules[m.id]).map(m => m.id);
+}
+
+function calculateModuleWhitespace(account) {
+    if (!account.modules) {
+        return MODULES.reduce((sum, m) => sum + m.arrPotential, 0);
+    }
+    return MODULES.filter(m => !account.modules[m.id])
+        .reduce((sum, m) => sum + m.arrPotential, 0);
 }
