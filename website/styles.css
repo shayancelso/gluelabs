@@ -3779,6 +3779,9 @@ p {
 
     .filter-options {
         flex-wrap: wrap;
+        justify-content: flex-start;
+        align-items: flex-start;
+        row-gap: var(--space-xs);
     }
 
     .viz-accounts {
