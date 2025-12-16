@@ -107,17 +107,21 @@ body {
 
 .glass {
     background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid var(--glass-border);
     box-shadow: var(--glass-shadow);
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
 }
 
 .glass-dark {
     background: var(--glass-dark-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid var(--glass-dark-border);
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
 }
 
 .gradient-text, .text-gradient {
@@ -2669,12 +2673,16 @@ p {
     border-radius: var(--radius-xl);
     display: flex;
     flex-direction: column;
-    transition: transform var(--transition-base), box-shadow var(--transition-base);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 
-.testimonial-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 20px 40px rgba(99, 102, 241, 0.1);
+@media (hover: hover) {
+    .testimonial-card:hover {
+        transform: translateY(-4px) translateZ(0);
+        box-shadow: 0 20px 40px rgba(99, 102, 241, 0.1);
+    }
 }
 
 .quote-mark {
@@ -2748,11 +2756,15 @@ p {
     padding: var(--space-xl);
     border-radius: var(--radius-xl);
     text-align: center;
-    transition: var(--transition-base);
+    transition: transform 0.2s ease;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 
-.member-card:hover {
-    transform: translateY(-4px);
+@media (hover: hover) {
+    .member-card:hover {
+        transform: translateY(-4px) translateZ(0);
+    }
 }
 
 .member-avatar {
