@@ -900,6 +900,104 @@ p {
 }
 
 /* ==========================================================================
+   Tools & Technology Section
+   ========================================================================== */
+
+.tools-trust {
+    padding: var(--space-3xl) 0;
+    background: var(--color-bg-alt);
+}
+
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: var(--space-lg);
+    align-items: center;
+    justify-items: center;
+    margin-top: var(--space-2xl);
+}
+
+.tool-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-md);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    transition: all var(--transition-base);
+    opacity: 0.8;
+    filter: grayscale(1);
+    height: 80px;
+    width: 120px;
+}
+
+.tool-item:hover {
+    opacity: 1;
+    filter: grayscale(0);
+    transform: translateY(-4px);
+    border-color: var(--color-primary);
+    box-shadow:
+        0 10px 30px rgba(99, 102, 241, 0.1),
+        0 0 0 1px rgba(99, 102, 241, 0.05);
+}
+
+.tool-item img {
+    width: auto;
+    height: 32px;
+    max-width: 100px;
+    transition: all var(--transition-base);
+}
+
+.tool-item:hover img {
+    transform: scale(1.05);
+}
+
+/* Responsive design for tools grid */
+@media (max-width: 1024px) {
+    .tools-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--space-md);
+    }
+}
+
+@media (max-width: 768px) {
+    .tools-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-md);
+    }
+    
+    .tool-item {
+        height: 70px;
+        width: 100px;
+        padding: var(--space-sm);
+    }
+    
+    .tool-item img {
+        height: 28px;
+        max-width: 80px;
+    }
+}
+
+@media (max-width: 480px) {
+    .tools-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-sm);
+    }
+    
+    .tool-item {
+        height: 60px;
+        width: 80px;
+        padding: var(--space-xs);
+    }
+    
+    .tool-item img {
+        height: 24px;
+        max-width: 60px;
+    }
+}
+
+/* ==========================================================================
    Demo Section
    ========================================================================== */
 
