@@ -908,16 +908,31 @@ p {
     background: var(--color-bg-alt);
 }
 
-.tools-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: var(--space-lg);
-    align-items: center;
-    justify-items: center;
+.tools-carousel {
     margin-top: var(--space-2xl);
-    max-width: 1000px;
-    margin-left: auto;
-    margin-right: auto;
+    overflow: hidden;
+    position: relative;
+}
+
+.tools-track {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xl);
+    animation: scroll 30s linear infinite;
+    width: calc(200% + var(--space-xl) * 13);
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(calc(-50% - var(--space-xl) * 6.5));
+    }
+}
+
+.tools-track:hover {
+    animation-play-state: paused;
 }
 
 .tool-item {
@@ -932,12 +947,12 @@ p {
     opacity: 0.9;
     filter: grayscale(0);
     height: 80px;
-    width: 120px;
+    min-width: 140px;
+    flex-shrink: 0;
 }
 
 .tool-item:hover {
     opacity: 1;
-    filter: grayscale(0);
     transform: translateY(-4px);
     border-color: var(--color-primary);
     box-shadow:
@@ -946,9 +961,11 @@ p {
 }
 
 .tool-item img {
+    max-width: 120px;
+    max-height: 40px;
     width: auto;
-    height: 32px;
-    max-width: 100px;
+    height: auto;
+    object-fit: contain;
     transition: all var(--transition-base);
 }
 
@@ -956,40 +973,40 @@ p {
     transform: scale(1.05);
 }
 
-/* Responsive design for tools grid */
+/* Responsive design for tools carousel */
 @media (max-width: 768px) {
-    .tools-grid {
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-        gap: var(--space-md);
+    .tools-track {
+        gap: var(--space-lg);
+        animation: scroll 25s linear infinite;
     }
     
     .tool-item {
         height: 70px;
-        width: 100px;
+        min-width: 120px;
         padding: var(--space-sm);
     }
     
     .tool-item img {
-        height: 28px;
-        max-width: 80px;
+        max-width: 100px;
+        max-height: 32px;
     }
 }
 
 @media (max-width: 480px) {
-    .tools-grid {
-        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-        gap: var(--space-sm);
+    .tools-track {
+        gap: var(--space-md);
+        animation: scroll 20s linear infinite;
     }
     
     .tool-item {
         height: 60px;
-        width: 80px;
+        min-width: 100px;
         padding: var(--space-xs);
     }
     
     .tool-item img {
-        height: 24px;
-        max-width: 60px;
+        max-width: 80px;
+        max-height: 28px;
     }
 }
 
