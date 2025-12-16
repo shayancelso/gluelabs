@@ -1074,17 +1074,20 @@ p {
 .filter-options {
     display: flex;
     gap: var(--space-xs);
+    flex-wrap: wrap;
 }
 
 .filter-btn {
-    padding: 0.4rem 0.75rem;
+    padding: 0.4rem 0.6rem;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: var(--radius-sm);
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: rgba(255, 255, 255, 0.6);
     cursor: pointer;
     transition: var(--transition-fast);
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .filter-btn:hover,
