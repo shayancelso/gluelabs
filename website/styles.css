@@ -2768,13 +2768,15 @@ p {
 }
 
 .member-avatar {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     margin: 0 auto var(--space-md);
     border-radius: 50%;
     overflow: hidden;
     border: 3px solid rgba(99, 102, 241, 0.2);
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 
 .member-avatar img {
@@ -2782,16 +2784,21 @@ p {
     height: 100%;
     object-fit: cover;
     object-position: center top;
-    transition: transform 0.3s ease;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 
-.member-card:hover .member-avatar {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
-}
+@media (hover: hover) {
+    .member-card:hover .member-avatar {
+        transform: scale(1.1);
+        border-color: var(--color-primary);
+        box-shadow: 0 8px 30px rgba(99, 102, 241, 0.35);
+    }
 
-.member-card:hover .member-avatar img {
-    transform: scale(1.05);
+    .member-card:hover .member-avatar img {
+        transform: scale(1.1);
+    }
 }
 
 .member-card h3 {
