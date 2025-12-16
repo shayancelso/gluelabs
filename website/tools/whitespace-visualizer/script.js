@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const vizGrid = document.getElementById('viz-grid');
     const vizAccountName = document.getElementById('viz-account-name');
     const vizViewType = document.getElementById('viz-view-type');
+    const vizLegend = document.getElementById('viz-legend');
     const filterTabs = document.querySelectorAll('.filter-tab');
 
     // Summary elements
@@ -130,16 +131,27 @@ document.addEventListener('DOMContentLoaded', function() {
     // ==========================================================================
 
     function renderVisualization(account, viewType) {
-        const items = account[viewType];
         const viewLabels = {
             products: 'Product Whitespace',
             regions: 'Regional Whitespace',
-            segments: 'Segment Whitespace'
+            segments: 'Segment Whitespace',
+            modules: 'Module Gap Analysis'
         };
 
         // Update header
         vizAccountName.textContent = account.name;
         vizViewType.textContent = viewLabels[viewType];
+
+        // Update legend based on view type
+        updateLegend(viewType);
+
+        // Handle modules view differently
+        if (viewType === 'modules') {
+            renderModuleMatrix(account);
+            return;
+        }
+
+        const items = account[viewType];
 
         // Calculate max value for bar scaling
         const maxValue = Math.max(...items.map(item => item.value || 0), 1);
@@ -179,10 +191,103 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ==========================================================================
+    // Update Legend
+    // ==========================================================================
+
+    function updateLegend(viewType) {
+        if (viewType === 'modules') {
+            vizLegend.innerHTML = `
+                <span class="legend-item">
+                    <span class="legend-dot adopted"></span>
+                    Has Module
+                </span>
+                <span class="legend-item">
+                    <span class="legend-dot opportunity"></span>
+                    Missing Module
+                </span>
+            `;
+        } else {
+            vizLegend.innerHTML = `
+                <span class="legend-item">
+                    <span class="legend-dot adopted"></span>
+                    Adopted
+                </span>
+                <span class="legend-item">
+                    <span class="legend-dot opportunity"></span>
+                    Opportunity
+                </span>
+                <span class="legend-item">
+                    <span class="legend-dot not-applicable"></span>
+                    Not Applicable
+                </span>
+            `;
+        }
+    }
+
+    // ==========================================================================
+    // Render Module Matrix
+    // ==========================================================================
+
+    function renderModuleMatrix(account) {
+        const moduleHeaders = MODULES.map(m =>
+            `<th class="module-header"><span>${m.name}</span></th>`
+        ).join('');
+
+        const moduleCells = MODULES.map(m => {
+            const hasModule = account.modules && account.modules[m.id];
+            const statusClass = hasModule ? 'has-module' : 'no-module';
+            const icon = hasModule
+                ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17L4 12"/></svg>`
+                : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>`;
+            return `<td class="module-status ${statusClass}">${icon}</td>`;
+        }).join('');
+
+        vizGrid.innerHTML = `
+            <div class="module-matrix">
+                <table class="module-table">
+                    <thead>
+                        <tr>
+                            <th class="company-header">Account</th>
+                            ${moduleHeaders}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="module-row">
+                            <td class="company-name">${account.name}</td>
+                            ${moduleCells}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        `;
+    }
+
+    // ==========================================================================
     // Update Summary
     // ==========================================================================
 
     function updateSummary(account, viewType) {
+        // Handle modules view differently
+        if (viewType === 'modules') {
+            const adoption = calculateModuleAdoption(account);
+            const gaps = getModuleGaps(account);
+
+            // Update labels for module view
+            document.querySelector('.summary-card.highlight .summary-label').textContent = 'Module Gaps';
+            document.querySelector('.summary-card:nth-child(2) .summary-label').textContent = 'Adoption Rate';
+            document.querySelector('.summary-card:nth-child(3) .summary-label').textContent = 'Modules Active';
+
+            totalWhitespaceEl.textContent = gaps.length + ' gaps';
+            coverageScoreEl.textContent = adoption.percentage + '%';
+            priorityRankEl.textContent = adoption.adopted + ' of ' + adoption.total;
+            return;
+        }
+
+        // Reset labels for non-module views
+        document.querySelector('.summary-card.highlight .summary-label').textContent = 'Total Whitespace';
+        document.querySelector('.summary-card:nth-child(2) .summary-label').textContent = 'Coverage Score';
+        document.querySelector('.summary-card:nth-child(3) .summary-label').textContent = 'Priority Rank';
+
         const whitespace = calculateTotalWhitespace(account, viewType);
         const coverage = calculateCoverageScore(account, viewType);
         const rank = calculatePriorityRank(DEMO_ACCOUNTS, account.id);

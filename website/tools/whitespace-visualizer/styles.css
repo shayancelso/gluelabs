@@ -575,6 +575,118 @@ p {
     color: var(--color-text-muted);
 }
 
+/* ==========================================================================
+   Module Matrix View
+   ========================================================================== */
+
+.module-matrix {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.module-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.module-table th,
+.module-table td {
+    padding: var(--space-sm);
+    text-align: center;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.module-table th {
+    font-weight: 600;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    background: var(--color-bg);
+    position: sticky;
+    top: 0;
+}
+
+.module-table th.module-header {
+    writing-mode: vertical-lr;
+    transform: rotate(180deg);
+    white-space: nowrap;
+    padding: var(--space-md) var(--space-xs);
+    height: 140px;
+    vertical-align: bottom;
+}
+
+.module-table th.company-header {
+    text-align: left;
+    writing-mode: horizontal-tb;
+    transform: none;
+    height: auto;
+    min-width: 180px;
+}
+
+.module-table td.company-name {
+    text-align: left;
+    font-weight: 500;
+    color: var(--color-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px;
+}
+
+.module-table tbody tr {
+    transition: background var(--transition-fast);
+}
+
+.module-table tbody tr:hover {
+    background: rgba(99, 102, 241, 0.03);
+}
+
+.module-table tbody tr.selected {
+    background: rgba(99, 102, 241, 0.08);
+}
+
+/* Module Status Icons */
+.module-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-sm);
+}
+
+.module-status.has-module {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--color-success);
+}
+
+.module-status.no-module {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--color-danger);
+}
+
+.module-status svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Module Summary Stats */
+.module-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-md);
+    background: var(--color-bg);
+    border-top: 1px solid var(--color-border);
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+}
+
+.module-count {
+    font-weight: 600;
+    color: var(--color-text);
+}
+
 /* Viz Summary */
 .viz-summary {
     display: grid;

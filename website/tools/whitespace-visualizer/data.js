@@ -3,6 +3,20 @@
  * This file can be swapped for API calls or CSV parsing later
  */
 
+// Available modules in the platform
+const MODULES = [
+    { id: 'payments', name: 'Payments' },
+    { id: 'mass_payments', name: 'Mass Payments' },
+    { id: 'supplier_mgmt', name: 'Supplier Management' },
+    { id: 'tax_compliance', name: 'Tax Compliance' },
+    { id: 'invoice_mgmt', name: 'Invoice Management' },
+    { id: 'purchase_orders', name: 'Purchase Orders' },
+    { id: 'procurement', name: 'Procurement' },
+    { id: 'expense_mgmt', name: 'Expense Management' },
+    { id: 'bill_pay', name: 'Bill Pay' },
+    { id: 'analytics', name: 'Analytics' }
+];
+
 const DEMO_ACCOUNTS = [
     {
         id: 'acme',
@@ -32,7 +46,19 @@ const DEMO_ACCOUNTS = [
             { name: 'Marketing', status: 'opportunity', value: 40000, likelihood: 'high' },
             { name: 'Customer Success', status: 'opportunity', value: 35000, likelihood: 'medium' },
             { name: 'Finance', status: 'not_applicable', value: 0, reason: 'Different tooling' }
-        ]
+        ],
+        modules: {
+            payments: false,
+            mass_payments: false,
+            supplier_mgmt: true,
+            tax_compliance: true,
+            invoice_mgmt: false,
+            purchase_orders: false,
+            procurement: false,
+            expense_mgmt: false,
+            bill_pay: false,
+            analytics: true
+        }
     },
     {
         id: 'techstart',
@@ -62,7 +88,19 @@ const DEMO_ACCOUNTS = [
             { name: 'Marketing', status: 'opportunity', value: 28000, likelihood: 'medium' },
             { name: 'Customer Success', status: 'adopted', value: 29000, users: 32 },
             { name: 'Finance', status: 'not_applicable', value: 0, reason: 'Not a fit' }
-        ]
+        ],
+        modules: {
+            payments: true,
+            mass_payments: false,
+            supplier_mgmt: false,
+            tax_compliance: true,
+            invoice_mgmt: true,
+            purchase_orders: false,
+            procurement: false,
+            expense_mgmt: false,
+            bill_pay: true,
+            analytics: false
+        }
     },
     {
         id: 'globalco',
@@ -92,7 +130,19 @@ const DEMO_ACCOUNTS = [
             { name: 'Marketing', status: 'adopted', value: 45000, users: 120 },
             { name: 'Customer Success', status: 'opportunity', value: 55000, likelihood: 'high' },
             { name: 'Finance', status: 'opportunity', value: 40000, likelihood: 'medium' }
-        ]
+        ],
+        modules: {
+            payments: true,
+            mass_payments: true,
+            supplier_mgmt: true,
+            tax_compliance: true,
+            invoice_mgmt: true,
+            purchase_orders: false,
+            procurement: true,
+            expense_mgmt: false,
+            bill_pay: true,
+            analytics: true
+        }
     },
     {
         id: 'fastgrow',
@@ -122,7 +172,19 @@ const DEMO_ACCOUNTS = [
             { name: 'Marketing', status: 'opportunity', value: 22000, likelihood: 'high' },
             { name: 'Customer Success', status: 'not_applicable', value: 0, reason: 'Too small' },
             { name: 'Finance', status: 'not_applicable', value: 0, reason: 'Not a fit' }
-        ]
+        ],
+        modules: {
+            payments: false,
+            mass_payments: false,
+            supplier_mgmt: true,
+            tax_compliance: false,
+            invoice_mgmt: false,
+            purchase_orders: false,
+            procurement: true,
+            expense_mgmt: true,
+            bill_pay: false,
+            analytics: false
+        }
     },
     {
         id: 'innovate',
@@ -152,7 +214,19 @@ const DEMO_ACCOUNTS = [
             { name: 'Marketing', status: 'adopted', value: 35000, users: 45 },
             { name: 'Customer Success', status: 'opportunity', value: 42000, likelihood: 'high' },
             { name: 'Finance', status: 'opportunity', value: 28000, likelihood: 'medium' }
-        ]
+        ],
+        modules: {
+            payments: true,
+            mass_payments: false,
+            supplier_mgmt: true,
+            tax_compliance: true,
+            invoice_mgmt: true,
+            purchase_orders: false,
+            procurement: false,
+            expense_mgmt: true,
+            bill_pay: true,
+            analytics: true
+        }
     }
 ];
 
@@ -194,4 +268,15 @@ function getLikelihoodColor(likelihood) {
         case 'low': return 'var(--color-text-muted)';
         default: return 'var(--color-primary)';
     }
+}
+
+function calculateModuleAdoption(account) {
+    if (!account.modules) return { adopted: 0, total: MODULES.length };
+    const adopted = Object.values(account.modules).filter(v => v === true).length;
+    return { adopted, total: MODULES.length, percentage: Math.round((adopted / MODULES.length) * 100) };
+}
+
+function getModuleGaps(account) {
+    if (!account.modules) return MODULES.map(m => m.id);
+    return MODULES.filter(m => !account.modules[m.id]).map(m => m.id);
 }
