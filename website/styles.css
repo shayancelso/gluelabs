@@ -900,6 +900,281 @@ p {
 }
 
 /* ==========================================================================
+   ROI Calculator Hero Section
+   ========================================================================== */
+
+.roi-hero {
+    padding: var(--space-3xl) 0;
+    background: linear-gradient(180deg, var(--color-bg) 0%, var(--color-bg-alt) 100%);
+}
+
+.roi-calculator-card {
+    max-width: 1000px;
+    margin: var(--space-2xl) auto 0;
+    padding: var(--space-2xl);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-xl);
+    backdrop-filter: blur(20px);
+}
+
+.calc-hero-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-2xl);
+    align-items: start;
+}
+
+.calc-hero-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.calc-hero-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.calc-hero-input-group label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.calc-hero-slider {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.calc-hero-slider input[type="range"] {
+    flex: 1;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-full);
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.calc-hero-slider input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: var(--gradient-primary);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.calc-hero-slider input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: var(--gradient-primary);
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+}
+
+.calc-hero-number {
+    display: flex;
+    align-items: center;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    padding: 0 var(--space-sm);
+}
+
+.calc-hero-number .number-prefix {
+    color: var(--color-text-secondary);
+    font-weight: 600;
+}
+
+.calc-hero-number input {
+    flex: 1;
+    padding: var(--space-sm);
+    background: transparent;
+    border: none;
+    color: var(--color-text);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.calc-hero-number input:focus {
+    outline: none;
+}
+
+.calc-hero-select {
+    padding: var(--space-sm);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text);
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.calc-hero-select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.slider-value {
+    min-width: 80px;
+    text-align: right;
+    font-weight: 600;
+    color: var(--color-primary);
+    font-size: 0.9rem;
+}
+
+.calc-hero-results {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.hero-result-highlight {
+    text-align: center;
+    padding: var(--space-lg);
+    background: var(--glass-bg);
+    border: 1px solid var(--color-primary);
+    border-radius: var(--radius-lg);
+}
+
+.hero-result-label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-xs);
+}
+
+.hero-result-value {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: transform 0.2s ease;
+}
+
+.hero-result-breakdown {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+}
+
+.hero-result-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    padding: var(--space-md);
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-sm);
+}
+
+.hero-result-item .result-label {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.hero-result-item .result-value {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text);
+    transition: transform 0.2s ease;
+}
+
+.hero-result-roi {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-md);
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: var(--radius-sm);
+}
+
+.roi-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.roi-value {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    transition: transform 0.2s ease;
+}
+
+.calc-hero-cta {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.calc-disclaimer {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    margin: 0;
+}
+
+/* Responsive Design for ROI Calculator */
+@media (max-width: 768px) {
+    .roi-calculator-card {
+        padding: var(--space-lg);
+        margin-top: var(--space-xl);
+    }
+
+    .calc-hero-layout {
+        grid-template-columns: 1fr;
+        gap: var(--space-xl);
+    }
+
+    .hero-result-value {
+        font-size: 2.5rem;
+    }
+
+    .hero-result-breakdown {
+        grid-template-columns: 1fr;
+    }
+
+    .calc-hero-slider {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-sm);
+    }
+
+    .slider-value {
+        text-align: left;
+        min-width: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .roi-calculator-card {
+        padding: var(--space-md);
+    }
+
+    .calc-hero-inputs {
+        gap: var(--space-md);
+    }
+
+    .hero-result-value {
+        font-size: 2rem;
+    }
+}
+
+/* ==========================================================================
    Tools & Technology Section
    ========================================================================== */
 
