@@ -107,26 +107,14 @@ body {
 }
 
 .glass {
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: rgba(255, 255, 255, 0.95);
     border: 1px solid var(--glass-border);
     box-shadow: var(--glass-shadow);
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
 }
 
 .glass-dark {
-    background: rgba(15, 23, 42, 0.97);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: rgba(15, 23, 42, 0.98);
     border: 1px solid var(--glass-dark-border);
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
 }
 
 .gradient-text, .text-gradient {
@@ -180,9 +168,7 @@ p {
 }
 
 .nav.scrolled {
-    background: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: rgba(255, 255, 255, 0.98);
     border-bottom: 1px solid var(--glass-border);
     padding: var(--space-sm) 0;
 }
@@ -2661,7 +2647,6 @@ p {
 
 .testimonials {
     padding: var(--space-3xl) 0;
-    contain: layout style;
 }
 
 .testimonials-grid {
@@ -2748,7 +2733,6 @@ p {
 .team {
     padding: var(--space-3xl) 0;
     background: var(--color-bg-alt);
-    contain: layout style;
 }
 
 .team-grid {
@@ -2763,8 +2747,10 @@ p {
     border-radius: var(--radius-xl);
     text-align: center;
     transition: transform 0.2s ease;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 @media (hover: hover) {
@@ -3495,13 +3481,11 @@ p {
         flex-direction: column;
         justify-content: center;
         gap: var(--space-lg);
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
+        background: #ffffff;
         padding: var(--space-2xl);
         transition: right var(--transition-base);
         z-index: 1001;
-        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.15);
     }
 
     .nav-links.active {
