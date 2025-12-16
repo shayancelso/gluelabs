@@ -13,13 +13,26 @@ document.addEventListener('DOMContentLoaded', function() {
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
     const navLinks = document.querySelector('.nav-links');
 
-    window.addEventListener('scroll', () => {
-        if (window.pageYOffset > 50) {
+    // Throttled scroll handler for nav
+    let lastScrollY = 0;
+    let ticking = false;
+
+    function updateNav() {
+        if (lastScrollY > 50) {
             nav.classList.add('scrolled');
         } else {
             nav.classList.remove('scrolled');
         }
-    });
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+        lastScrollY = window.pageYOffset;
+        if (!ticking) {
+            requestAnimationFrame(updateNav);
+            ticking = true;
+        }
+    }, { passive: true });
 
     if (mobileMenuBtn && navLinks) {
         mobileMenuBtn.addEventListener('click', () => {

@@ -165,7 +165,9 @@ p {
     right: 0;
     z-index: 1000;
     padding: var(--space-md) 0;
-    transition: var(--transition-base);
+    transition: padding 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    transform: translateZ(0);
+    backface-visibility: hidden;
 }
 
 .nav.scrolled {
@@ -2108,14 +2110,24 @@ p {
     min-height: 260px;
     display: flex;
     flex-direction: column;
-    opacity: 0;
-    transform: translateY(30px);
     transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .process-card:not(.visible) {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    .process-card {
+        will-change: opacity, transform;
+    }
 }
 
 .process-card.visible {
     opacity: 1;
     transform: translateY(0);
+    will-change: auto;
 }
 
 /* Staggered delays */
@@ -2271,9 +2283,14 @@ p {
     display: flex;
     align-items: center;
     padding: 0 var(--space-xs);
-    opacity: 0;
-    transform: scaleX(0);
     transition: all 0.4s ease;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .process-connector:not(.visible) {
+        opacity: 0;
+        transform: scaleX(0);
+    }
 }
 
 .process-connector.visible {
@@ -3327,15 +3344,32 @@ p {
    Animations
    ========================================================================== */
 
-[data-animate] {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
+/* Only animate if user hasn't requested reduced motion */
+@media (prefers-reduced-motion: no-preference) {
+    [data-animate]:not(.animated) {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    [data-animate] {
+        transition: opacity 0.6s ease, transform 0.6s ease;
+        will-change: opacity, transform;
+    }
+
+    [data-animate].animated {
+        opacity: 1;
+        transform: translateY(0);
+        will-change: auto;
+    }
 }
 
-[data-animate].animated {
-    opacity: 1;
-    transform: translateY(0);
+/* Reduced motion - show everything immediately */
+@media (prefers-reduced-motion: reduce) {
+    [data-animate] {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
 }
 
 /* ==========================================================================
