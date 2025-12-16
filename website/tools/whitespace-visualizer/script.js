@@ -237,8 +237,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const hasModule = account.modules && account.modules[m.id];
             const statusClass = hasModule ? 'has-module' : 'no-module';
             const icon = hasModule
-                ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17L4 12"/></svg>`
-                : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>`;
+                ? `<span class="status-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17L4 12"/></svg></span>`
+                : `<span class="status-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg></span>`;
             return `<td class="module-status ${statusClass}">${icon}</td>`;
         }).join('');
 

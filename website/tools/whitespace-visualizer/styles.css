@@ -645,29 +645,33 @@ p {
     background: rgba(99, 102, 241, 0.08);
 }
 
-/* Module Status Icons */
-.module-status {
+/* Module Status Cells */
+td.module-status {
+    padding: var(--space-xs);
+}
+
+td.module-status .status-icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     border-radius: var(--radius-sm);
 }
 
-.module-status.has-module {
-    background: rgba(16, 185, 129, 0.1);
+td.module-status.has-module .status-icon {
+    background: rgba(16, 185, 129, 0.15);
     color: var(--color-success);
 }
 
-.module-status.no-module {
-    background: rgba(239, 68, 68, 0.1);
+td.module-status.no-module .status-icon {
+    background: rgba(239, 68, 68, 0.15);
     color: var(--color-danger);
 }
 
-.module-status svg {
-    width: 16px;
-    height: 16px;
+td.module-status svg {
+    width: 18px;
+    height: 18px;
 }
 
 /* Module Summary Stats */
@@ -893,6 +897,27 @@ p {
 
     .viz-row-status {
         order: 3;
+    }
+
+    /* Module matrix responsive */
+    .module-matrix {
+        margin: 0 calc(-1 * var(--space-md));
+        padding: 0 var(--space-md);
+    }
+
+    .module-table th.module-header {
+        height: 100px;
+        font-size: 0.65rem;
+    }
+
+    td.module-status .status-icon {
+        width: 26px;
+        height: 26px;
+    }
+
+    td.module-status svg {
+        width: 14px;
+        height: 14px;
     }
 
     .viz-summary {
