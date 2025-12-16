@@ -2260,6 +2260,10 @@ p {
     border-style: dashed;
 }
 
+.process-card.ongoing:hover {
+    border-style: solid;
+}
+
 .process-card.ongoing .process-week {
     background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.15));
 }
