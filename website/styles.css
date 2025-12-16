@@ -79,6 +79,7 @@ body {
     background: var(--color-bg);
     overflow-x: hidden;
     opacity: 1;
+    -webkit-overflow-scrolling: touch;
 }
 
 /* Noise Overlay */
@@ -106,22 +107,26 @@ body {
 }
 
 .glass {
-    background: var(--glass-bg);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border: 1px solid var(--glass-border);
     box-shadow: var(--glass-shadow);
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 
 .glass-dark {
-    background: var(--glass-dark-bg);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: rgba(15, 23, 42, 0.97);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border: 1px solid var(--glass-dark-border);
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 
 .gradient-text, .text-gradient {
@@ -175,9 +180,9 @@ p {
 }
 
 .nav.scrolled {
-    background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--glass-border);
     padding: var(--space-sm) 0;
 }
@@ -312,11 +317,10 @@ p {
 
 .btn-glass {
     padding: 0.875rem 1.75rem;
-    background: var(--glass-bg);
+    background: rgba(255, 255, 255, 0.85);
     color: var(--color-text);
     border-radius: var(--radius-full);
     border: 1px solid var(--glass-border);
-    backdrop-filter: blur(10px);
 }
 
 .btn-glass:hover {
@@ -2657,6 +2661,7 @@ p {
 
 .testimonials {
     padding: var(--space-3xl) 0;
+    contain: layout style;
 }
 
 .testimonials-grid {
@@ -2743,6 +2748,7 @@ p {
 .team {
     padding: var(--space-3xl) 0;
     background: var(--color-bg-alt);
+    contain: layout style;
 }
 
 .team-grid {
@@ -3489,9 +3495,9 @@ p {
         flex-direction: column;
         justify-content: center;
         gap: var(--space-lg);
-        background: var(--glass-bg);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
         padding: var(--space-2xl);
         transition: right var(--transition-base);
         z-index: 1001;
@@ -3565,17 +3571,28 @@ p {
     }
 
     .hero-stats {
-        flex-direction: column;
-        gap: var(--space-md);
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: var(--space-sm);
+    }
+
+    .hero-stat {
+        flex: 1;
+        min-width: 90px;
+        text-align: center;
     }
 
     .hero-stat-divider {
-        width: 40px;
-        height: 1px;
+        display: none;
     }
 
     .hero-stat-number {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
+    }
+
+    .hero-stat-label {
+        font-size: 0.65rem;
     }
 
     /* Hero Product Preview Mobile */

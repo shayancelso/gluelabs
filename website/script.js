@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const current = Math.round(target * easeOut);
 
             if (target >= 1000000) {
-                element.textContent = prefix + '$' + (current / 1000000).toFixed(1) + 'M';
+                element.textContent = prefix + (current / 1000000).toFixed(1) + 'M';
             } else if (target >= 1000) {
                 element.textContent = prefix + (current / 1000).toFixed(0) + 'K' + suffix;
             } else {
