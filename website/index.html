@@ -222,10 +222,44 @@
     <!-- Interactive Demo Section -->
     <section class="demo" id="demo">
         <div class="container">
-            <div class="section-header center" data-animate="fade-up">
+            <!-- Featured Live Tool -->
+            <div class="featured-tool" data-animate="fade-up">
+                <div class="featured-tool-content">
+                    <span class="featured-badge">Try It Free</span>
+                    <h3>Whitespace Visualizer</h3>
+                    <p>See exactly where expansion opportunities exist across your accounts. Interactive demo with real data.</p>
+                    <a href="tools/whitespace-visualizer/" class="btn btn-primary">
+                        <span>Launch Full Tool</span>
+                        <svg class="btn-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+                </div>
+                <div class="featured-tool-preview">
+                    <div class="preview-mock">
+                        <div class="mock-header">
+                            <span class="mock-dot"></span>
+                            <span class="mock-dot"></span>
+                            <span class="mock-dot"></span>
+                        </div>
+                        <div class="mock-content">
+                            <div class="mock-sidebar"></div>
+                            <div class="mock-main">
+                                <div class="mock-bar" style="width: 85%"></div>
+                                <div class="mock-bar" style="width: 60%"></div>
+                                <div class="mock-bar opportunity" style="width: 90%"></div>
+                                <div class="mock-bar" style="width: 45%"></div>
+                                <div class="mock-bar opportunity" style="width: 75%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-header center" data-animate="fade-up" style="margin-top: var(--space-3xl);">
                 <span class="section-label">See It Live</span>
                 <h2>This isn't a mockup.<br><span class="text-gradient">This is what we build.</span></h2>
-                <p class="section-intro">Interactive tools that your team will actually use. Explore our most popular solutions below.</p>
+                <p class="section-intro">Interactive tools that your team will actually use. Click around to explore.</p>
             </div>
 
             <div class="demo-showcase" data-animate="fade-up" data-delay="100">
@@ -269,7 +303,7 @@
                 </div>
 
                 <div class="demo-content">
-                    <!-- Whitespace Visualizer Demo -->
+                    <!-- Whitespace Visualizer Demo - Interactive -->
                     <div class="demo-panel active" id="demo-whitespace">
                         <div class="demo-window glass-dark">
                             <div class="window-header">
@@ -278,86 +312,62 @@
                                     <span class="dot yellow"></span>
                                     <span class="dot green"></span>
                                 </div>
-                                <span class="window-title">Whitespace Visualizer — Acme Corp Dashboard</span>
+                                <span class="window-title" id="demo-window-title">Whitespace Visualizer — Acme Corp Dashboard</span>
                             </div>
                             <div class="window-content">
                                 <div class="viz-layout">
                                     <div class="viz-sidebar">
                                         <div class="viz-filter">
                                             <span class="filter-label">View By</span>
-                                            <div class="filter-options">
-                                                <button class="filter-btn active">Product</button>
-                                                <button class="filter-btn">Region</button>
-                                                <button class="filter-btn">Segment</button>
+                                            <div class="filter-options" id="demo-filter-options">
+                                                <button class="filter-btn active" data-filter="product">Product</button>
+                                                <button class="filter-btn" data-filter="region">Region</button>
+                                                <button class="filter-btn" data-filter="segment">Segment</button>
                                             </div>
                                         </div>
-                                        <div class="viz-accounts">
-                                            <div class="account-item selected">
+                                        <div class="viz-accounts" id="demo-accounts">
+                                            <div class="account-item selected" data-account="acme">
                                                 <span class="account-name">Acme Corp</span>
-                                                <span class="account-value">$420K</span>
+                                                <span class="account-value">$205K</span>
                                             </div>
-                                            <div class="account-item">
+                                            <div class="account-item" data-account="techstart">
                                                 <span class="account-name">TechStart Inc</span>
-                                                <span class="account-value">$280K</span>
+                                                <span class="account-value">$148K</span>
                                             </div>
-                                            <div class="account-item">
+                                            <div class="account-item" data-account="globalco">
                                                 <span class="account-name">GlobalCo</span>
-                                                <span class="account-value">$195K</span>
+                                                <span class="account-value">$245K</span>
                                             </div>
-                                            <div class="account-item">
+                                            <div class="account-item" data-account="fastgrow">
                                                 <span class="account-name">FastGrow LLC</span>
-                                                <span class="account-value">$156K</span>
+                                                <span class="account-value">$77K</span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="viz-main">
                                         <div class="viz-header">
-                                            <h3>Acme Corp — Product Whitespace</h3>
+                                            <h3 id="demo-viz-title">Acme Corp — Product Whitespace</h3>
                                             <div class="viz-legend">
                                                 <span class="legend-item"><span class="legend-dot adopted"></span> Adopted</span>
                                                 <span class="legend-item"><span class="legend-dot opportunity"></span> Opportunity</span>
                                                 <span class="legend-item"><span class="legend-dot none"></span> Not Applicable</span>
                                             </div>
                                         </div>
-                                        <div class="viz-grid">
-                                            <div class="viz-product">
-                                                <span class="product-name">Core Platform</span>
-                                                <div class="product-bar"><div class="bar-fill adopted" style="width: 100%"></div></div>
-                                                <span class="product-status adopted">Adopted</span>
-                                            </div>
-                                            <div class="viz-product">
-                                                <span class="product-name">Analytics Suite</span>
-                                                <div class="product-bar"><div class="bar-fill adopted" style="width: 100%"></div></div>
-                                                <span class="product-status adopted">Adopted</span>
-                                            </div>
-                                            <div class="viz-product highlight">
-                                                <span class="product-name">Enterprise API</span>
-                                                <div class="product-bar"><div class="bar-fill opportunity" style="width: 100%"></div></div>
-                                                <span class="product-status opportunity">$120K Opportunity</span>
-                                            </div>
-                                            <div class="viz-product highlight">
-                                                <span class="product-name">Security Add-on</span>
-                                                <div class="product-bar"><div class="bar-fill opportunity" style="width: 100%"></div></div>
-                                                <span class="product-status opportunity">$85K Opportunity</span>
-                                            </div>
-                                            <div class="viz-product">
-                                                <span class="product-name">Mobile SDK</span>
-                                                <div class="product-bar"><div class="bar-fill none" style="width: 100%"></div></div>
-                                                <span class="product-status none">Not Applicable</span>
-                                            </div>
+                                        <div class="viz-grid" id="demo-viz-grid">
+                                            <!-- Dynamic content rendered by JS -->
                                         </div>
                                         <div class="viz-summary">
                                             <div class="summary-card">
                                                 <span class="summary-label">Total Whitespace</span>
-                                                <span class="summary-value gradient-text">$205K</span>
+                                                <span class="summary-value gradient-text" id="demo-whitespace-value">$205K</span>
                                             </div>
                                             <div class="summary-card">
                                                 <span class="summary-label">Coverage Score</span>
-                                                <span class="summary-value">67%</span>
+                                                <span class="summary-value" id="demo-coverage-value">40%</span>
                                             </div>
                                             <div class="summary-card">
                                                 <span class="summary-label">Priority Rank</span>
-                                                <span class="summary-value">#3 of 47</span>
+                                                <span class="summary-value" id="demo-rank-value">#1 of 4</span>
                                             </div>
                                         </div>
                                     </div>
@@ -681,14 +691,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="demo-cta" data-animate="fade-up" data-delay="200">
-                    <a href="tools/whitespace-visualizer/" class="btn btn-primary btn-large">
-                        Try the Full Tool
-                        <span class="btn-arrow">→</span>
-                    </a>
-                    <p class="demo-cta-note">No signup required — explore with demo data</p>
                 </div>
             </div>
         </div>
@@ -1102,41 +1104,7 @@
         </div>
 
         <div class="container">
-            <!-- Featured Live Tool -->
-            <div class="featured-tool" data-animate="fade-up" data-delay="150">
-                <div class="featured-tool-content">
-                    <span class="featured-badge">Try It Free</span>
-                    <h3>Whitespace Visualizer</h3>
-                    <p>See exactly where expansion opportunities exist across your accounts. Interactive demo with real data.</p>
-                    <a href="tools/whitespace-visualizer/" class="btn btn-primary">
-                        <span>Launch Tool</span>
-                        <svg class="btn-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                            <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </a>
-                </div>
-                <div class="featured-tool-preview">
-                    <div class="preview-mock">
-                        <div class="mock-header">
-                            <span class="mock-dot"></span>
-                            <span class="mock-dot"></span>
-                            <span class="mock-dot"></span>
-                        </div>
-                        <div class="mock-content">
-                            <div class="mock-sidebar"></div>
-                            <div class="mock-main">
-                                <div class="mock-bar" style="width: 85%"></div>
-                                <div class="mock-bar" style="width: 60%"></div>
-                                <div class="mock-bar opportunity" style="width: 90%"></div>
-                                <div class="mock-bar" style="width: 45%"></div>
-                                <div class="mock-bar opportunity" style="width: 75%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tool-cta" data-animate="fade-up" data-delay="200">
+            <div class="tool-cta" data-animate="fade-up" data-delay="150">
                 <p>Don't see what you need? <strong>We'll build it.</strong></p>
                 <a href="#contact" class="btn btn-primary">
                     <span>Request a Custom Tool</span>

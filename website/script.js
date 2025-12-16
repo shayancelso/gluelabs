@@ -378,26 +378,174 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ==========================================================================
-    // Demo Visualizer Interactions
+    // Demo Visualizer Interactions - Interactive with Real Data
     // ==========================================================================
 
-    const filterBtns = document.querySelectorAll('.filter-btn');
+    // Demo data matching the real tool
+    const demoData = {
+        acme: {
+            name: 'Acme Corp',
+            whitespace: '$205K',
+            coverage: '40%',
+            rank: '#1 of 4',
+            products: [
+                { name: 'Core Platform', status: 'adopted', value: 'Adopted' },
+                { name: 'Analytics Suite', status: 'adopted', value: 'Adopted' },
+                { name: 'Enterprise API', status: 'opportunity', value: '$120K' },
+                { name: 'Security Add-on', status: 'opportunity', value: '$85K' },
+                { name: 'Mobile SDK', status: 'none', value: 'Not Applicable' }
+            ],
+            regions: [
+                { name: 'North America', status: 'adopted', value: 'Adopted' },
+                { name: 'EMEA', status: 'opportunity', value: '$95K' },
+                { name: 'APAC', status: 'opportunity', value: '$110K' },
+                { name: 'LATAM', status: 'none', value: 'Not Applicable' }
+            ],
+            segments: [
+                { name: 'Enterprise', status: 'adopted', value: 'Adopted' },
+                { name: 'Mid-Market', status: 'opportunity', value: '$145K' },
+                { name: 'SMB', status: 'opportunity', value: '$60K' }
+            ]
+        },
+        techstart: {
+            name: 'TechStart Inc',
+            whitespace: '$148K',
+            coverage: '60%',
+            rank: '#3 of 4',
+            products: [
+                { name: 'Core Platform', status: 'adopted', value: 'Adopted' },
+                { name: 'Analytics Suite', status: 'opportunity', value: '$48K' },
+                { name: 'Enterprise API', status: 'adopted', value: 'Adopted' },
+                { name: 'Security Add-on', status: 'opportunity', value: '$65K' },
+                { name: 'Mobile SDK', status: 'opportunity', value: '$35K' }
+            ],
+            regions: [
+                { name: 'North America', status: 'adopted', value: 'Adopted' },
+                { name: 'EMEA', status: 'adopted', value: 'Adopted' },
+                { name: 'APAC', status: 'opportunity', value: '$88K' },
+                { name: 'LATAM', status: 'opportunity', value: '$60K' }
+            ],
+            segments: [
+                { name: 'Enterprise', status: 'opportunity', value: '$78K' },
+                { name: 'Mid-Market', status: 'adopted', value: 'Adopted' },
+                { name: 'SMB', status: 'opportunity', value: '$70K' }
+            ]
+        },
+        globalco: {
+            name: 'GlobalCo',
+            whitespace: '$245K',
+            coverage: '33%',
+            rank: '#2 of 4',
+            products: [
+                { name: 'Core Platform', status: 'adopted', value: 'Adopted' },
+                { name: 'Analytics Suite', status: 'opportunity', value: '$75K' },
+                { name: 'Enterprise API', status: 'opportunity', value: '$95K' },
+                { name: 'Security Add-on', status: 'opportunity', value: '$75K' },
+                { name: 'Mobile SDK', status: 'none', value: 'Not Applicable' }
+            ],
+            regions: [
+                { name: 'North America', status: 'adopted', value: 'Adopted' },
+                { name: 'EMEA', status: 'opportunity', value: '$120K' },
+                { name: 'APAC', status: 'opportunity', value: '$85K' },
+                { name: 'LATAM', status: 'opportunity', value: '$40K' }
+            ],
+            segments: [
+                { name: 'Enterprise', status: 'adopted', value: 'Adopted' },
+                { name: 'Mid-Market', status: 'opportunity', value: '$165K' },
+                { name: 'SMB', status: 'opportunity', value: '$80K' }
+            ]
+        },
+        fastgrow: {
+            name: 'FastGrow LLC',
+            whitespace: '$77K',
+            coverage: '75%',
+            rank: '#4 of 4',
+            products: [
+                { name: 'Core Platform', status: 'adopted', value: 'Adopted' },
+                { name: 'Analytics Suite', status: 'adopted', value: 'Adopted' },
+                { name: 'Enterprise API', status: 'adopted', value: 'Adopted' },
+                { name: 'Security Add-on', status: 'opportunity', value: '$42K' },
+                { name: 'Mobile SDK', status: 'opportunity', value: '$35K' }
+            ],
+            regions: [
+                { name: 'North America', status: 'adopted', value: 'Adopted' },
+                { name: 'EMEA', status: 'adopted', value: 'Adopted' },
+                { name: 'APAC', status: 'opportunity', value: '$47K' },
+                { name: 'LATAM', status: 'opportunity', value: '$30K' }
+            ],
+            segments: [
+                { name: 'Enterprise', status: 'adopted', value: 'Adopted' },
+                { name: 'Mid-Market', status: 'adopted', value: 'Adopted' },
+                { name: 'SMB', status: 'opportunity', value: '$77K' }
+            ]
+        }
+    };
 
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            filterBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+    let currentAccount = 'acme';
+    let currentFilter = 'product';
+
+    const demoFilterOptions = document.getElementById('demo-filter-options');
+    const demoAccounts = document.getElementById('demo-accounts');
+    const demoVizGrid = document.getElementById('demo-viz-grid');
+    const demoVizTitle = document.getElementById('demo-viz-title');
+    const demoWindowTitle = document.getElementById('demo-window-title');
+    const demoWhitespaceValue = document.getElementById('demo-whitespace-value');
+    const demoCoverageValue = document.getElementById('demo-coverage-value');
+    const demoRankValue = document.getElementById('demo-rank-value');
+
+    function renderDemoViz() {
+        const account = demoData[currentAccount];
+        if (!account || !demoVizGrid) return;
+
+        const filterLabels = { product: 'Product', region: 'Regional', segment: 'Segment' };
+        const dataKey = currentFilter === 'product' ? 'products' : currentFilter === 'region' ? 'regions' : 'segments';
+        const items = account[dataKey] || [];
+
+        // Update titles
+        if (demoVizTitle) demoVizTitle.textContent = `${account.name} — ${filterLabels[currentFilter]} Whitespace`;
+        if (demoWindowTitle) demoWindowTitle.textContent = `Whitespace Visualizer — ${account.name} Dashboard`;
+
+        // Update summary
+        if (demoWhitespaceValue) demoWhitespaceValue.textContent = account.whitespace;
+        if (demoCoverageValue) demoCoverageValue.textContent = account.coverage;
+        if (demoRankValue) demoRankValue.textContent = account.rank;
+
+        // Render grid
+        demoVizGrid.innerHTML = items.map((item, i) => `
+            <div class="viz-product ${item.status === 'opportunity' ? 'highlight' : ''}" style="animation-delay: ${i * 0.05}s">
+                <span class="product-name">${item.name}</span>
+                <div class="product-bar"><div class="bar-fill ${item.status}" style="width: 100%"></div></div>
+                <span class="product-status ${item.status}">${item.status === 'opportunity' ? item.value + ' Opportunity' : item.value}</span>
+            </div>
+        `).join('');
+    }
+
+    // Filter button clicks
+    if (demoFilterOptions) {
+        demoFilterOptions.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                demoFilterOptions.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.dataset.filter;
+                renderDemoViz();
+            });
         });
-    });
+    }
 
-    const accountItems = document.querySelectorAll('.viz-accounts .account-item');
-
-    accountItems.forEach(item => {
-        item.addEventListener('click', () => {
-            accountItems.forEach(i => i.classList.remove('selected'));
-            item.classList.add('selected');
+    // Account item clicks
+    if (demoAccounts) {
+        demoAccounts.querySelectorAll('.account-item').forEach(item => {
+            item.addEventListener('click', () => {
+                demoAccounts.querySelectorAll('.account-item').forEach(i => i.classList.remove('selected'));
+                item.classList.add('selected');
+                currentAccount = item.dataset.account;
+                renderDemoViz();
+            });
         });
-    });
+    }
+
+    // Initial render
+    renderDemoViz();
 
     // ==========================================================================
     // Interactive Chart Bars
