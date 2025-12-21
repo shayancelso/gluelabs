@@ -4480,6 +4480,12 @@ p {
     margin: 0 auto;
 }
 
+/* Force monthly subscription cards into single row on desktop */
+.pricing-category:nth-child(2) .pricing-cards {
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 1400px;
+}
+
 .pricing-card {
     position: relative;
     padding: var(--space-xl);
@@ -4686,6 +4692,14 @@ p {
 }
 
 /* Mobile Responsiveness */
+@media (max-width: 1200px) {
+    /* Reset monthly subscription layout for smaller screens */
+    .pricing-category:nth-child(2) .pricing-cards {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 800px;
+    }
+}
+
 @media (max-width: 768px) {
     .pricing {
         padding: var(--space-2xl) 0;
@@ -4694,6 +4708,12 @@ p {
     .pricing-cards {
         grid-template-columns: 1fr;
         gap: var(--space-md);
+    }
+    
+    /* Reset monthly subscription layout for mobile */
+    .pricing-category:nth-child(2) .pricing-cards {
+        grid-template-columns: 1fr;
+        max-width: 100%;
     }
     
     .pricing-card {
