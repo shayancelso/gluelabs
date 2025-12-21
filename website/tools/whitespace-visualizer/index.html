@@ -123,12 +123,12 @@
                             <div class="viz-filter">
                                 <span class="filter-label">View By</span>
                                 <div class="filter-options">
-                                    <button class="filter-btn active" data-filter="product">Product</button>
-                                    <button class="filter-btn" data-filter="region">Region</button>
-                                    <button class="filter-btn" data-filter="segment">Segment</button>
+                                    <button class="filter-btn filter-tab active" data-filter="product">Product</button>
+                                    <button class="filter-btn filter-tab" data-filter="region">Region</button>
+                                    <button class="filter-btn filter-tab" data-filter="segment">Segment</button>
                                 </div>
                             </div>
-                            <div class="viz-accounts">
+                            <div class="viz-accounts" id="account-list">
                                 <div class="account-item selected" data-account="acme">
                                     <span class="account-name">Acme Corp</span>
                                     <span class="account-value">$245K</span>
@@ -156,21 +156,21 @@
                                     <span class="legend-item"><span class="legend-dot none"></span> Not Applicable</span>
                                 </div>
                             </div>
-                            <div class="viz-grid">
+                            <div class="viz-grid" id="viz-grid">
                                 <!-- Interactive whitespace grid populated by JavaScript -->
                             </div>
                             <div class="viz-summary">
                                 <div class="summary-card highlight">
                                     <span class="summary-label">Total Whitespace Opportunity</span>
-                                    <span class="summary-value gradient-text">$245K</span>
+                                    <span class="summary-value gradient-text" id="total-whitespace">$245K</span>
                                 </div>
                                 <div class="summary-card">
                                     <span class="summary-label">Product Coverage</span>
-                                    <span class="summary-value">40%</span>
+                                    <span class="summary-value" id="coverage-score">40%</span>
                                 </div>
                                 <div class="summary-card">
                                     <span class="summary-label">Expansion Priority</span>
-                                    <span class="summary-value">#1 of 4</span>
+                                    <span class="summary-value" id="priority-rank">#1 of 4</span>
                                 </div>
                             </div>
                         </div>
