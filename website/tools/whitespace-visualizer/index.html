@@ -8,12 +8,16 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../shared/variables.css">
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet" href="../tools.css">
     <link rel="stylesheet" href="styles.css">
     <!-- Vercel Analytics -->
     <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
+    <!-- Noise Overlay for texture -->
+    <div class="noise-overlay"></div>
+
     <!-- Navigation -->
     <nav class="nav">
         <div class="nav-container">
@@ -23,8 +27,10 @@
             </a>
             <div class="nav-links">
                 <a href="../../#demo" class="nav-link">See It Live</a>
-                <a href="../../#tools" class="nav-link">Tools</a>
+                <a href="../" class="nav-link">Tools</a>
                 <a href="../../#how-it-works" class="nav-link">How It Works</a>
+                <a href="../../#pricing" class="nav-link">Pricing</a>
+                <a href="../../#case-study" class="nav-link">Results</a>
                 <a href="../../#contact" class="btn btn-nav">Book a Call</a>
             </div>
             <button class="mobile-menu-btn" aria-label="Toggle menu">
@@ -36,8 +42,12 @@
 
     <!-- Tool Hero Section -->
     <section class="tool-hero">
+        <div class="tool-hero-bg">
+            <div class="hero-gradient"></div>
+            <div class="hero-grid-pattern"></div>
+        </div>
         <div class="container">
-            <a href="../../#tools" class="back-link">
+            <a href="../" class="back-link">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
                     <path d="M15 10H5M5 10L10 5M5 10L10 15"/>
                 </svg>
@@ -53,6 +63,7 @@
                         </svg>
                     </div>
                     <div class="tool-hero-text">
+                        <div class="tool-status live">Live Demo</div>
                         <h1>Whitespace Visualizer</h1>
                         <p class="tool-hero-subtitle">Turn your account data into an interactive map of untapped revenue opportunities</p>
                         <div class="tool-hero-stats">
@@ -944,7 +955,7 @@
                     <div class="footer-nav-col">
                         <h4>Product</h4>
                         <a href="../../#demo">See It Live</a>
-                        <a href="../../#tools">Tool Library</a>
+                        <a href="../">Tools</a>
                         <a href="../../#case-study">Results</a>
                     </div>
                     <div class="footer-nav-col">
@@ -957,6 +968,10 @@
             </div>
             <div class="footer-bottom">
                 <p>&copy; 2025 Glue. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy</a>
+                    <a href="#">Terms</a>
+                </div>
             </div>
         </div>
     </footer>
