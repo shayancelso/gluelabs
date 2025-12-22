@@ -1633,6 +1633,34 @@ class WhitespaceApp {
         // Update matrix based on axis selections
         console.log('Updating performance matrix');
     }
+
+    // Test function to manually trigger analytics
+    testAnalytics() {
+        console.log('Testing analytics manually...');
+        
+        // Check if sample data is loaded
+        if (!this.engine.accounts || this.engine.accounts.length === 0) {
+            console.log('Loading sample data first...');
+            this.loadSampleData();
+        }
+        
+        // Generate test data
+        const testStats = {
+            totalAccounts: this.engine.accounts.length,
+            totalProducts: this.engine.products.length
+        };
+        
+        const testOpportunities = this.engine.accounts.slice(0, 3).map(account => ({
+            account: account,
+            product: this.engine.products[0],
+            score: Math.floor(Math.random() * 100),
+            opportunityValue: Math.floor(Math.random() * 100000) + 50000
+        }));
+        
+        console.log('Test data:', { testStats, testOpportunities });
+        
+        this.displayAdvancedAnalytics(testStats, testOpportunities);
+    }
 }
 
 // Initialize app when DOM is ready
