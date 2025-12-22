@@ -656,70 +656,187 @@ class WhitespaceEngine {
         };
     }
 
-    // Revenue Projection Calculations
+    // Transparent Revenue Projection Calculations
     calculateRevenueProjections(opportunities, currentARR) {
-        // Categorize opportunities by probability and timeline
-        const highProbability = opportunities.filter(opp => opp.score >= 70);
-        const mediumProbability = opportunities.filter(opp => opp.score >= 40 && opp.score < 70);
-        const lowProbability = opportunities.filter(opp => opp.score < 40);
+        // Assign opportunities to quarters based on transparent logic
+        const quarterlyOpportunities = this.assignOpportunitiesToQuarters(opportunities);
         
-        // Calculate projected values with probability weighting
-        const q1Projection = this.calculateQuarterlyProjection(highProbability, 0.8, 0.6); // 80% of high prob, 60% close rate
-        const q2Projection = this.calculateQuarterlyProjection(
-            [...highProbability, ...mediumProbability.slice(0, 3)], 0.7, 0.5
-        );
-        const q3Projection = this.calculateQuarterlyProjection(
-            [...highProbability, ...mediumProbability], 0.6, 0.4
-        );
-        const q4Projection = this.calculateQuarterlyProjection(opportunities, 0.5, 0.35);
-        
-        // Calculate cumulative projections
+        // Calculate projections with detailed breakdowns
         const projections = {
             current: currentARR,
-            q1: {
-                newARR: q1Projection,
-                totalARR: currentARR + q1Projection,
-                growth: ((q1Projection / currentARR) * 100).toFixed(1)
-            },
-            q2: {
-                newARR: q2Projection - q1Projection,
-                totalARR: currentARR + q2Projection,
-                growth: ((q2Projection / currentARR) * 100).toFixed(1)
-            },
-            q3: {
-                newARR: q3Projection - q2Projection,
-                totalARR: currentARR + q3Projection,
-                growth: ((q3Projection / currentARR) * 100).toFixed(1)
-            },
-            q4: {
-                newARR: q4Projection - q3Projection,
-                totalARR: currentARR + q4Projection,
-                growth: ((q4Projection / currentARR) * 100).toFixed(1)
-            },
-            yearEnd: {
-                totalNewARR: q4Projection,
-                totalARR: currentARR + q4Projection,
-                totalGrowth: ((q4Projection / currentARR) * 100).toFixed(1)
-            }
+            quarters: {},
+            yearEnd: {},
+            confidence: {},
+            roi: {},
+            methodology: this.getProjectionMethodology()
         };
         
-        // Calculate confidence intervals
+        let cumulativeNewARR = 0;
+        
+        // Calculate each quarter with detailed breakdowns
+        ['q1', 'q2', 'q3', 'q4'].forEach((quarter, index) => {
+            const quarterOpps = quarterlyOpportunities[quarter];
+            const quarterProjection = this.calculateQuarterProjection(quarterOpps);
+            
+            cumulativeNewARR += quarterProjection.totalValue;
+            
+            projections.quarters[quarter] = {
+                opportunities: quarterOpps,
+                newARR: quarterProjection.totalValue,
+                totalARR: currentARR + cumulativeNewARR,
+                growth: ((cumulativeNewARR / currentARR) * 100).toFixed(1),
+                confidenceLevel: this.getQuarterConfidenceLevel(quarter),
+                breakdown: quarterProjection.breakdown
+            };
+        });
+        
+        // Year-end summary
+        projections.yearEnd = {
+            totalNewARR: cumulativeNewARR,
+            totalARR: currentARR + cumulativeNewARR,
+            totalGrowth: ((cumulativeNewARR / currentARR) * 100).toFixed(1)
+        };
+        
+        // Confidence scenarios
         projections.confidence = {
-            conservative: Math.round(q4Projection * 0.7),
-            expected: Math.round(q4Projection),
-            optimistic: Math.round(q4Projection * 1.3)
+            conservative: Math.round(cumulativeNewARR * 0.65),
+            expected: Math.round(cumulativeNewARR),
+            optimistic: Math.round(cumulativeNewARR * 1.4)
         };
         
         // ROI Analysis
-        projections.roi = this.calculateExpansionROI(q4Projection);
+        projections.roi = this.calculateExpansionROI(cumulativeNewARR);
         
         return projections;
     }
 
-    calculateQuarterlyProjection(opportunities, probability, closeRate) {
-        return opportunities.reduce((sum, opp) => {
-            return sum + (opp.opportunityValue * probability * closeRate);
-        }, 0);
+    assignOpportunitiesToQuarters(opportunities) {
+        const quarters = { q1: [], q2: [], q3: [], q4: [] };
+        
+        opportunities.forEach(opp => {
+            const quarter = this.determineOpportunityQuarter(opp);
+            quarters[quarter].push({
+                ...opp,
+                projectedValue: this.calculateProjectedValue(opp, quarter),
+                reasoning: this.getQuarterAssignmentReasoning(opp, quarter)
+            });
+        });
+        
+        return quarters;
+    }
+
+    determineOpportunityQuarter(opportunity) {
+        const score = opportunity.score;
+        const account = opportunity.account;
+        const product = opportunity.product;
+        
+        // High-confidence opportunities (Score 80+) - Q1
+        if (score >= 80) return 'q1';
+        
+        // Good opportunities with prerequisites met (Score 65+) - Q1-Q2  
+        if (score >= 65 && this.checkProductPrerequisites(account, product)) {
+            return 'q1';
+        }
+        
+        // Medium opportunities (Score 50-64) - Q2-Q3
+        if (score >= 50) {
+            return account.growthStage === 'growth' ? 'q2' : 'q3';
+        }
+        
+        // Lower confidence opportunities (Score 35-49) - Q3-Q4
+        if (score >= 35) {
+            return 'q3';
+        }
+        
+        // Speculative opportunities (Score < 35) - Q4
+        return 'q4';
+    }
+
+    calculateProjectedValue(opportunity, quarter) {
+        const baseValue = opportunity.opportunityValue;
+        const score = opportunity.score;
+        const confidenceMultiplier = this.getQuarterConfidenceLevel(quarter) / 100;
+        
+        // Probability based on score
+        let probability;
+        if (score >= 80) probability = 0.85;
+        else if (score >= 65) probability = 0.70;
+        else if (score >= 50) probability = 0.55;
+        else if (score >= 35) probability = 0.40;
+        else probability = 0.25;
+        
+        return Math.round(baseValue * probability * confidenceMultiplier);
+    }
+
+    getQuarterConfidenceLevel(quarter) {
+        const confidenceLevels = {
+            'q1': 85, // High confidence - proven opportunities
+            'q2': 70, // Good confidence - clear pipeline 
+            'q3': 55, // Medium confidence - needs development
+            'q4': 40  // Lower confidence - speculative
+        };
+        return confidenceLevels[quarter];
+    }
+
+    calculateQuarterProjection(opportunities) {
+        let totalValue = 0;
+        const breakdown = [];
+        
+        opportunities.forEach(opp => {
+            totalValue += opp.projectedValue;
+            breakdown.push({
+                account: opp.account.name,
+                product: opp.product.name,
+                opportunityValue: opp.opportunityValue,
+                projectedValue: opp.projectedValue,
+                score: opp.score,
+                reasoning: opp.reasoning,
+                calculation: this.getCalculationFormula(opp)
+            });
+        });
+        
+        // Sort by projected value (highest first)
+        breakdown.sort((a, b) => b.projectedValue - a.projectedValue);
+        
+        return { totalValue, breakdown };
+    }
+
+    getCalculationFormula(opportunity) {
+        const baseValue = opportunity.opportunityValue;
+        const score = opportunity.score;
+        const projectedValue = opportunity.projectedValue;
+        const probability = (projectedValue / baseValue).toFixed(2);
+        
+        return `$${baseValue.toLocaleString()} × ${score}/100 score × ${(probability * 100).toFixed(0)}% probability = $${projectedValue.toLocaleString()}`;
+    }
+
+    getQuarterAssignmentReasoning(opportunity, quarter) {
+        const score = opportunity.score;
+        const account = opportunity.account;
+        const product = opportunity.product;
+        const hasPrereqs = this.checkProductPrerequisites(account, product);
+        
+        if (quarter === 'q1') {
+            if (score >= 80) return `High score (${score}) + strong account relationship`;
+            if (score >= 65 && hasPrereqs) return `Good score (${score}) + prerequisites met`;
+            return `Ready for immediate expansion`;
+        } else if (quarter === 'q2') {
+            return `Growth stage account + medium confidence (${score})`;
+        } else if (quarter === 'q3') {
+            return `Requires nurturing + account development`;
+        } else {
+            return `Speculative opportunity + long-term potential`;
+        }
+    }
+
+    getProjectionMethodology() {
+        return {
+            q1: "High-confidence opportunities (Score 80+) or ready opportunities (65+ with prerequisites)",
+            q2: "Medium opportunities in growth-stage accounts (Score 50-64)",  
+            q3: "Developing opportunities requiring nurturing (Score 35-49)",
+            q4: "Speculative opportunities with long-term potential (Score <35)",
+            calculation: "Projected Value = Opportunity Value × Score-Based Probability × Quarter Confidence"
+        };
     }
 
     calculateExpansionROI(projectedNewARR) {
@@ -737,6 +854,744 @@ class WhitespaceEngine {
         };
     }
 
+    // Account Intelligence Features
+    generateAccountIntelligence() {
+        return this.accounts.map(account => {
+            const accountOpportunities = this.getAccountOpportunities(account);
+            const expansionReadiness = this.calculateExpansionReadiness(account);
+            const growthTrajectory = this.analyzeGrowthTrajectory(account);
+            const riskFactors = this.identifyRiskFactors(account);
+            const recommendedActions = this.generateRecommendedActions(account, accountOpportunities);
+            
+            return {
+                ...account,
+                intelligence: {
+                    expansionReadiness,
+                    growthTrajectory,
+                    riskFactors,
+                    recommendedActions,
+                    priorityScore: this.calculateAccountPriorityScore(account, accountOpportunities),
+                    nextBestAction: this.getNextBestAction(account, accountOpportunities),
+                    timeline: this.getExpansionTimeline(account, accountOpportunities)
+                }
+            };
+        });
+    }
+
+    getAccountOpportunities(account) {
+        return this.analysisResults?.opportunities?.filter(opp => opp.accountId === account.id) || [];
+    }
+
+    calculateExpansionReadiness(account) {
+        let readinessScore = 0;
+        const factors = [];
+        
+        // Growth stage factor
+        if (account.growthStage === 'growth') {
+            readinessScore += 30;
+            factors.push({ factor: 'Growth Stage', score: 30, note: 'Account in active growth phase' });
+        } else if (account.growthStage === 'early') {
+            readinessScore += 20;
+            factors.push({ factor: 'Growth Stage', score: 20, note: 'Early stage with expansion potential' });
+        } else {
+            readinessScore += 10;
+            factors.push({ factor: 'Growth Stage', score: 10, note: 'Mature account - expansion requires strategic approach' });
+        }
+        
+        // Penetration rate factor
+        const penetration = parseFloat(account.penetrationRate);
+        if (penetration < 30) {
+            readinessScore += 25;
+            factors.push({ factor: 'Market Penetration', score: 25, note: 'Low penetration = high expansion opportunity' });
+        } else if (penetration < 60) {
+            readinessScore += 15;
+            factors.push({ factor: 'Market Penetration', score: 15, note: 'Medium penetration with room to grow' });
+        } else {
+            readinessScore += 5;
+            factors.push({ factor: 'Market Penetration', score: 5, note: 'High penetration - limited upside remaining' });
+        }
+        
+        // Relationship strength (tier-based)
+        if (account.tier === 'Platinum') {
+            readinessScore += 20;
+            factors.push({ factor: 'Relationship Strength', score: 20, note: 'Strong strategic partnership' });
+        } else if (account.tier === 'Gold') {
+            readinessScore += 15;
+            factors.push({ factor: 'Relationship Strength', score: 15, note: 'Good working relationship' });
+        } else {
+            readinessScore += 5;
+            factors.push({ factor: 'Relationship Strength', score: 5, note: 'Relationship building needed' });
+        }
+        
+        // Size and strategic value
+        if (account.companySize === 'Enterprise') {
+            readinessScore += 15;
+            factors.push({ factor: 'Account Size', score: 15, note: 'Enterprise scale enables large expansions' });
+        } else if (account.companySize === 'Mid-Market') {
+            readinessScore += 10;
+            factors.push({ factor: 'Account Size', score: 10, note: 'Mid-market with good expansion potential' });
+        } else {
+            readinessScore += 5;
+            factors.push({ factor: 'Account Size', score: 5, note: 'SMB - focus on high-value, focused expansions' });
+        }
+        
+        // Whitespace value factor
+        if (account.whitespaceValue > 100000) {
+            readinessScore += 10;
+            factors.push({ factor: 'Whitespace Value', score: 10, note: 'Significant untapped potential' });
+        } else if (account.whitespaceValue > 50000) {
+            readinessScore += 5;
+            factors.push({ factor: 'Whitespace Value', score: 5, note: 'Moderate expansion opportunity' });
+        }
+        
+        return {
+            score: Math.min(100, readinessScore),
+            level: readinessScore >= 80 ? 'High' : readinessScore >= 60 ? 'Medium' : 'Low',
+            factors: factors
+        };
+    }
+
+    analyzeGrowthTrajectory(account) {
+        // Simulate growth analysis based on current metrics
+        const currentARR = account.currentARR;
+        const penetration = parseFloat(account.penetrationRate);
+        const growthStage = account.growthStage;
+        
+        let trajectory = 'Stable';
+        let projectedGrowth = 0;
+        let confidence = 'Medium';
+        
+        if (growthStage === 'growth' && penetration < 50) {
+            trajectory = 'Accelerating';
+            projectedGrowth = 25;
+            confidence = 'High';
+        } else if (growthStage === 'growth') {
+            trajectory = 'Growing';
+            projectedGrowth = 15;
+            confidence = 'High';
+        } else if (growthStage === 'early' && currentARR > 50000) {
+            trajectory = 'Emerging';
+            projectedGrowth = 35;
+            confidence = 'Medium';
+        } else if (penetration > 80) {
+            trajectory = 'Mature';
+            projectedGrowth = 5;
+            confidence = 'High';
+        }
+        
+        return {
+            trajectory,
+            projectedGrowth,
+            confidence,
+            timeframe: '12 months',
+            keyDrivers: this.getGrowthDrivers(account)
+        };
+    }
+
+    getGrowthDrivers(account) {
+        const drivers = [];
+        
+        if (parseFloat(account.penetrationRate) < 50) {
+            drivers.push('Significant whitespace remaining');
+        }
+        
+        if (account.growthStage === 'growth') {
+            drivers.push('Company in active growth phase');
+        }
+        
+        if (account.tier === 'Platinum' || account.tier === 'Gold') {
+            drivers.push('Strong existing relationship');
+        }
+        
+        if (account.companySize === 'Enterprise') {
+            drivers.push('Enterprise scale and budget');
+        }
+        
+        // Add industry-specific drivers
+        if (account.industry === 'Technology') {
+            drivers.push('Tech sector adoption momentum');
+        } else if (account.industry === 'Financial Services') {
+            drivers.push('Regulatory compliance requirements');
+        }
+        
+        return drivers.length > 0 ? drivers : ['Market dynamics', 'Product evolution'];
+    }
+
+    identifyRiskFactors(account) {
+        const risks = [];
+        
+        if (parseFloat(account.penetrationRate) > 75) {
+            risks.push({
+                risk: 'High Penetration',
+                severity: 'Medium',
+                mitigation: 'Focus on adjacent products and deeper platform integration'
+            });
+        }
+        
+        if (account.growthStage === 'mature') {
+            risks.push({
+                risk: 'Mature Account',
+                severity: 'Medium', 
+                mitigation: 'Require strategic value proposition and executive sponsorship'
+            });
+        }
+        
+        if (account.tier === 'Standard') {
+            risks.push({
+                risk: 'Limited Relationship Depth',
+                severity: 'High',
+                mitigation: 'Invest in relationship building before major expansion attempts'
+            });
+        }
+        
+        if (account.companySize === 'SMB') {
+            risks.push({
+                risk: 'Budget Constraints',
+                severity: 'Medium',
+                mitigation: 'Focus on ROI-driven, phased implementations'
+            });
+        }
+        
+        return risks;
+    }
+
+    generateRecommendedActions(account, opportunities) {
+        const actions = [];
+        const topOpps = opportunities.slice(0, 3);
+        
+        if (topOpps.length === 0) {
+            return [{ action: 'Account Assessment', priority: 'Medium', description: 'Conduct comprehensive account review to identify new opportunities' }];
+        }
+        
+        const readiness = this.calculateExpansionReadiness(account);
+        
+        if (readiness.score >= 80) {
+            actions.push({
+                action: 'Immediate Expansion',
+                priority: 'High',
+                description: `Execute top opportunity: ${topOpps[0].product.name} (Score: ${topOpps[0].score})`
+            });
+        } else if (readiness.score >= 60) {
+            actions.push({
+                action: 'Relationship Development',
+                priority: 'High',
+                description: 'Strengthen relationships before expansion execution'
+            });
+        } else {
+            actions.push({
+                action: 'Foundation Building',
+                priority: 'Medium',
+                description: 'Build account foundation before major expansion efforts'
+            });
+        }
+        
+        // Add opportunity-specific actions
+        topOpps.forEach((opp, index) => {
+            if (index < 2) { // Top 2 opportunities
+                const hasPrereqs = this.checkProductPrerequisites(account, opp.product);
+                if (!hasPrereqs) {
+                    actions.push({
+                        action: 'Prerequisites Setup',
+                        priority: 'Medium',
+                        description: `Establish foundation products before ${opp.product.name}`
+                    });
+                }
+            }
+        });
+        
+        return actions;
+    }
+
+    calculateAccountPriorityScore(account, opportunities) {
+        const whitespaceWeight = 0.3;
+        const readinessWeight = 0.4;
+        const opportunityWeight = 0.3;
+        
+        const whitespaceScore = (account.whitespaceValue / 200000) * 100; // Normalize to 200k max
+        const readinessScore = this.calculateExpansionReadiness(account).score;
+        const opportunityScore = opportunities.length > 0 ? 
+            opportunities.reduce((sum, opp) => sum + opp.score, 0) / opportunities.length : 0;
+        
+        return Math.round(
+            (whitespaceScore * whitespaceWeight) +
+            (readinessScore * readinessWeight) +
+            (opportunityScore * opportunityWeight)
+        );
+    }
+
+    getNextBestAction(account, opportunities) {
+        const readiness = this.calculateExpansionReadiness(account);
+        
+        if (opportunities.length === 0) {
+            return 'Conduct opportunity assessment to identify expansion potential';
+        }
+        
+        const topOpp = opportunities[0];
+        
+        if (readiness.score >= 80) {
+            return `Initiate ${topOpp.product.name} expansion discussion (High readiness, Score: ${topOpp.score})`;
+        } else if (readiness.score >= 60) {
+            return `Build relationship foundation before pursuing ${topOpp.product.name}`;
+        } else {
+            return `Strengthen account engagement before expansion efforts`;
+        }
+    }
+
+    getExpansionTimeline(account, opportunities) {
+        const readiness = this.calculateExpansionReadiness(account);
+        const timeline = {};
+        
+        if (opportunities.length === 0) {
+            timeline['Q1'] = 'Opportunity assessment and planning';
+            timeline['Q2-Q3'] = 'Foundation building and relationship development';
+            timeline['Q4'] = 'Initial expansion initiatives';
+            return timeline;
+        }
+        
+        const sortedOpps = [...opportunities].sort((a, b) => b.score - a.score);
+        
+        if (readiness.score >= 80) {
+            timeline['Q1'] = `Execute ${sortedOpps[0].product.name} expansion`;
+            if (sortedOpps.length > 1) {
+                timeline['Q2'] = `Pursue ${sortedOpps[1].product.name}`;
+            }
+            if (sortedOpps.length > 2) {
+                timeline['Q3-Q4'] = 'Additional product expansions';
+            }
+        } else if (readiness.score >= 60) {
+            timeline['Q1'] = 'Relationship strengthening and foundation building';
+            timeline['Q2'] = `Begin ${sortedOpps[0].product.name} expansion process`;
+            timeline['Q3-Q4'] = 'Execute expansion and assess additional opportunities';
+        } else {
+            timeline['Q1-Q2'] = 'Account relationship development';
+            timeline['Q3'] = 'Readiness assessment and planning';
+            timeline['Q4'] = 'Initial expansion discussions';
+        }
+        
+        return timeline;
+    }
+
+    // Expansion Playbooks
+    generateExpansionPlaybooks() {
+        return this.accounts.map(account => {
+            const accountOpportunities = this.getAccountOpportunities(account);
+            const expansionReadiness = this.calculateExpansionReadiness(account);
+            const playbook = this.createAccountPlaybook(account, accountOpportunities, expansionReadiness);
+            
+            return {
+                accountId: account.id,
+                accountName: account.name,
+                playbookType: playbook.type,
+                playbook: playbook
+            };
+        });
+    }
+
+    createAccountPlaybook(account, opportunities, readiness) {
+        const playbookType = this.determinePlaybookType(account, readiness);
+        const playbook = {
+            type: playbookType,
+            title: this.getPlaybookTitle(playbookType, account),
+            description: this.getPlaybookDescription(playbookType, account),
+            phases: this.generatePlaybookPhases(playbookType, account, opportunities),
+            timeline: this.generatePlaybookTimeline(playbookType, opportunities),
+            stakeholders: this.identifyKeyStakeholders(account, playbookType),
+            resources: this.getRequiredResources(playbookType, account),
+            successMetrics: this.defineSuccessMetrics(playbookType, account, opportunities),
+            competitiveInsights: this.generateCompetitiveInsights(account),
+            riskMitigation: this.generateRiskMitigation(account, playbookType)
+        };
+        
+        return playbook;
+    }
+
+    determinePlaybookType(account, readiness) {
+        const penetration = parseFloat(account.penetrationRate);
+        const growthStage = account.growthStage;
+        const companySize = account.companySize;
+        const readinessScore = readiness.score;
+        
+        if (readinessScore >= 80 && penetration < 50) {
+            return 'aggressive-expansion';
+        } else if (readinessScore >= 60 && growthStage === 'growth') {
+            return 'strategic-growth';
+        } else if (companySize === 'Enterprise' && penetration > 70) {
+            return 'platform-deepening';
+        } else if (readinessScore < 40) {
+            return 'relationship-building';
+        } else if (account.tier === 'Standard') {
+            return 'trust-establishment';
+        } else {
+            return 'tactical-expansion';
+        }
+    }
+
+    getPlaybookTitle(type, account) {
+        const titles = {
+            'aggressive-expansion': `High-Velocity Expansion Strategy: ${account.name}`,
+            'strategic-growth': `Strategic Growth Partnership: ${account.name}`,
+            'platform-deepening': `Platform Integration & Deepening: ${account.name}`,
+            'relationship-building': `Foundation Building & Development: ${account.name}`,
+            'trust-establishment': `Trust & Value Demonstration: ${account.name}`,
+            'tactical-expansion': `Tactical Expansion Roadmap: ${account.name}`
+        };
+        return titles[type];
+    }
+
+    getPlaybookDescription(type, account) {
+        const descriptions = {
+            'aggressive-expansion': `High-confidence, rapid expansion strategy for ${account.name}. This account shows exceptional readiness with significant whitespace remaining. Execute multiple opportunities simultaneously with dedicated resources.`,
+            'strategic-growth': `Long-term partnership development with ${account.name}. Focus on becoming their strategic technology partner through careful relationship nurturing and value demonstration.`,
+            'platform-deepening': `Maximize platform adoption and integration depth at ${account.name}. Transform existing relationship into comprehensive platform dependency with adjacent product adoption.`,
+            'relationship-building': `Foundational relationship development with ${account.name}. Build trust, demonstrate value, and establish expansion prerequisites before pursuing major opportunities.`,
+            'trust-establishment': `Prove value and establish credibility with ${account.name}. Focus on quick wins and relationship building to elevate partnership tier and unlock expansion potential.`,
+            'tactical-expansion': `Balanced approach to expansion at ${account.name}. Pursue selective opportunities while building stronger foundation for future growth.`
+        };
+        return descriptions[type];
+    }
+
+    generatePlaybookPhases(type, account, opportunities) {
+        const phases = {
+            'aggressive-expansion': [
+                {
+                    phase: 1,
+                    title: 'Opportunity Prioritization',
+                    duration: '2 weeks',
+                    activities: [
+                        'Validate top 3 expansion opportunities',
+                        'Confirm stakeholder alignment and budget',
+                        'Prepare detailed ROI presentations'
+                    ]
+                },
+                {
+                    phase: 2,
+                    title: 'Parallel Execution',
+                    duration: '6-8 weeks',
+                    activities: [
+                        'Launch multiple opportunity discussions simultaneously',
+                        'Leverage existing relationship strength',
+                        'Fast-track technical and legal processes'
+                    ]
+                },
+                {
+                    phase: 3,
+                    title: 'Momentum Capture',
+                    duration: '4 weeks',
+                    activities: [
+                        'Close multiple deals in succession',
+                        'Plan additional expansion opportunities',
+                        'Strengthen strategic partnership positioning'
+                    ]
+                }
+            ],
+            'strategic-growth': [
+                {
+                    phase: 1,
+                    title: 'Strategic Alignment',
+                    duration: '4 weeks',
+                    activities: [
+                        'Conduct comprehensive business review',
+                        'Map account growth strategy to our solutions',
+                        'Identify executive sponsors and champions'
+                    ]
+                },
+                {
+                    phase: 2,
+                    title: 'Value Co-Creation',
+                    duration: '8-12 weeks',
+                    activities: [
+                        'Develop joint value proposition',
+                        'Create custom success metrics and KPIs',
+                        'Design phased expansion roadmap'
+                    ]
+                },
+                {
+                    phase: 3,
+                    title: 'Partnership Execution',
+                    duration: '6 months',
+                    activities: [
+                        'Execute planned expansion initiatives',
+                        'Regular business reviews and optimization',
+                        'Explore additional strategic opportunities'
+                    ]
+                }
+            ],
+            'platform-deepening': [
+                {
+                    phase: 1,
+                    title: 'Usage Analysis',
+                    duration: '3 weeks',
+                    activities: [
+                        'Analyze current platform utilization',
+                        'Identify underutilized features and capabilities',
+                        'Map additional use cases and departments'
+                    ]
+                },
+                {
+                    phase: 2,
+                    title: 'Integration Expansion',
+                    duration: '6-10 weeks',
+                    activities: [
+                        'Propose adjacent product integrations',
+                        'Demonstrate platform ecosystem value',
+                        'Pilot advanced features with power users'
+                    ]
+                },
+                {
+                    phase: 3,
+                    title: 'Ecosystem Lock-in',
+                    duration: '8 weeks',
+                    activities: [
+                        'Finalize comprehensive platform adoption',
+                        'Establish center of excellence partnership',
+                        'Plan long-term strategic initiatives'
+                    ]
+                }
+            ],
+            'relationship-building': [
+                {
+                    phase: 1,
+                    title: 'Relationship Mapping',
+                    duration: '4 weeks',
+                    activities: [
+                        'Map organizational structure and decision makers',
+                        'Identify current pain points and priorities',
+                        'Establish regular touchpoints and meetings'
+                    ]
+                },
+                {
+                    phase: 2,
+                    title: 'Value Demonstration',
+                    duration: '8-12 weeks',
+                    activities: [
+                        'Deliver quick wins and valuable insights',
+                        'Provide industry expertise and best practices',
+                        'Build trust through consistent value delivery'
+                    ]
+                },
+                {
+                    phase: 3,
+                    title: 'Expansion Foundation',
+                    duration: '6 weeks',
+                    activities: [
+                        'Present expansion opportunities with strong ROI',
+                        'Leverage improved relationship for larger discussions',
+                        'Establish preferred vendor status'
+                    ]
+                }
+            ]
+        };
+        
+        return phases[type] || phases['tactical-expansion'];
+    }
+
+    generatePlaybookTimeline(type, opportunities) {
+        const timelines = {
+            'aggressive-expansion': {
+                'Month 1': 'Opportunity validation and stakeholder alignment',
+                'Month 2': 'Multi-track negotiation and execution',
+                'Month 3': 'Deal closure and momentum capture',
+                'Month 4+': 'Strategic partnership expansion'
+            },
+            'strategic-growth': {
+                'Month 1-2': 'Strategic assessment and alignment',
+                'Month 3-4': 'Joint planning and roadmap development',
+                'Month 5-8': 'Phased expansion execution',
+                'Month 9-12': 'Partnership optimization and growth'
+            },
+            'platform-deepening': {
+                'Month 1': 'Platform usage analysis and opportunity mapping',
+                'Month 2-3': 'Integration pilots and value demonstration',
+                'Month 4-5': 'Ecosystem expansion and adoption',
+                'Month 6+': 'Strategic platform partnership'
+            },
+            'relationship-building': {
+                'Month 1-2': 'Relationship mapping and trust building',
+                'Month 3-5': 'Value delivery and credibility establishment',
+                'Month 6-8': 'Expansion discussions and execution',
+                'Month 9+': 'Strategic partnership development'
+            }
+        };
+        
+        return timelines[type] || timelines['strategic-growth'];
+    }
+
+    identifyKeyStakeholders(account, playbookType) {
+        const baseStakeholders = [
+            { role: 'Account Executive', responsibility: 'Overall relationship and deal execution' },
+            { role: 'Customer Success Manager', responsibility: 'Value delivery and expansion identification' },
+            { role: 'Solutions Engineer', responsibility: 'Technical validation and demonstration' }
+        ];
+        
+        const additionalStakeholders = {
+            'aggressive-expansion': [
+                { role: 'Sales Director', responsibility: 'Strategic oversight and resource allocation' },
+                { role: 'Legal Team', responsibility: 'Contract acceleration and terms negotiation' }
+            ],
+            'strategic-growth': [
+                { role: 'VP of Sales', responsibility: 'Executive relationship and strategic alignment' },
+                { role: 'Product Management', responsibility: 'Roadmap alignment and customization' }
+            ],
+            'platform-deepening': [
+                { role: 'Technical Account Manager', responsibility: 'Deep integration and optimization' },
+                { role: 'Professional Services', responsibility: 'Implementation and training' }
+            ]
+        };
+        
+        return [
+            ...baseStakeholders,
+            ...(additionalStakeholders[playbookType] || [])
+        ];
+    }
+
+    getRequiredResources(playbookType, account) {
+        const resources = {
+            'aggressive-expansion': [
+                'Dedicated account team with executive support',
+                'Technical resources for rapid implementation',
+                'Legal support for contract acceleration',
+                'Marketing materials for multi-product positioning'
+            ],
+            'strategic-growth': [
+                'Senior account executive with C-level access',
+                'Custom ROI modeling and business case development',
+                'Executive briefing center access',
+                'Industry-specific use case documentation'
+            ],
+            'platform-deepening': [
+                'Technical account management resources',
+                'Professional services for integration',
+                'Product training and certification programs',
+                'Platform optimization consulting'
+            ],
+            'relationship-building': [
+                'Consistent account team assignment',
+                'Industry expertise and thought leadership content',
+                'Executive relationship building programs',
+                'Quick win identification and delivery resources'
+            ]
+        };
+        
+        return resources[playbookType] || resources['strategic-growth'];
+    }
+
+    defineSuccessMetrics(playbookType, account, opportunities) {
+        const baseMetrics = {
+            'Primary ARR Target': `$${this.formatCurrency(opportunities.reduce((sum, opp) => sum + opp.opportunityValue, 0))}`,
+            'Account Penetration': `Increase from ${account.penetrationRate}% to 80%+`,
+            'Relationship Tier': 'Advance to next tier level'
+        };
+        
+        const specificMetrics = {
+            'aggressive-expansion': {
+                'Time to Close': 'Average 45 days per opportunity',
+                'Deal Velocity': '3+ opportunities in parallel',
+                'Win Rate': '85%+ for identified opportunities'
+            },
+            'strategic-growth': {
+                'Partnership Depth Score': 'Achieve strategic partner status',
+                'Executive Engagement': 'C-level sponsor identified',
+                'Long-term Pipeline': '$500K+ future opportunity pipeline'
+            },
+            'platform-deepening': {
+                'Platform Utilization': 'Increase feature adoption by 60%',
+                'Integration Depth': 'Connect to 3+ enterprise systems',
+                'User Growth': 'Expand user base by 100%+'
+            }
+        };
+        
+        return {
+            ...baseMetrics,
+            ...(specificMetrics[playbookType] || {})
+        };
+    }
+
+    generateCompetitiveInsights(account) {
+        // Simulate competitive analysis based on industry and company size
+        const industry = account.industry;
+        const companySize = account.companySize;
+        
+        const competitiveThreats = {
+            'Technology': ['Microsoft', 'Salesforce', 'AWS'],
+            'Financial Services': ['Oracle', 'IBM', 'SAP'],
+            'Healthcare': ['Epic', 'Cerner', 'Allscripts'],
+            'Manufacturing': ['SAP', 'Oracle', 'Siemens'],
+            'Retail': ['Shopify', 'Adobe', 'SAP']
+        };
+        
+        const threats = competitiveThreats[industry] || ['Microsoft', 'Salesforce', 'Oracle'];
+        
+        return {
+            primaryCompetitors: threats.slice(0, 2),
+            competitiveAdvantages: [
+                'Superior integration capabilities',
+                'Better pricing flexibility',
+                'Faster implementation timeline',
+                'Industry-specific expertise'
+            ],
+            competitiveRisks: [
+                `${threats[0]} enterprise relationship`,
+                'Budget allocation to existing vendors',
+                'Change management resistance'
+            ],
+            counterStrategies: [
+                'Emphasize ROI and quick time-to-value',
+                'Leverage existing relationship strength',
+                'Demonstrate differentiated capabilities',
+                'Offer pilot programs to reduce risk'
+            ]
+        };
+    }
+
+    generateRiskMitigation(account, playbookType) {
+        const commonRisks = [
+            {
+                risk: 'Budget constraints or delays',
+                likelihood: 'Medium',
+                impact: 'High',
+                mitigation: 'Present phased implementation with clear ROI at each stage'
+            },
+            {
+                risk: 'Internal competing priorities',
+                likelihood: 'High',
+                impact: 'Medium',
+                mitigation: 'Align expansion with business critical initiatives and goals'
+            }
+        ];
+        
+        const playbookSpecificRisks = {
+            'aggressive-expansion': [
+                {
+                    risk: 'Resource overallocation leading to poor implementation',
+                    likelihood: 'Medium',
+                    impact: 'High',
+                    mitigation: 'Ensure adequate support resources and staged rollouts'
+                }
+            ],
+            'relationship-building': [
+                {
+                    risk: 'Extended timeline without visible progress',
+                    likelihood: 'High',
+                    impact: 'Medium',
+                    mitigation: 'Define clear milestones and quick wins to demonstrate progress'
+                }
+            ]
+        };
+        
+        return [
+            ...commonRisks,
+            ...(playbookSpecificRisks[playbookType] || [])
+        ];
+    }
+
+    formatCurrency(amount) {
+        return new Intl.NumberFormat('en-US', {
+            style: 'decimal',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        }).format(amount);
+    }
+
     // Export functionality
     exportResults() {
         if (!this.analysisResults) {
@@ -746,6 +1601,8 @@ class WhitespaceEngine {
         return {
             summary: this.analysisResults.stats,
             opportunities: this.analysisResults.opportunities,
+            accountIntelligence: this.generateAccountIntelligence(),
+            expansionPlaybooks: this.generateExpansionPlaybooks(),
             timestamp: this.analysisResults.timestamp
         };
     }
