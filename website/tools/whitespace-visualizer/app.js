@@ -139,6 +139,13 @@ class WhitespaceApp {
 
     displayResults(results) {
         console.log('Analysis results:', results); // Debug log
+        
+        // Check if analytics dashboard exists in DOM
+        const analyticsSection = document.querySelector('.analytics-dashboard');
+        if (!analyticsSection) {
+            console.error('Analytics dashboard section not found in DOM');
+        }
+        
         this.displayStats(results.stats);
         this.displayMatrix(results.matrix);
         this.displayRevenueProjections(results.stats.revenueProjections);
@@ -1174,9 +1181,16 @@ class WhitespaceApp {
             
             // Total Pipeline Value
             const totalPipeline = opportunities.reduce((sum, opp) => sum + (opp.opportunityValue || 0), 0);
+            console.log('Total pipeline calculated:', totalPipeline);
+            
             const pipelineElement = document.getElementById('total-pipeline-value');
+            console.log('Pipeline element found:', pipelineElement);
+            
             if (pipelineElement) {
                 pipelineElement.textContent = `$${this.formatCurrency(totalPipeline)}`;
+                console.log('Pipeline value set to:', pipelineElement.textContent);
+            } else {
+                console.error('total-pipeline-value element not found');
             }
             
             // High-Probability Opportunities
