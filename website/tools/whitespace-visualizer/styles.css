@@ -2616,6 +2616,9 @@
 
 .analytics-dashboard {
     margin-top: var(--space-4xl);
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: visible !important;
 }
 
 .analytics-header {
@@ -2640,28 +2643,30 @@
 
 /* Key Performance Metrics */
 .metrics-overview {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.5rem;
-    margin-bottom: 3rem;
-    width: 100%;
-    max-width: 100%;
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 1.5rem !important;
+    margin-bottom: 3rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    grid-auto-rows: 1fr !important;
 }
 
 .metric-card {
-    padding: 1.5rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    backdrop-filter: blur(20px);
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    transition: all 0.2s ease;
-    position: relative;
-    overflow: hidden;
-    min-height: 100px;
-    width: 100%;
+    padding: 1.5rem !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 12px !important;
+    backdrop-filter: blur(20px) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    transition: all 0.2s ease !important;
+    position: relative !important;
+    overflow: hidden !important;
+    min-height: 100px !important;
+    width: 100% !important;
+    flex: 1 !important;
 }
 
 .metric-card::before {
