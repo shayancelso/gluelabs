@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Whitespace Visualizer — Turn Your Account Data Into Revenue Maps | Glue</title>
-    <meta name="description" content="See every expansion opportunity in your accounts. Interactive whitespace analysis tool that identifies $2.4M+ in untapped revenue potential. Used by 200+ revenue teams.">
+    <title>Whitespace Analysis Tool — Revenue Expansion Platform | Glue</title>
+    <meta name="description" content="Professional whitespace analysis platform. Identify millions in hidden ARR within your existing accounts. Upload your data, visualize gaps, prioritize opportunities.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../styles.css">
     <link rel="stylesheet" href="../tools.css">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="advanced-styles.css">
     <!-- Vercel Analytics -->
     <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -61,151 +60,125 @@
                         <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                             <rect x="3" y="3" width="18" height="18" rx="2"/>
                             <path d="M3 9h18M9 9v12"/>
+                            <circle cx="12" cy="15" r="2"/>
                         </svg>
                     </div>
                     <div class="tool-hero-text">
-                        <div class="tool-status live">Live Demo</div>
-                        <h1>Whitespace Visualizer</h1>
-                        <p class="tool-hero-subtitle">Turn your account data into an interactive map of untapped revenue opportunities</p>
-                        <div class="tool-hero-stats">
-                            <div class="tool-stat">
-                                <span class="stat-value">$2.4M+</span>
-                                <span class="stat-label">Average whitespace identified</span>
-                            </div>
-                            <div class="tool-stat">
-                                <span class="stat-value">6 hrs</span>
-                                <span class="stat-label">Saved per week per AM</span>
-                            </div>
-                            <div class="tool-stat">
-                                <span class="stat-value">92%</span>
-                                <span class="stat-label">Tool adoption rate</span>
-                            </div>
-                        </div>
+                        <h1>Whitespace Analysis Platform</h1>
+                        <p class="tool-hero-subtitle">Instantly identify millions in hidden ARR within your existing accounts. Upload your data, visualize opportunities, prioritize expansion.</p>
                     </div>
                 </div>
 
-                <div class="tool-cta-section">
-                    <a href="#live-demo" class="btn btn-primary btn-large">
-                        <span>Try Interactive Demo</span>
-                        <svg class="btn-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                            <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </a>
-                    <a href="../../#contact" class="btn btn-glass btn-large">
-                        Request Custom Demo
-                    </a>
-                </div>
             </div>
         </div>
     </section>
 
-    <!-- Advanced Live Demo Section -->
-    <section class="live-demo" id="live-demo">
+    <!-- Main Tool Interface -->
+    <section class="tool-interface" id="tool-interface">
         <div class="container">
-            <div class="section-header center">
-                <span class="section-label">Enterprise Demo</span>
-                <h2>Advanced whitespace intelligence platform</h2>
-                <p class="section-intro">Experience sophisticated account analysis with AI-powered recommendations, interactive heat maps, and comprehensive stakeholder insights.</p>
+            <div class="tool-header">
+                <h2>Revenue Expansion Analysis</h2>
+                <p>Upload your client and product data to identify whitespace opportunities</p>
             </div>
 
-            <!-- Account Selector -->
-            <div class="account-selector">
-                <div class="selector-header">
-                    <h4>Select Account Portfolio</h4>
-                    <span class="portfolio-stats">3 Strategic Accounts • $1.38M Current ARR • $3.68M Expansion Potential</span>
-                </div>
-                <div class="account-grid" id="account-selector">
-                    <div class="account-card" data-account="global-tech-corp">
-                        <div class="account-header">
-                            <div class="account-info">
-                                <h5>Global Tech Corp</h5>
-                                <span class="account-details">Technology • 15K employees • $2.5B revenue</span>
-                            </div>
-                            <div class="account-tier strategic">Strategic</div>
-                        </div>
-                        <div class="account-metrics">
-                            <div class="account-metric">
-                                <span class="metric-label">Current ARR</span>
-                                <span class="metric-value">$485K</span>
-                            </div>
-                            <div class="account-metric">
-                                <span class="metric-label">Expansion Potential</span>
-                                <span class="metric-value">$1.2M</span>
-                            </div>
-                            <div class="account-metric">
-                                <span class="metric-label">Health Score</span>
-                                <span class="metric-value health-score">85</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="account-card" data-account="innovate-startup">
-                        <div class="account-header">
-                            <div class="account-info">
-                                <h5>Innovate Startup</h5>
-                                <span class="account-details">FinTech • 850 employees • $125M revenue</span>
-                            </div>
-                            <div class="account-tier growth">Growth</div>
-                        </div>
-                        <div class="account-metrics">
-                            <div class="account-metric">
-                                <span class="metric-label">Current ARR</span>
-                                <span class="metric-value">$145K</span>
-                            </div>
-                            <div class="account-metric">
-                                <span class="metric-label">Expansion Potential</span>
-                                <span class="metric-value">$380K</span>
-                            </div>
-                            <div class="account-metric">
-                                <span class="metric-label">Health Score</span>
-                                <span class="metric-value health-score">92</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="account-card" data-account="enterprise-bank">
-                        <div class="account-header">
-                            <div class="account-info">
-                                <h5>Enterprise Bank</h5>
-                                <span class="account-details">Financial Services • 25K employees • $8.2B revenue</span>
-                            </div>
-                            <div class="account-tier strategic">Strategic</div>
-                        </div>
-                        <div class="account-metrics">
-                            <div class="account-metric">
-                                <span class="metric-label">Current ARR</span>
-                                <span class="metric-value">$750K</span>
-                            </div>
-                            <div class="account-metric">
-                                <span class="metric-label">Expansion Potential</span>
-                                <span class="metric-value">$2.1M</span>
-                            </div>
-                            <div class="account-metric">
-                                <span class="metric-label">Health Score</span>
-                                <span class="metric-value health-score">78</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Advanced Visualization Container -->
-            <div class="advanced-demo-container" id="advanced-demo">
-                <div class="demo-placeholder">
-                    <div class="placeholder-content">
-                        <div class="placeholder-icon">
-                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                <rect x="3" y="3" width="18" height="18" rx="2"/>
-                                <path d="M3 9h18M9 9v12"/>
+            <!-- Data Import Section -->
+            <div class="data-import-section" id="data-import">
+                <div class="import-cards">
+                    <div class="upload-zone">
+                        <div class="upload-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7,10 12,15 17,10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
                             </svg>
                         </div>
-                        <h4>Select an account to begin analysis</h4>
-                        <p>Choose from our portfolio of enterprise accounts to explore sophisticated whitespace analysis capabilities.</p>
-                        <div class="feature-highlights">
-                            <span class="feature">🤖 AI-powered recommendations</span>
-                            <span class="feature">📊 Interactive heat maps</span>
-                            <span class="feature">👥 Stakeholder network mapping</span>
-                            <span class="feature">📈 Scenario planning tools</span>
+                        <h3>Upload Your Data</h3>
+                        <p>Drop your CSV file here or click to browse</p>
+                        <input type="file" id="data-upload" accept=".csv,.xlsx" style="display: none;">
+                        <button class="upload-btn" onclick="document.getElementById('data-upload').click()">
+                            Choose File
+                        </button>
+                        <div class="upload-status" id="data-status"></div>
+                        <div class="format-hint">
+                            CSV format: account_name, current_arr, industry, products_adopted, available_products
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sample-data-section">
+                    <button class="btn btn-glass" id="load-sample-data">
+                        Load Sample Data to Try Tool
+                    </button>
+                    <p class="sample-description">Or try the tool with our demo dataset to see how it works</p>
+                </div>
+            </div>
+
+            <!-- Analysis Results Section -->
+            <div class="analysis-section" id="analysis-results" style="display: none;">
+                <div class="analysis-header">
+                    <h3>Whitespace Analysis Results</h3>
+                    <div class="analysis-stats" id="analysis-stats">
+                        <!-- Stats populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Whitespace Matrix -->
+                <div class="matrix-container">
+                    <div class="matrix-header">
+                        <h4>Account-Product Opportunity Matrix</h4>
+                        <div class="matrix-controls">
+                            <div class="matrix-legend">
+                                <span class="legend-item">
+                                    <span class="legend-color adopted"></span>
+                                    Adopted
+                                </span>
+                                <span class="legend-item">
+                                    <span class="legend-color opportunity"></span>
+                                    Opportunity
+                                </span>
+                                <span class="legend-item">
+                                    <span class="legend-color not-applicable"></span>
+                                    Not Applicable
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="matrix-content" id="whitespace-matrix">
+                        <!-- Matrix populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Revenue Projections Section -->
+                <div class="projections-container">
+                    <div class="projections-header">
+                        <h4>12-Month Revenue Projections</h4>
+                        <p>Probability-weighted expansion forecasts based on opportunity scoring</p>
+                    </div>
+                    <div id="revenue-projections">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Analytics Dashboard -->
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h4>Top Expansion Opportunities</h4>
+                        <div id="top-opportunities">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <h4>Revenue Potential by Product</h4>
+                        <div id="product-opportunities">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <h4>Top Whitespace Accounts</h4>
+                        <div id="account-priorities">
+                            <!-- Populated by JavaScript -->
                         </div>
                     </div>
                 </div>
@@ -213,446 +186,44 @@
         </div>
     </section>
 
-    <!-- What Is Whitespace Analysis Section -->
-    <section class="what-is-whitespace">
+    <!-- Value Proposition Section -->
+    <section class="tool-value">
         <div class="container">
             <div class="section-header center">
-                <span class="section-label">Understanding Whitespace</span>
-                <h2>What is <span class="text-gradient">whitespace analysis</span>?</h2>
+                <span class="section-label">Why Use Whitespace Analysis</span>
+                <h2>Turn your existing accounts into <span class="text-gradient">expansion goldmines</span></h2>
             </div>
 
-            <div class="content-grid">
-                <div class="content-text">
-                    <h3>The systematic process to identify unmet demand within your existing accounts</h3>
-                    <p>Whitespace analysis reveals gaps between what your customers currently buy from you and what they could potentially purchase. It's the strategic method for mapping expansion opportunities across your account portfolio.</p>
-                    
-                    <div class="benefits-list">
-                        <div class="benefit-item">
-                            <div class="benefit-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                                </svg>
-                            </div>
-                            <div class="benefit-content">
-                                <h4>5-7x More Cost-Effective</h4>
-                                <p>Revenue from existing accounts costs significantly less than new customer acquisition</p>
-                            </div>
-                        </div>
-                        <div class="benefit-item">
-                            <div class="benefit-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M3 3v18h18v-18H3zm6 14H5v-4h4v4zm8 0h-4v-8h4v8zm0-10h-4V5h4v2z"/>
-                                </svg>
-                            </div>
-                            <div class="benefit-content">
-                                <h4>9% Average Growth Rate</h4>
-                                <p>Companies using systematic whitespace analysis vs 5-6% traditional approach</p>
-                            </div>
-                        </div>
-                        <div class="benefit-item">
-                            <div class="benefit-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M9 12l2 2 4-4"/>
-                                </svg>
-                            </div>
-                            <div class="benefit-content">
-                                <h4>Competitive Defense</h4>
-                                <p>Fill gaps before competitors can establish footholds in your strategic accounts</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="content-visual">
-                    <div class="whitespace-matrix glass-card">
-                        <div class="matrix-header">
-                            <h4>Whitespace Analysis Framework</h4>
-                        </div>
-                        <div class="matrix-grid">
-                            <div class="matrix-cell adopted" title="Currently using"></div>
-                            <div class="matrix-cell opportunity" title="High-value opportunity"></div>
-                            <div class="matrix-cell none" title="Not applicable"></div>
-                            <div class="matrix-cell adopted" title="Currently using"></div>
-                            <div class="matrix-cell none" title="Not applicable"></div>
-                            <div class="matrix-cell opportunity" title="High-value opportunity"></div>
-                            <div class="matrix-cell opportunity" title="High-value opportunity"></div>
-                            <div class="matrix-cell adopted" title="Currently using"></div>
-                            <div class="matrix-cell adopted" title="Currently using"></div>
-                            <div class="matrix-cell opportunity" title="High-value opportunity"></div>
-                            <div class="matrix-cell none" title="Not applicable"></div>
-                            <div class="matrix-cell none" title="Not applicable"></div>
-                        </div>
-                        <div class="matrix-labels">
-                            <div class="matrix-label">Products & Services →</div>
-                            <div class="matrix-label vertical">Buying Centers ↓</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- How Teams Use It Section -->
-    <section class="team-use-cases">
-        <div class="container">
-            <div class="section-header center">
-                <span class="section-label">Real Applications</span>
-                <h2>How teams are using <span class="text-gradient">whitespace analysis</span></h2>
-                <p class="section-intro">From account managers to revenue operations, see how different roles leverage whitespace insights</p>
-            </div>
-
-            <div class="use-case-tabs">
-                <button class="use-case-tab active" data-role="account-management">Account Management</button>
-                <button class="use-case-tab" data-role="customer-success">Customer Success</button>
-                <button class="use-case-tab" data-role="sales-development">Sales Development</button>
-                <button class="use-case-tab" data-role="revenue-ops">Revenue Operations</button>
-            </div>
-
-            <div class="use-case-content">
-                <!-- Account Management Use Cases -->
-                <div class="use-case-panel active" id="account-management">
-                    <div class="use-case-grid">
-                        <div class="use-case-main glass-card">
-                            <h3>Account Management Teams</h3>
-                            <p>Transform scattered account data into strategic expansion roadmaps</p>
-                            
-                            <div class="use-case-items">
-                                <div class="use-case-item">
-                                    <div class="use-case-icon">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M3 3v18h18v-18H3zm6 14H5v-4h4v4zm8 0h-4v-8h4v8zm0-10h-4V5h4v2z"/>
-                                        </svg>
-                                    </div>
-                                    <div class="use-case-text">
-                                        <h4>Portfolio Prioritization</h4>
-                                        <p>Rank accounts by expansion potential and focus on high-impact opportunities first</p>
-                                    </div>
-                                </div>
-                                <div class="use-case-item">
-                                    <div class="use-case-icon">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <rect x="3" y="4" width="18" height="18" rx="2"/>
-                                            <path d="M3 10h18"/>
-                                        </svg>
-                                    </div>
-                                    <div class="use-case-text">
-                                        <h4>QBR Preparation</h4>
-                                        <p>Generate data-driven expansion recommendations for quarterly business reviews</p>
-                                    </div>
-                                </div>
-                                <div class="use-case-item">
-                                    <div class="use-case-icon">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M9 12l2 2 4-4"/>
-                                        </svg>
-                                    </div>
-                                    <div class="use-case-text">
-                                        <h4>Competitive Defense</h4>
-                                        <p>Identify vulnerable areas before competitors can establish relationships</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="use-case-stats">
-                            <div class="stat-card glass-card highlight">
-                                <span class="stat-number">$840K</span>
-                                <span class="stat-label">Pipeline generated in Q1</span>
-                                <span class="stat-source">Series B SaaS Company</span>
-                            </div>
-                            <div class="stat-card glass-card">
-                                <span class="stat-number">80%</span>
-                                <span class="stat-label">Reduction in QBR prep time</span>
-                                <span class="stat-source">Professional Services Firm</span>
-                            </div>
-                            <div class="stat-card glass-card">
-                                <span class="stat-number">6 hrs</span>
-                                <span class="stat-label">Saved per week per AM</span>
-                                <span class="stat-source">Growth-Stage Startup</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Other use case panels (hidden by default) -->
-                <div class="use-case-panel" id="customer-success">
-                    <div class="use-case-grid">
-                        <div class="use-case-main glass-card">
-                            <h3>Customer Success Managers</h3>
-                            <p>Turn usage data into expansion opportunities and renewal strength</p>
-                            
-                            <div class="use-case-items">
-                                <div class="use-case-item">
-                                    <div class="use-case-icon">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M22 12h-4l-3 9-6-18-3 9H2"/>
-                                        </svg>
-                                    </div>
-                                    <div class="use-case-text">
-                                        <h4>Health Score Enhancement</h4>
-                                        <p>Identify usage gaps that impact customer health and address them proactively</p>
-                                    </div>
-                                </div>
-                                <div class="use-case-item">
-                                    <div class="use-case-icon">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <circle cx="12" cy="12" r="10"/>
-                                            <path d="M12 8v4l2 2"/>
-                                        </svg>
-                                    </div>
-                                    <div class="use-case-text">
-                                        <h4>Renewal Risk Mitigation</h4>
-                                        <p>Spot expansion opportunities that strengthen renewal likelihood</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="use-case-stats">
-                            <div class="stat-card glass-card highlight">
-                                <span class="stat-number">95%</span>
-                                <span class="stat-label">Renewal rate improvement</span>
-                                <span class="stat-source">Mid-market SaaS</span>
-                            </div>
-                            <div class="stat-card glass-card">
-                                <span class="stat-number">$150K</span>
-                                <span class="stat-label">Additional ARR per CSM</span>
-                                <span class="stat-source">Enterprise Software</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Sales Development Use Cases -->
-                <div class="use-case-panel" id="sales-development">
-                    <div class="use-case-grid">
-                        <div class="use-case-main glass-card">
-                            <h3>Sales Development Teams</h3>
-                            <p>Transform prospecting with account intelligence and expansion targeting</p>
-                            
-                            <div class="use-case-items">
-                                <div class="use-case-item">
-                                    <div class="use-case-icon">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-                                            <circle cx="9" cy="7" r="4"/>
-                                            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-                                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                                        </svg>
-                                    </div>
-                                    <div class="use-case-text">
-                                        <h4>Warm Outreach Targeting</h4>
-                                        <p>Identify exact stakeholders and products to mention in outbound sequences</p>
-                                    </div>
-                                </div>
-                                <div class="use-case-item">
-                                    <div class="use-case-icon">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <circle cx="11" cy="11" r="8"/>
-                                            <path d="M21 21L16.65 16.65"/>
-                                        </svg>
-                                    </div>
-                                    <div class="use-case-text">
-                                        <h4>Account Research Acceleration</h4>
-                                        <p>Skip hours of manual research with pre-built expansion opportunity maps</p>
-                                    </div>
-                                </div>
-                                <div class="use-case-item">
-                                    <div class="use-case-icon">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                            <polyline points="7,10 12,15 17,10"/>
-                                            <line x1="12" y1="15" x2="12" y2="3"/>
-                                        </svg>
-                                    </div>
-                                    <div class="use-case-text">
-                                        <h4>Handoff Quality</h4>
-                                        <p>Pass qualified leads with complete whitespace context to closing teams</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="use-case-stats">
-                            <div class="stat-card glass-card highlight">
-                                <span class="stat-number">3x</span>
-                                <span class="stat-label">Higher response rates</span>
-                                <span class="stat-source">SaaS Startup</span>
-                            </div>
-                            <div class="stat-card glass-card">
-                                <span class="stat-number">45%</span>
-                                <span class="stat-label">Reduction in research time</span>
-                                <span class="stat-source">Mid-market Tech</span>
-                            </div>
-                            <div class="stat-card glass-card">
-                                <span class="stat-number">$380K</span>
-                                <span class="stat-label">Additional pipeline per SDR</span>
-                                <span class="stat-source">Enterprise Software</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Revenue Operations Use Cases -->
-                <div class="use-case-panel" id="revenue-ops">
-                    <div class="use-case-grid">
-                        <div class="use-case-main glass-card">
-                            <h3>Revenue Operations Teams</h3>
-                            <p>Build systematic processes for identifying and tracking expansion opportunities</p>
-                            
-                            <div class="use-case-items">
-                                <div class="use-case-item">
-                                    <div class="use-case-icon">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M3 3v18h18"/>
-                                            <path d="M8 17l4-4 4 4"/>
-                                            <path d="M8 12l4-4 4 4"/>
-                                        </svg>
-                                    </div>
-                                    <div class="use-case-text">
-                                        <h4>Expansion Forecasting</h4>
-                                        <p>Build predictable revenue models based on whitespace opportunity scoring</p>
-                                    </div>
-                                </div>
-                                <div class="use-case-item">
-                                    <div class="use-case-icon">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <rect x="3" y="3" width="18" height="18" rx="2"/>
-                                            <rect x="7" y="7" width="3" height="3"/>
-                                            <rect x="14" y="7" width="3" height="3"/>
-                                            <rect x="7" y="14" width="10" height="3"/>
-                                        </svg>
-                                    </div>
-                                    <div class="use-case-text">
-                                        <h4>Territory Planning</h4>
-                                        <p>Distribute accounts based on expansion potential and team capacity</p>
-                                    </div>
-                                </div>
-                                <div class="use-case-item">
-                                    <div class="use-case-icon">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/>
-                                        </svg>
-                                    </div>
-                                    <div class="use-case-text">
-                                        <h4>Performance Metrics</h4>
-                                        <p>Track expansion success rates and optimize team strategies with data</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="use-case-stats">
-                            <div class="stat-card glass-card highlight">
-                                <span class="stat-number">92%</span>
-                                <span class="stat-label">Forecast accuracy improvement</span>
-                                <span class="stat-source">Enterprise SaaS</span>
-                            </div>
-                            <div class="stat-card glass-card">
-                                <span class="stat-number">25%</span>
-                                <span class="stat-label">Increase in team efficiency</span>
-                                <span class="stat-source">Revenue Operations Team</span>
-                            </div>
-                            <div class="stat-card glass-card">
-                                <span class="stat-number">$1.2M</span>
-                                <span class="stat-label">Additional ARR tracked</span>
-                                <span class="stat-source">Growth-stage Company</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Implementation Examples Section -->
-    <section class="implementation-examples">
-        <div class="container">
-            <div class="section-header center">
-                <span class="section-label">Success Stories</span>
-                <h2>Real implementations, <span class="text-gradient">real results</span></h2>
-                <p class="section-intro">See how companies transformed their expansion strategies with whitespace analysis</p>
-            </div>
-
-            <div class="examples-grid">
-                <div class="example-card glass-card">
-                    <div class="example-header">
-                        <div class="company-info">
-                            <h4>Growth-Stage Startup</h4>
-                            <p>75-person team, $8M ARR</p>
-                        </div>
-                        <div class="industry-badge">B2B SaaS</div>
-                    </div>
-                    <div class="example-content">
-                        <h5>Expansion Velocity</h5>
-                        <p>"We were flying blind before. Now our account managers know exactly which conversations to have with which stakeholders. It's like having a revenue GPS."</p>
-                        
-                        <div class="example-metrics">
-                            <div class="metric">
-                                <span class="metric-value">65%</span>
-                                <span class="metric-label">Faster deal closure</span>
-                            </div>
-                            <div class="metric">
-                                <span class="metric-value">$150K</span>
-                                <span class="metric-label">Average deal size increase</span>
-                            </div>
-                            <div class="metric">
-                                <span class="metric-value">100%</span>
-                                <span class="metric-label">Team adoption</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="example-card glass-card">
-                    <div class="example-header">
-                        <div class="company-info">
-                            <h4>Enterprise Software</h4>
-                            <p>200+ enterprise clients</p>
-                        </div>
-                        <div class="industry-badge">Financial Services</div>
-                    </div>
-                    <div class="example-content">
-                        <h5>Cross-sell Mapping</h5>
-                        <p>"$840K pipeline generated in Q1 Series B SaaS Company. 80% Reduction in QBR prep time Professional Services Firm. 6 hrs Saved per week AM Growth-Stage Startup"</p>
-                        
-                        <div class="example-metrics">
-                            <div class="metric">
-                                <span class="metric-value">$840K</span>
-                                <span class="metric-label">Pipeline generated in Q1</span>
-                            </div>
-                            <div class="metric">
-                                <span class="metric-value">80%</span>
-                                <span class="metric-label">Reduction in QBR prep time</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Final CTA Section -->
-    <section class="final-cta">
-        <div class="container">
-            <div class="cta-content glass-card">
-                <div class="cta-header">
-                    <h2>Ready to uncover your whitespace opportunities?</h2>
-                    <p>Join 200+ revenue teams using data-driven whitespace analysis to identify millions in expansion revenue</p>
-                </div>
-                
-                <div class="cta-buttons">
-                    <a href="../../#contact" class="btn btn-primary btn-large">
-                        <span>Book a Demo</span>
-                        <svg class="btn-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                            <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <div class="value-grid">
+                <div class="value-item">
+                    <div class="value-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
                         </svg>
-                    </a>
-                    <a href="#live-demo" class="btn btn-glass btn-large">Try Demo Again</a>
+                    </div>
+                    <h3>25-40% Revenue Lift</h3>
+                    <p>Companies using systematic whitespace analysis report significant increases in upsell and cross-sell revenue from existing accounts.</p>
                 </div>
 
-                <div class="cta-note">
-                    <p>Free implementation workshop included • No long-term contracts • ROI guaranteed</p>
+                <div class="value-item">
+                    <div class="value-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 8v4l2 2"/>
+                        </svg>
+                    </div>
+                    <h3>5x Faster Planning</h3>
+                    <p>Reduce account planning time from days to hours with automated opportunity identification and prioritization.</p>
+                </div>
+
+                <div class="value-item">
+                    <div class="value-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 3v18h18v-18H3zm6 14H5v-4h4v4zm8 0h-4v-8h4v8zm0-10h-4V5h4v2z"/>
+                        </svg>
+                    </div>
+                    <h3>Strategic Account Expansion</h3>
+                    <p>Transform scattered client data into clear expansion roadmaps with prioritized opportunities and revenue projections.</p>
                 </div>
             </div>
         </div>
@@ -676,8 +247,7 @@
     </footer>
 
     <!-- JavaScript -->
-    <script src="enterprise-data.js"></script>
-    <script src="advanced-viz.js"></script>
-    <script src="advanced-demo.js"></script>
+    <script src="whitespace-engine.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
