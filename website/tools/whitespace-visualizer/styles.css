@@ -2641,23 +2641,27 @@
 /* Key Performance Metrics */
 .metrics-overview {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: var(--space-xl);
-    margin-bottom: var(--space-4xl);
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+    width: 100%;
+    max-width: 100%;
 }
 
 .metric-card {
-    padding: var(--space-xl);
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius-xl);
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
     backdrop-filter: blur(20px);
     display: flex;
     align-items: center;
-    gap: var(--space-lg);
-    transition: all var(--transition-base);
+    gap: 1rem;
+    transition: all 0.2s ease;
     position: relative;
     overflow: hidden;
+    min-height: 100px;
+    width: 100%;
 }
 
 .metric-card::before {
@@ -2872,9 +2876,24 @@
     }
 }
 
+@media (max-width: 1024px) {
+    .metrics-overview {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.25rem;
+    }
+}
+
 @media (max-width: 768px) {
     .metrics-overview {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .metrics-overview {
         grid-template-columns: 1fr;
+        gap: 1rem;
     }
     
     .analytics-grid {
