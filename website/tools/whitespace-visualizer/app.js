@@ -1125,91 +1125,265 @@ class WhitespaceApp {
 
     // Advanced Analytics Dashboard Functions
     displayAdvancedAnalytics(stats, opportunities) {
-        this.displayKeyMetrics(stats, opportunities);
-        this.displayAnalyticsCharts(stats, opportunities);
-        this.initializeAnalyticsInteractivity();
+        try {
+            console.log('Displaying advanced analytics...', { stats, opportunities });
+            
+            // Validate inputs
+            if (!stats) {
+                console.error('Stats object is missing');
+                this.displayAnalyticsError('Statistics data is not available');
+                return;
+            }
+            
+            if (!opportunities || !Array.isArray(opportunities)) {
+                console.error('Opportunities array is missing or invalid');
+                this.displayAnalyticsError('Opportunities data is not available');
+                return;
+            }
+            
+            this.displayKeyMetrics(stats, opportunities);
+            this.displayAnalyticsCharts(stats, opportunities);
+            this.initializeAnalyticsInteractivity();
+            
+            console.log('Advanced analytics displayed successfully');
+        } catch (error) {
+            console.error('Error displaying advanced analytics:', error);
+            this.displayAnalyticsError('Failed to load analytics dashboard: ' + error.message);
+        }
+    }
+    
+    displayAnalyticsError(message) {
+        // Display error message in analytics dashboard
+        const dashboardElement = document.querySelector('.analytics-dashboard');
+        if (dashboardElement) {
+            const errorHTML = `
+                <div class="analytics-error">
+                    <div class="error-icon">⚠️</div>
+                    <h3>Analytics Dashboard Error</h3>
+                    <p>${message}</p>
+                    <button onclick="app.runAnalysis()" class="btn btn-primary">Retry Analysis</button>
+                </div>
+            `;
+            dashboardElement.innerHTML = errorHTML;
+        }
     }
 
     displayKeyMetrics(stats, opportunities) {
-        // Total Pipeline Value
-        const totalPipeline = opportunities.reduce((sum, opp) => sum + opp.opportunityValue, 0);
-        document.getElementById('total-pipeline-value').textContent = `$${this.formatCurrency(totalPipeline)}`;
-        
-        // High-Probability Opportunities
-        const highProbOpps = opportunities.filter(opp => opp.score >= 70);
-        document.getElementById('qualified-opportunities').textContent = highProbOpps.length;
-        document.getElementById('opportunities-trend').textContent = `${highProbOpps.length} ready for immediate action`;
-        
-        // Average Account Penetration
-        const avgPenetration = this.engine.accounts.reduce((sum, acc) => sum + acc.penetrationRate, 0) / this.engine.accounts.length;
-        document.getElementById('average-penetration').textContent = `${Math.round(avgPenetration)}%`;
-        document.getElementById('penetration-trend').textContent = `${Math.round(100 - avgPenetration)}% whitespace remaining`;
-        
-        // Expansion Velocity Score
-        const velocityScore = this.calculateExpansionVelocityScore(stats, opportunities);
-        document.getElementById('expansion-velocity').textContent = velocityScore;
-        document.getElementById('velocity-trend').textContent = 'Speed of opportunity execution';
+        try {
+            console.log('Displaying key metrics...', { stats, opportunities });
+            
+            // Total Pipeline Value
+            const totalPipeline = opportunities.reduce((sum, opp) => sum + (opp.opportunityValue || 0), 0);
+            const pipelineElement = document.getElementById('total-pipeline-value');
+            if (pipelineElement) {
+                pipelineElement.textContent = `$${this.formatCurrency(totalPipeline)}`;
+            }
+            
+            // High-Probability Opportunities
+            const highProbOpps = opportunities.filter(opp => (opp.score || 0) >= 70);
+            const qualifiedElement = document.getElementById('qualified-opportunities');
+            const trendElement = document.getElementById('opportunities-trend');
+            
+            if (qualifiedElement) {
+                qualifiedElement.textContent = highProbOpps.length;
+            }
+            if (trendElement) {
+                trendElement.textContent = `${highProbOpps.length} ready for immediate action`;
+            }
+            
+            // Average Account Penetration
+            if (this.engine.accounts && this.engine.accounts.length > 0) {
+                const avgPenetration = this.engine.accounts.reduce((sum, acc) => {
+                    const penetration = parseFloat(acc.penetrationRate) || 0;
+                    return sum + penetration;
+                }, 0) / this.engine.accounts.length;
+                
+                const penetrationElement = document.getElementById('average-penetration');
+                const penetrationTrendElement = document.getElementById('penetration-trend');
+                
+                if (penetrationElement) {
+                    penetrationElement.textContent = `${Math.round(avgPenetration)}%`;
+                }
+                if (penetrationTrendElement) {
+                    penetrationTrendElement.textContent = `${Math.round(100 - avgPenetration)}% whitespace remaining`;
+                }
+            }
+            
+            // Expansion Velocity Score
+            const velocityScore = this.calculateExpansionVelocityScore(stats, opportunities);
+            const velocityElement = document.getElementById('expansion-velocity');
+            const velocityTrendElement = document.getElementById('velocity-trend');
+            
+            if (velocityElement) {
+                velocityElement.textContent = velocityScore;
+            }
+            if (velocityTrendElement) {
+                velocityTrendElement.textContent = 'Speed of opportunity execution';
+            }
+            
+            console.log('Key metrics displayed successfully');
+        } catch (error) {
+            console.error('Error displaying key metrics:', error);
+            // Continue with other analytics functions even if metrics fail
+        }
     }
 
     calculateExpansionVelocityScore(stats, opportunities) {
         // Calculate based on opportunity scoring, account readiness, and market dynamics
+        if (!opportunities || opportunities.length === 0) {
+            return 0;
+        }
+        
         const avgScore = opportunities.reduce((sum, opp) => sum + opp.score, 0) / opportunities.length;
-        const readinessScore = this.engine.accounts.reduce((sum, acc) => sum + acc.expansionReadiness, 0) / this.engine.accounts.length;
-        const velocityScore = Math.round((avgScore + readinessScore) / 2);
+        
+        // Calculate readiness score for each account using the engine's method
+        const readinessScores = this.engine.accounts.map(acc => {
+            try {
+                return this.engine.calculateExpansionReadiness(acc).score;
+            } catch (e) {
+                console.warn('Error calculating readiness for account', acc.name, e);
+                return 50; // Default readiness score
+            }
+        });
+        
+        const avgReadinessScore = readinessScores.reduce((sum, score) => sum + score, 0) / readinessScores.length;
+        const velocityScore = Math.round((avgScore + avgReadinessScore) / 2);
         return velocityScore;
     }
 
     displayAnalyticsCharts(stats, opportunities) {
-        // Revenue Opportunity Heatmap
-        this.renderOpportunityHeatmap(opportunities);
-        
-        // Account Growth Trajectory
-        this.renderGrowthTrajectory(stats);
-        
-        // Expansion Success Probability
-        this.renderProbabilityDistribution(opportunities);
-        
-        // Competitive Risk Assessment
-        this.renderCompetitiveRiskAssessment(stats);
-        
-        // Strategic Account Performance Matrix
-        this.renderPerformanceMatrix(stats);
+        try {
+            console.log('Displaying analytics charts...');
+            
+            // Revenue Opportunity Heatmap
+            try {
+                this.renderOpportunityHeatmap(opportunities);
+                console.log('Opportunity heatmap rendered successfully');
+            } catch (error) {
+                console.error('Error rendering opportunity heatmap:', error);
+                this.renderChartError('opportunity-heatmap', 'Failed to load heatmap');
+            }
+            
+            // Account Growth Trajectory
+            try {
+                this.renderGrowthTrajectory(stats);
+                console.log('Growth trajectory rendered successfully');
+            } catch (error) {
+                console.error('Error rendering growth trajectory:', error);
+                this.renderChartError('growth-trajectory', 'Failed to load growth chart');
+            }
+            
+            // Expansion Success Probability
+            try {
+                this.renderProbabilityDistribution(opportunities);
+                console.log('Probability distribution rendered successfully');
+            } catch (error) {
+                console.error('Error rendering probability distribution:', error);
+                this.renderChartError('probability-distribution', 'Failed to load probability chart');
+            }
+            
+            // Competitive Risk Assessment
+            try {
+                this.renderCompetitiveRiskAssessment(stats);
+                console.log('Risk assessment rendered successfully');
+            } catch (error) {
+                console.error('Error rendering risk assessment:', error);
+                this.renderChartError('competitive-risk', 'Failed to load risk assessment');
+            }
+            
+            // Strategic Account Performance Matrix
+            try {
+                this.renderPerformanceMatrix(stats);
+                console.log('Performance matrix rendered successfully');
+            } catch (error) {
+                console.error('Error rendering performance matrix:', error);
+                this.renderChartError('performance-matrix', 'Failed to load performance matrix');
+            }
+            
+            console.log('All analytics charts processed');
+        } catch (error) {
+            console.error('Error displaying analytics charts:', error);
+        }
+    }
+    
+    renderChartError(chartId, message) {
+        const chartContainer = document.getElementById(chartId);
+        if (chartContainer) {
+            chartContainer.innerHTML = `
+                <div class="chart-error">
+                    <div class="error-message">
+                        <span class="error-icon">⚠️</span>
+                        <span>${message}</span>
+                    </div>
+                </div>
+            `;
+        }
     }
 
     renderOpportunityHeatmap(opportunities) {
         const heatmapContainer = document.getElementById('opportunity-heatmap');
         
-        // Group opportunities by account and product
-        const heatmapData = {};
-        opportunities.forEach(opp => {
-            if (!heatmapData[opp.account.name]) {
-                heatmapData[opp.account.name] = {};
-            }
-            heatmapData[opp.account.name][opp.product.name] = opp.score;
-        });
-
-        let heatmapHTML = '<div class="heatmap-grid">';
+        if (!heatmapContainer) {
+            console.warn('Heatmap container not found');
+            return;
+        }
         
-        Object.entries(heatmapData).slice(0, 5).forEach(([accountName, products]) => {
-            heatmapHTML += `<div class="heatmap-row">
-                <div class="heatmap-label">${accountName}</div>
-                <div class="heatmap-cells">`;
-            
-            Object.entries(products).forEach(([productName, score]) => {
-                const intensity = score / 100;
-                const colorClass = score >= 70 ? 'high' : score >= 40 ? 'medium' : 'low';
-                heatmapHTML += `<div class="heatmap-cell ${colorClass}" 
-                    title="${productName}: ${score}%" 
-                    style="opacity: ${0.3 + intensity * 0.7}">
-                    ${Math.round(score)}%
-                </div>`;
+        if (!opportunities || opportunities.length === 0) {
+            heatmapContainer.innerHTML = '<div class="no-data-message">No opportunities available for heatmap</div>';
+            return;
+        }
+        
+        try {
+            // Group opportunities by account and product
+            const heatmapData = {};
+            opportunities.forEach(opp => {
+                if (!opp.account || !opp.product) {
+                    console.warn('Invalid opportunity data:', opp);
+                    return;
+                }
+                
+                const accountName = opp.account.name || 'Unknown Account';
+                const productName = opp.product.name || 'Unknown Product';
+                const score = opp.score || 0;
+                
+                if (!heatmapData[accountName]) {
+                    heatmapData[accountName] = {};
+                }
+                heatmapData[accountName][productName] = score;
             });
+
+            let heatmapHTML = '<div class="heatmap-grid">';
             
-            heatmapHTML += `</div></div>`;
-        });
-        
-        heatmapHTML += '</div>';
-        heatmapContainer.innerHTML = heatmapHTML;
+            const dataEntries = Object.entries(heatmapData);
+            if (dataEntries.length === 0) {
+                heatmapHTML = '<div class="no-data-message">No valid data for heatmap</div>';
+            } else {
+                dataEntries.slice(0, 5).forEach(([accountName, products]) => {
+                    heatmapHTML += `<div class="heatmap-row">
+                        <div class="heatmap-label">${accountName}</div>
+                        <div class="heatmap-cells">`;
+                    
+                    Object.entries(products).forEach(([productName, score]) => {
+                        const intensity = Math.max(0, Math.min(1, score / 100));
+                        const colorClass = score >= 70 ? 'high' : score >= 40 ? 'medium' : 'low';
+                        heatmapHTML += `<div class="heatmap-cell ${colorClass}" 
+                            title="${productName}: ${Math.round(score)}%" 
+                            style="opacity: ${0.3 + intensity * 0.7}">
+                            ${Math.round(score)}%
+                        </div>`;
+                    });
+                    
+                    heatmapHTML += `</div></div>`;
+                });
+                
+                heatmapHTML += '</div>';
+            }
+            
+            heatmapContainer.innerHTML = heatmapHTML;
+        } catch (error) {
+            console.error('Error rendering heatmap:', error);
+            heatmapContainer.innerHTML = '<div class="chart-error">Error rendering heatmap</div>';
+        }
     }
 
     renderGrowthTrajectory(stats) {
@@ -1328,44 +1502,74 @@ class WhitespaceApp {
     renderPerformanceMatrix(stats) {
         const matrixContainer = document.getElementById('performance-matrix');
         
-        // Create scatter plot data
-        const matrixData = this.engine.accounts.map(account => ({
-            name: account.name,
-            x: account.currentARR,
-            y: account.expansionReadiness || Math.random() * 100,
-            size: account.whitespaceValue,
-            color: account.penetrationRate > 60 ? 'var(--color-success)' : 
-                   account.penetrationRate > 30 ? 'var(--color-warning)' : 'var(--color-primary)'
-        }));
-
-        let matrixHTML = `
-            <div class="performance-scatter">
-                <div class="scatter-plot">
-        `;
+        if (!matrixContainer) {
+            console.warn('Performance matrix container not found');
+            return;
+        }
         
-        matrixData.forEach(point => {
-            const xPos = Math.min(90, (point.x / Math.max(...matrixData.map(p => p.x))) * 80 + 10);
-            const yPos = Math.min(90, (point.y / 100) * 80 + 10);
-            const bubbleSize = Math.min(20, Math.max(8, (point.size / Math.max(...matrixData.map(p => p.size))) * 15 + 5));
+        if (!this.engine.accounts || this.engine.accounts.length === 0) {
+            matrixContainer.innerHTML = '<div class="no-data-message">No accounts available for performance matrix</div>';
+            return;
+        }
+        
+        try {
+            // Create scatter plot data with safe property access
+            const matrixData = this.engine.accounts.map(account => {
+                // Calculate expansion readiness score safely
+                let expansionScore;
+                try {
+                    expansionScore = this.engine.calculateExpansionReadiness(account).score;
+                } catch (e) {
+                    expansionScore = Math.random() * 100; // Fallback to random score
+                }
+                
+                const penetrationRate = parseFloat(account.penetrationRate) || 0;
+                
+                return {
+                    name: account.name || 'Unknown Account',
+                    x: account.currentARR || 0,
+                    y: expansionScore,
+                    size: account.whitespaceValue || 0,
+                    color: penetrationRate > 60 ? 'var(--color-success)' : 
+                           penetrationRate > 30 ? 'var(--color-warning)' : 'var(--color-primary)'
+                };
+            });
+
+            const maxX = Math.max(...matrixData.map(p => p.x)) || 1;
+            const maxSize = Math.max(...matrixData.map(p => p.size)) || 1;
+
+            let matrixHTML = `
+                <div class="performance-scatter">
+                    <div class="scatter-plot">
+            `;
+            
+            matrixData.forEach(point => {
+                const xPos = Math.min(90, (point.x / maxX) * 80 + 10);
+                const yPos = Math.min(90, (point.y / 100) * 80 + 10);
+                const bubbleSize = Math.min(20, Math.max(8, (point.size / maxSize) * 15 + 5));
+                
+                matrixHTML += `
+                    <div class="scatter-point" 
+                         style="left: ${xPos}%; bottom: ${yPos}%; width: ${bubbleSize}px; height: ${bubbleSize}px; background: ${point.color}"
+                         title="${point.name}: ARR $${this.formatCurrency(point.x)}, Score ${Math.round(point.y)}%">
+                    </div>
+                `;
+            });
             
             matrixHTML += `
-                <div class="scatter-point" 
-                     style="left: ${xPos}%; bottom: ${yPos}%; width: ${bubbleSize}px; height: ${bubbleSize}px; background: ${point.color}"
-                     title="${point.name}: ARR $${this.formatCurrency(point.x)}, Score ${Math.round(point.y)}%">
+                    </div>
+                    <div class="scatter-axes">
+                        <div class="x-axis-label">Current ARR →</div>
+                        <div class="y-axis-label">Opportunity Score ↑</div>
+                    </div>
                 </div>
             `;
-        });
-        
-        matrixHTML += `
-                </div>
-                <div class="scatter-axes">
-                    <div class="x-axis-label">Current ARR →</div>
-                    <div class="y-axis-label">Opportunity Score ↑</div>
-                </div>
-            </div>
-        `;
-        
-        matrixContainer.innerHTML = matrixHTML;
+            
+            matrixContainer.innerHTML = matrixHTML;
+        } catch (error) {
+            console.error('Error rendering performance matrix:', error);
+            matrixContainer.innerHTML = '<div class="chart-error">Error rendering performance matrix</div>';
+        }
     }
 
     initializeAnalyticsInteractivity() {
