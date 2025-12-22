@@ -2645,28 +2645,31 @@
 .metrics-overview {
     display: grid !important;
     grid-template-columns: repeat(4, 1fr) !important;
-    gap: 1.5rem !important;
+    gap: 1rem !important;
     margin-bottom: 3rem !important;
     width: 100% !important;
     max-width: 100% !important;
-    grid-auto-rows: 1fr !important;
+    grid-auto-rows: minmax(120px, auto) !important;
+    align-items: stretch !important;
 }
 
 .metric-card {
-    padding: 1.5rem !important;
+    padding: 1.2rem !important;
     background: rgba(255, 255, 255, 0.05) !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
     border-radius: 12px !important;
     backdrop-filter: blur(20px) !important;
     display: flex !important;
     align-items: center !important;
-    gap: 1rem !important;
+    justify-content: flex-start !important;
+    gap: 0.8rem !important;
     transition: all 0.2s ease !important;
     position: relative !important;
     overflow: hidden !important;
-    min-height: 100px !important;
+    height: 120px !important;
     width: 100% !important;
     flex: 1 !important;
+    box-sizing: border-box !important;
 }
 
 .metric-card::before {
@@ -2698,11 +2701,16 @@
 }
 
 .metric-icon {
-    padding: var(--space-md);
-    background: var(--color-primary);
-    border-radius: var(--radius-lg);
-    color: white;
-    flex-shrink: 0;
+    padding: 0.8rem !important;
+    background: var(--color-primary) !important;
+    border-radius: 10px !important;
+    color: white !important;
+    flex-shrink: 0 !important;
+    width: 50px !important;
+    height: 50px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
 
 .metric-card.success .metric-icon {
@@ -2718,30 +2726,39 @@
 }
 
 .metric-content {
-    flex: 1;
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    height: 100% !important;
 }
 
 .metric-value {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--color-text);
-    margin-bottom: var(--space-xs);
-    font-family: var(--font-display);
+    font-size: 1.8rem !important;
+    font-weight: 700 !important;
+    color: var(--color-text) !important;
+    margin-bottom: 0.25rem !important;
+    font-family: var(--font-display) !important;
+    line-height: 1.2 !important;
 }
 
 .metric-label {
-    font-weight: 600;
-    color: var(--color-text-secondary);
-    margin-bottom: var(--space-xs);
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    font-weight: 600 !important;
+    color: var(--color-text-secondary) !important;
+    margin-bottom: 0.25rem !important;
+    font-size: 0.8rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    line-height: 1.3 !important;
 }
 
 .metric-trend {
-    font-size: 0.85rem;
-    color: var(--color-text-tertiary);
-    font-style: italic;
+    font-size: 0.75rem !important;
+    color: var(--color-text-tertiary) !important;
+    font-style: italic !important;
+    line-height: 1.2 !important;
+    margin-top: 0.1rem !important;
 }
 
 /* Analytics Grid */
