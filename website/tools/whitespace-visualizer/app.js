@@ -1454,73 +1454,48 @@ class WhitespaceApp {
         const trajectoryContainer = document.getElementById('growth-trajectory');
         if (!trajectoryContainer) return;
         
-        // Different data based on timeframe with more realistic projections
+        // Different data based on timeframe
         const timeframeMults = {
-            '3m': { mult: 1.05, label: '3M Target', color: '#06d6a0', period: '3 months' },
-            '6m': { mult: 1.15, label: '6M Target', color: '#118ab2', period: '6 months' },
-            '12m': { mult: 1.28, label: '12M Target', color: '#8b5cf6', period: '12 months' }
+            '3m': { mult: 1.05, label: '3M Target' },
+            '6m': { mult: 1.15, label: '6M Target' },
+            '12m': { mult: 1.25, label: '12M Target' }
         };
         
         const config = timeframeMults[timeframe] || timeframeMults['12m'];
         
+        // Only update the content area, preserve the header and controls
         trajectoryContainer.innerHTML = `
-            <div style="padding: 0; margin: 0;">
-                <div style="margin-bottom: 20px; padding: 15px; background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(139, 92, 246, 0.03) 100%); border-radius: 10px; border-left: 4px solid ${config.color};">
-                    <div style="font-size: 13px; color: rgba(255,255,255,0.9); font-weight: 600;">
-                        📈 Growth Projections • ${config.period}
+            <div style="display: flex; flex-direction: column; gap: 12px; padding: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(34, 197, 94, 0.1); border-radius: 8px; border-left: 3px solid #22c55e;">
+                    <div>
+                        <div style="font-weight: 600; color: #fff;">TechCorp Solutions</div>
+                        <div style="font-size: 0.9rem; color: rgba(255,255,255,0.8);">$125,000 → $${Math.round(125000 * config.mult).toLocaleString()}</div>
                     </div>
-                    <div style="font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 3px;">
-                        Projected revenue expansion based on current opportunities
-                    </div>
-                </div>
-                
-                <div style="display: flex; flex-direction: column; gap: 14px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: linear-gradient(135deg, rgba(34, 197, 94, 0.08) 0%, rgba(34, 197, 94, 0.02) 100%); border-radius: 10px; border-left: 4px solid #22c55e; position: relative; overflow: hidden;">
-                        <div style="position: absolute; top: 0; right: 0; width: 60px; height: 100%; background: linear-gradient(90deg, transparent 0%, rgba(34, 197, 94, 0.05) 100%);"></div>
-                        <div>
-                            <div style="font-size: 14px; font-weight: 700; color: var(--color-text);">TechCorp Solutions</div>
-                            <div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 3px;">
-                                $125,000 → <strong style="color: #22c55e;">$${Math.round(125000 * config.mult).toLocaleString()}</strong>
-                            </div>
-                        </div>
-                        <div style="text-align: right;">
-                            <div style="font-size: 16px; font-weight: 800; color: #22c55e;">+${Math.round((config.mult - 1) * 100)}%</div>
-                            <div style="font-size: 10px; color: rgba(255,255,255,0.6);">${config.label}</div>
-                        </div>
-                    </div>
-                    
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(59, 130, 246, 0.02) 100%); border-radius: 10px; border-left: 4px solid #3b82f6; position: relative; overflow: hidden;">
-                        <div style="position: absolute; top: 0; right: 0; width: 60px; height: 100%; background: linear-gradient(90deg, transparent 0%, rgba(59, 130, 246, 0.05) 100%);"></div>
-                        <div>
-                            <div style="font-size: 14px; font-weight: 700; color: var(--color-text);">FinanceFirst LLC</div>
-                            <div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 3px;">
-                                $85,000 → <strong style="color: #3b82f6;">$${Math.round(85000 * config.mult * 1.12).toLocaleString()}</strong>
-                            </div>
-                        </div>
-                        <div style="text-align: right;">
-                            <div style="font-size: 16px; font-weight: 800; color: #3b82f6;">+${Math.round((config.mult * 1.12 - 1) * 100)}%</div>
-                            <div style="font-size: 10px; color: rgba(255,255,255,0.6);">${config.label}</div>
-                        </div>
-                    </div>
-                    
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(139, 92, 246, 0.02) 100%); border-radius: 10px; border-left: 4px solid #8b5cf6; position: relative; overflow: hidden;">
-                        <div style="position: absolute; top: 0; right: 0; width: 60px; height: 100%; background: linear-gradient(90deg, transparent 0%, rgba(139, 92, 246, 0.05) 100%);"></div>
-                        <div>
-                            <div style="font-size: 14px; font-weight: 700; color: var(--color-text);">HealthPlus Systems</div>
-                            <div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 3px;">
-                                $200,000 → <strong style="color: #8b5cf6;">$${Math.round(200000 * config.mult * 1.08).toLocaleString()}</strong>
-                            </div>
-                        </div>
-                        <div style="text-align: right;">
-                            <div style="font-size: 16px; font-weight: 800; color: #8b5cf6;">+${Math.round((config.mult * 1.08 - 1) * 100)}%</div>
-                            <div style="font-size: 10px; color: rgba(255,255,255,0.6);">${config.label}</div>
-                        </div>
+                    <div style="text-align: right;">
+                        <div style="font-weight: 600; color: #22c55e;">+${Math.round((config.mult - 1) * 100)}%</div>
+                        <div style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">${config.label}</div>
                     </div>
                 </div>
                 
-                <div style="margin-top: 20px; padding: 12px; background: rgba(255,255,255,0.02); border-radius: 8px; text-align: center;">
-                    <div style="font-size: 11px; color: rgba(255,255,255,0.6);">
-                        Total projected growth: <strong style="color: ${config.color};">$${Math.round((125000 * config.mult + 85000 * config.mult * 1.12 + 200000 * config.mult * 1.08) - (125000 + 85000 + 200000)).toLocaleString()}</strong>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(59, 130, 246, 0.1); border-radius: 8px; border-left: 3px solid #3b82f6;">
+                    <div>
+                        <div style="font-weight: 600; color: #fff;">FinanceFirst LLC</div>
+                        <div style="font-size: 0.9rem; color: rgba(255,255,255,0.8);">$85,000 → $${Math.round(85000 * config.mult * 1.1).toLocaleString()}</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-weight: 600; color: #3b82f6;">+${Math.round((config.mult * 1.1 - 1) * 100)}%</div>
+                        <div style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">${config.label}</div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(139, 92, 246, 0.1); border-radius: 8px; border-left: 3px solid #8b5cf6;">
+                    <div>
+                        <div style="font-weight: 600; color: #fff;">HealthPlus Systems</div>
+                        <div style="font-size: 0.9rem; color: rgba(255,255,255,0.8);">$200,000 → $${Math.round(200000 * config.mult * 1.05).toLocaleString()}</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-weight: 600; color: #8b5cf6;">+${Math.round((config.mult * 1.05 - 1) * 100)}%</div>
+                        <div style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">${config.label}</div>
                     </div>
                 </div>
             </div>
@@ -1534,26 +1509,22 @@ class WhitespaceApp {
         if (!heatmapContainer) return;
         
         // Different data based on filter
-        let subtitle = '';
         let accounts = [];
         
         switch(filterValue) {
             case 'high':
-                subtitle = 'High Probability Opportunities Only';
                 accounts = [
                     { name: 'TechCorp Solutions', scores: ['High (70%)', 'Medium (50%)', 'Low (30%)'] },
                     { name: 'HealthPlus Systems', scores: ['Adopted', 'High (89%)', 'High (75%)'] }
                 ];
                 break;
             case 'strategic':
-                subtitle = 'Strategic Accounts Focus';
                 accounts = [
                     { name: 'TechCorp Solutions', scores: ['High (70%)', 'Medium (50%)', 'Low (30%)'] },
                     { name: 'FinanceFirst LLC', scores: ['Medium (60%)', 'High (85%)', 'Medium (45%)'] }
                 ];
                 break;
             default:
-                subtitle = 'All Opportunities';
                 accounts = [
                     { name: 'TechCorp Solutions', scores: ['High (70%)', 'Medium (50%)', 'Low (30%)'] },
                     { name: 'FinanceFirst LLC', scores: ['Medium (60%)', 'High (85%)', 'Medium (45%)'] },
@@ -1561,35 +1532,33 @@ class WhitespaceApp {
                 ];
         }
         
+        // Only update content area, keep within the analytics card structure
         heatmapContainer.innerHTML = `
-            <div style="padding: 20px; background: rgba(255,255,255,0.05); border-radius: 12px; margin: 10px 0;">
-                <h6 style="margin: 0 0 15px 0; color: var(--color-text); font-weight: 600;">Revenue Opportunity Heatmap</h6>
-                <p style="margin: 0 0 20px 0; color: var(--color-text-muted); font-size: 12px;">${subtitle}</p>
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;">
-                    <div style="text-align: center; font-size: 11px; font-weight: 500; color: var(--color-text-muted); padding: 8px 4px; background: rgba(255,255,255,0.03); border-radius: 6px;">Core Platform</div>
-                    <div style="text-align: center; font-size: 11px; font-weight: 500; color: var(--color-text-muted); padding: 8px 4px; background: rgba(255,255,255,0.03); border-radius: 6px;">Advanced Analytics</div>
-                    <div style="text-align: center; font-size: 11px; font-weight: 500; color: var(--color-text-muted); padding: 8px 4px; background: rgba(255,255,255,0.03); border-radius: 6px;">Mobile App Suite</div>
+            <div style="padding: 20px;">
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px;">
+                    <div style="text-align: center; font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.7); padding: 8px; background: rgba(255,255,255,0.05); border-radius: 6px;">Core Platform</div>
+                    <div style="text-align: center; font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.7); padding: 8px; background: rgba(255,255,255,0.05); border-radius: 6px;">Advanced Analytics</div>
+                    <div style="text-align: center; font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.7); padding: 8px; background: rgba(255,255,255,0.05); border-radius: 6px;">Mobile App Suite</div>
                 </div>
                 <div style="display: flex; flex-direction: column; gap: 8px;">
                     ${accounts.map(account => `
                         <div style="display: grid; grid-template-columns: 1fr repeat(3, 1fr); gap: 10px; align-items: center;">
-                            <div style="font-size: 12px; font-weight: 500; color: var(--color-text); padding: 8px;">${account.name}</div>
+                            <div style="font-size: 12px; font-weight: 600; color: #fff; padding: 8px;">${account.name}</div>
                             ${account.scores.map(score => {
-                                let bgColor = '#156, 163, 175';  // gray
-                                let color = '#9ca3af';
+                                let bgColor, color;
                                 
                                 if (score.includes('High') || score.includes('89') || score.includes('85') || score.includes('75') || score.includes('70')) {
-                                    bgColor = '34, 197, 94';  // green
+                                    bgColor = 'rgba(34, 197, 94, 0.2)';
                                     color = '#22c55e';
                                 } else if (score.includes('Medium') || score.includes('60') || score.includes('50') || score.includes('45')) {
-                                    bgColor = '251, 191, 36';  // yellow
+                                    bgColor = 'rgba(251, 191, 36, 0.2)';
                                     color = '#fbbf24';
-                                } else if (score.includes('Adopted')) {
-                                    bgColor = '156, 163, 175';  // gray
+                                } else {
+                                    bgColor = 'rgba(156, 163, 175, 0.2)';
                                     color = '#9ca3af';
                                 }
                                 
-                                return `<div style="text-align: center; padding: 8px; background: rgba(${bgColor}, 0.2); border-radius: 6px; color: ${color}; font-size: 11px; font-weight: 600;">${score}</div>`;
+                                return `<div style="text-align: center; padding: 8px; background: ${bgColor}; border-radius: 6px; color: ${color}; font-size: 11px; font-weight: 600;">${score}</div>`;
                             }).join('')}
                         </div>
                     `).join('')}
@@ -1607,50 +1576,38 @@ class WhitespaceApp {
         const xAxis = document.getElementById('matrix-x-axis')?.value || 'arr';
         const yAxis = document.getElementById('matrix-y-axis')?.value || 'score';
         
+        // Only update the content area, preserve the header with controls
         matrixContainer.innerHTML = `
-            <div style="padding: 25px; background: rgba(255,255,255,0.05); border-radius: 12px; margin: 15px 0;">
-                <h6 style="margin: 0 0 25px 0; color: var(--color-text); font-weight: 600; font-size: 14px;">Strategic Account Performance Matrix</h6>
-                
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 30px;">
-                    <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(34, 197, 94, 0.05) 100%); border-radius: 12px; border: 1px solid rgba(34, 197, 94, 0.3); position: relative; overflow: hidden;">
-                        <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #22c55e 0%, #16a34a 100%);"></div>
-                        <div style="font-size: 11px; color: rgba(255,255,255,0.8); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">High ${xAxis.toUpperCase()} + High ${yAxis.toUpperCase()}</div>
-                        <div style="font-size: 28px; font-weight: 800; color: #22c55e; margin: 8px 0;">4</div>
-                        <div style="font-size: 12px; color: rgba(255,255,255,0.7); font-weight: 500;">Premium Targets</div>
-                        <div style="font-size: 10px; color: rgba(255,255,255,0.5); margin-top: 4px;">Immediate focus</div>
+            <div style="padding: 20px;">
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px;">
+                    <div style="text-align: center; padding: 16px; background: rgba(34, 197, 94, 0.1); border-radius: 8px; border-left: 3px solid #22c55e;">
+                        <div style="font-size: 10px; color: rgba(255,255,255,0.7); margin-bottom: 5px; text-transform: uppercase;">High ${xAxis} + High ${yAxis}</div>
+                        <div style="font-size: 20px; font-weight: 700; color: #22c55e;">4</div>
+                        <div style="font-size: 11px; color: rgba(255,255,255,0.8);">Premium Targets</div>
                     </div>
                     
-                    <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(251, 191, 36, 0.05) 100%); border-radius: 12px; border: 1px solid rgba(251, 191, 36, 0.3); position: relative; overflow: hidden;">
-                        <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%);"></div>
-                        <div style="font-size: 11px; color: rgba(255,255,255,0.8); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">High ${xAxis.toUpperCase()} + Low ${yAxis.toUpperCase()}</div>
-                        <div style="font-size: 28px; font-weight: 800; color: #fbbf24; margin: 8px 0;">2</div>
-                        <div style="font-size: 12px; color: rgba(255,255,255,0.7); font-weight: 500;">Retention Risk</div>
-                        <div style="font-size: 10px; color: rgba(255,255,255,0.5); margin-top: 4px;">Monitor closely</div>
+                    <div style="text-align: center; padding: 16px; background: rgba(251, 191, 36, 0.1); border-radius: 8px; border-left: 3px solid #fbbf24;">
+                        <div style="font-size: 10px; color: rgba(255,255,255,0.7); margin-bottom: 5px; text-transform: uppercase;">High ${xAxis} + Low ${yAxis}</div>
+                        <div style="font-size: 20px; font-weight: 700; color: #fbbf24;">2</div>
+                        <div style="font-size: 11px; color: rgba(255,255,255,0.8);">Retention Risk</div>
                     </div>
                     
-                    <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.05) 100%); border-radius: 12px; border: 1px solid rgba(59, 130, 246, 0.3); position: relative; overflow: hidden;">
-                        <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);"></div>
-                        <div style="font-size: 11px; color: rgba(255,255,255,0.8); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Low ${xAxis.toUpperCase()} + High ${yAxis.toUpperCase()}</div>
-                        <div style="font-size: 28px; font-weight: 800; color: #3b82f6; margin: 8px 0;">6</div>
-                        <div style="font-size: 12px; color: rgba(255,255,255,0.7); font-weight: 500;">Growth Potential</div>
-                        <div style="font-size: 10px; color: rgba(255,255,255,0.5); margin-top: 4px;">Scale opportunities</div>
+                    <div style="text-align: center; padding: 16px; background: rgba(59, 130, 246, 0.1); border-radius: 8px; border-left: 3px solid #3b82f6;">
+                        <div style="font-size: 10px; color: rgba(255,255,255,0.7); margin-bottom: 5px; text-transform: uppercase;">Low ${xAxis} + High ${yAxis}</div>
+                        <div style="font-size: 20px; font-weight: 700; color: #3b82f6;">6</div>
+                        <div style="font-size: 11px; color: rgba(255,255,255,0.8);">Growth Potential</div>
                     </div>
                     
-                    <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, rgba(107, 114, 128, 0.15) 0%, rgba(107, 114, 128, 0.05) 100%); border-radius: 12px; border: 1px solid rgba(107, 114, 128, 0.3); position: relative; overflow: hidden;">
-                        <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #6b7280 0%, #4b5563 100%);"></div>
-                        <div style="font-size: 11px; color: rgba(255,255,255,0.8); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Low ${xAxis.toUpperCase()} + Low ${yAxis.toUpperCase()}</div>
-                        <div style="font-size: 28px; font-weight: 800; color: #6b7280; margin: 8px 0;">3</div>
-                        <div style="font-size: 12px; color: rgba(255,255,255,0.7); font-weight: 500;">Monitor</div>
-                        <div style="font-size: 10px; color: rgba(255,255,255,0.5); margin-top: 4px;">Low priority</div>
+                    <div style="text-align: center; padding: 16px; background: rgba(107, 114, 128, 0.1); border-radius: 8px; border-left: 3px solid #6b7280;">
+                        <div style="font-size: 10px; color: rgba(255,255,255,0.7); margin-bottom: 5px; text-transform: uppercase;">Low ${xAxis} + Low ${yAxis}</div>
+                        <div style="font-size: 20px; font-weight: 700; color: #6b7280;">3</div>
+                        <div style="font-size: 11px; color: rgba(255,255,255,0.8);">Monitor</div>
                     </div>
                 </div>
                 
-                <div style="text-align: center; padding: 18px; background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%); border-radius: 10px; border: 1px solid rgba(139, 92, 246, 0.2);">
-                    <div style="font-size: 13px; color: rgba(255,255,255,0.8); font-weight: 500;">
-                        💡 Focus expansion efforts on <strong style="color: #22c55e; font-weight: 700;">Premium Targets</strong> and <strong style="color: #3b82f6; font-weight: 700;">Growth Potential</strong> quadrants
-                    </div>
-                    <div style="font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 5px;">
-                        Currently viewing: ${xAxis.charAt(0).toUpperCase() + xAxis.slice(1)} vs ${yAxis.charAt(0).toUpperCase() + yAxis.slice(1)}
+                <div style="text-align: center; padding: 12px; background: rgba(255,255,255,0.05); border-radius: 8px;">
+                    <div style="font-size: 11px; color: rgba(255,255,255,0.7);">
+                        Focus on <strong style="color: #22c55e;">Premium Targets</strong> and <strong style="color: #3b82f6;">Growth Potential</strong>
                     </div>
                 </div>
             </div>
