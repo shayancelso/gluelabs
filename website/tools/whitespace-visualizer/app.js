@@ -1371,40 +1371,40 @@ class WhitespaceApp {
             console.log('Building ultra-simple probability chart...');
             
             probabilityContainer.innerHTML = `
-                <div style="padding: 20px; background: rgba(255,255,255,0.05); border-radius: 12px; margin: 10px 0;">
-                    <h6 style="margin: 0 0 15px 0; color: var(--color-text); font-weight: 600;">Expansion Success Probability</h6>
-                    <div style="display: flex; flex-direction: column; gap: 10px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-size: 12px; color: var(--color-text);">High Probability (>70%)</span>
-                            <div style="display: flex; align-items: center; gap: 8px;">
-                                <div style="width: 60px; height: 6px; background: rgba(34, 197, 94, 0.2); border-radius: 3px; overflow: hidden;">
-                                    <div style="width: 85%; height: 100%; background: #22c55e; border-radius: 3px;"></div>
+                <div style="padding: 25px; background: rgba(255,255,255,0.05); border-radius: 12px; margin: 15px 0;">
+                    <h6 style="margin: 0 0 20px 0; color: var(--color-text); font-weight: 600; font-size: 14px;">Expansion Success Probability</h6>
+                    <div style="display: flex; flex-direction: column; gap: 14px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0;">
+                            <span style="font-size: 13px; color: var(--color-text);">High Probability (>70%)</span>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 80px; height: 8px; background: rgba(34, 197, 94, 0.2); border-radius: 4px; overflow: hidden;">
+                                    <div style="width: 85%; height: 100%; background: #22c55e; border-radius: 4px;"></div>
                                 </div>
-                                <span style="font-size: 12px; font-weight: 600; color: #22c55e;">42%</span>
+                                <span style="font-size: 13px; font-weight: 600; color: #22c55e; min-width: 35px;">42%</span>
                             </div>
                         </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-size: 12px; color: var(--color-text);">Medium Probability (40-70%)</span>
-                            <div style="display: flex; align-items: center; gap: 8px;">
-                                <div style="width: 60px; height: 6px; background: rgba(251, 191, 36, 0.2); border-radius: 3px; overflow: hidden;">
-                                    <div style="width: 65%; height: 100%; background: #fbbf24; border-radius: 3px;"></div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0;">
+                            <span style="font-size: 13px; color: var(--color-text);">Medium Probability (40-70%)</span>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 80px; height: 8px; background: rgba(251, 191, 36, 0.2); border-radius: 4px; overflow: hidden;">
+                                    <div style="width: 65%; height: 100%; background: #fbbf24; border-radius: 4px;"></div>
                                 </div>
-                                <span style="font-size: 12px; font-weight: 600; color: #fbbf24;">35%</span>
+                                <span style="font-size: 13px; font-weight: 600; color: #fbbf24; min-width: 35px;">35%</span>
                             </div>
                         </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-size: 12px; color: var(--color-text);">Low Probability (<40%)</span>
-                            <div style="display: flex; align-items: center; gap: 8px;">
-                                <div style="width: 60px; height: 6px; background: rgba(239, 68, 68, 0.2); border-radius: 3px; overflow: hidden;">
-                                    <div style="width: 25%; height: 100%; background: #ef4444; border-radius: 3px;"></div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0;">
+                            <span style="font-size: 13px; color: var(--color-text);">Low Probability (<40%)</span>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 80px; height: 8px; background: rgba(239, 68, 68, 0.2); border-radius: 4px; overflow: hidden;">
+                                    <div style="width: 25%; height: 100%; background: #ef4444; border-radius: 4px;"></div>
                                 </div>
-                                <span style="font-size: 12px; font-weight: 600; color: #ef4444;">23%</span>
+                                <span style="font-size: 13px; font-weight: 600; color: #ef4444; min-width: 35px;">23%</span>
                             </div>
                         </div>
-                        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
+                        <div style="margin-top: 20px; padding: 15px; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; background: rgba(255,255,255,0.03);">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-size: 12px; color: var(--color-text-muted);">Weighted Success Rate</span>
-                                <span style="font-size: 14px; font-weight: 600; color: var(--color-text);">67%</span>
+                                <span style="font-size: 13px; color: rgba(255,255,255,0.7);">Weighted Success Rate</span>
+                                <span style="font-size: 16px; font-weight: 700; color: var(--color-text);">67%</span>
                             </div>
                         </div>
                     </div>
@@ -1419,23 +1419,34 @@ class WhitespaceApp {
             console.log('Building ultra-simple risk assessment...');
             
             riskContainer.innerHTML = `
-                <div style="padding: 20px; background: rgba(255,255,255,0.05); border-radius: 12px; margin: 10px 0;">
-                    <h6 style="margin: 0 0 15px 0; color: var(--color-text); font-weight: 600;">Competitive Risk Assessment</h6>
-                    <div style="display: flex; flex-direction: column; gap: 10px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: rgba(239, 68, 68, 0.1); border-radius: 6px; border-left: 3px solid #ef4444;">
-                            <span style="font-size: 12px; font-weight: 500; color: var(--color-text);">High Risk Accounts</span>
-                            <span style="font-size: 12px; font-weight: 600; color: #ef4444;">3 accounts</span>
+                <div style="padding: 25px; background: rgba(255,255,255,0.05); border-radius: 12px; margin: 15px 0;">
+                    <h6 style="margin: 0 0 20px 0; color: var(--color-text); font-weight: 600; font-size: 14px;">Competitive Risk Assessment</h6>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: rgba(239, 68, 68, 0.1); border-radius: 8px; border-left: 4px solid #ef4444;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <div style="width: 8px; height: 8px; background: #ef4444; border-radius: 50%;"></div>
+                                <span style="font-size: 13px; font-weight: 500; color: var(--color-text);">High Risk Accounts</span>
+                            </div>
+                            <span style="font-size: 14px; font-weight: 600; color: #ef4444;">3</span>
                         </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: rgba(251, 191, 36, 0.1); border-radius: 6px; border-left: 3px solid #fbbf24;">
-                            <span style="font-size: 12px; font-weight: 500; color: var(--color-text);">Medium Risk Accounts</span>
-                            <span style="font-size: 12px; font-weight: 600; color: #fbbf24;">5 accounts</span>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: rgba(251, 191, 36, 0.1); border-radius: 8px; border-left: 4px solid #fbbf24;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <div style="width: 8px; height: 8px; background: #fbbf24; border-radius: 50%;"></div>
+                                <span style="font-size: 13px; font-weight: 500; color: var(--color-text);">Medium Risk Accounts</span>
+                            </div>
+                            <span style="font-size: 14px; font-weight: 600; color: #fbbf24;">5</span>
                         </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: rgba(34, 197, 94, 0.1); border-radius: 6px; border-left: 3px solid #22c55e;">
-                            <span style="font-size: 12px; font-weight: 500; color: var(--color-text);">Low Risk Accounts</span>
-                            <span style="font-size: 12px; font-weight: 600; color: #22c55e;">7 accounts</span>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: rgba(34, 197, 94, 0.1); border-radius: 8px; border-left: 4px solid #22c55e;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <div style="width: 8px; height: 8px; background: #22c55e; border-radius: 50%;"></div>
+                                <span style="font-size: 13px; font-weight: 500; color: var(--color-text);">Low Risk Accounts</span>
+                            </div>
+                            <span style="font-size: 14px; font-weight: 600; color: #22c55e;">7</span>
                         </div>
-                        <div style="margin-top: 10px; padding: 8px 0; font-size: 11px; color: var(--color-text-muted); text-align: center;">
-                            Next review: January 15, 2025
+                        <div style="margin-top: 15px; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 8px; text-align: center;">
+                            <div style="font-size: 12px; color: rgba(255,255,255,0.6);">
+                                📅 Next review: <strong style="color: var(--color-text);">January 15, 2025</strong>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1449,28 +1460,32 @@ class WhitespaceApp {
             console.log('Building ultra-simple performance matrix...');
             
             matrixContainer.innerHTML = `
-                <div style="padding: 20px; background: rgba(255,255,255,0.05); border-radius: 12px; margin: 10px 0;">
-                    <h6 style="margin: 0 0 15px 0; color: var(--color-text); font-weight: 600;">Account Performance Overview</h6>
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px;">
-                        <div style="text-align: center; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 8px;">
-                            <div style="font-size: 11px; color: var(--color-text-muted); margin-bottom: 4px;">High ARR + High Score</div>
-                            <div style="font-size: 16px; font-weight: 600; color: #22c55e;">4 accounts</div>
+                <div style="padding: 25px; background: rgba(255,255,255,0.05); border-radius: 12px; margin: 15px 0;">
+                    <h6 style="margin: 0 0 20px 0; color: var(--color-text); font-weight: 600; font-size: 14px;">Strategic Account Performance Matrix</h6>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-bottom: 25px;">
+                        <div style="text-align: center; padding: 16px; background: rgba(34, 197, 94, 0.1); border-radius: 10px; border: 1px solid rgba(34, 197, 94, 0.2);">
+                            <div style="font-size: 11px; color: rgba(255,255,255,0.7); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">High ARR + High Score</div>
+                            <div style="font-size: 18px; font-weight: 700; color: #22c55e;">4</div>
+                            <div style="font-size: 10px; color: rgba(255,255,255,0.6); margin-top: 2px;">Premium Targets</div>
                         </div>
-                        <div style="text-align: center; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 8px;">
-                            <div style="font-size: 11px; color: var(--color-text-muted); margin-bottom: 4px;">High ARR + Low Score</div>
-                            <div style="font-size: 16px; font-weight: 600; color: #fbbf24;">2 accounts</div>
+                        <div style="text-align: center; padding: 16px; background: rgba(251, 191, 36, 0.1); border-radius: 10px; border: 1px solid rgba(251, 191, 36, 0.2);">
+                            <div style="font-size: 11px; color: rgba(255,255,255,0.7); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">High ARR + Low Score</div>
+                            <div style="font-size: 18px; font-weight: 700; color: #fbbf24;">2</div>
+                            <div style="font-size: 10px; color: rgba(255,255,255,0.6); margin-top: 2px;">Retention Risk</div>
                         </div>
-                        <div style="text-align: center; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 8px;">
-                            <div style="font-size: 11px; color: var(--color-text-muted); margin-bottom: 4px;">Low ARR + High Score</div>
-                            <div style="font-size: 16px; font-weight: 600; color: #3b82f6;">6 accounts</div>
+                        <div style="text-align: center; padding: 16px; background: rgba(59, 130, 246, 0.1); border-radius: 10px; border: 1px solid rgba(59, 130, 246, 0.2);">
+                            <div style="font-size: 11px; color: rgba(255,255,255,0.7); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Low ARR + High Score</div>
+                            <div style="font-size: 18px; font-weight: 700; color: #3b82f6;">6</div>
+                            <div style="font-size: 10px; color: rgba(255,255,255,0.6); margin-top: 2px;">Growth Potential</div>
                         </div>
-                        <div style="text-align: center; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 8px;">
-                            <div style="font-size: 11px; color: var(--color-text-muted); margin-bottom: 4px;">Low ARR + Low Score</div>
-                            <div style="font-size: 16px; font-weight: 600; color: #6b7280;">3 accounts</div>
+                        <div style="text-align: center; padding: 16px; background: rgba(107, 114, 128, 0.1); border-radius: 10px; border: 1px solid rgba(107, 114, 128, 0.2);">
+                            <div style="font-size: 11px; color: rgba(255,255,255,0.7); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Low ARR + Low Score</div>
+                            <div style="font-size: 18px; font-weight: 700; color: #6b7280;">3</div>
+                            <div style="font-size: 10px; color: rgba(255,255,255,0.6); margin-top: 2px;">Monitor</div>
                         </div>
                     </div>
-                    <div style="text-align: center; font-size: 11px; color: var(--color-text-muted);">
-                        Focus on High Score quadrants for maximum ROI
+                    <div style="text-align: center; font-size: 12px; color: rgba(255,255,255,0.6); padding: 12px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                        💡 Focus expansion efforts on <strong style="color: #22c55e;">Premium Targets</strong> and <strong style="color: #3b82f6;">Growth Potential</strong> quadrants
                     </div>
                 </div>
             `;
