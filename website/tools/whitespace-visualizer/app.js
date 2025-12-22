@@ -138,20 +138,39 @@ class WhitespaceApp {
     }
 
     displayResults(results) {
+        console.log('🚀 DISPLAY RESULTS CALLED');
         console.log('Analysis results:', results); // Debug log
         
         // Check if analytics dashboard exists in DOM
         const analyticsSection = document.querySelector('.analytics-dashboard');
         if (!analyticsSection) {
-            console.error('Analytics dashboard section not found in DOM');
+            console.error('❌ Analytics dashboard section not found in DOM');
+            // Let's try to find any analytics elements
+            const allAnalyticsElements = document.querySelectorAll('[id*="analytics"], [class*="analytics"]');
+            console.log('Found analytics elements:', allAnalyticsElements);
+        } else {
+            console.log('✅ Analytics dashboard section found in DOM');
         }
         
+        console.log('📊 About to call displayStats...');
         this.displayStats(results.stats);
+        
+        console.log('📋 About to call displayMatrix...');
         this.displayMatrix(results.matrix);
+        
+        console.log('💰 About to call displayRevenueProjections...');
         this.displayRevenueProjections(results.stats.revenueProjections);
+        
+        console.log('📚 About to call displayExpansionPlaybooks...');
         this.displayExpansionPlaybooks();
+        
+        console.log('📈 About to call displayAdvancedAnalytics...');
         this.displayAdvancedAnalytics(results.stats, results.opportunities);
+        
+        console.log('📊 About to call displayDashboard...');
         this.displayDashboard(results.opportunities, results.stats);
+        
+        console.log('✅ All display functions called');
     }
 
     displayStats(stats) {
@@ -1133,7 +1152,31 @@ class WhitespaceApp {
     // Advanced Analytics Dashboard Functions
     displayAdvancedAnalytics(stats, opportunities) {
         try {
+            console.log('🔥 ADVANCED ANALYTICS FUNCTION CALLED!');
             console.log('=== ANALYTICS DEBUG START ===');
+            
+            // First check if the dashboard HTML is there
+            const dashboardElement = document.querySelector('.analytics-dashboard');
+            console.log('Analytics dashboard element:', dashboardElement);
+            
+            if (!dashboardElement) {
+                console.error('❌ CRITICAL: .analytics-dashboard element not found in DOM!');
+                return;
+            }
+            
+            // Check if it's visible
+            const computedStyle = window.getComputedStyle(dashboardElement);
+            console.log('Dashboard display style:', computedStyle.display);
+            console.log('Dashboard visibility style:', computedStyle.visibility);
+            console.log('Dashboard opacity style:', computedStyle.opacity);
+            
+            // Check for key metric elements
+            const pipelineEl = document.getElementById('total-pipeline-value');
+            console.log('Pipeline element exists:', !!pipelineEl);
+            
+            const qualifiedEl = document.getElementById('qualified-opportunities');
+            console.log('Qualified element exists:', !!qualifiedEl);
+            
             console.log('Stats object:', stats);
             console.log('Opportunities array:', opportunities);
             console.log('Opportunities length:', opportunities ? opportunities.length : 'undefined');
@@ -1695,7 +1738,52 @@ class WhitespaceApp {
 
     // Test function to manually trigger analytics
     testAnalytics() {
-        console.log('Testing analytics manually...');
+        console.log('🧪 TESTING ANALYTICS MANUALLY...');
+        
+        // First, let's directly test if we can set values in the HTML elements
+        console.log('🔍 Testing direct HTML element access...');
+        
+        const pipelineEl = document.getElementById('total-pipeline-value');
+        const qualifiedEl = document.getElementById('qualified-opportunities');
+        const penetrationEl = document.getElementById('average-penetration');
+        const velocityEl = document.getElementById('expansion-velocity');
+        
+        console.log('Pipeline element:', pipelineEl);
+        console.log('Qualified element:', qualifiedEl);
+        console.log('Penetration element:', penetrationEl);
+        console.log('Velocity element:', velocityEl);
+        
+        // Try to directly set values
+        if (pipelineEl) {
+            pipelineEl.textContent = '$1,234,567';
+            console.log('✅ Set pipeline value directly');
+        } else {
+            console.error('❌ Pipeline element not found');
+        }
+        
+        if (qualifiedEl) {
+            qualifiedEl.textContent = '42';
+            console.log('✅ Set qualified opportunities directly');
+        } else {
+            console.error('❌ Qualified element not found');
+        }
+        
+        if (penetrationEl) {
+            penetrationEl.textContent = '67%';
+            console.log('✅ Set penetration directly');
+        } else {
+            console.error('❌ Penetration element not found');
+        }
+        
+        if (velocityEl) {
+            velocityEl.textContent = '89';
+            console.log('✅ Set velocity directly');
+        } else {
+            console.error('❌ Velocity element not found');
+        }
+        
+        console.log('🎯 If you can see these test values in the UI, the HTML is working');
+        console.log('📋 Next, testing with actual data flow...');
         
         // Check if sample data is loaded
         if (!this.engine.accounts || this.engine.accounts.length === 0) {
