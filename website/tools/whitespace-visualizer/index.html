@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="../../styles.css">
     <link rel="stylesheet" href="../tools.css">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="advanced-styles.css">
     <!-- Vercel Analytics -->
     <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -98,80 +99,113 @@
         </div>
     </section>
 
-    <!-- Live Demo Section -->
+    <!-- Advanced Live Demo Section -->
     <section class="live-demo" id="live-demo">
         <div class="container">
             <div class="section-header center">
-                <span class="section-label">Interactive Demo</span>
-                <h2>See whitespace analysis in action</h2>
-                <p class="section-intro">Click around to explore how teams identify expansion opportunities across their account portfolio.</p>
+                <span class="section-label">Enterprise Demo</span>
+                <h2>Advanced whitespace intelligence platform</h2>
+                <p class="section-intro">Experience sophisticated account analysis with AI-powered recommendations, interactive heat maps, and comprehensive stakeholder insights.</p>
             </div>
 
-            <div class="demo-window">
-                <div class="window-header">
-                    <div class="window-dots">
-                        <span class="dot red"></span>
-                        <span class="dot yellow"></span>
-                        <span class="dot green"></span>
-                    </div>
-                    <span class="window-title">Whitespace Visualizer — Portfolio Overview</span>
+            <!-- Account Selector -->
+            <div class="account-selector">
+                <div class="selector-header">
+                    <h4>Select Account Portfolio</h4>
+                    <span class="portfolio-stats">3 Strategic Accounts • $1.38M Current ARR • $3.68M Expansion Potential</span>
                 </div>
-                <div class="window-content">
-                    <div class="viz-layout">
-                        <div class="viz-sidebar">
-                            <div class="viz-filter">
-                                <span class="filter-label">View By</span>
-                                <div class="filter-options">
-                                    <button class="filter-btn active" data-filter="product">Product</button>
-                                    <button class="filter-btn" data-filter="region">Region</button>
-                                    <button class="filter-btn" data-filter="segment">Segment</button>
-                                </div>
+                <div class="account-grid" id="account-selector">
+                    <div class="account-card" data-account="global-tech-corp">
+                        <div class="account-header">
+                            <div class="account-info">
+                                <h5>Global Tech Corp</h5>
+                                <span class="account-details">Technology • 15K employees • $2.5B revenue</span>
                             </div>
-                            <div class="viz-accounts" id="account-list">
-                                <div class="account-item selected" data-account="acme">
-                                    <span class="account-name">Acme Corp</span>
-                                    <span class="account-value">$245K</span>
-                                </div>
-                                <div class="account-item" data-account="techstart">
-                                    <span class="account-name">TechStart Inc</span>
-                                    <span class="account-value">$180K</span>
-                                </div>
-                                <div class="account-item" data-account="globalco">
-                                    <span class="account-name">GlobalCo</span>
-                                    <span class="account-value">$320K</span>
-                                </div>
-                                <div class="account-item" data-account="fastgrow">
-                                    <span class="account-name">FastGrow LLC</span>
-                                    <span class="account-value">$95K</span>
-                                </div>
+                            <div class="account-tier strategic">Strategic</div>
+                        </div>
+                        <div class="account-metrics">
+                            <div class="account-metric">
+                                <span class="metric-label">Current ARR</span>
+                                <span class="metric-value">$485K</span>
+                            </div>
+                            <div class="account-metric">
+                                <span class="metric-label">Expansion Potential</span>
+                                <span class="metric-value">$1.2M</span>
+                            </div>
+                            <div class="account-metric">
+                                <span class="metric-label">Health Score</span>
+                                <span class="metric-value health-score">85</span>
                             </div>
                         </div>
-                        <div class="viz-main">
-                            <div class="viz-header">
-                                <h3 id="viz-title">Acme Corp — Product Whitespace Analysis</h3>
-                                <div class="viz-legend">
-                                    <span class="legend-item"><span class="legend-dot adopted"></span> Adopted</span>
-                                    <span class="legend-item"><span class="legend-dot opportunity"></span> High-Value Opportunity</span>
-                                    <span class="legend-item"><span class="legend-dot none"></span> Not Applicable</span>
-                                </div>
+                    </div>
+                    
+                    <div class="account-card" data-account="innovate-startup">
+                        <div class="account-header">
+                            <div class="account-info">
+                                <h5>Innovate Startup</h5>
+                                <span class="account-details">FinTech • 850 employees • $125M revenue</span>
                             </div>
-                            <div class="viz-grid" id="viz-grid">
-                                <!-- Interactive whitespace grid populated by JavaScript -->
+                            <div class="account-tier growth">Growth</div>
+                        </div>
+                        <div class="account-metrics">
+                            <div class="account-metric">
+                                <span class="metric-label">Current ARR</span>
+                                <span class="metric-value">$145K</span>
                             </div>
-                            <div class="viz-summary">
-                                <div class="summary-card highlight">
-                                    <span class="summary-label">Total Whitespace Opportunity</span>
-                                    <span class="summary-value gradient-text" id="total-whitespace">$245K</span>
-                                </div>
-                                <div class="summary-card">
-                                    <span class="summary-label">Product Coverage</span>
-                                    <span class="summary-value" id="coverage-score">40%</span>
-                                </div>
-                                <div class="summary-card">
-                                    <span class="summary-label">Expansion Priority</span>
-                                    <span class="summary-value" id="priority-rank">#1 of 4</span>
-                                </div>
+                            <div class="account-metric">
+                                <span class="metric-label">Expansion Potential</span>
+                                <span class="metric-value">$380K</span>
                             </div>
+                            <div class="account-metric">
+                                <span class="metric-label">Health Score</span>
+                                <span class="metric-value health-score">92</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="account-card" data-account="enterprise-bank">
+                        <div class="account-header">
+                            <div class="account-info">
+                                <h5>Enterprise Bank</h5>
+                                <span class="account-details">Financial Services • 25K employees • $8.2B revenue</span>
+                            </div>
+                            <div class="account-tier strategic">Strategic</div>
+                        </div>
+                        <div class="account-metrics">
+                            <div class="account-metric">
+                                <span class="metric-label">Current ARR</span>
+                                <span class="metric-value">$750K</span>
+                            </div>
+                            <div class="account-metric">
+                                <span class="metric-label">Expansion Potential</span>
+                                <span class="metric-value">$2.1M</span>
+                            </div>
+                            <div class="account-metric">
+                                <span class="metric-label">Health Score</span>
+                                <span class="metric-value health-score">78</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Advanced Visualization Container -->
+            <div class="advanced-demo-container" id="advanced-demo">
+                <div class="demo-placeholder">
+                    <div class="placeholder-content">
+                        <div class="placeholder-icon">
+                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                <path d="M3 9h18M9 9v12"/>
+                            </svg>
+                        </div>
+                        <h4>Select an account to begin analysis</h4>
+                        <p>Choose from our portfolio of enterprise accounts to explore sophisticated whitespace analysis capabilities.</p>
+                        <div class="feature-highlights">
+                            <span class="feature">🤖 AI-powered recommendations</span>
+                            <span class="feature">📊 Interactive heat maps</span>
+                            <span class="feature">👥 Stakeholder network mapping</span>
+                            <span class="feature">📈 Scenario planning tools</span>
                         </div>
                     </div>
                 </div>
@@ -642,6 +676,8 @@
     </footer>
 
     <!-- JavaScript -->
-    <script src="script.js"></script>
+    <script src="enterprise-data.js"></script>
+    <script src="advanced-viz.js"></script>
+    <script src="advanced-demo.js"></script>
 </body>
 </html>
