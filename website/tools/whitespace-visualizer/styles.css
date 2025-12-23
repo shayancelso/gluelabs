@@ -286,6 +286,7 @@
     box-shadow: var(--glass-shadow);
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    position: relative;
 }
 
 .matrix-header {
@@ -351,6 +352,26 @@
     border-spacing: 4px;
     min-width: max-content;
     position: relative;
+    table-layout: fixed;
+}
+
+/* Ensure smooth scrolling */
+.matrix-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.matrix-container::-webkit-scrollbar-track {
+    background: var(--glass-bg);
+    border-radius: 4px;
+}
+
+.matrix-container::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    border-radius: 4px;
+}
+
+.matrix-container::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary-dark);
 }
 
 .matrix-table td,
@@ -378,16 +399,17 @@
 }
 
 .matrix-table th.account-header {
-    background: var(--color-bg);
+    background: var(--color-bg-alt);
     text-align: left;
     min-width: 180px;
     cursor: default;
     font-weight: 600;
     position: sticky;
     left: 0;
-    z-index: 10;
-    border-right: 3px solid var(--glass-border);
-    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+    z-index: 15;
+    border-right: 3px solid var(--color-primary);
+    box-shadow: 3px 0 8px rgba(0, 0, 0, 0.15);
+    border-left: 0;
 }
 
 .matrix-cell {
@@ -454,17 +476,18 @@
 
 /* Body row account headers (th elements in tbody) */
 .matrix-table tbody th.account-header {
-    background: var(--color-bg);
+    background: var(--color-bg-alt);
     justify-content: flex-start;
     min-width: 180px;
     cursor: default;
     position: sticky;
     left: 0;
-    z-index: 5;
-    border-right: 3px solid var(--glass-border);
+    z-index: 10;
+    border-right: 3px solid var(--color-primary);
     text-align: left;
     font-weight: 600;
-    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 3px 0 8px rgba(0, 0, 0, 0.15);
+    border-left: 0;
 }
 
 .matrix-cell.adopted {
