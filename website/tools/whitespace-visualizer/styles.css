@@ -350,6 +350,7 @@
     border-collapse: separate;
     border-spacing: 4px;
     min-width: max-content;
+    position: relative;
 }
 
 .matrix-table td,
@@ -377,7 +378,7 @@
 }
 
 .matrix-table th.account-header {
-    background: var(--glass-bg);
+    background: var(--color-bg);
     text-align: left;
     min-width: 180px;
     cursor: default;
@@ -385,7 +386,8 @@
     position: sticky;
     left: 0;
     z-index: 10;
-    border-right: 2px solid var(--glass-border);
+    border-right: 3px solid var(--glass-border);
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
 }
 
 .matrix-cell {
@@ -450,17 +452,19 @@
     cursor: default;
 }
 
-.matrix-cell.account-header {
-    background: var(--glass-bg);
+/* Body row account headers (th elements in tbody) */
+.matrix-table tbody th.account-header {
+    background: var(--color-bg);
     justify-content: flex-start;
     min-width: 180px;
     cursor: default;
     position: sticky;
     left: 0;
     z-index: 5;
-    border-right: 2px solid var(--glass-border);
+    border-right: 3px solid var(--glass-border);
     text-align: left;
     font-weight: 600;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
 }
 
 .matrix-cell.adopted {
