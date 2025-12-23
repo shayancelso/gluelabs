@@ -439,61 +439,31 @@ class WhitespaceApp {
                     </div>
                     
                     <div class="card-actions">
-                        <button class="action-btn expand-btn" onclick="app.togglePlaybook('${pb.accountId}')" aria-expanded="false" aria-controls="playbook-${pb.accountId}" aria-label="Expand playbook details">
-                            <span>View Strategy</span>
+                        <button class="action-btn expand-btn" onclick="app.togglePlaybook('${pb.accountId}')" aria-expanded="true" aria-controls="playbook-${pb.accountId}" aria-label="Collapse playbook details">
+                            <span>Hide Strategy</span>
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="6,9 12,15 18,9"></polyline>
-                            </svg>
-                        </button>
-                        <button class="action-btn quick-action" onclick="app.startExecution('${pb.accountId}')" aria-label="Start execution">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polygon points="5 3 19 12 5 21 5 3"/>
+                                <polyline points="18,15 12,9 6,15"></polyline>
                             </svg>
                         </button>
                     </div>
                     
-                    <div class="playbook-content" id="playbook-${pb.accountId}" style="display: none;">
+                    <div class="playbook-content" id="playbook-${pb.accountId}" style="display: block;">
                         <div class="content-inner">
                             <div class="strategy-overview-section">
                                 <h6 class="section-title">Strategy Overview</h6>
                                 <p class="strategy-description">${playbook.description}</p>
                             </div>
                             
-                            <!-- Interactive Timeline -->
-                            <div class="timeline-section">
-                                <h6 class="section-title">Execution Timeline</h6>
-                                <div class="timeline-container">
-                                    <div class="timeline-progress">
-                                        <div class="timeline-track"></div>
-                                        <div class="timeline-fill" style="width: 25%"></div>
-                                    </div>
-                                    <div class="timeline-phases">
-                                        ${this.createTimelinePhases(playbook).map((phase, index) => `
-                                            <div class="timeline-phase ${index === 0 ? 'active' : ''} ${index < 1 ? 'completed' : ''}" 
-                                                 data-phase="${index}" 
-                                                 onclick="app.showPhaseDetails('${pb.accountId}', ${index})">
-                                                <div class="phase-marker">
-                                                    <div class="phase-icon">
-                                                        ${phase.icon}
-                                                    </div>
-                                                    <div class="phase-connector"></div>
-                                                </div>
-                                                <div class="phase-content">
-                                                    <div class="phase-name">${phase.name}</div>
-                                                    <div class="phase-duration">${phase.duration}</div>
-                                                    <div class="phase-status">${phase.status}</div>
-                                                </div>
-                                                <div class="phase-tooltip">
-                                                    <div class="tooltip-title">${phase.name}</div>
-                                                    <div class="tooltip-description">${phase.description}</div>
-                                                    <div class="tooltip-activities">
-                                                        ${phase.activities.map(activity => `<li>${activity}</li>`).join('')}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        `).join('')}
-                                    </div>
-                                </div>
+                            <!-- Success Metrics -->
+                            <div style="margin: 20px 0; padding: 20px; background: white; border: 1px solid #ddd;">
+                                <h4 style="margin: 0 0 15px 0; color: black; font-size: 16px;">Success Metrics</h4>
+                                <ul style="list-style: none; padding: 0; margin: 0;">
+                                    ${Object.entries(playbook.successMetrics).slice(0, 4).map(([metric, target]) => `
+                                        <li style="margin-bottom: 8px; color: black; font-size: 14px;">
+                                            <strong style="color: black;">${metric}:</strong> ${target}
+                                        </li>
+                                    `).join('')}
+                                </ul>
                             </div>
                             
                             <!-- Collapsible Sections -->
@@ -524,16 +494,15 @@ class WhitespaceApp {
                                                 </div>
                                             </div>
                                             
-                                            <div class="metrics-panel">
-                                                <h6 class="panel-title">Success Metrics</h6>
-                                                <div class="metrics-grid">
+                                            <div style="background: white; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+                                                <h6 style="margin: 0 0 15px 0; color: black; font-size: 16px;">Success Metrics</h6>
+                                                <ul style="list-style: none; padding: 0; margin: 0;">
                                                     ${Object.entries(playbook.successMetrics).map(([metric, target]) => `
-                                                        <div class="metric-card">
-                                                            <div class="metric-name">${metric}</div>
-                                                            <div class="metric-target">${target}</div>
-                                                        </div>
+                                                        <li style="margin-bottom: 8px; color: black; font-size: 14px;">
+                                                            <strong style="color: black;">${metric}:</strong> ${target}
+                                                        </li>
                                                     `).join('')}
-                                                </div>
+                                                </ul>
                                             </div>
                                         </div>
                                     </div>
@@ -575,33 +544,6 @@ class WhitespaceApp {
                                 </div>
                             </div>
                             
-                            <!-- Action Buttons -->
-                            <div class="playbook-actions">
-                                <button class="action-btn primary-action" onclick="app.startExecution('${pb.accountId}')">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-                                    </svg>
-                                    <span>Start Execution</span>
-                                </button>
-                                <button class="action-btn secondary-action" onclick="app.showDetailedPlaybook('${pb.accountId}')">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                                        <polyline points="14 2 14 8 20 8"/>
-                                        <line x1="16" y1="13" x2="8" y2="13"/>
-                                        <line x1="16" y1="17" x2="8" y2="17"/>
-                                        <polyline points="10 9 9 9 8 9"/>
-                                    </svg>
-                                    <span>View Details</span>
-                                </button>
-                                <button class="action-btn tertiary-action" onclick="app.exportPlaybook('${pb.accountId}')">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                        <polyline points="7 10 12 15 17 10"/>
-                                        <line x1="12" y1="15" x2="12" y2="3"/>
-                                    </svg>
-                                    <span>Export PDF</span>
-                                </button>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -611,56 +553,21 @@ class WhitespaceApp {
         playbooksContainer.innerHTML = controlsHTML + '<div class="playbooks-grid">' + playbooksHTML + '</div>';
     }
     
-    // Helper function to create timeline phases
-    createTimelinePhases(playbook) {
-        const phases = [
-            {
-                name: 'Validation',
-                duration: '2-3 weeks',
-                status: 'On Track',
-                icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>',
-                description: 'Validate opportunity and align stakeholders',
-                activities: ['Stakeholder mapping', 'Business case development', 'Technical assessment']
-            },
-            {
-                name: 'Negotiation',
-                duration: '3-4 weeks',
-                status: 'Upcoming',
-                icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16 4h3a1 1 0 011 1v3"/><path d="M8 4H5a1 1 0 00-1 1v3"/><path d="M4 16v3a1 1 0 001 1h3"/></svg>',
-                description: 'Negotiate terms and secure commitment',
-                activities: ['Pricing negotiation', 'Contract terms', 'Implementation timeline']
-            },
-            {
-                name: 'Closure',
-                duration: '1-2 weeks',
-                status: 'Planned',
-                icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
-                description: 'Finalize contracts and kick off',
-                activities: ['Contract execution', 'Kick-off planning', 'Resource allocation']
-            },
-            {
-                name: 'Partnership',
-                duration: 'Ongoing',
-                status: 'Future',
-                icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
-                description: 'Build long-term strategic partnership',
-                activities: ['Quarterly reviews', 'Success tracking', 'Expansion planning']
-            }
-        ];
-        
-        return phases;
-    }
     
     // Helper function to get playbook icon
     getPlaybookIcon(type) {
         const icons = {
-            'aggressive-expansion': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>',
-            'strategic-growth': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20h20"/><path d="M5 20V10l7-7 7 7v10"/></svg>',
-            'platform-deepening': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><rect x="7" y="7" width="10" height="10"/></svg>',
-            'relationship-building': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>'
+            'high-velocity-expansion': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>',
+            'strategic-partnership': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20h20"/><path d="M5 20V10l7-7 7 7v10"/></svg>',
+            'platform-ecosystem': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><rect x="7" y="7" width="10" height="10"/></svg>',
+            'usage-based-scaling': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18v-18H3zm6 14H5v-4h4v4zm8 0h-4v-8h4v8zm0-10h-4V5h4v2z"/></svg>',
+            'multi-product-cross-sell': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>',
+            'geographic-departmental': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>',
+            'feature-adoption-deepening': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>',
+            'renewal-plus': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>'
         };
         
-        return icons[type] || icons['strategic-growth'];
+        return icons[type] || icons['renewal-plus'];
     }
     
     // Helper function to get role icon
@@ -677,12 +584,14 @@ class WhitespaceApp {
 
     formatPlaybookType(type) {
         const typeMap = {
-            'aggressive-expansion': 'High-Velocity Expansion',
-            'strategic-growth': 'Strategic Growth',
-            'platform-deepening': 'Platform Deepening',
-            'relationship-building': 'Relationship Building',
-            'trust-establishment': 'Trust Establishment',
-            'tactical-expansion': 'Tactical Expansion'
+            'high-velocity-expansion': 'High-Velocity Product Expansion',
+            'strategic-partnership': 'Strategic Partnership Development',
+            'platform-ecosystem': 'Platform Ecosystem Expansion',
+            'usage-based-scaling': 'Usage-Based Scaling Strategy',
+            'multi-product-cross-sell': 'Multi-Product Cross-Sell Initiative',
+            'geographic-departmental': 'Geographic & Departmental Expansion',
+            'feature-adoption-deepening': 'Feature Adoption Deepening',
+            'renewal-plus': 'Renewal+ Expansion Strategy'
         };
         return typeMap[type] || type;
     }
@@ -792,15 +701,7 @@ class WhitespaceApp {
         this.filterPlaybooks();
     }
     
-    startExecution(accountId) {
-        // Implementation for starting execution
-        alert(`Starting execution for account ${accountId}`);
-    }
     
-    showPhaseDetails(accountId, phaseIndex) {
-        // Implementation for showing phase details
-        console.log(`Showing phase ${phaseIndex} details for account ${accountId}`);
-    }
 
     showDetailedPlaybook(accountId) {
         const playbooks = this.engine.generateExpansionPlaybooks();
@@ -815,25 +716,6 @@ class WhitespaceApp {
                     <p class="playbook-desc">${playbook.playbook.description}</p>
                 </div>
                 
-                <div class="phases-section">
-                    <h5>Execution Phases</h5>
-                    <div class="phases-timeline">
-                        ${playbook.playbook.phases.map((phase, index) => `
-                            <div class="phase-item">
-                                <div class="phase-header">
-                                    <div class="phase-number">${phase.phase}</div>
-                                    <div class="phase-title">${phase.title}</div>
-                                    <div class="phase-duration">${phase.duration}</div>
-                                </div>
-                                <div class="phase-activities">
-                                    <ul>
-                                        ${phase.activities.map(activity => `<li>${activity}</li>`).join('')}
-                                    </ul>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
                 
                 <div class="resources-section">
                     <h5>Required Resources</h5>

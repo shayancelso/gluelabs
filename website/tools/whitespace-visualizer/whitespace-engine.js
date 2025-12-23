@@ -1258,210 +1258,451 @@ class WhitespaceEngine {
         const growthStage = account.growthStage;
         const companySize = account.companySize;
         const readinessScore = readiness.score;
+        const whitespaceValue = account.whitespaceValue;
+        const opportunities = this.getAccountOpportunities(account);
+        const adoptedProductCount = this.getAdoptedProductCount(account);
         
-        if (readinessScore >= 80 && penetration < 50) {
-            return 'aggressive-expansion';
-        } else if (readinessScore >= 60 && growthStage === 'growth') {
-            return 'strategic-growth';
-        } else if (companySize === 'Enterprise' && penetration > 70) {
-            return 'platform-deepening';
-        } else if (readinessScore < 40) {
-            return 'relationship-building';
-        } else if (account.tier === 'Standard') {
-            return 'trust-establishment';
-        } else {
-            return 'tactical-expansion';
+        // High-Velocity Product Expansion (PLG-driven, usage-based triggers)
+        if (readinessScore >= 85 && penetration < 40 && growthStage === 'hypergrowth' && whitespaceValue > 300000) {
+            return 'high-velocity-expansion';
         }
+        
+        // Strategic Partnership Development (executive relationship focus)
+        else if (companySize === 'Enterprise' && account.tier === 'Platinum' && readinessScore >= 70 && whitespaceValue > 250000) {
+            return 'strategic-partnership';
+        }
+        
+        // Platform Ecosystem Expansion (integration-led growth)
+        else if (adoptedProductCount >= 3 && penetration > 50 && this.hasIntegrationOpportunities(account)) {
+            return 'platform-ecosystem';
+        }
+        
+        // Usage-Based Scaling (consumption-driven expansion)
+        else if (this.hasUsageScalingOpportunity(account) && readinessScore >= 60) {
+            return 'usage-based-scaling';
+        }
+        
+        // Multi-Product Cross-Sell (adjacent product opportunities)
+        else if (adoptedProductCount <= 2 && opportunities.length >= 4 && readinessScore >= 65) {
+            return 'multi-product-cross-sell';
+        }
+        
+        // Geographic/Departmental Expansion (horizontal growth)
+        else if (companySize === 'Enterprise' && this.hasHorizontalExpansionOpportunity(account)) {
+            return 'geographic-departmental';
+        }
+        
+        // Feature Adoption Deepening (maximizing platform value)
+        else if (penetration > 60 && this.hasUnderutilizedFeatures(account)) {
+            return 'feature-adoption-deepening';
+        }
+        
+        // Renewal+ Strategy (retention with expansion focus)
+        else {
+            return 'renewal-plus';
+        }
+    }
+
+    // Helper methods for modern playbook determination
+    getAdoptedProductCount(account) {
+        return this.adoptions.filter(adoption => adoption.accountId === account.id).length;
+    }
+
+    hasIntegrationOpportunities(account) {
+        // Check if account has API Integration Pack or could benefit from platform integrations
+        const hasApiProduct = this.adoptions.some(adoption => 
+            adoption.accountId === account.id && 
+            this.products.find(p => p.id === adoption.productId)?.category === 'Integration'
+        );
+        return !hasApiProduct && account.companySize === 'Enterprise';
+    }
+
+    hasUsageScalingOpportunity(account) {
+        // Simulate usage-based scaling opportunities (normally would be from usage data)
+        const adoptedProducts = this.getAdoptedProductCount(account);
+        return adoptedProducts >= 2 && account.employeeCount > 500;
+    }
+
+    hasHorizontalExpansionOpportunity(account) {
+        // Check for geographic or departmental expansion potential
+        return account.employeeCount > 1000 && account.revenueSize > 100000000;
+    }
+
+    hasUnderutilizedFeatures(account) {
+        // Simulate feature utilization analysis (normally would be from product analytics)
+        const adoptedCount = this.getAdoptedProductCount(account);
+        const penetration = parseFloat(account.penetrationRate);
+        return adoptedCount >= 3 && penetration > 60 && penetration < 90;
     }
 
     getPlaybookTitle(type, account) {
         const titles = {
-            'aggressive-expansion': `High-Velocity Expansion Strategy: ${account.name}`,
-            'strategic-growth': `Strategic Growth Partnership: ${account.name}`,
-            'platform-deepening': `Platform Integration & Deepening: ${account.name}`,
-            'relationship-building': `Foundation Building & Development: ${account.name}`,
-            'trust-establishment': `Trust & Value Demonstration: ${account.name}`,
-            'tactical-expansion': `Tactical Expansion Roadmap: ${account.name}`
+            'high-velocity-expansion': `High-Velocity Product Expansion: ${account.name}`,
+            'strategic-partnership': `Strategic Partnership Development: ${account.name}`,
+            'platform-ecosystem': `Platform Ecosystem Expansion: ${account.name}`,
+            'usage-based-scaling': `Usage-Based Scaling Strategy: ${account.name}`,
+            'multi-product-cross-sell': `Multi-Product Cross-Sell Initiative: ${account.name}`,
+            'geographic-departmental': `Geographic & Departmental Expansion: ${account.name}`,
+            'feature-adoption-deepening': `Feature Adoption Deepening: ${account.name}`,
+            'renewal-plus': `Renewal+ Expansion Strategy: ${account.name}`
         };
-        return titles[type];
+        return titles[type] || `Expansion Strategy: ${account.name}`;
     }
 
     getPlaybookDescription(type, account) {
         const descriptions = {
-            'aggressive-expansion': `High-confidence, rapid expansion strategy for ${account.name}. This account shows exceptional readiness with significant whitespace remaining. Execute multiple opportunities simultaneously with dedicated resources.`,
-            'strategic-growth': `Long-term partnership development with ${account.name}. Focus on becoming their strategic technology partner through careful relationship nurturing and value demonstration.`,
-            'platform-deepening': `Maximize platform adoption and integration depth at ${account.name}. Transform existing relationship into comprehensive platform dependency with adjacent product adoption.`,
-            'relationship-building': `Foundational relationship development with ${account.name}. Build trust, demonstrate value, and establish expansion prerequisites before pursuing major opportunities.`,
-            'trust-establishment': `Prove value and establish credibility with ${account.name}. Focus on quick wins and relationship building to elevate partnership tier and unlock expansion potential.`,
-            'tactical-expansion': `Balanced approach to expansion at ${account.name}. Pursue selective opportunities while building stronger foundation for future growth.`
+            'high-velocity-expansion': `Product-led growth expansion for ${account.name} leveraging usage signals and hypergrowth momentum. Deploy rapid-fire product adoption with data-driven triggers, self-serve onboarding, and consumption-based expansion. Target 3-5 product additions within 90 days using PLG methodology.`,
+            'strategic-partnership': `Executive-level partnership development with ${account.name} focusing on multi-year strategic alignment. Engage C-suite stakeholders, co-create business outcomes, establish joint success metrics, and position as strategic technology partner. Build enterprise-wide platform dependency over 6-12 months.`,
+            'platform-ecosystem': `Integration-led expansion maximizing ecosystem value at ${account.name}. Leverage existing 3+ product foundation to drive API integrations, workflow automation, and platform consolidation. Focus on becoming the central hub for their tech stack with advanced platform features.`,
+            'usage-based-scaling': `Consumption-driven expansion targeting increased usage across existing products at ${account.name}. Analyze utilization patterns, identify scaling opportunities, and implement tier-based upgrades. Drive revenue growth through feature adoption and usage-based billing optimization.`,
+            'multi-product-cross-sell': `Adjacent product strategy targeting 4+ expansion opportunities at ${account.name}. Systematic cross-sell approach leveraging product synergies, departmental use cases, and workflow integrations. Execute coordinated multi-product demos and bundled value propositions.`,
+            'geographic-departmental': `Horizontal expansion strategy targeting new divisions, geographic regions, or business units within ${account.name}. Leverage existing success stories as proof points, identify departmental champions, and replicate deployment models across the organization.`,
+            'feature-adoption-deepening': `Advanced feature utilization strategy to maximize platform value at ${account.name}. Focus on unlocking premium capabilities, advanced workflows, and power-user features. Drive deeper engagement through training, consulting, and feature-specific success programs.`,
+            'renewal-plus': `Retention-first expansion approach combining renewal security with strategic growth opportunities at ${account.name}. Ensure contract renewal while identifying selective expansion opportunities. Balance risk mitigation with growth through value-first relationship building.`
         };
         return descriptions[type];
     }
 
     generatePlaybookPhases(type, account, opportunities) {
         const phases = {
-            'aggressive-expansion': [
+            'high-velocity-expansion': [
                 {
                     phase: 1,
-                    title: 'Opportunity Prioritization',
-                    duration: '2 weeks',
+                    title: 'PLG Trigger Analysis & Rapid Setup',
+                    duration: '1-2 weeks',
                     activities: [
-                        'Validate top 3 expansion opportunities',
-                        'Confirm stakeholder alignment and budget',
-                        'Prepare detailed ROI presentations'
+                        'Analyze usage data and identify expansion triggers',
+                        'Deploy self-serve onboarding for 3-5 target products',
+                        'Configure consumption-based pricing and tracking',
+                        'Set up automated usage alerts and expansion signals'
                     ]
                 },
                 {
                     phase: 2,
-                    title: 'Parallel Execution',
+                    title: 'High-Velocity Product Rollout',
+                    duration: '4-6 weeks',
+                    activities: [
+                        'Launch parallel product trials with usage incentives',
+                        'Execute rapid onboarding workshops for each product',
+                        'Monitor adoption metrics and optimize conversion funnels',
+                        'Scale successful products and pause underperformers'
+                    ]
+                },
+                {
+                    phase: 3,
+                    title: 'Momentum Scaling & Optimization',
+                    duration: '3-4 weeks',
+                    activities: [
+                        'Convert high-usage trials to paid subscriptions',
+                        'Implement usage-based upselling automation',
+                        'Establish product champion network for viral adoption',
+                        'Plan next-wave expansion with advanced features'
+                    ]
+                }
+            ],
+            'strategic-partnership': [
+                {
+                    phase: 1,
+                    title: 'C-Suite Engagement & Strategic Planning',
+                    duration: '4-6 weeks',
+                    activities: [
+                        'Schedule executive business review with C-suite',
+                        'Conduct joint strategic planning session',
+                        'Map multi-year technology roadmap alignment',
+                        'Establish executive sponsor and steering committee'
+                    ]
+                },
+                {
+                    phase: 2,
+                    title: 'Partnership Framework Development',
                     duration: '6-8 weeks',
                     activities: [
-                        'Launch multiple opportunity discussions simultaneously',
-                        'Leverage existing relationship strength',
-                        'Fast-track technical and legal processes'
+                        'Co-create business outcomes and success metrics',
+                        'Design enterprise-wide deployment plan',
+                        'Establish preferred vendor agreements and SLAs',
+                        'Create joint marketing and thought leadership plan'
                     ]
                 },
                 {
                     phase: 3,
-                    title: 'Momentum Capture',
-                    duration: '4 weeks',
-                    activities: [
-                        'Close multiple deals in succession',
-                        'Plan additional expansion opportunities',
-                        'Strengthen strategic partnership positioning'
-                    ]
-                }
-            ],
-            'strategic-growth': [
-                {
-                    phase: 1,
-                    title: 'Strategic Alignment',
-                    duration: '4 weeks',
-                    activities: [
-                        'Conduct comprehensive business review',
-                        'Map account growth strategy to our solutions',
-                        'Identify executive sponsors and champions'
-                    ]
-                },
-                {
-                    phase: 2,
-                    title: 'Value Co-Creation',
+                    title: 'Strategic Platform Expansion',
                     duration: '8-12 weeks',
                     activities: [
-                        'Develop joint value proposition',
-                        'Create custom success metrics and KPIs',
-                        'Design phased expansion roadmap'
-                    ]
-                },
-                {
-                    phase: 3,
-                    title: 'Partnership Execution',
-                    duration: '6 months',
-                    activities: [
-                        'Execute planned expansion initiatives',
-                        'Regular business reviews and optimization',
-                        'Explore additional strategic opportunities'
+                        'Execute enterprise platform rollout across divisions',
+                        'Implement advanced integration and automation',
+                        'Establish center of excellence and training programs',
+                        'Plan strategic innovation initiatives and partnerships'
                     ]
                 }
             ],
-            'platform-deepening': [
+            'platform-ecosystem': [
                 {
                     phase: 1,
-                    title: 'Usage Analysis',
-                    duration: '3 weeks',
+                    title: 'Integration Architecture Assessment',
+                    duration: '2-3 weeks',
                     activities: [
-                        'Analyze current platform utilization',
-                        'Identify underutilized features and capabilities',
-                        'Map additional use cases and departments'
+                        'Audit current tech stack and integration points',
+                        'Map API opportunities and data flow requirements',
+                        'Identify workflow automation and consolidation opportunities',
+                        'Design comprehensive platform ecosystem blueprint'
                     ]
                 },
                 {
                     phase: 2,
-                    title: 'Integration Expansion',
+                    title: 'API & Workflow Integration Launch',
+                    duration: '6-8 weeks',
+                    activities: [
+                        'Deploy API integration pack and connectivity suite',
+                        'Implement advanced workflow automation features',
+                        'Connect existing products for seamless data flow',
+                        'Pilot advanced platform features with power users'
+                    ]
+                },
+                {
+                    phase: 3,
+                    title: 'Ecosystem Consolidation & Enhancement',
+                    duration: '4-6 weeks',
+                    activities: [
+                        'Complete platform consolidation and optimization',
+                        'Deploy advanced analytics and insights capabilities',
+                        'Establish platform governance and best practices',
+                        'Plan future ecosystem expansion and innovation'
+                    ]
+                }
+            ],
+            'usage-based-scaling': [
+                {
+                    phase: 1,
+                    title: 'Usage Analytics & Scaling Opportunity Mapping',
+                    duration: '2-3 weeks',
+                    activities: [
+                        'Deploy advanced usage analytics and monitoring',
+                        'Analyze consumption patterns and scaling opportunities',
+                        'Identify feature adoption gaps and optimization areas',
+                        'Map tier-based upgrade paths and pricing optimization'
+                    ]
+                },
+                {
+                    phase: 2,
+                    title: 'Consumption-Driven Expansion Execution',
+                    duration: '4-6 weeks',
+                    activities: [
+                        'Implement usage-based billing and tier upgrades',
+                        'Deploy automated scaling recommendations and alerts',
+                        'Launch power user training and feature adoption programs',
+                        'Optimize pricing tiers based on usage patterns'
+                    ]
+                },
+                {
+                    phase: 3,
+                    title: 'Revenue Growth Optimization',
+                    duration: '4-5 weeks',
+                    activities: [
+                        'Scale successful usage-based revenue streams',
+                        'Implement predictive scaling and growth automation',
+                        'Establish usage-based success metrics and reporting',
+                        'Plan advanced feature rollout based on consumption data'
+                    ]
+                }
+            ],
+            'multi-product-cross-sell': [
+                {
+                    phase: 1,
+                    title: 'Product Synergy Mapping & Opportunity Prioritization',
+                    duration: '2-3 weeks',
+                    activities: [
+                        'Map product synergies and workflow integrations',
+                        'Prioritize 4+ expansion opportunities by value and readiness',
+                        'Identify departmental use cases and stakeholders',
+                        'Design coordinated multi-product demo strategy'
+                    ]
+                },
+                {
+                    phase: 2,
+                    title: 'Coordinated Cross-Sell Campaign',
+                    duration: '6-8 weeks',
+                    activities: [
+                        'Execute multi-product demos and value presentations',
+                        'Leverage product synergies for bundled value propositions',
+                        'Coordinate parallel opportunity development tracks',
+                        'Implement cross-product success stories and case studies'
+                    ]
+                },
+                {
+                    phase: 3,
+                    title: 'Portfolio Optimization & Expansion',
+                    duration: '4-6 weeks',
+                    activities: [
+                        'Complete multi-product deals and implementation',
+                        'Optimize product mix and integration workflows',
+                        'Establish comprehensive customer success programs',
+                        'Plan additional product expansion opportunities'
+                    ]
+                }
+            ],
+            'geographic-departmental': [
+                {
+                    phase: 1,
+                    title: 'Horizontal Expansion Mapping',
+                    duration: '3-4 weeks',
+                    activities: [
+                        'Map organizational structure and expansion opportunities',
+                        'Identify geographic regions and departments for expansion',
+                        'Document current success stories and proof points',
+                        'Develop departmental champion identification strategy'
+                    ]
+                },
+                {
+                    phase: 2,
+                    title: 'Systematic Horizontal Rollout',
                     duration: '6-10 weeks',
                     activities: [
-                        'Propose adjacent product integrations',
-                        'Demonstrate platform ecosystem value',
-                        'Pilot advanced features with power users'
+                        'Launch pilot programs in target departments/regions',
+                        'Leverage existing success stories for social proof',
+                        'Execute department-specific value demonstrations',
+                        'Replicate successful deployment models across units'
                     ]
                 },
                 {
                     phase: 3,
-                    title: 'Ecosystem Lock-in',
-                    duration: '8 weeks',
+                    title: 'Organization-Wide Scaling',
+                    duration: '4-6 weeks',
                     activities: [
-                        'Finalize comprehensive platform adoption',
-                        'Establish center of excellence partnership',
-                        'Plan long-term strategic initiatives'
+                        'Complete enterprise-wide deployment and training',
+                        'Establish governance and best practices across units',
+                        'Implement organization-wide success metrics and reporting',
+                        'Plan strategic initiatives for continued expansion'
                     ]
                 }
             ],
-            'relationship-building': [
+            'feature-adoption-deepening': [
                 {
                     phase: 1,
-                    title: 'Relationship Mapping',
-                    duration: '4 weeks',
+                    title: 'Advanced Feature Utilization Assessment',
+                    duration: '2-3 weeks',
                     activities: [
-                        'Map organizational structure and decision makers',
-                        'Identify current pain points and priorities',
-                        'Establish regular touchpoints and meetings'
+                        'Audit current feature adoption and utilization rates',
+                        'Identify premium capabilities and advanced workflows',
+                        'Map power-user opportunities and training needs',
+                        'Design feature-specific success and adoption programs'
                     ]
                 },
                 {
                     phase: 2,
-                    title: 'Value Demonstration',
-                    duration: '8-12 weeks',
+                    title: 'Power User Enablement & Training',
+                    duration: '4-6 weeks',
                     activities: [
-                        'Deliver quick wins and valuable insights',
-                        'Provide industry expertise and best practices',
-                        'Build trust through consistent value delivery'
+                        'Launch advanced feature training and certification programs',
+                        'Deploy power-user workshops and best practices sessions',
+                        'Implement consulting-led optimization initiatives',
+                        'Create internal champions and feature expertise centers'
                     ]
                 },
                 {
                     phase: 3,
-                    title: 'Expansion Foundation',
-                    duration: '6 weeks',
+                    title: 'Platform Mastery & Optimization',
+                    duration: '4-6 weeks',
                     activities: [
-                        'Present expansion opportunities with strong ROI',
-                        'Leverage improved relationship for larger discussions',
-                        'Establish preferred vendor status'
+                        'Achieve advanced platform utilization and optimization',
+                        'Establish ongoing consulting and optimization partnerships',
+                        'Implement advanced automation and custom workflows',
+                        'Plan strategic innovation and custom development initiatives'
+                    ]
+                }
+            ],
+            'renewal-plus': [
+                {
+                    phase: 1,
+                    title: 'Renewal Security & Relationship Strengthening',
+                    duration: '4-6 weeks',
+                    activities: [
+                        'Conduct comprehensive renewal risk assessment',
+                        'Execute value-first relationship building initiatives',
+                        'Document and communicate ROI and business outcomes',
+                        'Secure renewal commitment and baseline relationship health'
+                    ]
+                },
+                {
+                    phase: 2,
+                    title: 'Selective Expansion Identification',
+                    duration: '3-4 weeks',
+                    activities: [
+                        'Identify low-risk, high-value expansion opportunities',
+                        'Focus on adjacent products with proven ROI alignment',
+                        'Present conservative expansion options with clear benefits',
+                        'Balance growth initiatives with renewal security priorities'
+                    ]
+                },
+                {
+                    phase: 3,
+                    title: 'Value-Driven Growth Execution',
+                    duration: '3-4 weeks',
+                    activities: [
+                        'Execute approved expansion initiatives with proven value',
+                        'Implement success-based growth and payment structures',
+                        'Establish ongoing value monitoring and optimization',
+                        'Plan future expansion as relationship strength increases'
                     ]
                 }
             ]
         };
         
-        return phases[type] || phases['tactical-expansion'];
+        return phases[type] || phases['renewal-plus'];
     }
 
     generatePlaybookTimeline(type, opportunities) {
         const timelines = {
-            'aggressive-expansion': {
-                'Month 1': 'Opportunity validation and stakeholder alignment',
-                'Month 2': 'Multi-track negotiation and execution',
-                'Month 3': 'Deal closure and momentum capture',
-                'Month 4+': 'Strategic partnership expansion'
+            'high-velocity-expansion': {
+                'Week 1-2': 'PLG trigger analysis and rapid setup',
+                'Week 3-8': 'High-velocity product rollout and trials',
+                'Week 9-12': 'Momentum scaling and optimization',
+                'Month 4+': 'Next-wave expansion with advanced features'
             },
-            'strategic-growth': {
-                'Month 1-2': 'Strategic assessment and alignment',
-                'Month 3-4': 'Joint planning and roadmap development',
-                'Month 5-8': 'Phased expansion execution',
-                'Month 9-12': 'Partnership optimization and growth'
+            'strategic-partnership': {
+                'Month 1-2': 'C-suite engagement and strategic planning',
+                'Month 3-4': 'Partnership framework development',
+                'Month 5-8': 'Strategic platform expansion execution',
+                'Month 9-12': 'Partnership optimization and innovation'
             },
-            'platform-deepening': {
-                'Month 1': 'Platform usage analysis and opportunity mapping',
-                'Month 2-3': 'Integration pilots and value demonstration',
-                'Month 4-5': 'Ecosystem expansion and adoption',
-                'Month 6+': 'Strategic platform partnership'
+            'platform-ecosystem': {
+                'Week 1-3': 'Integration architecture assessment',
+                'Week 4-11': 'API and workflow integration launch',
+                'Week 12-17': 'Ecosystem consolidation and enhancement',
+                'Month 5+': 'Future ecosystem expansion and innovation'
             },
-            'relationship-building': {
-                'Month 1-2': 'Relationship mapping and trust building',
-                'Month 3-5': 'Value delivery and credibility establishment',
-                'Month 6-8': 'Expansion discussions and execution',
-                'Month 9+': 'Strategic partnership development'
+            'usage-based-scaling': {
+                'Week 1-3': 'Usage analytics and scaling opportunity mapping',
+                'Week 4-9': 'Consumption-driven expansion execution',
+                'Week 10-14': 'Revenue growth optimization',
+                'Month 4+': 'Predictive scaling and advanced features'
+            },
+            'multi-product-cross-sell': {
+                'Week 1-3': 'Product synergy mapping and prioritization',
+                'Week 4-11': 'Coordinated cross-sell campaign execution',
+                'Week 12-17': 'Portfolio optimization and expansion',
+                'Month 5+': 'Additional product expansion opportunities'
+            },
+            'geographic-departmental': {
+                'Week 1-4': 'Horizontal expansion mapping',
+                'Week 5-14': 'Systematic horizontal rollout',
+                'Week 15-20': 'Organization-wide scaling',
+                'Month 6+': 'Strategic initiatives for continued expansion'
+            },
+            'feature-adoption-deepening': {
+                'Week 1-3': 'Advanced feature utilization assessment',
+                'Week 4-9': 'Power user enablement and training',
+                'Week 10-15': 'Platform mastery and optimization',
+                'Month 4+': 'Strategic innovation and custom development'
+            },
+            'renewal-plus': {
+                'Month 1-2': 'Renewal security and relationship strengthening',
+                'Month 3': 'Selective expansion identification',
+                'Month 4': 'Value-driven growth execution',
+                'Month 5+': 'Future expansion as relationship strength increases'
             }
         };
         
-        return timelines[type] || timelines['strategic-growth'];
+        return timelines[type] || timelines['renewal-plus'];
     }
 
     identifyKeyStakeholders(account, playbookType) {
@@ -1472,17 +1713,37 @@ class WhitespaceEngine {
         ];
         
         const additionalStakeholders = {
-            'aggressive-expansion': [
-                { role: 'Sales Director', responsibility: 'Strategic oversight and resource allocation' },
-                { role: 'Legal Team', responsibility: 'Contract acceleration and terms negotiation' }
+            'high-velocity-expansion': [
+                { role: 'Product Led Growth Manager', responsibility: 'Usage analytics and PLG optimization' },
+                { role: 'Sales Development Rep', responsibility: 'Rapid trial setup and conversion tracking' }
             ],
-            'strategic-growth': [
+            'strategic-partnership': [
                 { role: 'VP of Sales', responsibility: 'Executive relationship and strategic alignment' },
-                { role: 'Product Management', responsibility: 'Roadmap alignment and customization' }
+                { role: 'Executive Sponsor', responsibility: 'C-level engagement and partnership development' }
             ],
-            'platform-deepening': [
-                { role: 'Technical Account Manager', responsibility: 'Deep integration and optimization' },
-                { role: 'Professional Services', responsibility: 'Implementation and training' }
+            'platform-ecosystem': [
+                { role: 'Technical Account Manager', responsibility: 'API integration and platform optimization' },
+                { role: 'Platform Architect', responsibility: 'Ecosystem design and implementation' }
+            ],
+            'usage-based-scaling': [
+                { role: 'Customer Success Engineer', responsibility: 'Usage optimization and scaling strategy' },
+                { role: 'Product Analytics Specialist', responsibility: 'Consumption pattern analysis' }
+            ],
+            'multi-product-cross-sell': [
+                { role: 'Portfolio Account Manager', responsibility: 'Multi-product coordination and strategy' },
+                { role: 'Sales Engineer', responsibility: 'Product demonstration and technical validation' }
+            ],
+            'geographic-departmental': [
+                { role: 'Enterprise Account Executive', responsibility: 'Organization-wide expansion strategy' },
+                { role: 'Implementation Manager', responsibility: 'Deployment scaling and coordination' }
+            ],
+            'feature-adoption-deepening': [
+                { role: 'Customer Success Specialist', responsibility: 'Feature adoption and training programs' },
+                { role: 'Professional Services', responsibility: 'Advanced consulting and optimization' }
+            ],
+            'renewal-plus': [
+                { role: 'Renewal Specialist', responsibility: 'Contract renewal security and risk mitigation' },
+                { role: 'Account Strategist', responsibility: 'Conservative expansion planning' }
             ]
         };
         
@@ -1494,33 +1755,57 @@ class WhitespaceEngine {
 
     getRequiredResources(playbookType, account) {
         const resources = {
-            'aggressive-expansion': [
-                'Dedicated account team with executive support',
-                'Technical resources for rapid implementation',
-                'Legal support for contract acceleration',
-                'Marketing materials for multi-product positioning'
+            'high-velocity-expansion': [
+                'PLG analytics platform and usage tracking tools',
+                'Self-serve onboarding and trial automation systems',
+                'Rapid deployment technical resources',
+                'Consumption-based billing and pricing infrastructure'
             ],
-            'strategic-growth': [
-                'Senior account executive with C-level access',
+            'strategic-partnership': [
+                'Executive briefing center access and C-suite materials',
+                'Strategic account planning and roadmap tools',
                 'Custom ROI modeling and business case development',
-                'Executive briefing center access',
-                'Industry-specific use case documentation'
+                'Partnership framework templates and agreements'
             ],
-            'platform-deepening': [
-                'Technical account management resources',
-                'Professional services for integration',
-                'Product training and certification programs',
-                'Platform optimization consulting'
+            'platform-ecosystem': [
+                'API development and integration engineering resources',
+                'Platform architecture and workflow automation tools',
+                'Technical account management and consulting services',
+                'Integration documentation and developer resources'
             ],
-            'relationship-building': [
-                'Consistent account team assignment',
-                'Industry expertise and thought leadership content',
-                'Executive relationship building programs',
-                'Quick win identification and delivery resources'
+            'usage-based-scaling': [
+                'Advanced product analytics and usage monitoring platforms',
+                'Tier-based pricing optimization and billing systems',
+                'Customer success engineering and optimization resources',
+                'Feature adoption tracking and recommendation engines'
+            ],
+            'multi-product-cross-sell': [
+                'Portfolio management and cross-sell coordination tools',
+                'Multi-product demo environments and integration showcases',
+                'Bundled pricing and value proposition development resources',
+                'Cross-product success story and case study materials'
+            ],
+            'geographic-departmental': [
+                'Enterprise deployment and scaling methodology',
+                'Organizational mapping and stakeholder analysis tools',
+                'Change management and training program resources',
+                'Regional/departmental customization and rollout planning'
+            ],
+            'feature-adoption-deepening': [
+                'Advanced training and certification program development',
+                'Power-user workshops and consulting engagement resources',
+                'Feature utilization analytics and optimization tools',
+                'Custom workflow and automation development capabilities'
+            ],
+            'renewal-plus': [
+                'Renewal risk assessment and monitoring tools',
+                'Conservative expansion planning and ROI validation resources',
+                'Relationship health tracking and engagement programs',
+                'Success-based expansion and value demonstration materials'
             ]
         };
         
-        return resources[playbookType] || resources['strategic-growth'];
+        return resources[playbookType] || resources['renewal-plus'];
     }
 
     defineSuccessMetrics(playbookType, account, opportunities) {
@@ -1531,20 +1816,45 @@ class WhitespaceEngine {
         };
         
         const specificMetrics = {
-            'aggressive-expansion': {
-                'Time to Close': 'Average 45 days per opportunity',
-                'Deal Velocity': '3+ opportunities in parallel',
-                'Win Rate': '85%+ for identified opportunities'
+            'high-velocity-expansion': {
+                'Time to Value': 'Average 2 weeks trial-to-paid conversion',
+                'Product Adoption Rate': '3-5 products adopted within 90 days',
+                'Usage Growth': '200%+ consumption increase per quarter'
             },
-            'strategic-growth': {
+            'strategic-partnership': {
                 'Partnership Depth Score': 'Achieve strategic partner status',
-                'Executive Engagement': 'C-level sponsor identified',
-                'Long-term Pipeline': '$500K+ future opportunity pipeline'
+                'Executive Engagement': 'C-level sponsor and steering committee',
+                'Enterprise Footprint': '80%+ business unit coverage'
             },
-            'platform-deepening': {
-                'Platform Utilization': 'Increase feature adoption by 60%',
-                'Integration Depth': 'Connect to 3+ enterprise systems',
-                'User Growth': 'Expand user base by 100%+'
+            'platform-ecosystem': {
+                'Integration Depth': 'Connect to 5+ enterprise systems',
+                'API Utilization': '90%+ of available endpoints activated',
+                'Workflow Automation': '15+ automated business processes'
+            },
+            'usage-based-scaling': {
+                'Consumption Growth': '150%+ usage increase within 6 months',
+                'Tier Progression': 'Advance 2+ pricing tiers per product',
+                'Feature Adoption': '80%+ of premium features utilized'
+            },
+            'multi-product-cross-sell': {
+                'Product Portfolio Size': '6+ products adopted',
+                'Cross-Sell Win Rate': '75%+ for identified opportunities',
+                'Bundle Optimization': '25%+ discount efficiency through bundling'
+            },
+            'geographic-departmental': {
+                'Organizational Coverage': '70%+ departments/regions adopted',
+                'User Base Expansion': '300%+ seat count increase',
+                'Deployment Velocity': 'Average 4 weeks per business unit'
+            },
+            'feature-adoption-deepening': {
+                'Power User Growth': '50%+ advanced feature utilization',
+                'Training Completion': '90%+ certification program completion',
+                'Custom Workflow Implementation': '10+ advanced automations deployed'
+            },
+            'renewal-plus': {
+                'Renewal Security': '100% contract renewal confirmation',
+                'Expansion Success': '15%+ ARR growth through selective expansion',
+                'Risk Mitigation': 'Zero churn risk factors identified'
             }
         };
         
@@ -1608,20 +1918,68 @@ class WhitespaceEngine {
         ];
         
         const playbookSpecificRisks = {
-            'aggressive-expansion': [
+            'high-velocity-expansion': [
                 {
-                    risk: 'Resource overallocation leading to poor implementation',
+                    risk: 'Over-rapid expansion without proper onboarding support',
                     likelihood: 'Medium',
                     impact: 'High',
-                    mitigation: 'Ensure adequate support resources and staged rollouts'
+                    mitigation: 'Implement automated onboarding and scale customer success resources'
                 }
             ],
-            'relationship-building': [
+            'strategic-partnership': [
                 {
-                    risk: 'Extended timeline without visible progress',
+                    risk: 'Executive sponsor changes or organizational restructuring',
+                    likelihood: 'Medium',
+                    impact: 'High',
+                    mitigation: 'Establish relationships with multiple executive stakeholders'
+                }
+            ],
+            'platform-ecosystem': [
+                {
+                    risk: 'Integration complexity leading to implementation delays',
+                    likelihood: 'Medium',
+                    impact: 'Medium',
+                    mitigation: 'Conduct thorough technical assessment and phased integration approach'
+                }
+            ],
+            'usage-based-scaling': [
+                {
+                    risk: 'Usage growth stagnation due to feature adoption barriers',
+                    likelihood: 'Medium',
+                    impact: 'Medium',
+                    mitigation: 'Implement proactive training and feature adoption programs'
+                }
+            ],
+            'multi-product-cross-sell': [
+                {
+                    risk: 'Product portfolio complexity overwhelming customer',
+                    likelihood: 'Medium',
+                    impact: 'Medium',
+                    mitigation: 'Focus on product synergies and staged rollout approach'
+                }
+            ],
+            'geographic-departmental': [
+                {
+                    risk: 'Organizational silos and inconsistent adoption',
                     likelihood: 'High',
                     impact: 'Medium',
-                    mitigation: 'Define clear milestones and quick wins to demonstrate progress'
+                    mitigation: 'Establish cross-departmental governance and standardized processes'
+                }
+            ],
+            'feature-adoption-deepening': [
+                {
+                    risk: 'Advanced features proving too complex for end users',
+                    likelihood: 'Medium',
+                    impact: 'Low',
+                    mitigation: 'Implement comprehensive training and ongoing support programs'
+                }
+            ],
+            'renewal-plus': [
+                {
+                    risk: 'Renewal uncertainty affecting expansion confidence',
+                    likelihood: 'Low',
+                    impact: 'High',
+                    mitigation: 'Secure renewal commitment before pursuing expansion initiatives'
                 }
             ]
         };
