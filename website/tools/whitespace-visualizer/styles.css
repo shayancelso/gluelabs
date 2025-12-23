@@ -4481,12 +4481,14 @@
 }
 
 .metrics-simple-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: nowrap;
 }
 
 .simple-metric {
+    flex: 1;
+    min-width: 0;
     padding: 12px;
     background: white;
     border: 1px solid #e2e8f0;
@@ -4503,13 +4505,19 @@
 /* Responsive metrics grid */
 @media (max-width: 1024px) {
     .metrics-simple-grid {
-        grid-template-columns: repeat(2, 1fr);
+        flex-wrap: wrap;
+    }
+    .simple-metric {
+        flex: 1 1 calc(50% - 4px);
     }
 }
 
 @media (max-width: 768px) {
     .metrics-simple-grid {
-        grid-template-columns: 1fr;
+        flex-direction: column;
+    }
+    .simple-metric {
+        flex: none;
     }
 }
 
