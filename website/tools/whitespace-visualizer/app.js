@@ -797,56 +797,60 @@ class WhitespaceApp {
     displayMatrix(matrix) {
         const matrixContainer = document.getElementById('whitespace-matrix');
         
-        // Create matrix table
         const accounts = this.engine.accounts;
         const products = this.engine.products;
         
-        let tableHTML = '<table class="matrix-table">';
+        // Create new frozen pane structure
+        let matrixHTML = `
+            <div class="matrix-layout">
+                <div class="matrix-accounts">
+                    <div class="account-header-cell">Account</div>
+                    ${accounts.map(account => `
+                        <div class="account-name-cell">${account.name}</div>
+                    `).join('')}
+                </div>
+                <div class="matrix-products">
+                    <div class="products-header">
+                        ${products.map(product => `
+                            <div class="product-header-cell">${product.name}</div>
+                        `).join('')}
+                    </div>
+                    <div class="products-data">
+                        ${accounts.map(account => `
+                            <div class="product-row">
+                                ${products.map(product => {
+                                    const cell = matrix[account.id][product.id];
+                                    const statusClass = cell.status;
+                                    let cellContent = '';
+                                    
+                                    if (cell.status === 'adopted') {
+                                        cellContent = '✓ Adopted';
+                                    } else if (cell.status === 'opportunity') {
+                                        cellContent = `
+                                            <div class="opportunity-value">$${this.formatCurrency(cell.opportunityValue)}</div>
+                                            <div class="opportunity-details">Click for details</div>
+                                        `;
+                                    } else {
+                                        cellContent = 'N/A';
+                                    }
+                                    
+                                    const clickable = cell.status === 'opportunity' ? 'clickable' : '';
+                                    return `
+                                        <div class="matrix-cell ${statusClass} ${clickable}" 
+                                             data-account="${account.id}" 
+                                             data-product="${product.id}">
+                                            ${cellContent}
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+        `;
         
-        // Header row
-        tableHTML += '<thead><tr>';
-        tableHTML += '<th class="account-header">Account</th>';
-        products.forEach(product => {
-            tableHTML += `<th>${product.name}</th>`;
-        });
-        tableHTML += '</tr></thead>';
-        
-        // Data rows
-        tableHTML += '<tbody>';
-        accounts.forEach(account => {
-            tableHTML += '<tr>';
-            tableHTML += `<th class="account-header">${account.name}</th>`;
-            
-            products.forEach(product => {
-                const cell = matrix[account.id][product.id];
-                const statusClass = cell.status;
-                let cellContent = '';
-                
-                if (cell.status === 'adopted') {
-                    cellContent = '✓ Adopted';
-                } else if (cell.status === 'opportunity') {
-                    cellContent = `
-                        <div class="opportunity-value">$${this.formatCurrency(cell.opportunityValue)}</div>
-                        <div class="opportunity-details">Click for details</div>
-                    `;
-                } else {
-                    cellContent = 'N/A';
-                }
-                
-                const clickable = cell.status === 'opportunity' ? 'clickable' : '';
-                tableHTML += `
-                    <td class="matrix-cell ${statusClass} ${clickable}" 
-                        data-account="${account.id}" 
-                        data-product="${product.id}">
-                        ${cellContent}
-                    </td>
-                `;
-            });
-            tableHTML += '</tr>';
-        });
-        tableHTML += '</tbody></table>';
-        
-        matrixContainer.innerHTML = tableHTML;
+        matrixContainer.innerHTML = matrixHTML;
         
         // Add touch feedback to matrix cells after rendering
         this.addTouchFeedbackToMatrixCells();
