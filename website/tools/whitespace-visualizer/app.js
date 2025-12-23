@@ -814,7 +814,6 @@ class WhitespaceApp {
                         ${products.map(product => `
                             <div class="product-header-cell clickable-header" 
                                  data-product="${product.id}" 
-                                 onclick="app.sortByProduct('${product.id}')"
                                  title="Click to sort accounts by ${product.name} opportunities">
                                 ${product.name}
                                 <span class="sort-indicator" id="sort-${product.id}">↕</span>
@@ -863,6 +862,9 @@ class WhitespaceApp {
         
         // Add click event listeners to opportunity cells
         this.addMatrixEventListeners();
+        
+        // Add click event listeners to product headers for sorting
+        this.addHeaderEventListeners();
     }
 
     addMatrixEventListeners() {
@@ -872,6 +874,16 @@ class WhitespaceApp {
                 const accountId = cell.dataset.account;
                 const productId = cell.dataset.product;
                 this.showOpportunityDetails(accountId, productId);
+            });
+        });
+    }
+
+    addHeaderEventListeners() {
+        const headerCells = document.querySelectorAll('.product-header-cell.clickable-header');
+        headerCells.forEach(header => {
+            header.addEventListener('click', () => {
+                const productId = header.dataset.product;
+                this.sortByProduct(productId);
             });
         });
     }
