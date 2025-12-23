@@ -483,27 +483,6 @@
     box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
 }
 
-.matrix-cell.opportunity::after {
-    content: "Click for details";
-    position: absolute;
-    bottom: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.7rem;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-    white-space: nowrap;
-    z-index: 20;
-}
-
-.matrix-cell.opportunity:hover::after {
-    opacity: 1;
-}
 
 .matrix-cell.not-applicable {
     background: #374151;
@@ -542,27 +521,6 @@
     box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
 }
 
-.matrix-cell.opportunity::after {
-    content: "Click for details";
-    position: absolute;
-    bottom: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.7rem;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-    white-space: nowrap;
-    z-index: 20;
-}
-
-.matrix-cell.opportunity:hover::after {
-    opacity: 1;
-}
 
 .matrix-cell.not-applicable {
     background: #374151;
