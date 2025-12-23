@@ -15,6 +15,9 @@ class WhitespaceApp {
         this.currentView = 'quarterly';
         this.currentProjections = null;
         this.initializeEventListeners();
+        
+        // Auto-load sample data on page load
+        setTimeout(() => this.loadSampleData(), 500);
     }
 
     initializeEventListeners() {
@@ -95,11 +98,15 @@ class WhitespaceApp {
 
     loadSampleData() {
         try {
+            // Show loading message
+            this.updateStatus(document.getElementById('data-status'), 'processing', 
+                'Loading sample data to demonstrate whitespace analysis...');
+            
             const result = this.engine.loadSampleData();
             
-            // Update status
+            // Update status with sample data notification
             this.updateStatus(document.getElementById('data-status'), 'success', 
-                '✓ 5 sample accounts, 6 products, 10 adoptions loaded');
+                '✓ Sample data loaded: 8 enterprise accounts with $2.5M+ in whitespace opportunities');
             this.updateUploadButton(document.querySelector('.upload-btn'), '✓ Sample Data Loaded');
             
             // Mark all data as loaded

@@ -339,65 +339,113 @@ class WhitespaceEngine {
     loadSampleData() {
         // Sample Products first (needed for market potential calculation)
         this.products = [
-            { id: 'P001', name: 'Core Platform', listPrice: 50000, category: 'Platform', targetSegment: 'All' },
-            { id: 'P002', name: 'Advanced Analytics', listPrice: 30000, category: 'Analytics', targetSegment: 'Enterprise' },
-            { id: 'P003', name: 'Mobile App Suite', listPrice: 20000, category: 'Mobile', targetSegment: 'All' },
-            { id: 'P004', name: 'API Integration Pack', listPrice: 25000, category: 'Integration', targetSegment: 'Enterprise' },
-            { id: 'P005', name: 'Security Module', listPrice: 40000, category: 'Security', targetSegment: 'Enterprise' },
-            { id: 'P006', name: 'Reporting Dashboard', listPrice: 15000, category: 'Reporting', targetSegment: 'All' }
+            { id: 'P001', name: 'Core Platform', listPrice: 120000, category: 'Platform', targetSegment: 'All' },
+            { id: 'P002', name: 'Advanced Analytics', listPrice: 85000, category: 'Analytics', targetSegment: 'Enterprise' },
+            { id: 'P003', name: 'Mobile App Suite', listPrice: 45000, category: 'Mobile', targetSegment: 'All' },
+            { id: 'P004', name: 'API Integration Pack', listPrice: 65000, category: 'Integration', targetSegment: 'Enterprise' },
+            { id: 'P005', name: 'Security Module', listPrice: 95000, category: 'Security', targetSegment: 'Enterprise' },
+            { id: 'P006', name: 'Reporting Dashboard', listPrice: 35000, category: 'Reporting', targetSegment: 'All' },
+            { id: 'P007', name: 'AI Automation Suite', listPrice: 150000, category: 'AI/ML', targetSegment: 'Enterprise' },
+            { id: 'P008', name: 'Compliance Manager', listPrice: 75000, category: 'Compliance', targetSegment: 'Enterprise' }
         ];
 
         // Sample Accounts with enhanced whitespace calculations
         this.accounts = [
             {
-                id: 'A001', name: 'TechCorp Solutions', currentARR: 125000,
-                totalMarketPotential: 320000, whitespaceValue: 195000, penetrationRate: '39.1',
+                id: 'A001', name: 'TechCorp Solutions', currentARR: 285000,
+                totalMarketPotential: 745000, whitespaceValue: 460000, penetrationRate: '38.2',
                 industry: 'Technology', companySize: 'Enterprise', tier: 'Platinum',
-                employeeCount: 1200, revenueSize: 150000000, growthStage: 'growth',
+                employeeCount: 3500, revenueSize: 450000000, growthStage: 'growth',
                 accountManager: 'Sarah Johnson'
             },
             {
-                id: 'A002', name: 'FinanceFirst LLC', currentARR: 85000,
-                totalMarketPotential: 180000, whitespaceValue: 95000, penetrationRate: '47.2',
-                industry: 'Financial Services', companySize: 'Mid-Market', tier: 'Gold',
-                employeeCount: 300, revenueSize: 30000000, growthStage: 'growth',
+                id: 'A002', name: 'Global Finance Partners', currentARR: 165000,
+                totalMarketPotential: 520000, whitespaceValue: 355000, penetrationRate: '31.7',
+                industry: 'Financial Services', companySize: 'Enterprise', tier: 'Platinum',
+                employeeCount: 2200, revenueSize: 320000000, growthStage: 'growth',
                 accountManager: 'Mike Chen'
             },
             {
-                id: 'A003', name: 'HealthPlus Systems', currentARR: 200000,
-                totalMarketPotential: 280000, whitespaceValue: 80000, penetrationRate: '71.4',
+                id: 'A003', name: 'HealthTech Innovations', currentARR: 370000,
+                totalMarketPotential: 670000, whitespaceValue: 300000, penetrationRate: '55.2',
                 industry: 'Healthcare', companySize: 'Enterprise', tier: 'Platinum',
-                employeeCount: 800, revenueSize: 75000000, growthStage: 'mature',
+                employeeCount: 1800, revenueSize: 275000000, growthStage: 'mature',
                 accountManager: 'Lisa Rodriguez'
             },
             {
-                id: 'A004', name: 'RetailMax Inc', currentARR: 45000,
-                totalMarketPotential: 85000, whitespaceValue: 40000, penetrationRate: '52.9',
-                industry: 'Retail', companySize: 'SMB', tier: 'Standard',
-                employeeCount: 75, revenueSize: 8000000, growthStage: 'growth',
+                id: 'A004', name: 'RetailMax Corporation', currentARR: 120000,
+                totalMarketPotential: 445000, whitespaceValue: 325000, penetrationRate: '27.0',
+                industry: 'Retail', companySize: 'Mid-Market', tier: 'Gold',
+                employeeCount: 850, revenueSize: 125000000, growthStage: 'growth',
                 accountManager: 'David Park'
             },
             {
-                id: 'A005', name: 'ManufacturingPro', currentARR: 150000,
-                totalMarketPotential: 240000, whitespaceValue: 90000, penetrationRate: '62.5',
+                id: 'A005', name: 'Industrial Manufacturing Co', currentARR: 235000,
+                totalMarketPotential: 595000, whitespaceValue: 360000, penetrationRate: '39.5',
                 industry: 'Manufacturing', companySize: 'Enterprise', tier: 'Gold',
-                employeeCount: 1500, revenueSize: 200000000, growthStage: 'growth',
+                employeeCount: 2800, revenueSize: 380000000, growthStage: 'growth',
                 accountManager: 'Jennifer Walsh'
+            },
+            {
+                id: 'A006', name: 'Cloud Solutions Inc', currentARR: 95000,
+                totalMarketPotential: 485000, whitespaceValue: 390000, penetrationRate: '19.6',
+                industry: 'Technology', companySize: 'Mid-Market', tier: 'Gold',
+                employeeCount: 650, revenueSize: 85000000, growthStage: 'hypergrowth',
+                accountManager: 'Tom Harrison'
+            },
+            {
+                id: 'A007', name: 'Digital Media Group', currentARR: 155000,
+                totalMarketPotential: 410000, whitespaceValue: 255000, penetrationRate: '37.8',
+                industry: 'Media', companySize: 'Mid-Market', tier: 'Gold',
+                employeeCount: 480, revenueSize: 65000000, growthStage: 'growth',
+                accountManager: 'Rachel Kim'
+            },
+            {
+                id: 'A008', name: 'Pharma Solutions Ltd', currentARR: 320000,
+                totalMarketPotential: 520000, whitespaceValue: 200000, penetrationRate: '61.5',
+                industry: 'Healthcare', companySize: 'Enterprise', tier: 'Platinum',
+                employeeCount: 1600, revenueSize: 220000000, growthStage: 'mature',
+                accountManager: 'Sarah Johnson'
             }
         ];
 
-        // Sample Adoptions
+        // Sample Adoptions - strategically placed to show massive whitespace opportunities
         this.adoptions = [
-            { accountId: 'A001', productId: 'P001', contractValue: 50000, startDate: new Date('2023-01-15'), status: 'active' },
-            { accountId: 'A001', productId: 'P003', contractValue: 20000, startDate: new Date('2023-06-01'), status: 'active' },
-            { accountId: 'A002', productId: 'P001', contractValue: 50000, startDate: new Date('2023-03-01'), status: 'active' },
-            { accountId: 'A002', productId: 'P006', contractValue: 15000, startDate: new Date('2023-08-15'), status: 'active' },
-            { accountId: 'A003', productId: 'P001', contractValue: 50000, startDate: new Date('2022-11-01'), status: 'active' },
-            { accountId: 'A003', productId: 'P002', contractValue: 30000, startDate: new Date('2023-02-15'), status: 'active' },
-            { accountId: 'A003', productId: 'P005', contractValue: 40000, startDate: new Date('2023-09-01'), status: 'active' },
-            { accountId: 'A004', productId: 'P001', contractValue: 25000, startDate: new Date('2023-07-01'), status: 'active' },
-            { accountId: 'A005', productId: 'P001', contractValue: 50000, startDate: new Date('2023-04-15'), status: 'active' },
-            { accountId: 'A005', productId: 'P004', contractValue: 25000, startDate: new Date('2023-10-01'), status: 'active' }
+            // TechCorp Solutions - only has 2 of 8 products
+            { accountId: 'A001', productId: 'P001', contractValue: 120000, startDate: new Date('2023-01-15'), status: 'active' },
+            { accountId: 'A001', productId: 'P003', contractValue: 45000, startDate: new Date('2023-06-01'), status: 'active' },
+            { accountId: 'A001', productId: 'P007', contractValue: 120000, startDate: new Date('2024-02-01'), status: 'active' },
+            
+            // Global Finance Partners - only has 2 of 8 products
+            { accountId: 'A002', productId: 'P001', contractValue: 120000, startDate: new Date('2023-03-01'), status: 'active' },
+            { accountId: 'A002', productId: 'P006', contractValue: 45000, startDate: new Date('2023-08-15'), status: 'active' },
+            
+            // HealthTech Innovations - has 4 of 8 products
+            { accountId: 'A003', productId: 'P001', contractValue: 120000, startDate: new Date('2022-11-01'), status: 'active' },
+            { accountId: 'A003', productId: 'P002', contractValue: 85000, startDate: new Date('2023-02-15'), status: 'active' },
+            { accountId: 'A003', productId: 'P005', contractValue: 95000, startDate: new Date('2023-09-01'), status: 'active' },
+            { accountId: 'A003', productId: 'P008', contractValue: 70000, startDate: new Date('2024-01-10'), status: 'active' },
+            
+            // RetailMax Corporation - only has 2 of 8 products
+            { accountId: 'A004', productId: 'P001', contractValue: 85000, startDate: new Date('2023-07-01'), status: 'active' },
+            { accountId: 'A004', productId: 'P006', contractValue: 35000, startDate: new Date('2023-10-15'), status: 'active' },
+            
+            // Industrial Manufacturing Co - has 3 of 8 products
+            { accountId: 'A005', productId: 'P001', contractValue: 120000, startDate: new Date('2023-04-15'), status: 'active' },
+            { accountId: 'A005', productId: 'P004', contractValue: 65000, startDate: new Date('2023-10-01'), status: 'active' },
+            { accountId: 'A005', productId: 'P003', contractValue: 50000, startDate: new Date('2024-03-01'), status: 'active' },
+            
+            // Cloud Solutions Inc - only has 1 of 8 products (huge opportunity!)
+            { accountId: 'A006', productId: 'P001', contractValue: 95000, startDate: new Date('2023-11-01'), status: 'active' },
+            
+            // Digital Media Group - has 2 of 8 products
+            { accountId: 'A007', productId: 'P001', contractValue: 100000, startDate: new Date('2023-05-15'), status: 'active' },
+            { accountId: 'A007', productId: 'P002', contractValue: 55000, startDate: new Date('2023-12-01'), status: 'active' },
+            
+            // Pharma Solutions Ltd - has 3 of 8 products
+            { accountId: 'A008', productId: 'P001', contractValue: 120000, startDate: new Date('2023-01-20'), status: 'active' },
+            { accountId: 'A008', productId: 'P005', contractValue: 95000, startDate: new Date('2023-06-15'), status: 'active' },
+            { accountId: 'A008', productId: 'P008', contractValue: 105000, startDate: new Date('2023-09-01'), status: 'active' }
         ];
 
         return { success: true, message: 'Sample data loaded successfully' };
