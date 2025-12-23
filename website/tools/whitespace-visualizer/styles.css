@@ -106,7 +106,7 @@
 }
 
 .upload-btn {
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
     color: white;
     border: none;
     border-radius: var(--radius-md);
@@ -258,7 +258,7 @@
     display: block;
     font-size: 2rem;
     font-weight: 800;
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -373,10 +373,12 @@
     font-weight: 600;
     text-align: left;
     border-bottom: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
     background: var(--color-bg);
     color: var(--color-text);
     display: flex;
     align-items: center;
+    margin: 2px;
 }
 
 .account-header-cell {
@@ -395,6 +397,7 @@
     background: var(--glass-bg);
     border-bottom: 1px solid var(--glass-border);
     border-right: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
     padding: var(--space-xs);
     font-size: 0.85rem;
     font-weight: 600;
@@ -404,6 +407,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    margin: 2px;
 }
 
 .products-data {
@@ -439,6 +443,7 @@
     background: var(--color-bg);
     border-bottom: 1px solid var(--glass-border);
     border-right: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
     padding: var(--space-xs);
     font-size: 0.85rem;
     font-weight: 500;
@@ -449,6 +454,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    margin: 2px;
 }
 
 .matrix-cell.adopted {
@@ -457,7 +463,7 @@
 }
 
 .matrix-cell.opportunity {
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
     color: white;
     font-weight: 600;
 }
@@ -516,7 +522,7 @@
 }
 
 .matrix-cell.opportunity {
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
     color: white;
     font-weight: 600;
 }
@@ -639,13 +645,13 @@
 }
 
 .scenario-btn.active, .view-btn.active {
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
     color: white;
     font-weight: 600;
 }
 
 .scenario-btn.active:hover, .view-btn.active:hover {
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
 }
 
 .projections-header {
@@ -699,7 +705,7 @@
 .projection-quarter .quarter-value {
     font-size: 1.5rem;
     font-weight: 800;
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -763,7 +769,7 @@
 .month-value {
     font-size: 1.3rem;
     font-weight: 800;
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -1021,7 +1027,7 @@
 }
 
 .summary-item.highlight .value {
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -1096,7 +1102,7 @@
 
 .opportunity-value-display .value {
     font-weight: 700;
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -1222,7 +1228,7 @@
 }
 
 .detail-value.highlight {
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -2012,7 +2018,7 @@
 }
 
 .phase-number {
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
     color: white;
     width: 32px;
     height: 32px;
@@ -2282,7 +2288,7 @@
 }
 
 .value-icon {
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
     border-radius: var(--radius-lg);
     padding: var(--space-lg);
     display: inline-flex;
@@ -2984,7 +2990,7 @@
 }
 
 .analytics-btn.active {
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
     border-color: var(--color-primary);
     color: white;
     box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
@@ -4020,7 +4026,7 @@
 }
 
 .filter-chip.active {
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
     border-color: var(--color-primary);
     color: white;
 }
@@ -4060,7 +4066,7 @@
     left: 0;
     right: 0;
     height: 3px;
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
     opacity: 0;
     transition: opacity var(--transition-base);
 }
@@ -4308,7 +4314,7 @@
 .timeline-fill {
     position: absolute;
     height: 100%;
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
     border-radius: 2px;
     transition: width 0.5s ease;
 }
@@ -5120,7 +5126,7 @@
 .stakeholder-icon {
     width: 40px;
     height: 40px;
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
     border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
