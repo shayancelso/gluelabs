@@ -15,6 +15,7 @@ class WhitespaceApp {
         this.currentView = 'quarterly';
         this.currentProjections = null;
         this.initializeEventListeners();
+        this.initializeMobileOptimizations();
         
         // Auto-load sample data immediately and hide import section
         this.loadSampleData();
@@ -846,6 +847,9 @@ class WhitespaceApp {
         tableHTML += '</tbody></table>';
         
         matrixContainer.innerHTML = tableHTML;
+        
+        // Add touch feedback to matrix cells after rendering
+        this.addTouchFeedbackToMatrixCells();
         
         // Add click event listeners to opportunity cells
         this.addMatrixEventListeners();
@@ -2499,6 +2503,213 @@ class WhitespaceApp {
                 </div>
             </div>
         `;
+    }
+    
+    // ==========================================================================
+    // Mobile Touch Optimizations
+    // ==========================================================================
+    
+    initializeMobileOptimizations() {
+        // Only initialize on mobile devices
+        if (window.innerWidth <= 768) {
+            this.setupTouchFeedback();
+            this.setupBottomSheetModal();
+            this.setupSwipeNavigation();
+            this.optimizeModalForMobile();
+        }
+        
+        // Listen for orientation changes
+        window.addEventListener('resize', () => {
+            if (window.innerWidth <= 768) {
+                this.setupTouchFeedback();
+            }
+        });
+    }
+    
+    setupTouchFeedback() {
+        // Remove existing touch listeners to avoid duplicates
+        document.removeEventListener('touchstart', this.handleTouchStart);
+        document.removeEventListener('touchend', this.handleTouchEnd);
+        
+        // Add global touch feedback
+        this.handleTouchStart = (e) => {
+            const target = e.target.closest('.matrix-cell, .action-btn, .btn, .playbook-card');
+            if (target) {
+                target.classList.add('touch-active');
+                
+                // Add haptic feedback if available
+                if (navigator.vibrate) {
+                    navigator.vibrate(50);
+                }
+            }
+        };
+        
+        this.handleTouchEnd = (e) => {
+            const target = e.target.closest('.matrix-cell, .action-btn, .btn, .playbook-card');
+            if (target) {
+                setTimeout(() => {
+                    target.classList.remove('touch-active');
+                }, 150);
+            }
+        };
+        
+        document.addEventListener('touchstart', this.handleTouchStart, { passive: true });
+        document.addEventListener('touchend', this.handleTouchEnd, { passive: true });
+    }
+    
+    addTouchFeedbackToMatrixCells() {
+        // This is called after matrix is rendered
+        const matrixCells = document.querySelectorAll('.matrix-cell');
+        matrixCells.forEach(cell => {
+            // Ensure proper touch target size
+            cell.style.minHeight = '44px';
+            cell.style.minWidth = '44px';
+        });
+    }
+    
+    setupBottomSheetModal() {
+        const modal = document.getElementById('opportunity-modal');
+        if (!modal) return;
+        
+        // Add show class for animation
+        this.originalShowModal = this.showModal;
+        this.showModal = (content) => {
+            this.originalShowModal(content);
+            
+            // Add mobile-specific modal behavior
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 10);
+            
+            // Prevent body scroll on mobile
+            document.body.style.overflow = 'hidden';
+            document.body.style.position = 'fixed';
+            document.body.style.width = '100%';
+        };
+        
+        this.originalCloseModal = this.closeModal;
+        this.closeModal = () => {
+            const modal = document.getElementById('opportunity-modal');
+            if (modal) {
+                modal.classList.remove('show');
+                setTimeout(() => {
+                    this.originalCloseModal();
+                }, 300);
+            }
+            
+            // Restore body scroll
+            document.body.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.width = '';
+        };
+    }
+    
+    setupSwipeNavigation() {
+        const dashboardGrid = document.querySelector('.dashboard-grid');
+        if (!dashboardGrid) return;
+        
+        let startX = 0;
+        let scrollLeft = 0;
+        
+        // Make dashboard horizontally scrollable on mobile
+        if (window.innerWidth <= 768) {
+            dashboardGrid.style.display = 'flex';
+            dashboardGrid.style.overflowX = 'auto';
+            dashboardGrid.style.scrollSnapType = 'x mandatory';
+            dashboardGrid.style.webkitOverflowScrolling = 'touch';
+            
+            const cards = dashboardGrid.querySelectorAll('.dashboard-card');
+            cards.forEach(card => {
+                card.style.minWidth = '280px';
+                card.style.scrollSnapAlign = 'start';
+            });
+        }
+    }
+    
+    optimizeModalForMobile() {
+        // Add swipe-to-dismiss functionality
+        const modal = document.getElementById('opportunity-modal');
+        if (!modal) return;
+        
+        let startY = 0;
+        let currentY = 0;
+        let isDragging = false;
+        
+        const modalContent = modal.querySelector('.modal-content');
+        
+        const handleTouchStart = (e) => {
+            startY = e.touches[0].clientY;
+            isDragging = true;
+            modalContent.style.transition = 'none';
+        };
+        
+        const handleTouchMove = (e) => {
+            if (!isDragging) return;
+            
+            currentY = e.touches[0].clientY;
+            const deltaY = Math.max(0, currentY - startY);
+            
+            modalContent.style.transform = `translateY(${deltaY}px)`;
+        };
+        
+        const handleTouchEnd = () => {
+            if (!isDragging) return;
+            isDragging = false;
+            
+            const deltaY = currentY - startY;
+            modalContent.style.transition = 'transform 0.3s cubic-bezier(0.32, 0.72, 0, 1)';
+            
+            if (deltaY > 100) {
+                // Swipe down to dismiss
+                this.closeModal();
+            } else {
+                // Snap back
+                modalContent.style.transform = 'translateY(0)';
+            }
+        };
+        
+        modalContent.addEventListener('touchstart', handleTouchStart, { passive: true });
+        modalContent.addEventListener('touchmove', handleTouchMove, { passive: false });
+        modalContent.addEventListener('touchend', handleTouchEnd, { passive: true });
+    }
+    
+    // Progressive disclosure for dashboard sections
+    toggleDashboardSection(sectionId) {
+        const section = document.getElementById(sectionId);
+        if (!section) return;
+        
+        const isCollapsed = section.classList.contains('collapsed');
+        
+        if (isCollapsed) {
+            section.classList.remove('collapsed');
+            section.classList.add('expanded');
+        } else {
+            section.classList.remove('expanded');
+            section.classList.add('collapsed');
+        }
+    }
+    
+    // Show skeleton loading state
+    showSkeletonLoader(containerId) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        
+        const skeletonHTML = `
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-text"></div>
+            <div class="skeleton skeleton-text"></div>
+            <div class="skeleton skeleton-text"></div>
+        `;
+        
+        container.innerHTML = skeletonHTML;
+    }
+    
+    // Hide skeleton and show content
+    hideSkeletonLoader(containerId, content) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        
+        container.innerHTML = content;
     }
 }
 
