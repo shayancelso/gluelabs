@@ -812,7 +812,13 @@ class WhitespaceApp {
                 <div class="matrix-products">
                     <div class="products-header">
                         ${products.map(product => `
-                            <div class="product-header-cell">${product.name}</div>
+                            <div class="product-header-cell clickable-header" 
+                                 data-product="${product.id}" 
+                                 onclick="app.sortByProduct('${product.id}')"
+                                 title="Click to sort accounts by ${product.name} opportunities">
+                                ${product.name}
+                                <span class="sort-indicator" id="sort-${product.id}">↕</span>
+                            </div>
                         `).join('')}
                     </div>
                     <div class="products-data">
@@ -868,6 +874,69 @@ class WhitespaceApp {
                 this.showOpportunityDetails(accountId, productId);
             });
         });
+    }
+
+    sortByProduct(productId) {
+        const matrix = this.engine.matrix;
+        const accounts = this.engine.accounts;
+        const products = this.engine.products;
+        
+        // Get current sort state
+        const currentSort = this.currentSort || {};
+        const isCurrentProduct = currentSort.productId === productId;
+        const isDescending = isCurrentProduct && currentSort.direction === 'desc';
+        
+        // Update sort indicators
+        document.querySelectorAll('.sort-indicator').forEach(indicator => {
+            indicator.textContent = '↕';
+        });
+        
+        const sortIndicator = document.getElementById(`sort-${productId}`);
+        if (sortIndicator) {
+            sortIndicator.textContent = isDescending ? '↑' : '↓';
+        }
+        
+        // Sort accounts based on the product column
+        const sortedAccounts = [...accounts].sort((a, b) => {
+            const cellA = matrix[a.id][productId];
+            const cellB = matrix[b.id][productId];
+            
+            // Priority: opportunity > adopted > not-applicable
+            const getPriority = (cell) => {
+                if (cell.status === 'opportunity') return 3;
+                if (cell.status === 'adopted') return 2;
+                return 1; // not-applicable
+            };
+            
+            const priorityA = getPriority(cellA);
+            const priorityB = getPriority(cellB);
+            
+            if (priorityA !== priorityB) {
+                return isDescending ? priorityA - priorityB : priorityB - priorityA;
+            }
+            
+            // If same status, sort by opportunity value if both are opportunities
+            if (cellA.status === 'opportunity' && cellB.status === 'opportunity') {
+                const valueA = cellA.opportunityValue || 0;
+                const valueB = cellB.opportunityValue || 0;
+                return isDescending ? valueA - valueB : valueB - valueA;
+            }
+            
+            // Fall back to alphabetical by account name
+            return a.name.localeCompare(b.name);
+        });
+        
+        // Update engine with sorted accounts
+        this.engine.accounts = sortedAccounts;
+        
+        // Store current sort state
+        this.currentSort = {
+            productId: productId,
+            direction: isDescending ? 'asc' : 'desc'
+        };
+        
+        // Re-render the matrix with sorted accounts
+        this.displayMatrix(matrix);
     }
 
     displayDashboard(opportunities, stats) {

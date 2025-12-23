@@ -406,10 +406,35 @@
     color: var(--color-text);
     font-family: var(--font-display);
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     margin: 2px;
     box-sizing: border-box;
+    position: relative;
+}
+
+.product-header-cell.clickable-header {
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.product-header-cell.clickable-header:hover {
+    background: var(--color-primary-light);
+    border-color: var(--color-primary);
+    transform: translateY(-1px);
+}
+
+.sort-indicator {
+    font-size: 0.7rem;
+    opacity: 0.6;
+    margin-top: 2px;
+    color: var(--color-text-secondary);
+}
+
+.clickable-header:hover .sort-indicator {
+    opacity: 1;
+    color: var(--color-primary);
 }
 
 .products-data {
