@@ -351,8 +351,6 @@
     border-collapse: separate;
     border-spacing: 4px;
     min-width: max-content;
-    position: relative;
-    table-layout: fixed;
 }
 
 /* Ensure smooth scrolling */
@@ -399,17 +397,17 @@
 }
 
 .matrix-table th.account-header {
-    background: var(--color-bg-alt);
+    background: var(--color-bg);
     text-align: left;
-    min-width: 180px;
+    width: 200px;
+    min-width: 200px;
+    max-width: 200px;
     cursor: default;
     font-weight: 600;
     position: sticky;
     left: 0;
-    z-index: 15;
-    border-right: 3px solid var(--color-primary);
-    box-shadow: 3px 0 8px rgba(0, 0, 0, 0.15);
-    border-left: 0;
+    z-index: 100;
+    border-right: 2px solid var(--glass-border);
 }
 
 .matrix-cell {
@@ -476,18 +474,18 @@
 
 /* Body row account headers (th elements in tbody) */
 .matrix-table tbody th.account-header {
-    background: var(--color-bg-alt);
+    background: var(--color-bg);
     justify-content: flex-start;
-    min-width: 180px;
+    width: 200px;
+    min-width: 200px;
+    max-width: 200px;
     cursor: default;
     position: sticky;
     left: 0;
-    z-index: 10;
-    border-right: 3px solid var(--color-primary);
+    z-index: 50;
+    border-right: 2px solid var(--glass-border);
     text-align: left;
     font-weight: 600;
-    box-shadow: 3px 0 8px rgba(0, 0, 0, 0.15);
-    border-left: 0;
 }
 
 .matrix-cell.adopted {
