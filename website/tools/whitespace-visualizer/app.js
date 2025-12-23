@@ -16,8 +16,16 @@ class WhitespaceApp {
         this.currentProjections = null;
         this.initializeEventListeners();
         
-        // Auto-load sample data on page load
-        setTimeout(() => this.loadSampleData(), 500);
+        // Auto-load sample data immediately and hide import section
+        this.loadSampleData();
+        
+        // Hide import section immediately
+        setTimeout(() => {
+            const importSection = document.querySelector('.data-import-section');
+            if (importSection) {
+                importSection.style.display = 'none';
+            }
+        }, 100);
     }
 
     initializeEventListeners() {
