@@ -367,18 +367,19 @@
 
 .account-header-cell,
 .account-name-cell {
-    min-height: 50px;
+    height: 50px;
     padding: var(--space-xs);
     font-size: 0.85rem;
     font-weight: 600;
     text-align: left;
-    border-bottom: 1px solid var(--glass-border);
+    border: 1px solid var(--glass-border);
     border-radius: var(--radius-sm);
     background: var(--color-bg);
     color: var(--color-text);
     display: flex;
     align-items: center;
     margin: 2px;
+    box-sizing: border-box;
 }
 
 .account-header-cell {
@@ -392,11 +393,11 @@
 }
 
 .product-header-cell {
-    min-height: 50px;
-    min-width: 120px;
+    height: 50px;
+    width: 120px;
+    flex-shrink: 0;
     background: var(--glass-bg);
-    border-bottom: 1px solid var(--glass-border);
-    border-right: 1px solid var(--glass-border);
+    border: 1px solid var(--glass-border);
     border-radius: var(--radius-sm);
     padding: var(--space-xs);
     font-size: 0.85rem;
@@ -408,6 +409,7 @@
     align-items: center;
     justify-content: center;
     margin: 2px;
+    box-sizing: border-box;
 }
 
 .products-data {
@@ -438,11 +440,11 @@
 }
 
 .matrix-cell {
-    min-height: 50px;
-    min-width: 120px;
+    height: 50px;
+    width: 120px;
+    flex-shrink: 0;
     background: var(--color-bg);
-    border-bottom: 1px solid var(--glass-border);
-    border-right: 1px solid var(--glass-border);
+    border: 1px solid var(--glass-border);
     border-radius: var(--radius-sm);
     padding: var(--space-xs);
     font-size: 0.85rem;
@@ -455,6 +457,7 @@
     align-items: center;
     justify-content: center;
     margin: 2px;
+    box-sizing: border-box;
 }
 
 .matrix-cell.adopted {
