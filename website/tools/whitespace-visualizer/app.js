@@ -864,7 +864,9 @@ class WhitespaceApp {
         this.addMatrixEventListeners();
         
         // Add click event listeners to product headers for sorting
-        this.addHeaderEventListeners();
+        setTimeout(() => {
+            this.addHeaderEventListeners();
+        }, 100);
     }
 
     addMatrixEventListeners() {
@@ -880,18 +882,30 @@ class WhitespaceApp {
 
     addHeaderEventListeners() {
         const headerCells = document.querySelectorAll('.product-header-cell.clickable-header');
+        console.log('Found header cells:', headerCells.length);
+        
         headerCells.forEach(header => {
-            header.addEventListener('click', () => {
+            console.log('Adding listener to header:', header.dataset.product);
+            header.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Header clicked:', header.dataset.product);
                 const productId = header.dataset.product;
                 this.sortByProduct(productId);
             });
+            
+            // Also add visual feedback
+            header.style.cursor = 'pointer';
         });
     }
 
     sortByProduct(productId) {
+        console.log('sortByProduct called with:', productId);
         const matrix = this.engine.matrix;
         const accounts = this.engine.accounts;
         const products = this.engine.products;
+        
+        console.log('Accounts before sort:', accounts.map(a => a.name));
         
         // Get current sort state
         const currentSort = this.currentSort || {};
