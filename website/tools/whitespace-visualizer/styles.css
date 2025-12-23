@@ -284,6 +284,8 @@
     padding: var(--space-xl);
     margin-bottom: var(--space-3xl);
     box-shadow: var(--glass-shadow);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .matrix-header {
@@ -380,6 +382,10 @@
     min-width: 180px;
     cursor: default;
     font-weight: 600;
+    position: sticky;
+    left: 0;
+    z-index: 10;
+    border-right: 2px solid var(--glass-border);
 }
 
 .matrix-cell {
@@ -445,10 +451,16 @@
 }
 
 .matrix-cell.account-header {
-    background: rgba(0, 0, 0, 0.2);
+    background: var(--glass-bg);
     justify-content: flex-start;
     min-width: 180px;
     cursor: default;
+    position: sticky;
+    left: 0;
+    z-index: 5;
+    border-right: 2px solid var(--glass-border);
+    text-align: left;
+    font-weight: 600;
 }
 
 .matrix-cell.adopted {
