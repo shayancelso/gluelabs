@@ -4481,7 +4481,7 @@ p {
 }
 
 /* Force monthly subscription cards into single row on desktop */
-.pricing-category:nth-child(2) .pricing-cards {
+.pricing-category:nth-child(1) .pricing-cards {
     grid-template-columns: repeat(4, 1fr);
     max-width: 1400px;
 }
@@ -4696,7 +4696,7 @@ p {
 /* Mobile Responsiveness */
 @media (max-width: 1200px) {
     /* Reset monthly subscription layout for smaller screens */
-    .pricing-category:nth-child(2) .pricing-cards {
+    .pricing-category:nth-child(1) .pricing-cards {
         grid-template-columns: repeat(2, 1fr);
         max-width: 800px;
     }
@@ -4719,7 +4719,7 @@ p {
     }
     
     /* Reset monthly subscription layout for mobile */
-    .pricing-category:nth-child(2) .pricing-cards {
+    .pricing-category:nth-child(1) .pricing-cards {
         grid-template-columns: 1fr;
         max-width: 100%;
     }
