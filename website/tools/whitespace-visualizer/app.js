@@ -164,10 +164,6 @@ class WhitespaceApp {
         console.log('📚 About to call displayExpansionPlaybooks...');
         this.displayExpansionPlaybooks();
         
-        console.log('📈 About to call displayAdvancedAnalytics...');
-        // TEMPORARY: Start with basic working version
-        this.displaySimpleAnalytics(results.stats, results.opportunities);
-        
         console.log('📊 About to call displayDashboard...');
         this.displayDashboard(results.opportunities, results.stats);
         
@@ -355,6 +351,34 @@ class WhitespaceApp {
         
         console.log('Generated playbooks:', playbooks); // Debug log
         
+        // Add controls section
+        const controlsHTML = `
+            <div class="playbooks-controls">
+                <div class="playbooks-search">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <input type="text" placeholder="Search accounts..." id="playbook-search" onkeyup="app.filterPlaybooks()" aria-label="Search playbooks">
+                </div>
+                <div class="playbooks-filters">
+                    <select id="playbook-sort" onchange="app.sortPlaybooks()" aria-label="Sort playbooks">
+                        <option value="revenue">Sort by Revenue</option>
+                        <option value="tier">Sort by Tier</option>
+                        <option value="readiness">Sort by Readiness</option>
+                    </select>
+                    <div class="filter-chips">
+                        <button class="filter-chip active" data-filter="all" onclick="app.filterByType('all')" aria-pressed="true">All</button>
+                        <button class="filter-chip" data-filter="enterprise" onclick="app.filterByType('enterprise')" aria-pressed="false">Enterprise</button>
+                        <button class="filter-chip" data-filter="strategic" onclick="app.filterByType('strategic')" aria-pressed="false">Strategic</button>
+                    </div>
+                </div>
+                <div class="playbooks-count">
+                    <span id="playbook-count">${playbooks.length}</span> strategies
+                </div>
+            </div>
+        `;
+        
         const playbooksHTML = playbooks.map(pb => {
             const playbook = pb.playbook;
             const playbookTypeClass = playbook.type.replace(/-/g, '_');
@@ -362,142 +386,286 @@ class WhitespaceApp {
             const accountOpportunities = this.engine.getAccountOpportunities(account);
             const totalOpportunityValue = accountOpportunities.reduce((sum, opp) => sum + opp.opportunityValue, 0);
             
+            // Determine tier color
+            const tierColors = {
+                'Platinum': { bg: '#8b5cf6', icon: '👑' },
+                'Gold': { bg: '#f59e0b', icon: '⭐' },
+                'Silver': { bg: '#6b7280', icon: '🔷' }
+            };
+            const tierInfo = tierColors[account.tier] || { bg: '#6b7280', icon: '🔷' };
+            
             return `
-                <div class="playbook-card playbook-${playbookTypeClass}" data-account-id="${pb.accountId}">
-                    <div class="playbook-overview">
-                        <div class="playbook-meta">
-                            <div class="account-info">
+                <div class="playbook-card modern-card" data-account-id="${pb.accountId}" data-tier="${account.tier}" data-value="${totalOpportunityValue}">
+                    <div class="card-header">
+                        <div class="account-section">
+                            <div class="account-header">
                                 <h5 class="account-name">${pb.accountName}</h5>
-                                <div class="account-details">
-                                    <span class="account-tier">${account.tier}</span>
-                                    <span class="account-industry">${account.industry}</span>
-                                    <span class="account-size">${account.companySize}</span>
-                                </div>
+                                <span class="tier-badge ${account.tier.toLowerCase()}">
+                                    ${account.tier}
+                                </span>
                             </div>
-                            <div class="playbook-strategy">
-                                <div class="strategy-type">${this.formatPlaybookType(playbook.type)}</div>
-                                <div class="strategy-value">$${this.formatCurrency(totalOpportunityValue)} potential</div>
+                            <div class="account-meta">
+                                <span class="meta-item">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M3 21h18M3 10h18M3 7l9-4 9 4M12 3v18"/>
+                                    </svg>
+                                    ${account.industry}
+                                </span>
+                                <span class="meta-item">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                                    </svg>
+                                    ${account.companySize}
+                                </span>
                             </div>
                         </div>
-                        <div class="playbook-expand" onclick="app.togglePlaybook('${pb.accountId}')">
-                            <span class="expand-text">View Strategy</span>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="6,9 12,15 18,9"></polyline>
-                            </svg>
+                        <div class="strategy-section">
+                            <div class="strategy-type-badge ${playbookTypeClass}">
+                                ${this.getPlaybookIcon(playbook.type)}
+                                <span>${this.formatPlaybookType(playbook.type)}</span>
+                            </div>
+                            <div class="revenue-display">
+                                <div class="revenue-value">$${this.formatCurrency(totalOpportunityValue)}</div>
+                                <div class="revenue-label">Potential Revenue</div>
+                            </div>
                         </div>
                     </div>
                     
+                    <div class="card-actions">
+                        <button class="action-btn expand-btn" onclick="app.togglePlaybook('${pb.accountId}')" aria-expanded="false" aria-controls="playbook-${pb.accountId}" aria-label="Expand playbook details">
+                            <span>View Strategy</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6,9 12,15 18,9"></polyline>
+                            </svg>
+                        </button>
+                        <button class="action-btn quick-action" onclick="app.startExecution('${pb.accountId}')" aria-label="Start execution">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5 3 19 12 5 21 5 3"/>
+                            </svg>
+                        </button>
+                    </div>
+                    
                     <div class="playbook-content" id="playbook-${pb.accountId}" style="display: none;">
-                        <div class="strategy-overview">
-                            <div class="strategy-description">
-                                <h6>Strategy Overview</h6>
-                                <p>${playbook.description}</p>
-                            </div>
-                        </div>
-                        
-                        <div class="playbook-tabs">
-                            <div class="tab-nav">
-                                <button class="tab-btn active" onclick="app.switchPlaybookTab('${pb.accountId}', 'execution')">Execution Plan</button>
-                                <button class="tab-btn" onclick="app.switchPlaybookTab('${pb.accountId}', 'team')">Team & Metrics</button>
-                                <button class="tab-btn" onclick="app.switchPlaybookTab('${pb.accountId}', 'competitive')">Competitive Intel</button>
+                        <div class="content-inner">
+                            <div class="strategy-overview-section">
+                                <h6 class="section-title">Strategy Overview</h6>
+                                <p class="strategy-description">${playbook.description}</p>
                             </div>
                             
-                            <div class="tab-content">
-                                <div class="tab-panel active" data-tab="execution">
-                                    <div class="execution-roadmap">
-                                        <h6>Execution Timeline</h6>
-                                        <div class="roadmap-timeline">
-                                            ${Object.entries(playbook.timeline).map(([period, activity], index) => `
-                                                <div class="roadmap-milestone ${index === 0 ? 'current' : ''}">
-                                                    <div class="milestone-marker">
-                                                        <div class="milestone-number">${index + 1}</div>
+                            <!-- Interactive Timeline -->
+                            <div class="timeline-section">
+                                <h6 class="section-title">Execution Timeline</h6>
+                                <div class="timeline-container">
+                                    <div class="timeline-progress">
+                                        <div class="timeline-track"></div>
+                                        <div class="timeline-fill" style="width: 25%"></div>
+                                    </div>
+                                    <div class="timeline-phases">
+                                        ${this.createTimelinePhases(playbook).map((phase, index) => `
+                                            <div class="timeline-phase ${index === 0 ? 'active' : ''} ${index < 1 ? 'completed' : ''}" 
+                                                 data-phase="${index}" 
+                                                 onclick="app.showPhaseDetails('${pb.accountId}', ${index})">
+                                                <div class="phase-marker">
+                                                    <div class="phase-icon">
+                                                        ${phase.icon}
                                                     </div>
-                                                    <div class="milestone-content">
-                                                        <div class="milestone-period">${period}</div>
-                                                        <div class="milestone-description">${activity}</div>
+                                                    <div class="phase-connector"></div>
+                                                </div>
+                                                <div class="phase-content">
+                                                    <div class="phase-name">${phase.name}</div>
+                                                    <div class="phase-duration">${phase.duration}</div>
+                                                    <div class="phase-status">${phase.status}</div>
+                                                </div>
+                                                <div class="phase-tooltip">
+                                                    <div class="tooltip-title">${phase.name}</div>
+                                                    <div class="tooltip-description">${phase.description}</div>
+                                                    <div class="tooltip-activities">
+                                                        ${phase.activities.map(activity => `<li>${activity}</li>`).join('')}
                                                     </div>
                                                 </div>
-                                            `).join('')}
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Collapsible Sections -->
+                            <div class="details-sections">
+                                <div class="details-section">
+                                    <button class="section-toggle" onclick="app.toggleSection('${pb.accountId}', 'team')">
+                                        <span>Team & Success Metrics</span>
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="6,9 12,15 18,9"></polyline>
+                                        </svg>
+                                    </button>
+                                    <div class="section-content" id="section-${pb.accountId}-team" style="display: none;">
+                                        <div class="team-metrics-grid">
+                                            <div class="stakeholders-panel">
+                                                <h6 class="panel-title">Key Stakeholders</h6>
+                                                <div class="stakeholders-list">
+                                                    ${playbook.stakeholders.map(stakeholder => `
+                                                        <div class="stakeholder-card">
+                                                            <div class="stakeholder-icon">
+                                                                ${this.getRoleIcon(stakeholder.role)}
+                                                            </div>
+                                                            <div class="stakeholder-info">
+                                                                <div class="stakeholder-role">${stakeholder.role}</div>
+                                                                <div class="stakeholder-responsibility">${stakeholder.responsibility}</div>
+                                                            </div>
+                                                        </div>
+                                                    `).join('')}
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="metrics-panel">
+                                                <h6 class="panel-title">Success Metrics</h6>
+                                                <div class="metrics-grid">
+                                                    ${Object.entries(playbook.successMetrics).map(([metric, target]) => `
+                                                        <div class="metric-card">
+                                                            <div class="metric-name">${metric}</div>
+                                                            <div class="metric-target">${target}</div>
+                                                        </div>
+                                                    `).join('')}
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 
-                                <div class="tab-panel" data-tab="team">
-                                    <div class="team-metrics-grid">
-                                        <div class="team-section">
-                                            <h6>Key Stakeholders</h6>
-                                            <div class="team-list">
-                                                ${playbook.stakeholders.map(stakeholder => `
-                                                    <div class="team-member">
-                                                        <div class="member-role">${stakeholder.role}</div>
-                                                        <div class="member-duty">${stakeholder.responsibility}</div>
-                                                    </div>
-                                                `).join('')}
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="metrics-section">
-                                            <h6>Success Metrics</h6>
-                                            <div class="metrics-list">
-                                                ${Object.entries(playbook.successMetrics).map(([metric, target]) => `
-                                                    <div class="metric-item">
-                                                        <div class="metric-name">${metric}</div>
-                                                        <div class="metric-target">${target}</div>
-                                                    </div>
-                                                `).join('')}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="tab-panel" data-tab="competitive">
-                                    <div class="competitive-intelligence">
-                                        <div class="intel-section">
-                                            <h6>Competitive Landscape</h6>
-                                            <div class="competitors-overview">
-                                                <div class="primary-competitors">
-                                                    <span class="label">Primary Threats:</span>
-                                                    <span class="competitors">${playbook.competitiveInsights.primaryCompetitors.join(', ')}</span>
+                                <div class="details-section">
+                                    <button class="section-toggle" onclick="app.toggleSection('${pb.accountId}', 'competitive')">
+                                        <span>Competitive Intelligence</span>
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="6,9 12,15 18,9"></polyline>
+                                        </svg>
+                                    </button>
+                                    <div class="section-content" id="section-${pb.accountId}-competitive" style="display: none;">
+                                        <div class="competitive-panel">
+                                            <div class="competitors-section">
+                                                <h6 class="panel-title">Competitive Landscape</h6>
+                                                <div class="competitors-grid">
+                                                    ${playbook.competitiveInsights.primaryCompetitors.map(competitor => `
+                                                        <div class="competitor-chip">${competitor}</div>
+                                                    `).join('')}
                                                 </div>
                                             </div>
-                                        </div>
-                                        
-                                        <div class="intel-section">
-                                            <h6>Our Competitive Advantages</h6>
-                                            <div class="advantages-list">
-                                                ${playbook.competitiveInsights.competitiveAdvantages.map(advantage => `
-                                                    <div class="advantage-point">${advantage}</div>
-                                                `).join('')}
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="intel-section">
-                                            <h6>Counter-Strategies</h6>
-                                            <div class="strategies-list">
-                                                ${playbook.competitiveInsights.counterStrategies.map(strategy => `
-                                                    <div class="strategy-point">${strategy}</div>
-                                                `).join('')}
+                                            
+                                            <div class="advantages-section">
+                                                <h6 class="panel-title">Our Advantages</h6>
+                                                <div class="advantages-list">
+                                                    ${playbook.competitiveInsights.competitiveAdvantages.map(advantage => `
+                                                        <div class="advantage-item">
+                                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                                <polyline points="20 6 9 17 4 12"></polyline>
+                                                            </svg>
+                                                            <span>${advantage}</span>
+                                                        </div>
+                                                    `).join('')}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div class="playbook-actions">
-                            <button class="action-btn primary" onclick="app.showDetailedPlaybook('${pb.accountId}')">
-                                View Full Playbook
-                            </button>
-                            <button class="action-btn secondary" onclick="app.exportPlaybook('${pb.accountId}')">
-                                Export Strategy
-                            </button>
+                            
+                            <!-- Action Buttons -->
+                            <div class="playbook-actions">
+                                <button class="action-btn primary-action" onclick="app.startExecution('${pb.accountId}')">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                                    </svg>
+                                    <span>Start Execution</span>
+                                </button>
+                                <button class="action-btn secondary-action" onclick="app.showDetailedPlaybook('${pb.accountId}')">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14 2 14 8 20 8"/>
+                                        <line x1="16" y1="13" x2="8" y2="13"/>
+                                        <line x1="16" y1="17" x2="8" y2="17"/>
+                                        <polyline points="10 9 9 9 8 9"/>
+                                    </svg>
+                                    <span>View Details</span>
+                                </button>
+                                <button class="action-btn tertiary-action" onclick="app.exportPlaybook('${pb.accountId}')">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                        <polyline points="7 10 12 15 17 10"/>
+                                        <line x1="12" y1="15" x2="12" y2="3"/>
+                                    </svg>
+                                    <span>Export PDF</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             `;
         }).join('');
         
-        playbooksContainer.innerHTML = playbooksHTML;
+        playbooksContainer.innerHTML = controlsHTML + '<div class="playbooks-grid">' + playbooksHTML + '</div>';
+    }
+    
+    // Helper function to create timeline phases
+    createTimelinePhases(playbook) {
+        const phases = [
+            {
+                name: 'Validation',
+                duration: '2-3 weeks',
+                status: 'On Track',
+                icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>',
+                description: 'Validate opportunity and align stakeholders',
+                activities: ['Stakeholder mapping', 'Business case development', 'Technical assessment']
+            },
+            {
+                name: 'Negotiation',
+                duration: '3-4 weeks',
+                status: 'Upcoming',
+                icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16 4h3a1 1 0 011 1v3"/><path d="M8 4H5a1 1 0 00-1 1v3"/><path d="M4 16v3a1 1 0 001 1h3"/></svg>',
+                description: 'Negotiate terms and secure commitment',
+                activities: ['Pricing negotiation', 'Contract terms', 'Implementation timeline']
+            },
+            {
+                name: 'Closure',
+                duration: '1-2 weeks',
+                status: 'Planned',
+                icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
+                description: 'Finalize contracts and kick off',
+                activities: ['Contract execution', 'Kick-off planning', 'Resource allocation']
+            },
+            {
+                name: 'Partnership',
+                duration: 'Ongoing',
+                status: 'Future',
+                icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+                description: 'Build long-term strategic partnership',
+                activities: ['Quarterly reviews', 'Success tracking', 'Expansion planning']
+            }
+        ];
+        
+        return phases;
+    }
+    
+    // Helper function to get playbook icon
+    getPlaybookIcon(type) {
+        const icons = {
+            'aggressive-expansion': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>',
+            'strategic-growth': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20h20"/><path d="M5 20V10l7-7 7 7v10"/></svg>',
+            'platform-deepening': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><rect x="7" y="7" width="10" height="10"/></svg>',
+            'relationship-building': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>'
+        };
+        
+        return icons[type] || icons['strategic-growth'];
+    }
+    
+    // Helper function to get role icon
+    getRoleIcon(role) {
+        const roleIcons = {
+            'Account Executive': '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>',
+            'Solution Architect': '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
+            'Customer Success': '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>',
+            'Product Specialist': '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>'
+        };
+        
+        return roleIcons[role] || roleIcons['Account Executive'];
     }
 
     formatPlaybookType(type) {
@@ -514,27 +682,117 @@ class WhitespaceApp {
 
     togglePlaybook(accountId) {
         const content = document.getElementById(`playbook-${accountId}`);
-        const isVisible = content.style.display !== 'none';
+        const card = content.closest('.playbook-card');
+        const expandBtn = card.querySelector('.expand-btn');
+        const isVisible = content.style.display === 'block';
         
-        // Close all other playbooks
-        document.querySelectorAll('.playbook-content').forEach(el => {
-            el.style.display = 'none';
-        });
-        
-        // Toggle current playbook
-        if (!isVisible) {
+        if (isVisible) {
+            // Hide with animation
+            content.style.display = 'none';
+            card.classList.remove('expanded');
+            expandBtn.setAttribute('aria-expanded', 'false');
+            expandBtn.querySelector('svg').style.transform = 'rotate(0deg)';
+            expandBtn.querySelector('span').textContent = 'View Strategy';
+        } else {
+            // Hide all other playbooks
+            document.querySelectorAll('.playbook-content').forEach(el => {
+                el.style.display = 'none';
+                el.closest('.playbook-card').classList.remove('expanded');
+            });
+            document.querySelectorAll('.expand-btn').forEach(btn => {
+                btn.setAttribute('aria-expanded', 'false');
+                btn.querySelector('svg').style.transform = 'rotate(0deg)';
+                btn.querySelector('span').textContent = 'View Strategy';
+            });
+            
+            // Show current playbook
             content.style.display = 'block';
+            card.classList.add('expanded');
+            expandBtn.setAttribute('aria-expanded', 'true');
+            expandBtn.querySelector('svg').style.transform = 'rotate(180deg)';
+            expandBtn.querySelector('span').textContent = 'Hide Strategy';
         }
+    }
+    
+    toggleSection(accountId, section) {
+        const sectionContent = document.getElementById(`section-${accountId}-${section}`);
+        const toggleBtn = sectionContent.previousElementSibling;
+        const isVisible = sectionContent.style.display === 'block';
         
-        // Update expand icon
-        document.querySelectorAll('.playbook-expand svg').forEach(icon => {
-            icon.style.transform = 'rotate(0deg)';
+        if (isVisible) {
+            sectionContent.style.display = 'none';
+            toggleBtn.querySelector('svg').style.transform = 'rotate(0deg)';
+        } else {
+            sectionContent.style.display = 'block';
+            toggleBtn.querySelector('svg').style.transform = 'rotate(180deg)';
+        }
+    }
+    
+    filterPlaybooks() {
+        const searchTerm = document.getElementById('playbook-search').value.toLowerCase();
+        const cards = document.querySelectorAll('.playbook-card');
+        let visibleCount = 0;
+        
+        cards.forEach(card => {
+            const accountName = card.querySelector('.account-name').textContent.toLowerCase();
+            const industry = card.querySelector('.meta-item').textContent.toLowerCase();
+            
+            if (accountName.includes(searchTerm) || industry.includes(searchTerm)) {
+                card.style.display = 'block';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
         });
         
-        if (!isVisible) {
-            const expandIcon = content.previousElementSibling.querySelector('.playbook-expand svg');
-            expandIcon.style.transform = 'rotate(180deg)';
-        }
+        document.getElementById('playbook-count').textContent = visibleCount;
+    }
+    
+    sortPlaybooks() {
+        const sortBy = document.getElementById('playbook-sort').value;
+        const container = document.querySelector('.playbooks-grid');
+        const cards = Array.from(container.querySelectorAll('.playbook-card'));
+        
+        cards.sort((a, b) => {
+            switch(sortBy) {
+                case 'revenue':
+                    return parseInt(b.dataset.value) - parseInt(a.dataset.value);
+                case 'tier':
+                    const tierOrder = { 'Platinum': 0, 'Gold': 1, 'Silver': 2 };
+                    return tierOrder[a.dataset.tier] - tierOrder[b.dataset.tier];
+                case 'readiness':
+                    // This would need readiness data in the dataset
+                    return 0;
+                default:
+                    return 0;
+            }
+        });
+        
+        cards.forEach(card => container.appendChild(card));
+    }
+    
+    filterByType(type) {
+        const chips = document.querySelectorAll('.filter-chip');
+        chips.forEach(chip => {
+            chip.classList.remove('active');
+            chip.setAttribute('aria-pressed', 'false');
+        });
+        event.target.classList.add('active');
+        event.target.setAttribute('aria-pressed', 'true');
+        
+        // Implementation would filter based on type
+        // For now, just show all
+        this.filterPlaybooks();
+    }
+    
+    startExecution(accountId) {
+        // Implementation for starting execution
+        alert(`Starting execution for account ${accountId}`);
+    }
+    
+    showPhaseDetails(accountId, phaseIndex) {
+        // Implementation for showing phase details
+        console.log(`Showing phase ${phaseIndex} details for account ${accountId}`);
     }
 
     showDetailedPlaybook(accountId) {
@@ -1152,6 +1410,8 @@ class WhitespaceApp {
 
     // Simple Analytics Dashboard - Basic Working Version
     displaySimpleAnalytics(stats, opportunities) {
+        // Analytics dashboard removed per user request
+        return;
         console.log('🎯 SIMPLE ANALYTICS STARTING...');
         
         try {
@@ -1304,96 +1564,18 @@ class WhitespaceApp {
         this.updateHeatmapFilter('all');
         
         // Account Growth Trajectory - Initialize with default data, preserve controls
+        // Set default active button
+        const defaultButton = document.querySelector('.analytics-btn[data-timeframe="12m"]');
+        if (defaultButton) {
+            defaultButton.classList.add('active');
+        }
         this.updateGrowthTrajectory('12m');
         
         // Probability Distribution 
-        const probabilityContainer = document.getElementById('probability-distribution');
-        if (probabilityContainer) {
-            console.log('Building ultra-simple probability chart...');
-            
-            probabilityContainer.innerHTML = `
-                <div style="padding: 25px; background: rgba(255,255,255,0.05); border-radius: 12px; margin: 15px 0;">
-                    <h6 style="margin: 0 0 20px 0; color: var(--color-text); font-weight: 600; font-size: 14px;">Expansion Success Probability</h6>
-                    <div style="display: flex; flex-direction: column; gap: 14px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0;">
-                            <span style="font-size: 13px; color: var(--color-text);">High Probability (>70%)</span>
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <div style="width: 80px; height: 8px; background: rgba(34, 197, 94, 0.2); border-radius: 4px; overflow: hidden;">
-                                    <div style="width: 85%; height: 100%; background: #22c55e; border-radius: 4px;"></div>
-                                </div>
-                                <span style="font-size: 13px; font-weight: 600; color: #22c55e; min-width: 35px;">42%</span>
-                            </div>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0;">
-                            <span style="font-size: 13px; color: var(--color-text);">Medium Probability (40-70%)</span>
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <div style="width: 80px; height: 8px; background: rgba(251, 191, 36, 0.2); border-radius: 4px; overflow: hidden;">
-                                    <div style="width: 65%; height: 100%; background: #fbbf24; border-radius: 4px;"></div>
-                                </div>
-                                <span style="font-size: 13px; font-weight: 600; color: #fbbf24; min-width: 35px;">35%</span>
-                            </div>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0;">
-                            <span style="font-size: 13px; color: var(--color-text);">Low Probability (<40%)</span>
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <div style="width: 80px; height: 8px; background: rgba(239, 68, 68, 0.2); border-radius: 4px; overflow: hidden;">
-                                    <div style="width: 25%; height: 100%; background: #ef4444; border-radius: 4px;"></div>
-                                </div>
-                                <span style="font-size: 13px; font-weight: 600; color: #ef4444; min-width: 35px;">23%</span>
-                            </div>
-                        </div>
-                        <div style="margin-top: 20px; padding: 15px; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; background: rgba(255,255,255,0.03);">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-size: 13px; color: rgba(255,255,255,0.7);">Weighted Success Rate</span>
-                                <span style="font-size: 16px; font-weight: 700; color: var(--color-text);">67%</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            console.log('✅ Ultra-simple probability chart created');
-        }
+        this.displayProbabilityDistribution();
         
         // Competitive Risk Assessment 
-        const riskContainer = document.getElementById('competitive-risk');
-        if (riskContainer) {
-            console.log('Building ultra-simple risk assessment...');
-            
-            riskContainer.innerHTML = `
-                <div style="padding: 25px; background: rgba(255,255,255,0.05); border-radius: 12px; margin: 15px 0;">
-                    <h6 style="margin: 0 0 20px 0; color: var(--color-text); font-weight: 600; font-size: 14px;">Competitive Risk Assessment</h6>
-                    <div style="display: flex; flex-direction: column; gap: 12px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: rgba(239, 68, 68, 0.1); border-radius: 8px; border-left: 4px solid #ef4444;">
-                            <div style="display: flex; align-items: center; gap: 8px;">
-                                <div style="width: 8px; height: 8px; background: #ef4444; border-radius: 50%;"></div>
-                                <span style="font-size: 13px; font-weight: 500; color: var(--color-text);">High Risk Accounts</span>
-                            </div>
-                            <span style="font-size: 14px; font-weight: 600; color: #ef4444;">3</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: rgba(251, 191, 36, 0.1); border-radius: 8px; border-left: 4px solid #fbbf24;">
-                            <div style="display: flex; align-items: center; gap: 8px;">
-                                <div style="width: 8px; height: 8px; background: #fbbf24; border-radius: 50%;"></div>
-                                <span style="font-size: 13px; font-weight: 500; color: var(--color-text);">Medium Risk Accounts</span>
-                            </div>
-                            <span style="font-size: 14px; font-weight: 600; color: #fbbf24;">5</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: rgba(34, 197, 94, 0.1); border-radius: 8px; border-left: 4px solid #22c55e;">
-                            <div style="display: flex; align-items: center; gap: 8px;">
-                                <div style="width: 8px; height: 8px; background: #22c55e; border-radius: 50%;"></div>
-                                <span style="font-size: 13px; font-weight: 500; color: var(--color-text);">Low Risk Accounts</span>
-                            </div>
-                            <span style="font-size: 14px; font-weight: 600; color: #22c55e;">7</span>
-                        </div>
-                        <div style="margin-top: 15px; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 8px; text-align: center;">
-                            <div style="font-size: 12px; color: rgba(255,255,255,0.6);">
-                                📅 Next review: <strong style="color: var(--color-text);">January 15, 2025</strong>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            console.log('✅ Ultra-simple risk assessment created');
-        }
+        this.displayCompetitiveRisk();
         
         // Performance Matrix - Initialize with working functionality
         this.updatePerformanceMatrix();
@@ -1407,24 +1589,42 @@ class WhitespaceApp {
     addAnalyticsInteractivity() {
         console.log('🎛️ Adding analytics interactivity...');
         
-        // Time period buttons for growth trajectory
-        const timeButtons = document.querySelectorAll('.analytics-btn[data-timeframe]');
-        timeButtons.forEach(btn => {
-            btn.addEventListener('click', (e) => {
+        // Use event delegation for dynamic elements
+        const analyticsContainer = document.querySelector('.analytics-dashboard');
+        if (!analyticsContainer) return;
+        
+        // Remove any existing listeners to prevent duplicates
+        analyticsContainer.replaceWith(analyticsContainer.cloneNode(true));
+        const newContainer = document.querySelector('.analytics-dashboard');
+        
+        // Time period buttons for growth trajectory - use event delegation
+        newContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('analytics-btn') && e.target.hasAttribute('data-timeframe')) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Find all time buttons within the same card
+                const card = e.target.closest('.analytics-card');
+                const timeButtons = card.querySelectorAll('.analytics-btn[data-timeframe]');
+                
                 // Remove active class from all buttons
                 timeButtons.forEach(b => b.classList.remove('active'));
                 // Add active class to clicked button
                 e.target.classList.add('active');
                 
-                const timeframe = e.target.dataset.timeframe;
+                const timeframe = e.target.getAttribute('data-timeframe');
                 this.updateGrowthTrajectory(timeframe);
-            });
+            }
         });
         
         // Heatmap filter dropdown
         const heatmapFilter = document.getElementById('heatmap-filter');
         if (heatmapFilter) {
-            heatmapFilter.addEventListener('change', (e) => {
+            // Remove existing listener
+            const newHeatmapFilter = heatmapFilter.cloneNode(true);
+            heatmapFilter.parentNode.replaceChild(newHeatmapFilter, heatmapFilter);
+            
+            newHeatmapFilter.addEventListener('change', (e) => {
                 this.updateHeatmapFilter(e.target.value);
             });
         }
@@ -1434,18 +1634,22 @@ class WhitespaceApp {
         const yAxisSelect = document.getElementById('matrix-y-axis');
         
         if (xAxisSelect) {
-            xAxisSelect.addEventListener('change', (e) => {
+            const newXAxis = xAxisSelect.cloneNode(true);
+            xAxisSelect.parentNode.replaceChild(newXAxis, xAxisSelect);
+            newXAxis.addEventListener('change', () => {
                 this.updatePerformanceMatrix();
             });
         }
         
         if (yAxisSelect) {
-            yAxisSelect.addEventListener('change', (e) => {
+            const newYAxis = yAxisSelect.cloneNode(true);
+            yAxisSelect.parentNode.replaceChild(newYAxis, yAxisSelect);
+            newYAxis.addEventListener('change', () => {
                 this.updatePerformanceMatrix();
             });
         }
         
-        console.log('✅ Analytics interactivity added');
+        console.log('✅ Analytics interactivity added with event delegation');
     }
     
     updateGrowthTrajectory(timeframe) {
@@ -1463,43 +1667,52 @@ class WhitespaceApp {
         
         const config = timeframeMults[timeframe] || timeframeMults['12m'];
         
+        // Create or find content container
+        let contentContainer = trajectoryContainer.querySelector('.trajectory-content');
+        if (!contentContainer) {
+            contentContainer = document.createElement('div');
+            contentContainer.className = 'trajectory-content';
+            trajectoryContainer.appendChild(contentContainer);
+        }
+        
         // Only update the content area, preserve the header and controls
-        trajectoryContainer.innerHTML = `
-            <div style="display: flex; flex-direction: column; gap: 12px; padding: 20px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(34, 197, 94, 0.1); border-radius: 8px; border-left: 3px solid #22c55e;">
-                    <div>
-                        <div style="font-weight: 600; color: #fff;">TechCorp Solutions</div>
-                        <div style="font-size: 0.9rem; color: rgba(255,255,255,0.8);">$125,000 → $${Math.round(125000 * config.mult).toLocaleString()}</div>
+        contentContainer.innerHTML = this.createGrowthTrajectoryContent(config);
+    }
+    
+    createGrowthTrajectoryContent(config) {
+        const accounts = [
+            { name: 'TechCorp Solutions', current: 125000, growth: config.mult, color: '#22c55e' },
+            { name: 'FinanceFirst LLC', current: 85000, growth: config.mult * 1.1, color: '#3b82f6' },
+            { name: 'HealthPlus Systems', current: 200000, growth: config.mult * 1.05, color: '#8b5cf6' }
+        ];
+        
+        return `
+            <div class="trajectory-items">
+                ${accounts.map((account, index) => `
+                    <div class="trajectory-item trajectory-item-${index}" data-color="${account.color}">
+                        <div class="trajectory-account-info">
+                            <div class="trajectory-account-name">${account.name}</div>
+                            <div class="trajectory-account-revenue">
+                                $${account.current.toLocaleString()} → $${Math.round(account.current * account.growth).toLocaleString()}
+                            </div>
+                        </div>
+                        <div class="trajectory-growth-info">
+                            <div class="trajectory-growth-percent">
+                                +${Math.round((account.growth - 1) * 100)}%
+                            </div>
+                            <div class="trajectory-growth-label">${config.label}</div>
+                        </div>
                     </div>
-                    <div style="text-align: right;">
-                        <div style="font-weight: 600; color: #22c55e;">+${Math.round((config.mult - 1) * 100)}%</div>
-                        <div style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">${config.label}</div>
-                    </div>
-                </div>
-                
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(59, 130, 246, 0.1); border-radius: 8px; border-left: 3px solid #3b82f6;">
-                    <div>
-                        <div style="font-weight: 600; color: #fff;">FinanceFirst LLC</div>
-                        <div style="font-size: 0.9rem; color: rgba(255,255,255,0.8);">$85,000 → $${Math.round(85000 * config.mult * 1.1).toLocaleString()}</div>
-                    </div>
-                    <div style="text-align: right;">
-                        <div style="font-weight: 600; color: #3b82f6;">+${Math.round((config.mult * 1.1 - 1) * 100)}%</div>
-                        <div style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">${config.label}</div>
-                    </div>
-                </div>
-                
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(139, 92, 246, 0.1); border-radius: 8px; border-left: 3px solid #8b5cf6;">
-                    <div>
-                        <div style="font-weight: 600; color: #fff;">HealthPlus Systems</div>
-                        <div style="font-size: 0.9rem; color: rgba(255,255,255,0.8);">$200,000 → $${Math.round(200000 * config.mult * 1.05).toLocaleString()}</div>
-                    </div>
-                    <div style="text-align: right;">
-                        <div style="font-weight: 600; color: #8b5cf6;">+${Math.round((config.mult * 1.05 - 1) * 100)}%</div>
-                        <div style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">${config.label}</div>
-                    </div>
-                </div>
+                `).join('')}
             </div>
         `;
+    }
+    
+    hexToRgb(hex) {
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? 
+            `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : 
+            '255, 255, 255';
     }
     
     updateHeatmapFilter(filterValue) {
@@ -1508,58 +1721,67 @@ class WhitespaceApp {
         const heatmapContainer = document.getElementById('opportunity-heatmap');
         if (!heatmapContainer) return;
         
+        // Create or find content container
+        let contentContainer = heatmapContainer.querySelector('.heatmap-content');
+        if (!contentContainer) {
+            contentContainer = document.createElement('div');
+            contentContainer.className = 'heatmap-content';
+            heatmapContainer.appendChild(contentContainer);
+        }
+        
+        // Only update the content area
+        contentContainer.innerHTML = this.createHeatmapContent(filterValue);
+    }
+    
+    createHeatmapContent(filterValue) {
         // Different data based on filter
         let accounts = [];
         
         switch(filterValue) {
             case 'high':
                 accounts = [
-                    { name: 'TechCorp Solutions', scores: ['High (70%)', 'Medium (50%)', 'Low (30%)'] },
-                    { name: 'HealthPlus Systems', scores: ['Adopted', 'High (89%)', 'High (75%)'] }
+                    { name: 'TechCorp Solutions', scores: [{ value: 70, status: 'high' }, { value: 50, status: 'medium' }, { value: 30, status: 'low' }] },
+                    { name: 'HealthPlus Systems', scores: [{ value: 0, status: 'adopted' }, { value: 89, status: 'high' }, { value: 75, status: 'high' }] }
                 ];
                 break;
             case 'strategic':
                 accounts = [
-                    { name: 'TechCorp Solutions', scores: ['High (70%)', 'Medium (50%)', 'Low (30%)'] },
-                    { name: 'FinanceFirst LLC', scores: ['Medium (60%)', 'High (85%)', 'Medium (45%)'] }
+                    { name: 'TechCorp Solutions', scores: [{ value: 70, status: 'high' }, { value: 50, status: 'medium' }, { value: 30, status: 'low' }] },
+                    { name: 'FinanceFirst LLC', scores: [{ value: 60, status: 'medium' }, { value: 85, status: 'high' }, { value: 45, status: 'medium' }] }
                 ];
                 break;
             default:
                 accounts = [
-                    { name: 'TechCorp Solutions', scores: ['High (70%)', 'Medium (50%)', 'Low (30%)'] },
-                    { name: 'FinanceFirst LLC', scores: ['Medium (60%)', 'High (85%)', 'Medium (45%)'] },
-                    { name: 'HealthPlus Systems', scores: ['Adopted', 'High (89%)', 'High (75%)'] }
+                    { name: 'TechCorp Solutions', scores: [{ value: 70, status: 'high' }, { value: 50, status: 'medium' }, { value: 30, status: 'low' }] },
+                    { name: 'FinanceFirst LLC', scores: [{ value: 60, status: 'medium' }, { value: 85, status: 'high' }, { value: 45, status: 'medium' }] },
+                    { name: 'HealthPlus Systems', scores: [{ value: 0, status: 'adopted' }, { value: 89, status: 'high' }, { value: 75, status: 'high' }] }
                 ];
         }
         
-        // Only update content area, keep within the analytics card structure
-        heatmapContainer.innerHTML = `
-            <div style="padding: 20px;">
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px;">
-                    <div style="text-align: center; font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.7); padding: 8px; background: rgba(255,255,255,0.05); border-radius: 6px;">Core Platform</div>
-                    <div style="text-align: center; font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.7); padding: 8px; background: rgba(255,255,255,0.05); border-radius: 6px;">Advanced Analytics</div>
-                    <div style="text-align: center; font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.7); padding: 8px; background: rgba(255,255,255,0.05); border-radius: 6px;">Mobile App Suite</div>
+        const products = ['Core Platform', 'Advanced Analytics', 'Mobile App Suite'];
+        
+        return `
+            <div class="heatmap-grid-container">
+                <div class="heatmap-products">
+                    ${products.map(product => `
+                        <div class="heatmap-product-label">${product}</div>
+                    `).join('')}
                 </div>
-                <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div class="heatmap-rows">
                     ${accounts.map(account => `
-                        <div style="display: grid; grid-template-columns: 1fr repeat(3, 1fr); gap: 10px; align-items: center;">
-                            <div style="font-size: 12px; font-weight: 600; color: #fff; padding: 8px;">${account.name}</div>
-                            ${account.scores.map(score => {
-                                let bgColor, color;
-                                
-                                if (score.includes('High') || score.includes('89') || score.includes('85') || score.includes('75') || score.includes('70')) {
-                                    bgColor = 'rgba(34, 197, 94, 0.2)';
-                                    color = '#22c55e';
-                                } else if (score.includes('Medium') || score.includes('60') || score.includes('50') || score.includes('45')) {
-                                    bgColor = 'rgba(251, 191, 36, 0.2)';
-                                    color = '#fbbf24';
-                                } else {
-                                    bgColor = 'rgba(156, 163, 175, 0.2)';
-                                    color = '#9ca3af';
-                                }
-                                
-                                return `<div style="text-align: center; padding: 8px; background: ${bgColor}; border-radius: 6px; color: ${color}; font-size: 11px; font-weight: 600;">${score}</div>`;
-                            }).join('')}
+                        <div class="heatmap-row">
+                            <div class="heatmap-account-label">${account.name}</div>
+                            <div class="heatmap-cells">
+                                ${account.scores.map((score, prodIndex) => `
+                                    <div class="heatmap-cell heatmap-cell-${score.status}" 
+                                         title="${account.name} - ${products[prodIndex]}: ${score.status === 'adopted' ? 'Already using product' : `${score.value}% probability of adoption`}"
+                                         data-account="${account.name}"
+                                         data-product="${products[prodIndex]}"
+                                         data-score="${score.value}">
+                                        ${score.status === 'adopted' ? 'Adopted' : `${score.value}%`}
+                                    </div>
+                                `).join('')}
+                            </div>
                         </div>
                     `).join('')}
                 </div>
@@ -1576,44 +1798,78 @@ class WhitespaceApp {
         const xAxis = document.getElementById('matrix-x-axis')?.value || 'arr';
         const yAxis = document.getElementById('matrix-y-axis')?.value || 'score';
         
-        // Only update the content area, preserve the header with controls
-        matrixContainer.innerHTML = `
-            <div style="padding: 20px;">
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px;">
-                    <div style="text-align: center; padding: 16px; background: rgba(34, 197, 94, 0.1); border-radius: 8px; border-left: 3px solid #22c55e;">
-                        <div style="font-size: 10px; color: rgba(255,255,255,0.7); margin-bottom: 5px; text-transform: uppercase;">High ${xAxis} + High ${yAxis}</div>
-                        <div style="font-size: 20px; font-weight: 700; color: #22c55e;">4</div>
-                        <div style="font-size: 11px; color: rgba(255,255,255,0.8);">Premium Targets</div>
+        // Create or find content container
+        let contentContainer = matrixContainer.querySelector('.matrix-content');
+        if (!contentContainer) {
+            contentContainer = document.createElement('div');
+            contentContainer.className = 'matrix-content';
+            matrixContainer.appendChild(contentContainer);
+        }
+        
+        // Only update the content area
+        contentContainer.innerHTML = this.createMatrixContent(xAxis, yAxis);
+    }
+    
+    createMatrixContent(xAxis, yAxis) {
+        const axisLabels = {
+            'arr': 'ARR',
+            'potential': 'Growth Potential',
+            'penetration': 'Penetration Rate',
+            'score': 'Opportunity Score',
+            'velocity': 'Expansion Velocity',
+            'risk': 'Risk Factor'
+        };
+        
+        const segments = [
+            { 
+                label: `High ${axisLabels[xAxis]} + High ${axisLabels[yAxis]}`,
+                count: 4,
+                description: 'Premium Targets',
+                color: '#22c55e',
+                accounts: ['TechCorp Solutions', 'HealthPlus Systems', 'Global Enterprises', 'Innovation Labs']
+            },
+            { 
+                label: `High ${axisLabels[xAxis]} + Low ${axisLabels[yAxis]}`,
+                count: 2,
+                description: 'Retention Risk',
+                color: '#fbbf24',
+                accounts: ['Legacy Corp', 'Traditional Industries']
+            },
+            { 
+                label: `Low ${axisLabels[xAxis]} + High ${axisLabels[yAxis]}`,
+                count: 6,
+                description: 'Growth Potential',
+                color: '#3b82f6',
+                accounts: ['StartupCo', 'Growth Ventures', 'Digital First', 'Future Tech', 'Emerging Markets', 'NextGen Solutions']
+            },
+            { 
+                label: `Low ${axisLabels[xAxis]} + Low ${axisLabels[yAxis]}`,
+                count: 3,
+                description: 'Nurture Accounts',
+                color: '#8b5cf6',
+                accounts: ['Small Business Inc', 'Local Services', 'Basic Tier Co']
+            }
+        ];
+        
+        return `
+            <div class="matrix-segments">
+                ${segments.map((segment, index) => `
+                    <div class="matrix-segment matrix-segment-${['success', 'warning', 'primary', 'secondary'][index]}" data-color="${segment.color}">
+                        <div class="segment-header">
+                            <div class="segment-label">${segment.label}</div>
+                            <div class="segment-count">${segment.count}</div>
+                        </div>
+                        <div class="segment-description">${segment.description}</div>
+                        <div class="segment-accounts">
+                            ${segment.accounts.slice(0, 3).map(account => `
+                                <span class="account-tag">${account}</span>
+                            `).join('')}
+                            ${segment.accounts.length > 3 ? `<span class="account-more">+${segment.accounts.length - 3} more</span>` : ''}
+                        </div>
                     </div>
-                    
-                    <div style="text-align: center; padding: 16px; background: rgba(251, 191, 36, 0.1); border-radius: 8px; border-left: 3px solid #fbbf24;">
-                        <div style="font-size: 10px; color: rgba(255,255,255,0.7); margin-bottom: 5px; text-transform: uppercase;">High ${xAxis} + Low ${yAxis}</div>
-                        <div style="font-size: 20px; font-weight: 700; color: #fbbf24;">2</div>
-                        <div style="font-size: 11px; color: rgba(255,255,255,0.8);">Retention Risk</div>
-                    </div>
-                    
-                    <div style="text-align: center; padding: 16px; background: rgba(59, 130, 246, 0.1); border-radius: 8px; border-left: 3px solid #3b82f6;">
-                        <div style="font-size: 10px; color: rgba(255,255,255,0.7); margin-bottom: 5px; text-transform: uppercase;">Low ${xAxis} + High ${yAxis}</div>
-                        <div style="font-size: 20px; font-weight: 700; color: #3b82f6;">6</div>
-                        <div style="font-size: 11px; color: rgba(255,255,255,0.8);">Growth Potential</div>
-                    </div>
-                    
-                    <div style="text-align: center; padding: 16px; background: rgba(107, 114, 128, 0.1); border-radius: 8px; border-left: 3px solid #6b7280;">
-                        <div style="font-size: 10px; color: rgba(255,255,255,0.7); margin-bottom: 5px; text-transform: uppercase;">Low ${xAxis} + Low ${yAxis}</div>
-                        <div style="font-size: 20px; font-weight: 700; color: #6b7280;">3</div>
-                        <div style="font-size: 11px; color: rgba(255,255,255,0.8);">Monitor</div>
-                    </div>
-                </div>
-                
-                <div style="text-align: center; padding: 12px; background: rgba(255,255,255,0.05); border-radius: 8px;">
-                    <div style="font-size: 11px; color: rgba(255,255,255,0.7);">
-                        Focus on <strong style="color: #22c55e;">Premium Targets</strong> and <strong style="color: #3b82f6;">Growth Potential</strong>
-                    </div>
-                </div>
+                `).join('')}
             </div>
         `;
-        
-        console.log('✅ Performance matrix updated with working functionality');
     }
 
     // Advanced Analytics Dashboard Functions
@@ -2274,6 +2530,78 @@ class WhitespaceApp {
         console.log('Test data:', { testStats, testOpportunities });
         
         this.displayAdvancedAnalytics(testStats, testOpportunities);
+    }
+    
+    displayProbabilityDistribution() {
+        const probabilityContainer = document.getElementById('probability-distribution');
+        if (!probabilityContainer) return;
+        
+        const data = [
+            { label: 'High Probability (>70%)', percentage: 42, color: '#22c55e' },
+            { label: 'Medium Probability (40-70%)', percentage: 35, color: '#fbbf24' },
+            { label: 'Low Probability (<40%)', percentage: 23, color: '#ef4444' }
+        ];
+        
+        const weightedSuccess = Math.round(data.reduce((acc, item) => {
+            const weight = item.label.includes('High') ? 0.85 : item.label.includes('Medium') ? 0.55 : 0.25;
+            return acc + (item.percentage * weight);
+        }, 0));
+        
+        probabilityContainer.innerHTML = `
+            <div class="probability-content">
+                <div class="probability-bars">
+                    ${data.map(item => `
+                        <div class="probability-item">
+                            <div class="probability-label">${item.label}</div>
+                            <div class="probability-bar-container">
+                                <div class="probability-bar-track">
+                                    <div class="probability-bar-fill probability-fill-${item.label.includes('High') ? 'high' : item.label.includes('Medium') ? 'medium' : 'low'}" style="width: ${item.percentage}%;"></div>
+                                </div>
+                                <span class="probability-value probability-value-${item.label.includes('High') ? 'high' : item.label.includes('Medium') ? 'medium' : 'low'}">${item.percentage}%</span>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="probability-summary">
+                    <span class="summary-label">Weighted Success Rate</span>
+                    <span class="summary-value">${weightedSuccess}%</span>
+                </div>
+            </div>
+        `;
+    }
+    
+    displayCompetitiveRisk() {
+        const riskContainer = document.getElementById('competitive-risk');
+        if (!riskContainer) return;
+        
+        const riskData = [
+            { level: 'High Risk Accounts', count: 3, color: '#ef4444', accounts: ['TechCorp Solutions', 'Global Enterprises', 'Innovation Labs'] },
+            { level: 'Medium Risk Accounts', count: 5, color: '#fbbf24', accounts: ['FinanceFirst LLC', 'HealthPlus Systems', 'Digital First', 'Growth Ventures', 'StartupCo'] },
+            { level: 'Low Risk Accounts', count: 7, color: '#22c55e', accounts: ['Legacy Corp', 'Traditional Industries', 'Small Business Inc', 'Local Services', 'Basic Tier Co', 'NextGen Solutions', 'Future Tech'] }
+        ];
+        
+        const nextReviewDate = new Date();
+        nextReviewDate.setDate(nextReviewDate.getDate() + 30);
+        const formattedDate = nextReviewDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        
+        riskContainer.innerHTML = `
+            <div class="risk-content">
+                <div class="risk-levels">
+                    ${riskData.map(risk => `
+                        <div class="risk-level-item risk-level-${risk.level.includes('High') ? 'high' : risk.level.includes('Medium') ? 'medium' : 'low'}">
+                            <div class="risk-level-info">
+                                <div class="risk-indicator"></div>
+                                <span class="risk-level-label">${risk.level}</span>
+                            </div>
+                            <span class="risk-count">${risk.count}</span>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="risk-review">
+                    <span class="review-text">Next review: <strong>${formattedDate}</strong></span>
+                </div>
+            </div>
+        `;
     }
 }
 
