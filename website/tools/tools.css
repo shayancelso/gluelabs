@@ -247,6 +247,8 @@
 
 .tools-category {
     margin-bottom: var(--space-3xl);
+    width: 100%;
+    overflow: hidden;
 }
 
 .tools-category:last-child {
@@ -264,11 +266,12 @@
 
 .tools-category-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: var(--space-xl);
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-lg);
     align-items: stretch;
-    justify-items: center;
-    max-width: 1400px;
+    justify-items: stretch;
+    width: 100%;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 0 var(--space-md);
 }
@@ -277,7 +280,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    padding: var(--space-xl);
+    padding: var(--space-lg);
     border-radius: var(--radius-xl);
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
@@ -288,8 +291,8 @@
     color: inherit;
     overflow: hidden;
     width: 100%;
-    max-width: 320px;
-    min-height: 200px;
+    min-height: 220px;
+    box-sizing: border-box;
 }
 
 .tool-card::before {
@@ -332,6 +335,9 @@
     font-family: var(--font-display);
     color: var(--color-text);
     margin-bottom: var(--space-sm);
+    line-height: 1.3;
+    word-break: break-word;
+    hyphens: auto;
 }
 
 .tool-card p {
@@ -339,6 +345,8 @@
     line-height: 1.5;
     font-size: 0.95rem;
     margin-top: auto;
+    word-break: break-word;
+    hyphens: auto;
 }
 
 /* Tools CTA Section */
@@ -379,12 +387,27 @@
     align-items: center;
 }
 
-/* Tablet Responsiveness */
+/* Large Desktop - Better grid handling */
+@media (min-width: 1200px) {
+    .tools-category-grid {
+        max-width: 1300px;
+        grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+        gap: var(--space-xl);
+    }
+}
+
+/* Tablet */
 @media (max-width: 1024px) {
     .tools-category-grid {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: var(--space-lg);
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: var(--space-md);
         max-width: 900px;
+        padding: 0 var(--space-sm);
+    }
+    
+    .tool-card {
+        padding: var(--space-md);
+        min-height: 200px;
     }
 }
 
