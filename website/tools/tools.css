@@ -244,39 +244,15 @@
     background: var(--color-bg);
 }
 
-.tools-grid {
-    margin-top: var(--space-2xl);
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 var(--space-lg);
-}
-
-.tools-category {
-    margin-bottom: var(--space-4xl);
-    width: 100%;
-}
-
-.tools-category:last-child {
-    margin-bottom: 0;
-}
-
-.category-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    font-family: var(--font-display);
-    color: var(--color-text);
-    margin-bottom: var(--space-xl);
-    text-align: center;
-}
-
-.tools-category-grid {
+/* Unified Simple Grid */
+.unified-tools-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: var(--space-xl);
+    max-width: 1200px;
+    margin: var(--space-2xl) auto 0;
+    padding: 0 var(--space-lg);
     align-items: stretch;
-    justify-content: center;
-    width: 100%;
-    margin: 0 auto;
 }
 
 .tool-card {
@@ -392,36 +368,25 @@
     align-items: center;
 }
 
-/* Large Desktop and up - 3 column max for better balance */
-@media (min-width: 900px) {
-    .tools-category-grid {
-        grid-template-columns: repeat(3, 1fr);
-        max-width: 1000px;
-    }
-}
-
-/* Medium Screens - 2 columns */
-@media (min-width: 600px) and (max-width: 899px) {
-    .tools-category-grid {
+/* Responsive Grid - Simple Breakpoints */
+@media (max-width: 900px) {
+    .unified-tools-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: var(--space-lg);
     }
 }
 
-/* Tablet and Mobile */
-@media (max-width: 599px) {
-    .tools-category-grid {
+/* Mobile */
+@media (max-width: 600px) {
+    .unified-tools-grid {
         grid-template-columns: 1fr;
         gap: var(--space-lg);
-    }
-    
-    .tools-grid {
         padding: 0 var(--space-md);
     }
     
     .tool-card {
         padding: var(--space-lg);
-        min-height: 220px;
+        min-height: 240px;
     }
 }
 
