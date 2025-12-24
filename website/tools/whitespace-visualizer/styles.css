@@ -10,8 +10,8 @@
 .tool-hero {
     min-height: auto;
     padding: var(--space-sm) 0;
-    margin-top: 80px; /* Account for fixed navigation bar */
-    padding-top: var(--space-lg); /* Additional spacing */
+    margin-top: 120px; /* Account for fixed navigation bar */
+    padding-top: var(--space-xl); /* Additional spacing */
 }
 
 /* ==========================================================================
@@ -21,8 +21,8 @@
 .tool-interface {
     padding: 0;
     background: var(--color-bg);
-    margin-top: 80px; /* Account for fixed navigation bar */
-    padding-top: var(--space-lg); /* Additional spacing for better visual hierarchy */
+    margin-top: 120px; /* Account for fixed navigation bar */
+    padding-top: var(--space-xl); /* Additional spacing for better visual hierarchy */
 }
 
 .tool-header {
