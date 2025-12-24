@@ -252,7 +252,7 @@
 }
 
 .tools-category {
-    margin-bottom: var(--space-3xl);
+    margin-bottom: var(--space-4xl);
     width: 100%;
 }
 
@@ -294,7 +294,7 @@
     color: inherit;
     overflow: visible;
     width: 100%;
-    min-height: 240px;
+    min-height: 260px;
     box-sizing: border-box;
 }
 
@@ -392,23 +392,15 @@
     align-items: center;
 }
 
-/* Extra Large Desktop */
-@media (min-width: 1200px) {
-    .tools-category-grid {
-        grid-template-columns: repeat(4, 1fr);
-        max-width: 1200px;
-    }
-}
-
-/* Large Desktop */
-@media (min-width: 900px) and (max-width: 1199px) {
+/* Large Desktop and up - 3 column max for better balance */
+@media (min-width: 900px) {
     .tools-category-grid {
         grid-template-columns: repeat(3, 1fr);
-        max-width: 900px;
+        max-width: 1000px;
     }
 }
 
-/* Medium Desktop */
+/* Medium Screens - 2 columns */
 @media (min-width: 600px) and (max-width: 899px) {
     .tools-category-grid {
         grid-template-columns: repeat(2, 1fr);
