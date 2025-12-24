@@ -99,6 +99,10 @@ Use CSS variables defined in `:root` for consistency:
 - Prefer CSS-only solutions over JavaScript when possible
 - Use existing patterns rather than creating new ones
 
+### Design Guidelines Reference
+For detailed design specifications, component guidelines, and visual standards, refer to:
+**[CLAUDE.md](./CLAUDE.md)** - Contains comprehensive project overview, architecture patterns, and development guidelines specifically for Claude Code integration.
+
 ### Testing Checklist
 When adding new pages or features:
 - [ ] Include `/script.js` for navigation behavior
