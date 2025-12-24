@@ -264,12 +264,13 @@
 
 .tools-category-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: var(--space-lg);
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-xl);
     align-items: stretch;
-    justify-content: center;
-    max-width: 1200px;
+    justify-items: center;
+    max-width: 1400px;
     margin: 0 auto;
+    padding: 0 var(--space-md);
 }
 
 .tool-card {
@@ -286,7 +287,9 @@
     text-decoration: none;
     color: inherit;
     overflow: hidden;
-    min-height: 220px;
+    width: 100%;
+    max-width: 320px;
+    min-height: 200px;
 }
 
 .tool-card::before {
@@ -376,6 +379,15 @@
     align-items: center;
 }
 
+/* Tablet Responsiveness */
+@media (max-width: 1024px) {
+    .tools-category-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: var(--space-lg);
+        max-width: 900px;
+    }
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
     .tools-hero {
@@ -407,7 +419,13 @@
 
     .tools-category-grid {
         grid-template-columns: 1fr;
-        gap: var(--space-md);
+        gap: var(--space-lg);
+        max-width: 100%;
+        padding: 0 var(--space-sm);
+    }
+    
+    .tool-card {
+        max-width: 100%;
     }
 
     .tool-actions {
