@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gloo Video Ad - Quick Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+        #canvas {
+            display: block;
+            margin: 0 auto;
+            border: 1px solid #333;
+            max-width: 100%;
+            height: auto;
+        }
+        .controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            background: #6366f1;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #5558e3;
+        }
+        #status {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="960" height="540"></canvas>
+    
+    <div class="controls">
+        <button onclick="playAnimation()">Play Animation</button>
+        <button onclick="pauseAnimation()">Pause</button>
+        <button onclick="resetAnimation()">Reset</button>
+        <div id="status">Ready to play</div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let animationId = null;
+        let startTime = null;
+        let currentTime = 0;
+        let isPlaying = false;
+
+        function drawFrame(time) {
+            // Clear canvas
+            ctx.fillStyle = '#0a0a0b';
+            ctx.fillRect(0, 0, 960, 540);
+            
+            // Calculate progress (0-10 seconds)
+            const progress = (time % 10000) / 10000;
+            const seconds = time / 1000;
+            
+            // Scene logic
+            if (seconds < 2) {
+                // Scene 1: Hook
+                ctx.font = '48px Arial';
+                ctx.fillStyle = '#fff';
+                ctx.textAlign = 'center';
+                ctx.fillText('Your whitespace worth', 480, 250);
+                
+                ctx.font = '64px Arial';
+                ctx.fillStyle = '#6366f1';
+                ctx.fillText('$2.4M+', 480, 320);
+            } else if (seconds < 5) {
+                // Scene 2: Solution
+                ctx.font = '36px Arial';
+                ctx.fillStyle = '#fff';
+                ctx.textAlign = 'center';
+                ctx.fillText('Custom tools for account teams', 480, 270);
+            } else if (seconds < 8) {
+                // Scene 3: Benefits
+                const benefits = ['3 week delivery', '92% adoption rate', 'Built for you'];
+                benefits.forEach((text, i) => {
+                    ctx.font = '28px Arial';
+                    ctx.fillStyle = '#6366f1';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(text, 480, 200 + i * 60);
+                });
+            } else {
+                // Scene 4: CTA
+                ctx.font = '72px Arial';
+                ctx.fillStyle = '#fff';
+                ctx.textAlign = 'center';
+                ctx.fillText('Gloo', 480, 250);
+                
+                ctx.font = '36px Arial';
+                ctx.fillStyle = '#6366f1';
+                ctx.fillText('Book a demo', 480, 320);
+                
+                ctx.font = '24px Arial';
+                ctx.fillStyle = '#888';
+                ctx.fillText('gluelabs.co', 480, 370);
+            }
+            
+            // Update status
+            document.getElementById('status').textContent = `Time: ${seconds.toFixed(1)}s`;
+        }
+
+        function animate(timestamp) {
+            if (!startTime) startTime = timestamp;
+            currentTime = timestamp - startTime;
+            
+            drawFrame(currentTime);
+            
+            if (isPlaying) {
+                animationId = requestAnimationFrame(animate);
+            }
+        }
+
+        function playAnimation() {
+            if (!isPlaying) {
+                isPlaying = true;
+                if (currentTime >= 10000) {
+                    currentTime = 0;
+                    startTime = null;
+                }
+                requestAnimationFrame(animate);
+                document.getElementById('status').textContent = 'Playing...';
+            }
+        }
+
+        function pauseAnimation() {
+            isPlaying = false;
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+            document.getElementById('status').textContent = 'Paused';
+        }
+
+        function resetAnimation() {
+            pauseAnimation();
+            currentTime = 0;
+            startTime = null;
+            drawFrame(0);
+            document.getElementById('status').textContent = 'Reset - Ready to play';
+        }
+
+        // Initial draw
+        drawFrame(0);
+    </script>
+</body>
+</html>

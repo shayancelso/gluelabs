@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gloo - 10 Second Video Ad</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="video-ad.css">
+</head>
+<body>
+    <div class="video-container">
+        <canvas id="video-canvas" width="1920" height="1080"></canvas>
+        
+        <!-- Hidden elements for rendering -->
+        <div id="render-elements" style="display: none;">
+            <!-- Scene 1: Opening Hook -->
+            <div class="scene" id="scene-1">
+                <div class="split-view">
+                    <div class="chaos-side">
+                        <div class="spreadsheet-chaos"></div>
+                    </div>
+                    <div class="clean-side">
+                        <div class="gloo-interface"></div>
+                    </div>
+                </div>
+                <h1 class="hook-text">Your whitespace worth <span class="highlight">$2.4M+</span></h1>
+            </div>
+            
+            <!-- Scene 2: Problem & Solution -->
+            <div class="scene" id="scene-2">
+                <div class="data-flow">
+                    <div class="data-particles"></div>
+                    <div class="dashboard-preview"></div>
+                </div>
+                <h2 class="solution-text">Custom tools for account teams</h2>
+            </div>
+            
+            <!-- Scene 3: Benefits -->
+            <div class="scene" id="scene-3">
+                <div class="benefits-grid">
+                    <div class="benefit" data-delay="0">
+                        <div class="benefit-icon">⚡</div>
+                        <div class="benefit-text">3 week delivery</div>
+                    </div>
+                    <div class="benefit" data-delay="0.2">
+                        <div class="benefit-icon">✓</div>
+                        <div class="benefit-text">92% adoption rate</div>
+                    </div>
+                    <div class="benefit" data-delay="0.4">
+                        <div class="benefit-icon">🛠</div>
+                        <div class="benefit-text">Built for you, not bought</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Scene 4: CTA -->
+            <div class="scene" id="scene-4">
+                <img src="../images/gloo-logo.png" alt="Gloo" class="logo-large">
+                <div class="cta-container">
+                    <h2 class="cta-text">Book a demo</h2>
+                    <p class="website-url">gluelabs.co</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Controls for testing -->
+    <div class="controls">
+        <button id="play-btn">Play Animation</button>
+        <button id="export-btn">Export Video</button>
+        <input type="range" id="timeline-scrubber" min="0" max="10" step="0.1" value="0">
+        <span id="time-display">0.0s</span>
+    </div>
+    
+    <script src="video-simple.js"></script>
+</body>
+</html>
