@@ -1,0 +1,825 @@
+/**
+ * SaaS Pricing Calculator - Tool-Specific Styles
+ * Clean, intuitive UX design with clear visual hierarchy
+ */
+
+/* Local CSS Variables */
+:root {
+    --color-primary-dark: #5558e3;
+}
+
+/* Tool Interface Layout */
+.tool-interface {
+    margin-top: 120px;
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-xxl);
+}
+
+.container-wide {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 var(--space-lg);
+}
+
+/* Section Headers */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--space-xl);
+    gap: var(--space-xl);
+}
+
+.section-header > div:first-child {
+    flex: 1;
+}
+
+.section-header h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 var(--space-xs) 0;
+}
+
+.section-description {
+    color: var(--color-text-secondary);
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+/* Builder Controls */
+.builder-controls {
+    display: flex;
+    gap: var(--space-md);
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.template-select {
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    color: var(--color-text);
+    font-family: inherit;
+    min-width: 200px;
+    cursor: pointer;
+}
+
+.template-select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.1);
+}
+
+/* Hero Stats */
+.tool-hero-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-lg);
+    margin-top: var(--space-xl);
+    padding-top: var(--space-xl);
+    border-top: 1px solid var(--glass-border);
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--space-xs);
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.4;
+}
+
+/* Pricing Builder Section */
+.pricing-builder-section {
+    margin-bottom: var(--space-xxl);
+    padding-top: var(--space-xl);
+}
+
+.pricing-tiers-builder {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-lg);
+    margin-top: var(--space-xl);
+}
+
+/* Pricing Tier Card */
+.pricing-tier-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-xl);
+    box-shadow: var(--glass-shadow);
+    transition: all var(--transition-smooth);
+    position: relative;
+}
+
+.pricing-tier-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(var(--color-primary-rgb), 0.1);
+}
+
+/* Tier Header */
+.tier-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+
+.tier-name-input {
+    flex: 1;
+    font-size: 1.25rem;
+    font-weight: 600;
+    background: transparent;
+    border: none;
+    color: var(--color-text);
+    padding: var(--space-xs);
+    border-bottom: 2px solid transparent;
+    transition: all var(--transition-fast);
+}
+
+.tier-name-input:hover {
+    border-color: var(--glass-border);
+}
+
+.tier-name-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.remove-tier-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    background: transparent;
+    color: var(--color-error);
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+    opacity: 0.6;
+}
+
+.pricing-tier-card:hover .remove-tier-btn {
+    opacity: 1;
+}
+
+.remove-tier-btn:hover {
+    background: var(--color-error);
+    color: white;
+    border-color: var(--color-error);
+}
+
+/* Tier Pricing */
+.tier-pricing {
+    margin-bottom: var(--space-lg);
+    text-align: center;
+}
+
+.price-input-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    margin-top: var(--space-sm);
+    position: relative;
+}
+
+.price-symbol {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+}
+
+.price-input-group label {
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.tier-price-input {
+    width: 120px;
+    padding: var(--space-sm);
+    border: 2px solid transparent;
+    border-radius: var(--radius-md);
+    background: rgba(var(--color-primary-rgb), 0.05);
+    color: var(--color-text);
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    transition: all var(--transition-fast);
+}
+
+.tier-price-input:hover {
+    background: rgba(var(--color-primary-rgb), 0.08);
+}
+
+.tier-price-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    background: rgba(var(--color-primary-rgb), 0.1);
+    transform: scale(1.02);
+}
+
+.tier-billing-select {
+    padding: var(--space-xs) var(--space-sm);
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.tier-billing-select:hover {
+    background: rgba(var(--color-primary-rgb), 0.05);
+}
+
+/* Tier Metrics */
+.tier-metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+    padding: var(--space-lg);
+    background: rgba(241, 245, 249, 0.02);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(var(--glass-border), 0.5);
+}
+
+.metric-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    align-items: center;
+}
+
+.metric-suffix {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    margin-top: 2px;
+}
+
+.metric-group label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.tier-percentage-input,
+.tier-conversion-input {
+    padding: var(--space-sm) var(--space-md);
+    border: 2px solid transparent;
+    border-radius: var(--radius-md);
+    background: var(--glass-bg);
+    color: var(--color-text);
+    transition: all var(--transition-fast);
+    text-align: center;
+    font-weight: 500;
+}
+
+.tier-percentage-input:focus,
+.tier-conversion-input:focus {
+    border-color: var(--color-primary);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Tier Features */
+.tier-features {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.tier-features label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.tier-features-input {
+    padding: var(--space-md);
+    border: 2px solid transparent;
+    border-radius: var(--radius-md);
+    background: rgba(241, 245, 249, 0.03);
+    color: var(--color-text);
+    font-family: inherit;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    resize: vertical;
+    min-height: 100px;
+    transition: all var(--transition-fast);
+}
+
+.tier-features-input:hover {
+    background: rgba(241, 245, 249, 0.05);
+}
+
+.tier-features-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Projections Section */
+.projections-section {
+    margin-bottom: var(--space-xxl);
+}
+
+.projections-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: var(--space-xl);
+    align-items: start;
+}
+
+/* Goals and Metrics Panel */
+.goals-and-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+}
+
+.config-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-xl);
+    box-shadow: var(--glass-shadow);
+}
+
+.config-card h3 {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: var(--space-lg);
+    color: var(--color-text);
+}
+
+.config-card h3 svg {
+    color: var(--color-primary);
+}
+
+/* Goal Grid */
+.goal-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-sm);
+}
+
+.goal-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-md);
+    border: 2px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    background: transparent;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    text-align: center;
+}
+
+.goal-btn:hover {
+    background: rgba(var(--color-primary-rgb), 0.05);
+    border-color: rgba(var(--color-primary-rgb), 0.3);
+}
+
+.goal-btn.active {
+    background: rgba(var(--color-primary-rgb), 0.1);
+    border-color: var(--color-primary);
+}
+
+.goal-amount {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.goal-label {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+}
+
+.custom-goal-wrapper {
+    grid-column: span 2;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    margin-top: var(--space-sm);
+}
+
+.custom-goal-wrapper input {
+    padding: var(--space-md);
+    border: 2px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--color-text);
+    font-size: 1rem;
+}
+
+.custom-goal-wrapper label {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    text-align: center;
+}
+
+/* Metrics Grid */
+.metrics-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.metric-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.metric-field label {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.label-text {
+    font-weight: 500;
+    color: var(--color-text);
+    font-size: 0.9rem;
+}
+
+.label-help {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+}
+
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.input-wrapper input {
+    flex: 1;
+    padding: var(--space-sm) var(--space-md);
+    padding-left: 2rem;
+    padding-right: 2rem;
+    border: 2px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--color-text);
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all var(--transition-fast);
+}
+
+.input-wrapper input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.input-prefix,
+.input-suffix {
+    position: absolute;
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    pointer-events: none;
+}
+
+.input-prefix {
+    left: var(--space-md);
+}
+
+.input-suffix {
+    right: var(--space-md);
+}
+
+/* Results Panel */
+.results-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-xl);
+    box-shadow: var(--glass-shadow);
+}
+
+.results-panel h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: var(--space-lg);
+    color: var(--color-text);
+}
+
+/* Chart Card */
+.chart-card {
+    background: rgba(241, 245, 249, 0.02);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-xl);
+}
+
+.chart-container {
+    height: 300px;
+    width: 100%;
+    position: relative;
+}
+
+.chart-container canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* Metrics Summary */
+.metrics-summary {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+}
+
+.metric-card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    background: rgba(241, 245, 249, 0.02);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    transition: all var(--transition-fast);
+}
+
+.metric-card:hover {
+    background: rgba(var(--color-primary-rgb), 0.02);
+    border-color: rgba(var(--color-primary-rgb), 0.2);
+}
+
+.metric-card.highlight {
+    grid-column: span 2;
+    background: rgba(var(--color-primary-rgb), 0.05);
+    border-color: rgba(var(--color-primary-rgb), 0.3);
+}
+
+.metric-icon {
+    font-size: 1.5rem;
+}
+
+.metric-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.metric-label {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.metric-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+/* Actions Section */
+.actions-section {
+    margin-bottom: var(--space-xxl);
+}
+
+.actions-grid {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-lg);
+    flex-wrap: wrap;
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-lg);
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    border: 1px solid var(--glass-border);
+    font-size: 0.9rem;
+}
+
+.btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.btn-secondary {
+    background: var(--glass-bg);
+    color: var(--color-text);
+    border: 1px solid var(--glass-border);
+}
+
+.btn-secondary:hover {
+    background: rgba(var(--color-primary-rgb), 0.05);
+    border-color: rgba(var(--color-primary-rgb), 0.3);
+    transform: translateY(-1px);
+}
+
+.btn-primary {
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+}
+
+.btn-primary:hover {
+    background: var(--color-primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(var(--color-primary-rgb), 0.3);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--color-text);
+    border: 1px solid var(--glass-border);
+}
+
+.btn-outline:hover {
+    background: var(--glass-bg);
+    border-color: var(--color-primary);
+}
+
+/* Notifications */
+.notification {
+    position: fixed;
+    top: 100px;
+    right: var(--space-lg);
+    padding: var(--space-md) var(--space-lg);
+    border-radius: var(--radius-md);
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    transform: translateX(100%);
+    opacity: 0;
+    transition: all var(--transition-smooth);
+    z-index: 1000;
+    max-width: 300px;
+}
+
+.notification.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.notification.success {
+    border-color: var(--color-success);
+    background: rgba(34, 197, 94, 0.1);
+}
+
+.notification.error {
+    border-color: var(--color-error);
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.notification.info {
+    border-color: var(--color-primary);
+    background: rgba(var(--color-primary-rgb), 0.1);
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    color: var(--color-text-secondary);
+    font-style: italic;
+    padding: var(--space-xxl);
+    border: 2px dashed var(--glass-border);
+    border-radius: var(--radius-xl);
+    background: rgba(var(--color-primary-rgb), 0.02);
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .projections-layout {
+        grid-template-columns: 1fr;
+    }
+    
+    .goal-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 1024px) {
+    .pricing-tiers-builder {
+        grid-template-columns: 1fr;
+    }
+
+    .metrics-summary {
+        grid-template-columns: 1fr;
+    }
+    
+    .metric-card.highlight {
+        grid-column: span 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .container-wide {
+        padding: 0 var(--space-md);
+    }
+
+    .tool-interface {
+        margin-top: 100px;
+    }
+
+    .pricing-tier-card,
+    .config-card,
+    .results-panel {
+        padding: var(--space-lg);
+    }
+
+    .goal-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .goal-btn {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .actions-grid {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .builder-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .price-input-group {
+        flex-wrap: wrap;
+    }
+    
+    .tier-price-input {
+        width: 100%;
+    }
+}
+
+/* Input Focus States */
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.1);
+}
+
+/* Loading States */
+.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* Accessibility */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
