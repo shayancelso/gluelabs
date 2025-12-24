@@ -266,11 +266,13 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: var(--space-lg);
+    align-items: stretch;
 }
 
 .tool-card {
     position: relative;
-    display: block;
+    display: flex;
+    flex-direction: column;
     padding: var(--space-xl);
     border-radius: var(--radius-xl);
     background: var(--glass-bg);
@@ -281,6 +283,7 @@
     text-decoration: none;
     color: inherit;
     overflow: hidden;
+    min-height: 220px;
 }
 
 .tool-card::before {
@@ -329,6 +332,7 @@
     color: var(--color-text-secondary);
     line-height: 1.5;
     font-size: 0.95rem;
+    margin-top: auto;
 }
 
 /* Tools CTA Section */
