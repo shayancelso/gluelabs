@@ -143,12 +143,15 @@
     position: absolute;
     top: var(--space-md);
     right: var(--space-md);
-    padding: var(--space-xs) var(--space-sm);
+    padding: var(--space-xs) var(--space-md);
     border-radius: var(--radius-full);
     font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    white-space: nowrap;
+    min-width: max-content;
+    z-index: 10;
 }
 
 .tool-status.live {
@@ -243,12 +246,15 @@
 
 .tools-grid {
     margin-top: var(--space-2xl);
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 var(--space-lg);
 }
 
 .tools-category {
     margin-bottom: var(--space-3xl);
     width: 100%;
-    overflow: hidden;
 }
 
 .tools-category:last-child {
@@ -260,27 +266,26 @@
     font-weight: 700;
     font-family: var(--font-display);
     color: var(--color-text);
-    margin-bottom: var(--space-lg);
+    margin-bottom: var(--space-xl);
     text-align: center;
 }
 
 .tools-category-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: var(--space-lg);
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--space-xl);
     align-items: stretch;
-    justify-items: stretch;
+    justify-content: center;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1300px;
     margin: 0 auto;
-    padding: 0 var(--space-md);
 }
 
 .tool-card {
     position: relative;
     display: flex;
     flex-direction: column;
-    padding: var(--space-lg);
+    padding: var(--space-xl);
     border-radius: var(--radius-xl);
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
@@ -289,9 +294,9 @@
     transition: all 0.3s ease;
     text-decoration: none;
     color: inherit;
-    overflow: hidden;
+    overflow: visible;
     width: 100%;
-    min-height: 220px;
+    min-height: 240px;
     box-sizing: border-box;
 }
 
@@ -336,17 +341,19 @@
     color: var(--color-text);
     margin-bottom: var(--space-sm);
     line-height: 1.3;
-    word-break: break-word;
-    hyphens: auto;
+    word-break: keep-all;
+    hyphens: none;
+    overflow-wrap: break-word;
 }
 
 .tool-card p {
     color: var(--color-text-secondary);
-    line-height: 1.5;
+    line-height: 1.6;
     font-size: 0.95rem;
     margin-top: auto;
-    word-break: break-word;
-    hyphens: auto;
+    word-break: keep-all;
+    hyphens: none;
+    overflow-wrap: break-word;
 }
 
 /* Tools CTA Section */
@@ -387,27 +394,47 @@
     align-items: center;
 }
 
-/* Large Desktop - Better grid handling */
-@media (min-width: 1200px) {
+/* Extra Large Desktop */
+@media (min-width: 1400px) {
     .tools-category-grid {
-        max-width: 1300px;
-        grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-        gap: var(--space-xl);
+        grid-template-columns: repeat(4, 1fr);
+        max-width: 1400px;
+    }
+}
+
+/* Large Desktop */
+@media (min-width: 1200px) and (max-width: 1399px) {
+    .tools-category-grid {
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 1200px;
+    }
+}
+
+/* Medium Desktop */
+@media (min-width: 992px) and (max-width: 1199px) {
+    .tools-category-grid {
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 1000px;
+        gap: var(--space-lg);
     }
 }
 
 /* Tablet */
-@media (max-width: 1024px) {
+@media (max-width: 991px) {
     .tools-category-grid {
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: var(--space-md);
-        max-width: 900px;
-        padding: 0 var(--space-sm);
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: var(--space-lg);
+        max-width: 100%;
+        padding: 0;
+    }
+    
+    .tools-grid {
+        padding: 0 var(--space-md);
     }
     
     .tool-card {
-        padding: var(--space-md);
-        min-height: 200px;
+        padding: var(--space-lg);
+        min-height: 220px;
     }
 }
 
