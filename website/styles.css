@@ -3649,6 +3649,241 @@ p {
 }
 
 /* ==========================================================================
+   GSAP Animations (Retool-inspired)
+   ========================================================================== */
+
+/* Typewriter Effect */
+.typewriter-cursor {
+    display: inline-block;
+    animation: cursorBlink 0.8s step-end infinite;
+    color: var(--color-primary);
+    font-weight: 300;
+    margin-left: 2px;
+}
+
+@keyframes cursorBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.typewriter-text {
+    display: inline-block;
+    min-width: 200px;
+}
+
+/* Hero Mockup Parallax */
+.hero-visual {
+    perspective: 1000px;
+}
+
+.hero-product-preview {
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+
+/* GSAP Scroll Animation Variants */
+.gsap-loaded [data-scroll="fade-left"],
+.gsap-loaded [data-scroll="fade-right"],
+.gsap-loaded [data-scroll="fade-up"],
+.gsap-loaded [data-scroll="scale-in"] {
+    opacity: 0;
+}
+
+/* Sticky Scroll Section - Progress indicator only, no pinning */
+
+/* Sticky Progress Indicator */
+.sticky-progress {
+    position: fixed;
+    left: var(--space-lg);
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xs);
+    z-index: 50;
+}
+
+@media (max-width: 1024px) {
+    .sticky-progress {
+        display: none;
+    }
+}
+
+.progress-dots {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.progress-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-text-muted);
+    opacity: 0.3;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.progress-dot.active {
+    background: var(--color-primary);
+    opacity: 1;
+    transform: scale(1.3);
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.4);
+}
+
+.progress-line {
+    width: 2px;
+    height: 80px;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 1px;
+    overflow: hidden;
+    margin: var(--space-xs) 0;
+}
+
+.progress-fill {
+    width: 100%;
+    height: 0%;
+    background: linear-gradient(to bottom, var(--color-primary), var(--color-secondary));
+    transition: height 0.1s linear;
+    border-radius: 1px;
+}
+
+/* Enhanced Service Card Hover */
+.service-card {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.3s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2),
+                0 8px 16px rgba(99, 102, 241, 0.1);
+    border-color: rgba(99, 102, 241, 0.3);
+}
+
+.service-card:hover .service-icon {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+}
+
+/* Enhanced Testimonial Card */
+.testimonial-card {
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.testimonial-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 25px 50px rgba(99, 102, 241, 0.1);
+}
+
+/* Process Card Connector Animation */
+.process-connector {
+    transform-origin: left center;
+}
+
+.process-connector svg path {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    transition: stroke-dashoffset 0.8s ease;
+}
+
+.process-connector.visible svg path {
+    stroke-dashoffset: 0;
+}
+
+.process-connector svg polygon {
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.4s ease 0.6s;
+}
+
+.process-connector.visible svg polygon {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Process Card Ongoing Pulse */
+.process-card.ongoing.visible {
+    animation: ongoingPulse 3s ease-in-out infinite;
+}
+
+@keyframes ongoingPulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.1);
+    }
+    50% {
+        box-shadow: 0 0 0 15px rgba(99, 102, 241, 0);
+    }
+}
+
+/* FAQ Icon Rotation */
+.faq-icon {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.faq-item.active .faq-icon {
+    transform: rotate(45deg);
+}
+
+/* CTA Grid Pulse */
+.cta-grid-pattern {
+    animation: gridPulse 4s ease-in-out infinite;
+}
+
+@keyframes gridPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Navigation Hide/Show */
+.nav {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Tool Chip Hover Enhancement */
+.tool-chip {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tool-chip:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.15);
+}
+
+/* Demo Panel Transitions */
+.demo-panel {
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.demo-panel:not(.active) {
+    opacity: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+/* Reduced motion - disable all GSAP animations */
+@media (prefers-reduced-motion: reduce) {
+    .typewriter-cursor {
+        animation: none;
+    }
+
+    .sticky-progress {
+        display: none !important;
+    }
+
+    .process-card.ongoing.visible {
+        animation: none;
+    }
+
+    .cta-grid-pattern {
+        animation: none;
+    }
+}
+
+/* ==========================================================================
    Responsive
    ========================================================================== */
 

@@ -22,27 +22,30 @@
     <div class="noise-overlay"></div>
 
     <!-- Navigation -->
-    <nav class="nav">
+    <nav class="nav" role="navigation" aria-label="Main navigation">
         <div class="nav-container">
-            <a href="#" class="logo">
+            <a href="#" class="logo" aria-label="Gloo - Go to homepage">
                 <img src="/images/gloo-logo.png" alt="Gloo" class="logo-img">
             </a>
-            <div class="nav-links">
-                <a href="#demo" class="nav-link">See It Live</a>
-                <a href="tools/" class="nav-link">Tools</a>
-                <a href="#how-it-works" class="nav-link">How It Works</a>
-                <a href="#case-study" class="nav-link">Results</a>
-                <a href="#contact" class="btn btn-nav">Book a Call</a>
+            <div class="nav-links" role="menubar">
+                <a href="#demo" class="nav-link" role="menuitem">See It Live</a>
+                <a href="tools/" class="nav-link" role="menuitem">Tools</a>
+                <a href="#how-it-works" class="nav-link" role="menuitem">How It Works</a>
+                <a href="#case-study" class="nav-link" role="menuitem">Results</a>
+                <a href="#contact" class="btn btn-nav" role="menuitem">Book a Call</a>
             </div>
-            <button class="mobile-menu-btn" aria-label="Toggle menu">
+            <button class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">
                 <span></span>
                 <span></span>
             </button>
         </div>
     </nav>
 
+    <!-- Main Content -->
+    <main role="main" id="main-content">
+
     <!-- Hero Section -->
-    <section class="hero">
+    <section class="hero" aria-labelledby="hero-heading">
         <div class="hero-bg">
             <div class="hero-gradient"></div>
             <div class="hero-grid-pattern"></div>
@@ -68,7 +71,7 @@
                     <span class="badge-pulse"></span>
                     <span>Consulting-to-Build Studio</span>
                 </div>
-                <h1 data-animate="fade-up" data-delay="100">
+                <h1 id="hero-heading" data-animate="fade-up" data-delay="100">
                     <span class="hero-line">Tap into your</span>
                     <span class="hero-line hero-highlight">whitespace</span>
                 </h1>
@@ -235,47 +238,47 @@
             <div class="tools-carousel" data-animate="fade-up" data-delay="100">
                 <div class="tools-track">
                     <div class="tool-item">
-                        <img src="images/tools/lovable-dark-png.png" alt="Lovable" title="Lovable - AI-powered app development">
+                        <img src="images/tools/lovable-dark-png.png" alt="Lovable" title="Lovable - AI-powered app development" loading="lazy">
                     </div>
                     <div class="tool-item">
-                        <img src="images/tools/Claude_AI_logo.svg.png" alt="Claude" title="Claude - AI coding assistant">
+                        <img src="images/tools/Claude_AI_logo.svg.png" alt="Claude" title="Claude - AI coding assistant" loading="lazy">
                     </div>
                     <div class="tool-item">
-                        <img src="images/tools/ChatGPT-Logo.png" alt="ChatGPT" title="ChatGPT - AI assistant">
+                        <img src="images/tools/ChatGPT-Logo.png" alt="ChatGPT" title="ChatGPT - AI assistant" loading="lazy">
                     </div>
                     <div class="tool-item">
-                        <img src="images/tools/Figma-logo.svg.png" alt="Figma" title="Figma - Design and prototyping">
+                        <img src="images/tools/Figma-logo.svg.png" alt="Figma" title="Figma - Design and prototyping" loading="lazy">
                     </div>
                     <div class="tool-item">
-                        <img src="images/tools/N8n-logo-new.svg.png" alt="n8n" title="n8n - Workflow automation">
+                        <img src="images/tools/N8n-logo-new.svg.png" alt="n8n" title="n8n - Workflow automation" loading="lazy">
                     </div>
                     <div class="tool-item">
-                        <img src="images/tools/Zapier-logo.png" alt="Zapier" title="Zapier - App integration and automation">
+                        <img src="images/tools/Zapier-logo.png" alt="Zapier" title="Zapier - App integration and automation" loading="lazy">
                     </div>
                     <div class="tool-item">
-                        <img src="images/tools/Google_Gemini_logo.svg.png" alt="Gemini" title="Gemini - Google AI">
+                        <img src="images/tools/Google_Gemini_logo.svg.png" alt="Gemini" title="Gemini - Google AI" loading="lazy">
                     </div>
                     <!-- Duplicate for seamless loop -->
                     <div class="tool-item">
-                        <img src="images/tools/lovable-dark-png.png" alt="Lovable" title="Lovable - AI-powered app development">
+                        <img src="images/tools/lovable-dark-png.png" alt="Lovable" title="Lovable - AI-powered app development" loading="lazy">
                     </div>
                     <div class="tool-item">
-                        <img src="images/tools/Claude_AI_logo.svg.png" alt="Claude" title="Claude - AI coding assistant">
+                        <img src="images/tools/Claude_AI_logo.svg.png" alt="Claude" title="Claude - AI coding assistant" loading="lazy">
                     </div>
                     <div class="tool-item">
-                        <img src="images/tools/ChatGPT-Logo.png" alt="ChatGPT" title="ChatGPT - AI assistant">
+                        <img src="images/tools/ChatGPT-Logo.png" alt="ChatGPT" title="ChatGPT - AI assistant" loading="lazy">
                     </div>
                     <div class="tool-item">
-                        <img src="images/tools/Figma-logo.svg.png" alt="Figma" title="Figma - Design and prototyping">
+                        <img src="images/tools/Figma-logo.svg.png" alt="Figma" title="Figma - Design and prototyping" loading="lazy">
                     </div>
                     <div class="tool-item">
-                        <img src="images/tools/N8n-logo-new.svg.png" alt="n8n" title="n8n - Workflow automation">
+                        <img src="images/tools/N8n-logo-new.svg.png" alt="n8n" title="n8n - Workflow automation" loading="lazy">
                     </div>
                     <div class="tool-item">
-                        <img src="images/tools/Zapier-logo.png" alt="Zapier" title="Zapier - App integration and automation">
+                        <img src="images/tools/Zapier-logo.png" alt="Zapier" title="Zapier - App integration and automation" loading="lazy">
                     </div>
                     <div class="tool-item">
-                        <img src="images/tools/Google_Gemini_logo.svg.png" alt="Gemini" title="Gemini - Google AI">
+                        <img src="images/tools/Google_Gemini_logo.svg.png" alt="Gemini" title="Gemini - Google AI" loading="lazy">
                     </div>
                 </div>
             </div>
@@ -1235,11 +1238,11 @@
     </section>
 
     <!-- FAQ Section -->
-    <section class="faq">
+    <section class="faq" aria-labelledby="faq-heading">
         <div class="container">
             <div class="section-header center" data-animate="fade-up">
                 <span class="section-label">FAQ</span>
-                <h2>Questions?<br><span class="text-gradient">Answers.</span></h2>
+                <h2 id="faq-heading">Questions?<br><span class="text-gradient">Answers.</span></h2>
             </div>
 
             <div class="faq-grid" data-animate="fade-up" data-delay="100">
@@ -1298,14 +1301,14 @@
     </section>
 
     <!-- CTA Section -->
-    <section class="cta" id="contact">
+    <section class="cta" id="contact" aria-labelledby="cta-heading">
         <div class="cta-bg">
             <div class="cta-gradient"></div>
             <div class="cta-grid-pattern"></div>
         </div>
         <div class="container">
             <div class="cta-content" data-animate="fade-up">
-                <h2>Ready to stop<br><span class="text-gradient">compromising?</span></h2>
+                <h2 id="cta-heading">Ready to stop<br><span class="text-gradient">compromising?</span></h2>
                 <p>Let's talk about what you're building. 30-minute intro call. No pressure, no pitch deck.</p>
                 <div class="cta-buttons">
                     <a href="mailto:hello@buildwithglue.com" class="btn btn-primary btn-large">
@@ -1323,13 +1326,15 @@
         </div>
     </section>
 
+    </main>
+
     <!-- Footer -->
-    <footer class="footer">
+    <footer class="footer" role="contentinfo">
         <div class="footer-gradient"></div>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-brand">
-                    <img src="/images/gloo-logo.png" alt="Gloo" class="logo-img footer-logo-img">
+                    <img src="/images/gloo-logo.png" alt="Gloo" class="logo-img footer-logo-img" loading="lazy">
                     <p>Built for you, not bought by you.</p>
                     <div class="footer-social">
                         <a href="#" class="social-link" aria-label="LinkedIn">
@@ -1374,6 +1379,12 @@
         </div>
     </footer>
 
+    <!-- GSAP Animation Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
+
     <script src="script.js"></script>
+    <script src="animations.js"></script>
 </body>
 </html>
