@@ -168,12 +168,13 @@
                 const offsetX = (mouseX - centerX) / centerX;
                 const offsetY = (mouseY - centerY) / centerY;
 
-                // Apply subtle rotation and translation
+                // Apply rotation and translation based on mouse position
                 gsap.to(this.dashboard, {
-                    rotateY: offsetX * 5,
-                    rotateX: -offsetY * 5,
-                    x: offsetX * 20,
-                    duration: 0.5,
+                    rotateY: offsetX * 8,
+                    rotateX: -offsetY * 6,
+                    x: offsetX * 25,
+                    y: offsetY * 10,
+                    duration: 0.4,
                     ease: 'power2.out'
                 });
             });
@@ -693,17 +694,17 @@
                 card.style.transformStyle = 'preserve-3d';
 
                 gsap.from(card, {
-                    y: 80,
+                    y: 100,
                     opacity: 0,
-                    rotateX: 15,
-                    rotateY: i === 0 ? -10 : i === 2 ? 10 : 0, // Side cards rotate inward
-                    scale: 0.9,
-                    duration: 0.8,
-                    delay: i * 0.15,
+                    rotateX: 25,
+                    rotateY: i === 0 ? -15 : i === 2 ? 15 : 0, // Side cards rotate inward
+                    scale: 0.85,
+                    duration: 1,
+                    delay: i * 0.2,
                     ease: 'power3.out',
                     scrollTrigger: {
                         trigger: '.testimonials-grid',
-                        start: 'top 80%',
+                        start: 'top 85%',
                         toggleActions: 'play none none none'
                     }
                 });
