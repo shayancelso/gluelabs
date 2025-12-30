@@ -287,11 +287,14 @@
                 onLeaveBack: () => self.hideProgress(),
                 onUpdate: (trigger) => {
                     const progress = trigger.progress;
-                    const chapters = self.chapters.length;
-                    const chapterIndex = Math.min(
-                        Math.floor(progress * chapters),
-                        chapters - 1
-                    );
+
+                    // Explicit ranges to ensure Whitespace Visualizer displays first
+                    // This prevents skipping chapter 0 due to scroll trigger start position
+                    let chapterIndex;
+                    if (progress < 0.30) chapterIndex = 0;      // Whitespace Visualizer
+                    else if (progress < 0.55) chapterIndex = 1; // Account Health
+                    else if (progress < 0.80) chapterIndex = 2; // ROI Calculator
+                    else chapterIndex = 3;                       // Work-back Planner
 
                     if (chapterIndex !== self.currentChapter) {
                         self.switchChapter(chapterIndex);
