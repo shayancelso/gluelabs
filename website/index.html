@@ -38,7 +38,20 @@
             </a>
             <div class="nav-links" role="menubar">
                 <a href="#demo" class="nav-link" role="menuitem">See It Live</a>
-                <a href="tools/" class="nav-link" role="menuitem">Tools</a>
+                <div class="nav-dropdown">
+                    <a href="tools/" class="nav-link nav-link-dropdown" role="menuitem">
+                        Tools
+                        <svg class="dropdown-arrow" width="10" height="10" viewBox="0 0 10 10" fill="none">
+                            <path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                    </a>
+                    <div class="nav-dropdown-menu">
+                        <a href="tools/whitespace-visualizer/" class="dropdown-item">Whitespace Visualizer</a>
+                        <a href="#demo" class="dropdown-item">Account Health</a>
+                        <a href="#demo" class="dropdown-item">ROI Calculator</a>
+                        <a href="#demo" class="dropdown-item">Work-back Planner</a>
+                    </div>
+                </div>
                 <a href="#how-it-works" class="nav-link" role="menuitem">How It Works</a>
                 <a href="#case-study" class="nav-link" role="menuitem">Results</a>
                 <a href="#contact" class="btn btn-nav" role="menuitem">Book a Call</a>
@@ -1336,6 +1349,16 @@
     </section>
 
     </main>
+
+    <!-- Mobile Section Indicators -->
+    <div class="mobile-section-dots" aria-hidden="true">
+        <button class="section-dot active" data-section="hero" aria-label="Hero section"></button>
+        <button class="section-dot" data-section="demo" aria-label="Demo section"></button>
+        <button class="section-dot" data-section="about" aria-label="About section"></button>
+        <button class="section-dot" data-section="how-it-works" aria-label="How it works section"></button>
+        <button class="section-dot" data-section="case-study" aria-label="Case study section"></button>
+        <button class="section-dot" data-section="contact" aria-label="Contact section"></button>
+    </div>
 
     <!-- Footer -->
     <footer class="footer" role="contentinfo">

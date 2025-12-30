@@ -743,3 +743,56 @@ function throttle(func, limit) {
         }
     };
 }
+
+// ==========================================================================
+// Mobile Section Dots
+// ==========================================================================
+
+(function initMobileSectionDots() {
+    const dots = document.querySelectorAll('.section-dot');
+    if (!dots.length) return;
+
+    const sections = [
+        { id: 'hero', el: document.querySelector('.hero') },
+        { id: 'demo', el: document.getElementById('demo') },
+        { id: 'about', el: document.getElementById('about') },
+        { id: 'how-it-works', el: document.getElementById('how-it-works') },
+        { id: 'case-study', el: document.getElementById('case-study') },
+        { id: 'contact', el: document.getElementById('contact') }
+    ].filter(s => s.el);
+
+    // Click handler for dots
+    dots.forEach(dot => {
+        dot.addEventListener('click', () => {
+            const sectionId = dot.dataset.section;
+            const section = sectionId === 'hero'
+                ? document.querySelector('.hero')
+                : document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
+
+    // Intersection observer to track active section
+    const observerOptions = {
+        root: null,
+        rootMargin: '-40% 0px -40% 0px',
+        threshold: 0
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const sectionId = entry.target.id || 'hero';
+                dots.forEach(dot => {
+                    dot.classList.toggle('active', dot.dataset.section === sectionId);
+                });
+            }
+        });
+    }, observerOptions);
+
+    sections.forEach(section => {
+        if (section.el) observer.observe(section.el);
+    });
+})();
