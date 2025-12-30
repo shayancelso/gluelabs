@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whitespace Visualizer — 3D Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-bg: #fafafa;
+            --color-bg-alt: #f5f5f7;
+            --color-surface: #ffffff;
+            --color-border: rgba(139, 92, 246, 0.2);
+            --color-text: #1a1a2e;
+            --color-text-secondary: rgba(30, 30, 50, 0.7);
+            --color-text-muted: rgba(30, 30, 50, 0.5);
+            --color-primary: #8b5cf6;
+            --color-primary-glow: rgba(139, 92, 246, 0.4);
+            --color-accent: #7c3aed;
+            --color-success: #22c55e;
+            --color-warning: #f59e0b;
+            --color-danger: #ef4444;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-display: 'Space Grotesk', sans-serif;
+            --cube-size: 279px;
+            --face-duration: 5s; /* Time visible at each face */
+            --transition-duration: 1.5s; /* Smooth transition between faces */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-bg);
+            color: var(--color-text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: visible;
+            position: relative;
+            padding: 100px 20px 40px 20px;
+            box-sizing: border-box;
+        }
+
+        /* Ambient background effects */
+        .ambient-bg {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .ambient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.3;
+            animation: orbFloat 20s ease-in-out infinite;
+        }
+
+        .ambient-orb-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--color-primary) 0%, transparent 70%);
+            top: -200px;
+            left: -200px;
+            animation-delay: 0s;
+        }
+
+        .ambient-orb-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--color-accent) 0%, transparent 70%);
+            bottom: -150px;
+            right: -150px;
+            animation-delay: -7s;
+        }
+
+        .ambient-orb-3 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, #ec4899 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -14s;
+            opacity: 0.15;
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -30px) scale(1.05); }
+            50% { transform: translate(-20px, 20px) scale(0.95); }
+            75% { transform: translate(20px, 10px) scale(1.02); }
+        }
+
+        /* Noise texture overlay */
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Scene container */
+        .scene-container {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            margin-top: 20px;
+            overflow: visible;
+        }
+
+        /* 3D Scene */
+        .scene {
+            width: var(--cube-size);
+            height: var(--cube-size);
+            perspective: 1200px;
+            perspective-origin: 50% 50%;
+        }
+
+        /* Cube wrapper for orbital animation */
+        .cube-orbit {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            /* Fast continuous rotation - 8 seconds full revolution */
+            animation: orbit 8s linear infinite;
+        }
+
+        /* Smooth continuous orbital rotation */
+        @keyframes orbit {
+            0% {
+                transform: rotateX(-15deg) rotateY(0deg);
+            }
+            100% {
+                transform: rotateX(-15deg) rotateY(360deg);
+            }
+        }
+
+        /* Cube structure */
+        .cube {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: translateZ(calc(var(--cube-size) / -2));
+        }
+
+        /* Cube faces */
+        .cube-face {
+            position: absolute;
+            width: var(--cube-size);
+            height: var(--cube-size);
+            background: linear-gradient(
+                145deg,
+                rgba(255, 255, 255, 0.85) 0%,
+                rgba(250, 250, 255, 0.9) 100%
+            );
+            border: 1px solid rgba(139, 92, 246, 0.25);
+            border-radius: 24px;
+            padding: 12px;
+            backface-visibility: visible;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.5),
+                inset 0 0 60px rgba(139, 92, 246, 0.08),
+                0 25px 50px -12px rgba(139, 92, 246, 0.2);
+            backdrop-filter: blur(20px);
+        }
+
+        /* Glass reflection overlay */
+        .cube-face::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(
+                180deg,
+                rgba(255, 255, 255, 0.03) 0%,
+                transparent 100%
+            );
+            border-radius: 24px 24px 0 0;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        /* Purple edge glow for integration */
+        .cube-face::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(
+                135deg,
+                rgba(139, 92, 246, 0.15) 0%,
+                transparent 25%,
+                transparent 75%,
+                rgba(236, 72, 153, 0.1) 100%
+            );
+            border-radius: 26px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Face content wrapper for proper z-stacking */
+        .face-header,
+        .score-grid,
+        .face-footer {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Face positioning */
+        .cube-face-front  { transform: rotateY(0deg) translateZ(calc(var(--cube-size) / 2)); }
+        .cube-face-back   { transform: rotateY(180deg) translateZ(calc(var(--cube-size) / 2)); }
+        .cube-face-right  { transform: rotateY(90deg) translateZ(calc(var(--cube-size) / 2)); }
+        .cube-face-left   { transform: rotateY(-90deg) translateZ(calc(var(--cube-size) / 2)); }
+        .cube-face-top    { transform: rotateX(90deg) translateZ(calc(var(--cube-size) / 2)); }
+        .cube-face-bottom { transform: rotateX(-90deg) translateZ(calc(var(--cube-size) / 2)); }
+
+        /* Face header */
+        .face-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .face-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+        }
+
+        .face-indicator.active {
+            background: var(--color-success);
+            box-shadow: 0 0 12px rgba(34, 197, 94, 0.5);
+        }
+
+        .face-indicator.warning {
+            background: var(--color-warning);
+            box-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
+        }
+
+        .face-indicator.danger {
+            background: var(--color-danger);
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.5);
+        }
+
+        .face-title {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--color-text);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ============================================
+           TOOL VISUALIZATIONS
+           ============================================ */
+
+        /* Shared tool content area */
+        .tool-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 4px;
+        }
+
+        /* ---- 1. WHITESPACE VISUALIZER (Grid) ---- */
+        .whitespace-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .grid-cell {
+            border-radius: 12px;
+            background: var(--color-bg-alt);
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .grid-cell.intensity-0 { background: rgba(139, 92, 246, 0.08); }
+        .grid-cell.intensity-1 { background: rgba(139, 92, 246, 0.2); }
+        .grid-cell.intensity-2 { background: rgba(139, 92, 246, 0.35); }
+        .grid-cell.intensity-3 { background: rgba(139, 92, 246, 0.5); box-shadow: 0 0 15px rgba(139, 92, 246, 0.2); }
+        .grid-cell.intensity-4 {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.65) 0%, rgba(124, 58, 237, 0.65) 100%);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+
+        /* ---- 2. ACCOUNT HEALTH (Gauges) ---- */
+        .health-dashboard {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .health-card {
+            background: rgba(139, 92, 246, 0.06);
+            border: 1px solid var(--color-border);
+            border-radius: 16px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .health-gauge {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .health-gauge::before {
+            content: '';
+            position: absolute;
+            inset: 4px;
+            border-radius: 50%;
+            background: #ffffff;
+        }
+
+        .health-gauge.excellent {
+            background: conic-gradient(#22c55e 0deg 324deg, rgba(55, 65, 81, 0.4) 324deg 360deg);
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+        }
+        .health-gauge.good {
+            background: conic-gradient(#6366f1 0deg 270deg, rgba(55, 65, 81, 0.4) 270deg 360deg);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+        .health-gauge.warning {
+            background: conic-gradient(#f59e0b 0deg 180deg, rgba(55, 65, 81, 0.4) 180deg 360deg);
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+        }
+        .health-gauge.critical {
+            background: conic-gradient(#ef4444 0deg 90deg, rgba(55, 65, 81, 0.4) 90deg 360deg);
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+        }
+
+        .health-value {
+            position: relative;
+            z-index: 1;
+            font-family: var(--font-display);
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
+        .health-label {
+            font-size: 10px;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ---- 3. ROI CALCULATOR (Line Chart) ---- */
+        .roi-chart {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chart-container {
+            flex: 1;
+            position: relative;
+            background: rgba(139, 92, 246, 0.04);
+            border-radius: 12px;
+            border: 1px solid var(--color-border);
+            padding: 16px 12px 12px 12px;
+            min-height: 160px;
+        }
+
+        .chart-svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .chart-grid-line {
+            stroke: rgba(255, 255, 255, 0.06);
+            stroke-width: 1;
+        }
+
+        .chart-line {
+            fill: none;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .chart-line.revenue {
+            stroke: #6366f1;
+            filter: drop-shadow(0 0 6px rgba(99, 102, 241, 0.5));
+        }
+
+        .chart-line.profit {
+            stroke: #22c55e;
+            filter: drop-shadow(0 0 6px rgba(34, 197, 94, 0.5));
+        }
+
+        .chart-area {
+            opacity: 0.15;
+        }
+
+        .chart-area.revenue { fill: url(#revenueGradient); }
+        .chart-area.profit { fill: url(#profitGradient); }
+
+        .chart-dot {
+            fill: var(--color-bg);
+            stroke-width: 2;
+            transition: r 0.2s ease;
+        }
+
+        .chart-dot.revenue { stroke: #6366f1; }
+        .chart-dot.profit { stroke: #22c55e; }
+
+        .chart-label {
+            font-size: 9px;
+            fill: var(--color-text-muted);
+            text-anchor: middle;
+        }
+
+        .chart-y-label {
+            font-size: 8px;
+            fill: var(--color-text-muted);
+            text-anchor: end;
+        }
+
+        .chart-legend {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            padding: 6px 0;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10px;
+            color: var(--color-text-secondary);
+        }
+
+        .legend-line {
+            width: 16px;
+            height: 3px;
+            border-radius: 2px;
+        }
+
+        .legend-line.revenue { background: #6366f1; }
+        .legend-line.profit { background: #22c55e; }
+
+        .roi-summary {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 8px;
+        }
+
+        .roi-label { font-size: 11px; color: var(--color-text-secondary); }
+        .roi-value { font-family: var(--font-display); font-size: 14px; font-weight: 700; color: #22c55e; }
+
+        /* ---- 4. CHURN PREDICTOR (Risk Meters) ---- */
+        .churn-dashboard {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .risk-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            background: rgba(139, 92, 246, 0.04);
+            border: 1px solid var(--color-border);
+            border-radius: 10px;
+        }
+
+        .risk-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .risk-info {
+            flex: 1;
+        }
+
+        .risk-name {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: 4px;
+        }
+
+        .risk-bar-bg {
+            height: 6px;
+            background: rgba(139, 92, 246, 0.15);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .risk-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.6s ease;
+        }
+
+        .risk-bar-fill.low { background: #22c55e; }
+        .risk-bar-fill.medium { background: #f59e0b; }
+        .risk-bar-fill.high { background: #ef4444; }
+
+        .risk-score {
+            font-family: var(--font-display);
+            font-size: 12px;
+            font-weight: 700;
+            min-width: 32px;
+            text-align: right;
+        }
+
+        .risk-score.low { color: #22c55e; }
+        .risk-score.medium { color: #f59e0b; }
+        .risk-score.high { color: #ef4444; }
+
+        /* ---- 5. RENEWAL TRACKER (Timeline) ---- */
+        .renewal-timeline {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            background: rgba(139, 92, 246, 0.04);
+            border: 1px solid var(--color-border);
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .timeline-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .timeline-dot.upcoming { background: #6366f1; box-shadow: 0 0 10px rgba(99, 102, 241, 0.5); }
+        .timeline-dot.soon { background: #f59e0b; box-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
+        .timeline-dot.urgent { background: #ef4444; box-shadow: 0 0 10px rgba(239, 68, 68, 0.5); animation: pulse 1.5s ease-in-out infinite; }
+        .timeline-dot.completed { background: #22c55e; }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        .timeline-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .timeline-company {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--color-text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .timeline-date {
+            font-size: 9px;
+            color: var(--color-text-muted);
+        }
+
+        .timeline-value {
+            font-family: var(--font-display);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        /* ---- 6. STAKEHOLDER MAP (Network) ---- */
+        .stakeholder-map {
+            flex: 1;
+            position: relative;
+            background: rgba(139, 92, 246, 0.04);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .map-node {
+            position: absolute;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+            color: white;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .map-node:hover {
+            transform: scale(1.1);
+        }
+
+        .map-node.primary {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.4);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 14px;
+        }
+
+        .map-node.secondary {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.3);
+        }
+
+        .map-node.tertiary {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
+        }
+
+        .map-connection {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(99, 102, 241, 0.4) 0%, rgba(139, 92, 246, 0.2) 100%);
+            transform-origin: left center;
+        }
+
+        /* Face footer with metric */
+        .face-footer {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .metric-label {
+            font-size: 13px;
+            color: var(--color-text-secondary);
+            font-weight: 500;
+        }
+
+        .metric-value {
+            font-family: var(--font-display);
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .metric-value.success {
+            background: linear-gradient(135deg, var(--color-success) 0%, #10b981 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        .metric-value.warning {
+            background: linear-gradient(135deg, var(--color-warning) 0%, var(--color-danger) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        /* Sidebar indicator (mini version on left) */
+        .sidebar-mini {
+            position: absolute;
+            left: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .sidebar-item.active {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .sidebar-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--color-text-muted);
+        }
+
+        .sidebar-item.active .sidebar-dot {
+            background: var(--color-primary);
+            box-shadow: 0 0 8px var(--color-primary-glow);
+        }
+
+        .sidebar-text {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            font-weight: 500;
+        }
+
+        .sidebar-item.active .sidebar-text {
+            color: var(--color-text);
+        }
+
+        /* Cube shadow on ground */
+        .cube-shadow {
+            position: absolute;
+            width: calc(var(--cube-size) * 0.8);
+            height: 50px;
+            background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            bottom: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            filter: blur(30px);
+            animation: shadowPulse 8s linear infinite;
+        }
+
+        @keyframes shadowPulse {
+            0% { transform: translateX(-50%) scale(1); opacity: 0.6; }
+            25% { transform: translateX(-45%) scale(1.05); opacity: 0.5; }
+            50% { transform: translateX(-50%) scale(1); opacity: 0.6; }
+            75% { transform: translateX(-55%) scale(1.05); opacity: 0.5; }
+            100% { transform: translateX(-50%) scale(1); opacity: 0.6; }
+        }
+
+        /* Subtle floating animation for the entire scene */
+        .scene {
+            animation: sceneFloat 8s ease-in-out infinite;
+        }
+
+        @keyframes sceneFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* Bottom info bar */
+        .info-bar {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            padding: 16px 24px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--color-border);
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .info-dot.primary { background: var(--color-primary); box-shadow: 0 0 8px var(--color-primary-glow); }
+        .info-dot.success { background: var(--color-success); box-shadow: 0 0 8px rgba(34, 197, 94, 0.4); }
+        .info-dot.warning { background: var(--color-warning); box-shadow: 0 0 8px rgba(245, 158, 11, 0.4); }
+        .info-dot.muted { background: rgba(55, 65, 81, 0.8); }
+
+        .info-text {
+            font-size: 13px;
+            color: var(--color-text-secondary);
+            font-weight: 500;
+        }
+
+        /* Subtle vignette */
+        .vignette {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        /* Dynamic ambient light */
+        .ambient-light {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: conic-gradient(
+                from 0deg at 50% 50%,
+                transparent 0deg,
+                rgba(99, 102, 241, 0.08) 60deg,
+                transparent 120deg,
+                rgba(139, 92, 246, 0.06) 180deg,
+                transparent 240deg,
+                rgba(236, 72, 153, 0.05) 300deg,
+                transparent 360deg
+            );
+            animation: ambientRotate 8s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes ambientRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Title and branding */
+        .demo-title {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 20;
+        }
+
+        .demo-title h1 {
+            font-family: var(--font-display);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-text-secondary);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .demo-title .logo-text {
+            font-family: var(--font-display);
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 50%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            :root {
+                --cube-size: 300px;
+            }
+
+            .scene-container {
+                gap: 40px;
+            }
+
+            .info-bar {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            :root {
+                --cube-size: 260px;
+            }
+
+            .cube-face {
+                padding: 16px;
+                border-radius: 16px;
+            }
+
+            .score-grid {
+                gap: 6px;
+            }
+
+            .score-cell {
+                border-radius: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Ambient background -->
+    <div class="ambient-bg">
+        <div class="ambient-orb ambient-orb-1"></div>
+        <div class="ambient-orb ambient-orb-2"></div>
+        <div class="ambient-orb ambient-orb-3"></div>
+    </div>
+
+    <!-- Noise texture -->
+    <div class="noise-overlay"></div>
+
+    <!-- Vignette -->
+    <div class="vignette"></div>
+
+    <!-- Title (hidden when embedded) -->
+    <div class="demo-title" id="demo-title">
+        <h1>Whitespace Analysis</h1>
+        <div class="logo-text">Gloo</div>
+    </div>
+
+    <!-- Ambient light -->
+    <div class="ambient-light"></div>
+
+    <!-- Main scene -->
+    <div class="scene-container">
+        <div class="scene">
+            <div class="cube-orbit">
+                <div class="cube">
+                    <!-- Front face: Whitespace Visualizer -->
+                    <div class="cube-face cube-face-front">
+                        <div class="face-header">
+                            <div class="face-indicator active"></div>
+                            <div class="face-title">Whitespace Visualizer</div>
+                        </div>
+                        <div class="tool-content">
+                            <div class="whitespace-grid" id="whitespace-grid"></div>
+                        </div>
+                        <div class="face-footer">
+                            <span class="metric-label">Whitespace Found</span>
+                            <span class="metric-value">$2.4M</span>
+                        </div>
+                    </div>
+
+                    <!-- Right face: Account Health -->
+                    <div class="cube-face cube-face-right">
+                        <div class="face-header">
+                            <div class="face-indicator" style="background: var(--color-success); box-shadow: 0 0 12px rgba(34, 197, 94, 0.5);"></div>
+                            <div class="face-title">Account Health</div>
+                        </div>
+                        <div class="tool-content">
+                            <div class="health-dashboard">
+                                <div class="health-card">
+                                    <div class="health-gauge excellent">
+                                        <span class="health-value">90</span>
+                                    </div>
+                                    <span class="health-label">Acme Corp</span>
+                                </div>
+                                <div class="health-card">
+                                    <div class="health-gauge good">
+                                        <span class="health-value">75</span>
+                                    </div>
+                                    <span class="health-label">TechStart</span>
+                                </div>
+                                <div class="health-card">
+                                    <div class="health-gauge warning">
+                                        <span class="health-value">50</span>
+                                    </div>
+                                    <span class="health-label">DataFlow</span>
+                                </div>
+                                <div class="health-card">
+                                    <div class="health-gauge critical">
+                                        <span class="health-value">25</span>
+                                    </div>
+                                    <span class="health-label">CloudNine</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="face-footer">
+                            <span class="metric-label">Avg Health Score</span>
+                            <span class="metric-value success">72</span>
+                        </div>
+                    </div>
+
+                    <!-- Back face: ROI Calculator -->
+                    <div class="cube-face cube-face-back">
+                        <div class="face-header">
+                            <div class="face-indicator" style="background: #22c55e; box-shadow: 0 0 12px rgba(34, 197, 94, 0.5);"></div>
+                            <div class="face-title">ROI Calculator</div>
+                        </div>
+                        <div class="tool-content">
+                            <div class="roi-chart">
+                                <div class="chart-container">
+                                    <svg class="chart-svg" viewBox="0 0 280 140" preserveAspectRatio="none">
+                                        <!-- Gradient definitions -->
+                                        <defs>
+                                            <linearGradient id="revenueGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                                <stop offset="0%" style="stop-color:#6366f1;stop-opacity:0.4" />
+                                                <stop offset="100%" style="stop-color:#6366f1;stop-opacity:0" />
+                                            </linearGradient>
+                                            <linearGradient id="profitGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                                <stop offset="0%" style="stop-color:#22c55e;stop-opacity:0.4" />
+                                                <stop offset="100%" style="stop-color:#22c55e;stop-opacity:0" />
+                                            </linearGradient>
+                                        </defs>
+
+                                        <!-- Grid lines -->
+                                        <line class="chart-grid-line" x1="40" y1="20" x2="270" y2="20" />
+                                        <line class="chart-grid-line" x1="40" y1="50" x2="270" y2="50" />
+                                        <line class="chart-grid-line" x1="40" y1="80" x2="270" y2="80" />
+                                        <line class="chart-grid-line" x1="40" y1="110" x2="270" y2="110" />
+
+                                        <!-- Y-axis labels -->
+                                        <text class="chart-y-label" x="35" y="23">$2M</text>
+                                        <text class="chart-y-label" x="35" y="53">$1.5M</text>
+                                        <text class="chart-y-label" x="35" y="83">$1M</text>
+                                        <text class="chart-y-label" x="35" y="113">$500K</text>
+
+                                        <!-- Revenue area fill -->
+                                        <path class="chart-area revenue" d="M55,95 L101,75 L147,60 L193,45 L239,25 L239,110 L55,110 Z" />
+
+                                        <!-- Profit area fill -->
+                                        <path class="chart-area profit" d="M55,105 L101,95 L147,80 L193,60 L239,40 L239,110 L55,110 Z" />
+
+                                        <!-- Revenue line -->
+                                        <polyline class="chart-line revenue" points="55,95 101,75 147,60 193,45 239,25" />
+
+                                        <!-- Profit line -->
+                                        <polyline class="chart-line profit" points="55,105 101,95 147,80 193,60 239,40" />
+
+                                        <!-- Data points - Revenue -->
+                                        <circle class="chart-dot revenue" cx="55" cy="95" r="4" />
+                                        <circle class="chart-dot revenue" cx="101" cy="75" r="4" />
+                                        <circle class="chart-dot revenue" cx="147" cy="60" r="4" />
+                                        <circle class="chart-dot revenue" cx="193" cy="45" r="4" />
+                                        <circle class="chart-dot revenue" cx="239" cy="25" r="4" />
+
+                                        <!-- Data points - Profit -->
+                                        <circle class="chart-dot profit" cx="55" cy="105" r="4" />
+                                        <circle class="chart-dot profit" cx="101" cy="95" r="4" />
+                                        <circle class="chart-dot profit" cx="147" cy="80" r="4" />
+                                        <circle class="chart-dot profit" cx="193" cy="60" r="4" />
+                                        <circle class="chart-dot profit" cx="239" cy="40" r="4" />
+
+                                        <!-- X-axis labels -->
+                                        <text class="chart-label" x="55" y="125">Jan</text>
+                                        <text class="chart-label" x="101" y="125">Mar</text>
+                                        <text class="chart-label" x="147" y="125">Jun</text>
+                                        <text class="chart-label" x="193" y="125">Sep</text>
+                                        <text class="chart-label" x="239" y="125">Dec</text>
+                                    </svg>
+                                </div>
+                                <div class="chart-legend">
+                                    <div class="legend-item">
+                                        <div class="legend-line revenue"></div>
+                                        <span>Revenue</span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <div class="legend-line profit"></div>
+                                        <span>Profit</span>
+                                    </div>
+                                </div>
+                                <div class="roi-summary">
+                                    <span class="roi-label">Projected ROI</span>
+                                    <span class="roi-value">+340%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="face-footer">
+                            <span class="metric-label">Annual Savings</span>
+                            <span class="metric-value success">$1.2M</span>
+                        </div>
+                    </div>
+
+                    <!-- Left face: Churn Predictor -->
+                    <div class="cube-face cube-face-left">
+                        <div class="face-header">
+                            <div class="face-indicator warning"></div>
+                            <div class="face-title">Churn Predictor</div>
+                        </div>
+                        <div class="tool-content">
+                            <div class="churn-dashboard">
+                                <div class="risk-item">
+                                    <div class="risk-avatar">AC</div>
+                                    <div class="risk-info">
+                                        <div class="risk-name">Acme Corp</div>
+                                        <div class="risk-bar-bg"><div class="risk-bar-fill low" style="width: 15%;"></div></div>
+                                    </div>
+                                    <span class="risk-score low">15%</span>
+                                </div>
+                                <div class="risk-item">
+                                    <div class="risk-avatar">DF</div>
+                                    <div class="risk-info">
+                                        <div class="risk-name">DataFlow Inc</div>
+                                        <div class="risk-bar-bg"><div class="risk-bar-fill medium" style="width: 45%;"></div></div>
+                                    </div>
+                                    <span class="risk-score medium">45%</span>
+                                </div>
+                                <div class="risk-item">
+                                    <div class="risk-avatar">CN</div>
+                                    <div class="risk-info">
+                                        <div class="risk-name">CloudNine</div>
+                                        <div class="risk-bar-bg"><div class="risk-bar-fill high" style="width: 78%;"></div></div>
+                                    </div>
+                                    <span class="risk-score high">78%</span>
+                                </div>
+                                <div class="risk-item">
+                                    <div class="risk-avatar">TS</div>
+                                    <div class="risk-info">
+                                        <div class="risk-name">TechStart</div>
+                                        <div class="risk-bar-bg"><div class="risk-bar-fill low" style="width: 22%;"></div></div>
+                                    </div>
+                                    <span class="risk-score low">22%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="face-footer">
+                            <span class="metric-label">At Risk Revenue</span>
+                            <span class="metric-value warning">$340K</span>
+                        </div>
+                    </div>
+
+                    <!-- Top face: Renewal Tracker -->
+                    <div class="cube-face cube-face-top">
+                        <div class="face-header">
+                            <div class="face-indicator"></div>
+                            <div class="face-title">Renewal Tracker</div>
+                        </div>
+                        <div class="tool-content">
+                            <div class="renewal-timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-dot urgent"></div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-company">CloudNine Ltd</div>
+                                        <div class="timeline-date">Due in 3 days</div>
+                                    </div>
+                                    <span class="timeline-value">$89K</span>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-dot soon"></div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-company">DataFlow Inc</div>
+                                        <div class="timeline-date">Due in 2 weeks</div>
+                                    </div>
+                                    <span class="timeline-value">$156K</span>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-dot upcoming"></div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-company">Acme Corporation</div>
+                                        <div class="timeline-date">Due in 45 days</div>
+                                    </div>
+                                    <span class="timeline-value">$420K</span>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-dot completed"></div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-company">TechStart Pro</div>
+                                        <div class="timeline-date">Renewed</div>
+                                    </div>
+                                    <span class="timeline-value">$67K</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="face-footer">
+                            <span class="metric-label">Pipeline Value</span>
+                            <span class="metric-value">$732K</span>
+                        </div>
+                    </div>
+
+                    <!-- Bottom face: Stakeholder Map -->
+                    <div class="cube-face cube-face-bottom">
+                        <div class="face-header">
+                            <div class="face-indicator" style="background: #ec4899; box-shadow: 0 0 12px rgba(236, 72, 153, 0.5);"></div>
+                            <div class="face-title">Stakeholder Map</div>
+                        </div>
+                        <div class="tool-content">
+                            <div class="stakeholder-map" id="stakeholder-map">
+                                <!-- Connections drawn by JS -->
+                                <div class="map-node primary">CEO</div>
+                                <div class="map-node secondary" style="top: 20%; left: 25%;">VP</div>
+                                <div class="map-node secondary" style="top: 25%; right: 20%;">CTO</div>
+                                <div class="map-node tertiary" style="bottom: 25%; left: 15%;">PM</div>
+                                <div class="map-node tertiary" style="bottom: 20%; right: 25%;">Dev</div>
+                                <div class="map-node tertiary" style="top: 60%; left: 20%;">Ops</div>
+                                <div class="map-node tertiary" style="top: 65%; right: 15%;">QA</div>
+                            </div>
+                        </div>
+                        <div class="face-footer">
+                            <span class="metric-label">Key Contacts</span>
+                            <span class="metric-value" style="background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%); -webkit-background-clip: text; background-clip: text;">7</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cube-shadow"></div>
+        </div>
+
+        <!-- Tools legend bar -->
+        <div class="info-bar">
+            <div class="info-item">
+                <div class="info-dot primary"></div>
+                <span class="info-text">Whitespace</span>
+            </div>
+            <div class="info-item">
+                <div class="info-dot success"></div>
+                <span class="info-text">Health</span>
+            </div>
+            <div class="info-item">
+                <div class="info-dot" style="background: #22c55e;"></div>
+                <span class="info-text">ROI</span>
+            </div>
+            <div class="info-item">
+                <div class="info-dot warning"></div>
+                <span class="info-text">Churn</span>
+            </div>
+            <div class="info-item">
+                <div class="info-dot" style="background: #6366f1;"></div>
+                <span class="info-text">Renewals</span>
+            </div>
+            <div class="info-item">
+                <div class="info-dot" style="background: #ec4899; box-shadow: 0 0 8px rgba(236, 72, 153, 0.4);"></div>
+                <span class="info-text">Stakeholders</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Whitespace grid pattern
+        const gridPattern = [
+            [0, 3, 2, 1, 4],
+            [2, 4, 3, 2, 1],
+            [1, 2, 0, 3, 2],
+            [3, 1, 2, 4, 0]
+        ];
+
+        let gridCells = [];
+
+        // Generate the whitespace grid
+        function initWhitespaceGrid() {
+            const container = document.getElementById('whitespace-grid');
+            if (!container) return;
+
+            container.innerHTML = '';
+            gridCells = [];
+
+            gridPattern.forEach((row, rowIndex) => {
+                row.forEach((intensity, colIndex) => {
+                    const cell = document.createElement('div');
+                    cell.className = 'grid-cell';
+                    cell.dataset.intensity = intensity;
+                    cell.classList.add(`intensity-${intensity}`);
+                    cell.dataset.row = rowIndex;
+                    cell.dataset.col = colIndex;
+                    container.appendChild(cell);
+                    gridCells.push(cell);
+                });
+            });
+        }
+
+        // Pulse animation for grid cells
+        function pulseGridCell(cell) {
+            const intensity = parseInt(cell.dataset.intensity);
+            if (intensity === 0) return;
+
+            cell.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+            cell.style.transform = 'scale(1.1)';
+            cell.style.filter = 'brightness(1.4)';
+            cell.style.boxShadow = '0 0 25px rgba(99, 102, 241, 0.5)';
+
+            setTimeout(() => {
+                cell.style.transform = 'scale(1)';
+                cell.style.filter = 'brightness(1)';
+                cell.style.boxShadow = '';
+            }, 500);
+        }
+
+        // Wave animation across grid
+        function waveAnimation() {
+            gridCells.forEach((cell) => {
+                const row = parseInt(cell.dataset.row);
+                const col = parseInt(cell.dataset.col);
+                const delay = (row + col) * 60;
+                setTimeout(() => pulseGridCell(cell), delay);
+            });
+        }
+
+        // Random sparkle on grid
+        function sparkleGrid() {
+            const count = 2 + Math.floor(Math.random() * 2);
+            const shuffled = [...gridCells].sort(() => Math.random() - 0.5);
+            shuffled.slice(0, count).forEach((cell, i) => {
+                setTimeout(() => pulseGridCell(cell), i * 100);
+            });
+        }
+
+        // Animate health gauges
+        function animateHealthGauges() {
+            const gauges = document.querySelectorAll('.health-gauge');
+            const randomGauge = gauges[Math.floor(Math.random() * gauges.length)];
+            if (randomGauge) {
+                randomGauge.style.transition = 'all 0.4s ease';
+                randomGauge.style.transform = 'scale(1.08)';
+                setTimeout(() => {
+                    randomGauge.style.transform = 'scale(1)';
+                }, 400);
+            }
+        }
+
+        // Animate chart dots
+        function animateChartDots() {
+            const dots = document.querySelectorAll('.chart-dot');
+            dots.forEach((dot, i) => {
+                setTimeout(() => {
+                    dot.setAttribute('r', '6');
+                    setTimeout(() => {
+                        dot.setAttribute('r', '4');
+                    }, 300);
+                }, i * 80);
+            });
+        }
+
+        // Animate risk bars
+        function animateRiskBars() {
+            const bars = document.querySelectorAll('.risk-bar-fill');
+            const randomBar = bars[Math.floor(Math.random() * bars.length)];
+            if (randomBar) {
+                const currentWidth = parseFloat(randomBar.style.width);
+                const variation = 3 + Math.random() * 5;
+                const newWidth = Math.min(95, Math.max(10, currentWidth + (Math.random() > 0.5 ? variation : -variation)));
+                randomBar.style.width = `${newWidth}%`;
+            }
+        }
+
+        // Pulse metric values
+        function pulseMetrics() {
+            const metrics = document.querySelectorAll('.metric-value');
+            const randomMetric = metrics[Math.floor(Math.random() * metrics.length)];
+            if (randomMetric) {
+                randomMetric.style.transition = 'all 0.4s ease';
+                randomMetric.style.transform = 'scale(1.08)';
+                randomMetric.style.filter = 'brightness(1.3)';
+                setTimeout(() => {
+                    randomMetric.style.transform = 'scale(1)';
+                    randomMetric.style.filter = 'brightness(1)';
+                }, 400);
+            }
+        }
+
+        // Animate stakeholder nodes
+        function animateNodes() {
+            const nodes = document.querySelectorAll('.map-node:not(.primary)');
+            const randomNode = nodes[Math.floor(Math.random() * nodes.length)];
+            if (randomNode) {
+                const originalTransform = randomNode.style.transform || '';
+                randomNode.style.transition = 'all 0.5s ease';
+                randomNode.style.transform = originalTransform + ' scale(1.2)';
+                randomNode.style.boxShadow = '0 0 30px rgba(99, 102, 241, 0.6)';
+                setTimeout(() => {
+                    randomNode.style.transform = originalTransform;
+                    randomNode.style.boxShadow = '';
+                }, 500);
+            }
+        }
+
+        // Check if embedded (via query param or iframe)
+        function isEmbedded() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('embed') === 'true' || window.self !== window.top;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initWhitespaceGrid();
+
+            // Hide elements when embedded
+            if (isEmbedded()) {
+                document.getElementById('demo-title')?.remove();
+                document.querySelector('.info-bar')?.remove();
+                document.body.style.padding = '20px';
+                document.body.style.background = 'transparent';
+                document.querySelector('.ambient-bg')?.remove();
+                document.querySelector('.vignette')?.remove();
+                document.querySelector('.noise-overlay')?.remove();
+                document.querySelector('.ambient-light')?.remove();
+                document.querySelector('.cube-shadow')?.remove();
+
+                // Remove purple tint from cube face shadows
+                const style = document.createElement('style');
+                style.textContent = `
+                    .cube-face {
+                        box-shadow:
+                            inset 0 1px 0 rgba(255, 255, 255, 0.5),
+                            inset 0 0 60px rgba(200, 200, 200, 0.05),
+                            0 25px 50px -12px rgba(0, 0, 0, 0.1) !important;
+                    }
+                    .cube-face::after {
+                        display: none !important;
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            // Ambient animations
+            setInterval(sparkleGrid, 1200);
+            setInterval(waveAnimation, 6000);
+            setInterval(animateHealthGauges, 2000);
+            setInterval(animateChartDots, 3000);
+            setInterval(animateRiskBars, 2500);
+            setInterval(pulseMetrics, 3500);
+            setInterval(animateNodes, 1800);
+
+            // Initial wave
+            setTimeout(waveAnimation, 800);
+        });
+    </script>
+</body>
+</html>
