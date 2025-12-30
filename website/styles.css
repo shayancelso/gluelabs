@@ -189,44 +189,35 @@ p {
     display: flex;
     align-items: center;
     text-decoration: none;
-    transition: opacity var(--transition-base);
-    position: relative;
-    overflow: hidden;
+    transition: transform var(--transition-base);
 }
 
 .logo:hover {
-    opacity: 1;
-}
-
-/* Shimmer effect on logo hover */
-.logo::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        120deg,
-        transparent 0%,
-        rgba(99, 102, 241, 0.25) 40%,
-        rgba(236, 72, 153, 0.25) 60%,
-        transparent 100%
-    );
-    z-index: 1;
-    pointer-events: none;
-    transition: left 0s;
-}
-
-.logo:hover::before {
-    left: 100%;
-    transition: left 0.8s ease-in-out;
+    transform: scale(1.02);
 }
 
 .logo-img {
     height: 70px;
     width: auto;
     display: block;
+    transition: filter 0.3s ease;
+}
+
+/* Shimmer effect on logo hover - uses brightness pulse */
+.logo:hover .logo-img {
+    animation: logoShimmer 0.8s ease-in-out;
+}
+
+@keyframes logoShimmer {
+    0% {
+        filter: brightness(1) drop-shadow(0 0 0 transparent);
+    }
+    50% {
+        filter: brightness(1.15) drop-shadow(0 0 8px rgba(99, 102, 241, 0.4));
+    }
+    100% {
+        filter: brightness(1) drop-shadow(0 0 0 transparent);
+    }
 }
 
 /* Footer logo adjustments */
