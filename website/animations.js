@@ -679,9 +679,9 @@
             const cards = gsap.utils.toArray('.testimonial-card');
             if (cards.length === 0) return;
 
-            // Set perspective on parent for 3D effect
+            // Set perspective on parent for 3D effect (desktop only)
             const grid = document.querySelector('.testimonials-grid');
-            if (grid) {
+            if (grid && !isMobile) {
                 grid.style.perspective = '1000px';
             }
 
@@ -690,18 +690,31 @@
                 card.removeAttribute('data-animate');
                 card.removeAttribute('data-delay');
 
-                // Add transform style for 3D
-                card.style.transformStyle = 'preserve-3d';
+                // Add transform style for 3D (desktop only)
+                if (!isMobile) {
+                    card.style.transformStyle = 'preserve-3d';
+                }
 
-                gsap.from(card, {
+                // Simpler animation on mobile, full 3D on desktop
+                const animProps = isMobile ? {
+                    y: 40,
+                    opacity: 0,
+                    duration: 0.6,
+                    delay: i * 0.1,
+                    ease: 'power3.out'
+                } : {
                     y: 100,
                     opacity: 0,
                     rotateX: 25,
-                    rotateY: i === 0 ? -15 : i === 2 ? 15 : 0, // Side cards rotate inward
+                    rotateY: i === 0 ? -15 : i === 2 ? 15 : 0,
                     scale: 0.85,
                     duration: 1,
                     delay: i * 0.2,
-                    ease: 'power3.out',
+                    ease: 'power3.out'
+                };
+
+                gsap.from(card, {
+                    ...animProps,
                     scrollTrigger: {
                         trigger: '.testimonials-grid',
                         start: 'top 85%',

@@ -4079,6 +4079,23 @@ p {
         font-size: 0.65rem;
     }
 
+    /* Hero Headline - prevent overflow */
+    .hero h1,
+    #hero-heading {
+        font-size: clamp(1.75rem, 7vw, 2.5rem);
+        word-wrap: break-word;
+    }
+
+    .hero-line {
+        display: block;
+    }
+
+    /* Typewriter text - prevent overflow */
+    .typewriter-text {
+        min-width: auto !important;
+        display: inline;
+    }
+
     /* Hero Product Preview Mobile */
     .preview-content {
         grid-template-columns: 1fr;
@@ -4100,16 +4117,21 @@ p {
 
     /* Demo Section Mobile */
     .demo-tabs {
-        flex-wrap: wrap;
-        gap: var(--space-xs);
+        flex-direction: column;
+        gap: var(--space-sm);
+        width: 100%;
     }
 
     .demo-tab {
-        padding: 0.6rem 1rem;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        justify-content: flex-start;
+        text-align: left;
     }
 
     .demo-tab span:not(.tab-icon) {
-        display: none;
+        display: inline;
+        font-size: 0.85rem;
     }
 
     /* Demo Window Mobile */
@@ -4488,11 +4510,20 @@ p {
     /* CTA Mobile */
     .cta-buttons {
         flex-direction: column;
+        gap: var(--space-sm);
     }
 
     .cta-buttons .btn {
         width: 100%;
         justify-content: center;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
+        text-align: center;
+    }
+
+    .cta h2 {
+        font-size: clamp(1.5rem, 6vw, 2rem);
     }
 
     /* Section Spacing Mobile */
@@ -4539,12 +4570,28 @@ p {
         padding: 0 var(--space-md);
     }
 
-    h1 { font-size: 1.75rem; }
-    h2 { font-size: 1.5rem; }
-    h3 { font-size: 1.1rem; }
+    h1 { font-size: 1.5rem; }
+    h2 { font-size: 1.35rem; }
+    h3 { font-size: 1rem; }
+
+    .hero h1,
+    #hero-heading {
+        font-size: 1.5rem;
+        line-height: 1.3;
+    }
 
     .hero-badge {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
+        padding: 4px 8px;
+    }
+
+    /* Typewriter - ensure no overflow */
+    .typewriter-text {
+        min-width: auto !important;
+    }
+
+    .typewriter-cursor {
+        font-size: 1.2rem;
     }
 
     .hero-subtitle {
