@@ -246,10 +246,15 @@ document.addEventListener('DOMContentLoaded', function() {
         if (targetPanel) {
             targetPanel.classList.add('active');
         }
+
+        // Initialize ROI chart when ROI tab is activated
+        if (targetId === 'roi' && typeof window.initRoiChartNow === 'function') {
+            setTimeout(window.initRoiChartNow, 100);
+        }
     }
 
     // ==========================================================================
-    // Demo ROI Calculator (in demo section)
+    // Demo ROI Calculator (in demo section) with Live Chart
     // ==========================================================================
 
     const calcTeam = document.getElementById('calc-team');
@@ -260,15 +265,127 @@ document.addEventListener('DOMContentLoaded', function() {
     const calcTeamValue = document.getElementById('calc-team-value');
     const calcHoursValue = document.getElementById('calc-hours-value');
 
-    const calcTime = document.getElementById('calc-time');
+    const calcBreakeven = document.getElementById('calc-breakeven');
     const calcProductivity = document.getElementById('calc-productivity');
-    const calcDev = document.getElementById('calc-dev');
     const calcRoi = document.getElementById('calc-roi');
 
     const HOURLY_RATE = 100;
-    const DEVELOPER_COST = 150000;
     const GLUE_COST = 30000;
     const WEEKS_PER_YEAR = 52;
+
+    // Initialize ROI Chart
+    let roiChart = null;
+    const roiChartCanvas = document.getElementById('roi-chart');
+
+    function initRoiChart() {
+        if (!roiChartCanvas || typeof Chart === 'undefined') return;
+
+        const ctx = roiChartCanvas.getContext('2d');
+
+        roiChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: Array.from({ length: 25 }, (_, i) => i), // 0-24 months
+                datasets: [
+                    {
+                        label: 'Cumulative Value',
+                        data: [],
+                        borderColor: '#a855f7',
+                        backgroundColor: 'rgba(168, 85, 247, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        pointHoverRadius: 4
+                    },
+                    {
+                        label: 'Investment',
+                        data: [],
+                        borderColor: '#f472b6',
+                        backgroundColor: 'transparent',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        pointRadius: 0,
+                        pointHoverRadius: 0
+                    },
+                    {
+                        label: 'Break-even',
+                        data: [],
+                        borderColor: '#22c55e',
+                        backgroundColor: '#22c55e',
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        pointStyle: 'circle',
+                        showLine: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 15, 30, 0.9)',
+                        titleColor: '#fff',
+                        bodyColor: 'rgba(255, 255, 255, 0.8)',
+                        borderColor: 'rgba(168, 85, 247, 0.3)',
+                        borderWidth: 1,
+                        padding: 12,
+                        displayColors: true,
+                        filter: (item) => item.raw !== null,
+                        callbacks: {
+                            title: (items) => `Month ${items[0].label}`,
+                            label: (item) => {
+                                const value = item.raw;
+                                if (value === null) return null;
+                                if (item.dataset.label === 'Break-even') {
+                                    return '✓ Break-even reached!';
+                                }
+                                return `${item.dataset.label}: $${value.toLocaleString()}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            color: 'rgba(255, 255, 255, 0.4)',
+                            font: { size: 10 },
+                            maxTicksLimit: 7,
+                            callback: (val) => val === 0 ? 'Now' : `${val}mo`
+                        }
+                    },
+                    y: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            color: 'rgba(255, 255, 255, 0.4)',
+                            font: { size: 10 },
+                            callback: (val) => {
+                                if (val >= 1000000) return '$' + (val / 1000000).toFixed(1) + 'M';
+                                if (val >= 1000) return '$' + (val / 1000).toFixed(0) + 'K';
+                                return '$' + val;
+                            }
+                        },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
 
     function calculateDemoROI() {
         if (!calcTeam || !calcDeal || !calcHours) return;
@@ -280,25 +397,104 @@ document.addEventListener('DOMContentLoaded', function() {
         if (calcTeamValue) calcTeamValue.textContent = teamSize;
         if (calcHoursValue) calcHoursValue.textContent = hoursWasted + ' hrs';
 
+        // Calculate monthly value generation
         const timeSavedPerWeek = hoursWasted * 0.7 * teamSize;
-        const timeSavedAnnual = Math.round(timeSavedPerWeek * WEEKS_PER_YEAR);
-        const productivityValue = timeSavedAnnual * HOURLY_RATE;
-        const devSavings = DEVELOPER_COST - GLUE_COST;
-        const totalValue = productivityValue + devSavings;
-        const roi = Math.round((totalValue / GLUE_COST) * 100);
+        const monthlyValue = Math.round((timeSavedPerWeek * (WEEKS_PER_YEAR / 12)) * HOURLY_RATE);
 
-        if (calcTime) calcTime.textContent = timeSavedAnnual.toLocaleString() + ' hours';
-        if (calcProductivity) calcProductivity.textContent = '$' + productivityValue.toLocaleString();
-        if (calcDev) calcDev.textContent = '$' + devSavings.toLocaleString();
+        // Generate chart data for 24 months
+        const cumulativeValues = [];
+        const investmentLine = [];
+        let breakEvenMonth = null;
+
+        for (let month = 0; month <= 24; month++) {
+            const cumulative = month * monthlyValue;
+            cumulativeValues.push(cumulative);
+            investmentLine.push(GLUE_COST);
+
+            if (breakEvenMonth === null && cumulative >= GLUE_COST) {
+                breakEvenMonth = month;
+            }
+        }
+
+        // Create break-even point data (sparse array with only the break-even point)
+        const breakEvenData = new Array(25).fill(null);
+        if (breakEvenMonth !== null && breakEvenMonth <= 24) {
+            breakEvenData[breakEvenMonth] = GLUE_COST;
+        }
+
+        // Initialize chart if needed, then update
+        if (!roiChart && roiChartCanvas && typeof Chart !== 'undefined') {
+            initRoiChart();
+        }
+        if (roiChart) {
+            roiChart.data.datasets[0].data = cumulativeValues;
+            roiChart.data.datasets[1].data = investmentLine;
+            roiChart.data.datasets[2].data = breakEvenData;
+            roiChart.update('none');
+        }
+
+        // Calculate final values
+        const totalValue24Mo = cumulativeValues[24];
+        const roi = Math.round(((totalValue24Mo - GLUE_COST) / GLUE_COST) * 100);
+
+        // Update UI
+        if (calcBreakeven) {
+            calcBreakeven.textContent = breakEvenMonth
+                ? `Month ${breakEvenMonth}`
+                : 'Month 1';
+        }
+        if (calcProductivity) calcProductivity.textContent = '$' + totalValue24Mo.toLocaleString();
         if (calcRoi) calcRoi.textContent = roi.toLocaleString() + '%';
     }
 
+    // Initialize chart when ROI panel becomes visible
+    const roiPanel = document.getElementById('demo-roi');
+
+    function tryInitChart() {
+        if (!roiChart && roiChartCanvas && typeof Chart !== 'undefined') {
+            initRoiChart();
+            calculateDemoROI();
+        } else if (roiChart) {
+            calculateDemoROI();
+        }
+    }
+
+    // Expose globally for activateTab to use
+    window.initRoiChartNow = tryInitChart;
+
+    // Watch for ROI panel becoming active
+    if (roiPanel) {
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributeName === 'class' && roiPanel.classList.contains('active')) {
+                    setTimeout(tryInitChart, 50);
+                }
+            });
+        });
+        observer.observe(roiPanel, { attributes: true });
+    }
+
+    // ROI tab click handler - most reliable method
+    const roiTab = document.querySelector('[data-tab="roi"]');
+    if (roiTab) {
+        roiTab.addEventListener('click', () => {
+            setTimeout(tryInitChart, 100);
+            setTimeout(tryInitChart, 300); // Backup call
+        });
+    }
+
+    // Input handlers
     if (calcTeam) calcTeam.addEventListener('input', calculateDemoROI);
     if (calcDeal) calcDeal.addEventListener('input', calculateDemoROI);
     if (calcHours) calcHours.addEventListener('input', calculateDemoROI);
     if (calcSolution) calcSolution.addEventListener('change', calculateDemoROI);
 
-    calculateDemoROI();
+    // Initialize on page load if ROI panel is visible
+    setTimeout(() => {
+        if (roiPanel && roiPanel.classList.contains('active')) {
+            tryInitChart();
+        }
+    }, 500);
 
     // ==========================================================================
     // Work-back Planner Interactivity
