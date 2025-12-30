@@ -477,6 +477,44 @@ p {
     background: radial-gradient(ellipse at center, rgba(99, 102, 241, 0.08) 0%, transparent 60%);
 }
 
+/* Stripe-inspired Gradient Background */
+.hero-mesh {
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 120%;
+    height: 140%;
+    pointer-events: none;
+    transform: skewY(-12deg);
+    transform-origin: top right;
+    background:
+        radial-gradient(ellipse 80% 50% at 70% 20%, rgba(168, 85, 247, 0.4) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 40% at 30% 70%, rgba(236, 72, 153, 0.35) 0%, transparent 50%),
+        radial-gradient(ellipse 50% 50% at 80% 60%, rgba(99, 102, 241, 0.3) 0%, transparent 50%);
+    animation: meshShift 20s ease-in-out infinite;
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
+}
+
+.mesh-gradient {
+    display: none;
+}
+
+@keyframes meshShift {
+    0%, 100% {
+        background:
+            radial-gradient(ellipse 80% 50% at 70% 20%, rgba(168, 85, 247, 0.4) 0%, transparent 50%),
+            radial-gradient(ellipse 60% 40% at 30% 70%, rgba(236, 72, 153, 0.35) 0%, transparent 50%),
+            radial-gradient(ellipse 50% 50% at 80% 60%, rgba(99, 102, 241, 0.3) 0%, transparent 50%);
+    }
+    50% {
+        background:
+            radial-gradient(ellipse 80% 50% at 60% 30%, rgba(168, 85, 247, 0.35) 0%, transparent 50%),
+            radial-gradient(ellipse 60% 40% at 40% 60%, rgba(236, 72, 153, 0.4) 0%, transparent 50%),
+            radial-gradient(ellipse 50% 50% at 70% 50%, rgba(99, 102, 241, 0.35) 0%, transparent 50%);
+    }
+}
+
 .hero-grid-pattern {
     position: absolute;
     inset: 0;
