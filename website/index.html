@@ -24,11 +24,8 @@
     <!-- Navigation -->
     <nav class="nav" role="navigation" aria-label="Main navigation">
         <div class="nav-container">
-            <a href="#" class="logo has-lou" aria-label="Gloo - Go to homepage">
+            <a href="#" class="logo" aria-label="Gloo - Go to homepage">
                 <img src="/images/gloo-logo.png" alt="Gloo" class="logo-img">
-                <span class="lou-blob">
-                    <img src="/Logo/Lou.png" alt="Lou" class="lou-img">
-                </span>
             </a>
             <div class="nav-links" role="menubar">
                 <a href="tools/" class="nav-link" role="menuitem">Our Tools</a>
@@ -48,7 +45,7 @@
                 </div>
                 <a href="#how-it-works" class="nav-link" role="menuitem">How It Works</a>
                 <a href="#case-study" class="nav-link" role="menuitem">Results</a>
-                <a href="#contact" class="btn btn-nav" role="menuitem">Book a Call</a>
+                <a href="#contact" class="btn btn-nav" role="menuitem"><span>Book a Call</span></a>
             </div>
             <button class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">
                 <span></span>
@@ -111,22 +108,6 @@
                         Book Intro Call
                     </a>
                 </div>
-                <div class="hero-stats" data-animate="fade-up" data-delay="400">
-                    <div class="hero-stat">
-                        <span class="hero-stat-number" data-count="2400000">$0</span>
-                        <span class="hero-stat-label">Revenue Unlocked</span>
-                    </div>
-                    <div class="hero-stat-divider"></div>
-                    <div class="hero-stat">
-                        <span class="hero-stat-number" data-count="3">0</span>
-                        <span class="hero-stat-label">Week Delivery</span>
-                    </div>
-                    <div class="hero-stat-divider"></div>
-                    <div class="hero-stat">
-                        <span class="hero-stat-number" data-count="89" data-suffix="%">0%</span>
-                        <span class="hero-stat-label">Tool Adoption</span>
-                    </div>
-                </div>
             </div>
             <div class="hero-visual" data-animate="fade-up" data-delay="200">
                 <div class="hero-cube-container">
@@ -148,52 +129,67 @@
         </div>
     </section>
 
-    <!-- Value Props Marquee -->
-    <section class="logos-section">
-        <div class="logo-marquee">
-            <div class="marquee-track">
-                <div class="logo-item">3-Week Delivery</div>
-                <div class="logo-item value-divider">—</div>
-                <div class="logo-item">89% Adoption Rate</div>
-                <div class="logo-item value-divider">—</div>
-                <div class="logo-item">Built For Your Workflow</div>
-                <div class="logo-item value-divider">—</div>
-                <div class="logo-item">No Long-term Contracts</div>
-                <div class="logo-item value-divider">—</div>
-                <div class="logo-item">Ongoing Support</div>
-                <div class="logo-item value-divider">—</div>
-                <div class="logo-item">3-Week Delivery</div>
-                <div class="logo-item value-divider">—</div>
-                <div class="logo-item">89% Adoption Rate</div>
-                <div class="logo-item value-divider">—</div>
-                <div class="logo-item">Built For Your Workflow</div>
-                <div class="logo-item value-divider">—</div>
-                <div class="logo-item">No Long-term Contracts</div>
-                <div class="logo-item value-divider">—</div>
-                <div class="logo-item">Ongoing Support</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Results Section -->
-    <section class="results">
+    <!-- What We Do Section - Timeline Layout -->
+    <section class="what-we-do" id="what-we-do">
         <div class="container">
-            <div class="results-grid">
-                <div class="result-card glass" data-animate="fade-up">
-                    <span class="result-number" data-count="3" data-suffix="x">0x</span>
-                    <span class="result-label">Faster than traditional development</span>
+            <div class="section-header center" data-animate="fade-up">
+                <span class="section-label">What We Do</span>
+                <h2>We <span class="text-gradient">build</span> tools you've been <span class="text-gradient">wishing</span> for.</h2>
+            </div>
+
+            <div class="process-layout">
+                <!-- Timeline on Left -->
+                <div class="process-timeline">
+                    <!-- Step 1 -->
+                    <div class="timeline-step" data-animate="fade-up">
+                        <div class="step-marker">
+                            <span class="step-number">1</span>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <h3>Discover</h3>
+                            <p>We embed with your team to understand exactly how you work—the spreadsheets, the workarounds, the "tribal knowledge" that lives in people's heads.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="timeline-step" data-animate="fade-up" data-delay="100">
+                        <div class="step-marker">
+                            <span class="step-number">2</span>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-content">
+                            <h3>Build</h3>
+                            <p>Custom tools designed around your process—not the other way around. No config, no compromise, no shelfware.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="timeline-step" data-animate="fade-up" data-delay="200">
+                        <div class="step-marker">
+                            <span class="step-number">3</span>
+                        </div>
+                        <div class="step-content">
+                            <h3>Ship</h3>
+                            <p>Working product in your hands in days. Trained team. Live data. Day one ready.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="result-card glass" data-animate="fade-up" data-delay="100">
-                    <span class="result-number" data-count="150" data-prefix="$" data-suffix="K+">$0K+</span>
-                    <span class="result-label">Saved vs. hiring a developer</span>
-                </div>
-                <div class="result-card glass" data-animate="fade-up" data-delay="200">
-                    <span class="result-number" data-count="89" data-suffix="%">0%</span>
-                    <span class="result-label">Average tool adoption rate</span>
-                </div>
-                <div class="result-card glass" data-animate="fade-up" data-delay="300">
-                    <span class="result-number" data-count="2" data-suffix=" weeks">0 weeks</span>
-                    <span class="result-label">Time to first working tool</span>
+
+                <!-- Prototype Images on Right (sticky) -->
+                <div class="process-visual">
+                    <div class="prototype-stack" data-animate="fade-up">
+                        <div class="prototype-frame prototype-back glass">
+                            <img src="images/prototype2.png" alt="Gloo Prototype - Analytics Dashboard">
+                        </div>
+                        <div class="prototype-frame prototype-front glass">
+                            <img src="images/prototype 1.png" alt="Gloo Prototype - Account Management Tool">
+                        </div>
+                        <div class="prototype-dots">
+                            <button class="prototype-dot active" data-index="0" aria-label="View first prototype"></button>
+                            <button class="prototype-dot" data-index="1" aria-label="View second prototype"></button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -204,7 +200,8 @@
         <div class="container">
             <div class="section-header center" data-animate="fade-up">
                 <span class="section-label">The Problem</span>
-                <h2>Stop compromising.<br><span class="text-gradient">Start building.</span></h2>
+                <h2>Your vision. Your terms.<br><span class="text-gradient">Your build.</span></h2>
+                <p class="section-subheadline">Your team is drowning in spreadsheets, expensive software sits unused, and growth opportunities slip through the cracks.</p>
             </div>
 
             <div class="comparison-grid" data-animate="fade-up" data-delay="100">
@@ -213,28 +210,115 @@
                         <span class="comparison-label">The Old Way</span>
                     </div>
                     <div class="comparison-content">
-                        <div class="old-way-visual">
-                            <div class="spreadsheet-mess">
-                                <div class="spreadsheet-row header">
-                                    <span>Account</span><span>Q1</span><span>Q2</span><span>Status</span>
+                        <!-- Visual chaos: floating error elements -->
+                        <div class="old-way-visual chaos-container">
+                            <div class="chaos-element error-popup" style="--delay: 0s; --x: 20%; --y: 10%;">
+                                <span class="error-icon">⚠</span> #REF! Error
+                            </div>
+                            <div class="chaos-element error-popup" style="--delay: 0.5s; --x: 60%; --y: 25%;">
+                                <span class="error-icon">✕</span> File not found
+                            </div>
+                            <div class="chaos-element tab-float" style="--delay: 0.3s; --x: 10%; --y: 50%;">
+                                Q3_data_FINAL_v3.xlsx
+                            </div>
+                            <div class="chaos-element tab-float" style="--delay: 0.8s; --x: 55%; --y: 60%;">
+                                accounts_backup_OLD.csv
+                            </div>
+                            <div class="chaos-element error-popup" style="--delay: 1s; --x: 35%; --y: 75%;">
+                                <span class="error-icon">⚠</span> Circular reference
+                            </div>
+                        </div>
+
+                        <!-- Pain metrics -->
+                        <div class="pain-metrics">
+                            <div class="pain-metric">
+                                <div class="pain-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <polyline points="12 6 12 12 16 14"/>
+                                    </svg>
                                 </div>
-                                <div class="spreadsheet-row">
-                                    <span>Acme</span><span>$50K</span><span class="error">#REF!</span><span>???</span>
+                                <div class="pain-text">
+                                    <span class="pain-stat">4+ hours/week</span>
+                                    <span class="pain-desc">lost to manual data entry</span>
                                 </div>
-                                <div class="spreadsheet-row">
-                                    <span>Tech Inc</span><span class="error">$NaN</span><span>$30K</span><span>Maybe</span>
+                            </div>
+                            <div class="pain-metric">
+                                <div class="pain-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                                        <line x1="8" y1="21" x2="16" y2="21"/>
+                                        <line x1="12" y1="17" x2="12" y2="21"/>
+                                    </svg>
                                 </div>
-                                <div class="spreadsheet-row">
-                                    <span class="error">MISSING</span><span>$20K</span><span>$25K</span><span>IDK</span>
+                                <div class="pain-text">
+                                    <span class="pain-stat">Gaps in your stack</span>
+                                    <span class="pain-desc">generic tools missing key features</span>
                                 </div>
                             </div>
                         </div>
-                        <ul class="comparison-list">
-                            <li><span class="icon-x">✕</span> Spreadsheets that break every quarter</li>
-                            <li><span class="icon-x">✕</span> $50K+ for software you won't use</li>
-                            <li><span class="icon-x">✕</span> 6 months to hire a developer</li>
-                            <li><span class="icon-x">✕</span> Tribal knowledge that walks out the door</li>
+
+                        <!-- Quantified pain points -->
+                        <ul class="comparison-list enhanced">
+                            <li>
+                                <span class="pain-list-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                                        <polyline points="14 2 14 8 20 8"/>
+                                        <line x1="9" y1="15" x2="15" y2="15"/>
+                                    </svg>
+                                </span>
+                                <div>
+                                    <strong>One-size-fits-all tools</strong> that don't fit your workflow—you fill the gaps manually
+                                </div>
+                            </li>
+                            <li>
+                                <span class="pain-list-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="12" y1="1" x2="12" y2="23"/>
+                                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                                    </svg>
+                                </span>
+                                <div>
+                                    <strong>$48K/year</strong> enterprise tools with features you'll never use—missing the ones you need
+                                </div>
+                            </li>
+                            <li>
+                                <span class="pain-list-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                        <line x1="16" y1="2" x2="16" y2="6"/>
+                                        <line x1="8" y1="2" x2="8" y2="6"/>
+                                        <line x1="3" y1="10" x2="21" y2="10"/>
+                                    </svg>
+                                </span>
+                                <div>
+                                    <strong>Workarounds everywhere</strong>—spreadsheets, exports, copy-paste to bridge the gaps
+                                </div>
+                            </li>
                         </ul>
+
+                        <!-- Timeline visual -->
+                        <div class="old-timeline">
+                            <div class="timeline-bar">
+                                <div class="timeline-segment" style="--width: 40%;">
+                                    <span>Implementation</span>
+                                    <small>6+ months</small>
+                                </div>
+                                <div class="timeline-segment waiting" style="--width: 60%;">
+                                    <span>Waiting for ROI</span>
+                                    <small>12+ months</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Frustrated quote -->
+                        <div class="frustrated-quote">
+                            <blockquote>
+                                "We spent 3 months onboarding a tool we stopped using after 6."
+                            </blockquote>
+                            <cite>— VP of Sales, B2B SaaS</cite>
+                        </div>
                     </div>
                 </div>
 
@@ -249,27 +333,132 @@
                         <span class="comparison-label gradient-text">The Gloo Way</span>
                     </div>
                     <div class="comparison-content">
+                        <!-- Clean mini-demo preview -->
                         <div class="glue-way-visual">
-                            <div class="glue-preview">
-                                <div class="glue-metric">
-                                    <span class="glue-metric-value">$2.4M</span>
-                                    <span class="glue-metric-label">Revenue Opportunity</span>
+                            <div class="glue-preview enhanced">
+                                <div class="glue-preview-header">
+                                    <span class="preview-dot"></span>
+                                    <span class="preview-dot"></span>
+                                    <span class="preview-dot"></span>
+                                    <span class="preview-title">Whitespace Analyzer</span>
                                 </div>
-                                <div class="glue-chart">
-                                    <div class="glue-bar" style="--height: 60%"></div>
-                                    <div class="glue-bar" style="--height: 80%"></div>
-                                    <div class="glue-bar active" style="--height: 95%"></div>
-                                    <div class="glue-bar" style="--height: 70%"></div>
+                                <div class="glue-preview-content">
+                                    <div class="glue-metric-row">
+                                        <!-- Left Column: Revenue + Chart -->
+                                        <div class="glue-metric-column">
+                                            <div class="glue-metric">
+                                                <span class="glue-metric-value">$2.4M</span>
+                                                <span class="glue-metric-label">Revenue Found</span>
+                                            </div>
+                                            <div class="glue-chart">
+                                                <div class="glue-bar" style="--height: 45%"></div>
+                                                <div class="glue-bar" style="--height: 65%"></div>
+                                                <div class="glue-bar" style="--height: 80%"></div>
+                                                <div class="glue-bar active" style="--height: 95%"></div>
+                                            </div>
+                                        </div>
+                                        <!-- Right Column: Expansion + Sparkline -->
+                                        <div class="glue-metric-column">
+                                            <div class="glue-metric">
+                                                <span class="glue-metric-value success">+34%</span>
+                                                <span class="glue-metric-label">Expansion Rate</span>
+                                            </div>
+                                            <div class="sparkline-container">
+                                                <svg class="sparkline" viewBox="0 0 200 50" preserveAspectRatio="none">
+                                                    <defs>
+                                                        <linearGradient id="sparkline-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                                            <stop offset="0%" style="stop-color:rgba(99, 102, 241, 0.4)"/>
+                                                            <stop offset="100%" style="stop-color:rgba(99, 102, 241, 0)"/>
+                                                        </linearGradient>
+                                                    </defs>
+                                                    <path class="sparkline-fill" d="M0,45 L20,42 L40,38 L60,40 L80,32 L100,28 L120,22 L140,18 L160,12 L180,8 L200,5 L200,50 L0,50 Z" fill="url(#sparkline-gradient)"/>
+                                                    <path class="sparkline-line" d="M0,45 L20,42 L40,38 L60,40 L80,32 L100,28 L120,22 L140,18 L160,12 L180,8 L200,5" fill="none" stroke="url(#sparkline-gradient-line)" stroke-width="2"/>
+                                                    <defs>
+                                                        <linearGradient id="sparkline-gradient-line" x1="0%" y1="0%" x2="100%" y2="0%">
+                                                            <stop offset="0%" style="stop-color:#6366f1"/>
+                                                            <stop offset="100%" style="stop-color:#ec4899"/>
+                                                        </linearGradient>
+                                                    </defs>
+                                                </svg>
+                                                <span class="sparkline-label">Growth Trend</span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <ul class="comparison-list">
-                            <li><span class="icon-check">✓</span> Custom tools built for your workflow</li>
-                            <li><span class="icon-check">✓</span> Working product in 2-3 weeks</li>
-                            <li><span class="icon-check">✓</span> Fraction of the cost of a developer</li>
-                            <li><span class="icon-check">✓</span> Tools your team actually adopts</li>
+
+                        <!-- Success metrics -->
+                        <div class="success-metrics">
+                            <div class="success-metric">
+                                <span class="success-value">89%</span>
+                                <span class="success-label">adoption rate</span>
+                            </div>
+                            <div class="success-metric">
+                                <span class="success-value">3 weeks</span>
+                                <span class="success-label">to first tool</span>
+                            </div>
+                            <div class="success-metric">
+                                <span class="success-value">$150K+</span>
+                                <span class="success-label">saved vs hiring</span>
+                            </div>
+                        </div>
+
+                        <!-- Benefits with icons -->
+                        <ul class="comparison-list enhanced gloo-list">
+                            <li>
+                                <span class="success-list-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                        <polyline points="22 4 12 14.01 9 11.01"/>
+                                    </svg>
+                                </span>
+                                <div>Custom tools built around <strong>your process</strong></div>
+                            </li>
+                            <li>
+                                <span class="success-list-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                                    </svg>
+                                </span>
+                                <div>Working product in <strong>2-3 weeks</strong>, not months</div>
+                            </li>
+                            <li>
+                                <span class="success-list-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="9" cy="7" r="4"/>
+                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                    </svg>
+                                </span>
+                                <div>Tools your team <strong>actually adopts</strong></div>
+                            </li>
                         </ul>
+
+                        <!-- Social proof quote -->
+                        <div class="social-proof-quote">
+                            <blockquote>
+                                "We found $400K in expansion opportunities we didn't know existed."
+                            </blockquote>
+                            <cite>— Head of CS, 200-person SaaS</cite>
+                        </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Use case teaser -->
+            <div class="use-case-teaser" data-animate="fade-up" data-delay="200">
+                <div class="teaser-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                </div>
+                <div class="teaser-content">
+                    <p class="teaser-before"><strong>Before:</strong> Account Managers at a 200-person company spent 4+ hours weekly hunting for data across spreadsheets.</p>
+                    <p class="teaser-after"><strong>After:</strong> One dashboard. Instant clarity. They now know exactly where to focus—and found $400K in opportunities in month one.</p>
                 </div>
             </div>
         </div>
