@@ -190,14 +190,41 @@ p {
     align-items: center;
     text-decoration: none;
     transition: opacity var(--transition-base);
+    position: relative;
+    overflow: hidden;
 }
 
 .logo:hover {
-    opacity: 0.8;
+    opacity: 1;
+}
+
+/* Shimmer effect on logo hover */
+.logo::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        transparent 0%,
+        rgba(99, 102, 241, 0.25) 40%,
+        rgba(236, 72, 153, 0.25) 60%,
+        transparent 100%
+    );
+    z-index: 1;
+    pointer-events: none;
+    transition: left 0s;
+}
+
+.logo:hover::before {
+    left: 100%;
+    transition: left 0.8s ease-in-out;
 }
 
 .logo-img {
-    height: 48px;
+    height: 52px;
     width: auto;
     display: block;
 }
@@ -219,11 +246,35 @@ p {
     font-weight: 500;
     color: var(--color-text-secondary);
     text-decoration: none;
-    transition: var(--transition-fast);
+    transition: color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+    position: relative;
+    padding: 0.5rem 0.875rem;
+    border-radius: var(--radius-full);
+}
+
+.nav-link::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-subtle);
+    border-radius: var(--radius-full);
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: -1;
 }
 
 .nav-link:hover {
     color: var(--color-text);
+}
+
+.nav-link:hover::before {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.nav-link:active {
+    transform: scale(0.97);
 }
 
 .btn {
@@ -851,15 +902,24 @@ p {
 
 .result-card {
     padding: var(--space-lg);
-    border-radius: var(--radius-lg);
+    border-radius: 20px;
     text-align: center;
+    border: 1px solid rgba(99, 102, 241, 0.08);
+    background: rgba(255, 255, 255, 0.8);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.result-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(99, 102, 241, 0.12);
 }
 
 .result-number {
     display: block;
     font-family: var(--font-display);
     font-size: 2.5rem;
-    font-weight: 700;
+    font-weight: 600;
+    letter-spacing: -0.02em;
     background: var(--gradient-primary);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -3881,6 +3941,63 @@ p {
     .cta-grid-pattern {
         animation: none;
     }
+}
+
+/* ==========================================================================
+   Easter Egg - Lou the Dog
+   ========================================================================== */
+
+/* Hidden paw print that appears on hover */
+.lou-paw {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    opacity: 0;
+    transform: scale(0.5) rotate(-15deg);
+    transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events: none;
+    z-index: 10;
+}
+
+.lou-paw svg {
+    width: 100%;
+    height: 100%;
+    fill: var(--color-primary);
+    filter: drop-shadow(0 2px 4px rgba(99, 102, 241, 0.3));
+}
+
+/* Paw appears on parent hover */
+.has-lou:hover .lou-paw {
+    opacity: 0.7;
+    transform: scale(1) rotate(0deg);
+}
+
+/* Paw locations */
+.lou-paw.paw-top-right {
+    top: -8px;
+    right: -8px;
+}
+
+.lou-paw.paw-bottom-left {
+    bottom: -6px;
+    left: -6px;
+}
+
+.lou-paw.paw-corner {
+    bottom: 8px;
+    right: 8px;
+}
+
+/* Special wiggle animation on extended hover */
+.has-lou:hover .lou-paw {
+    animation: pawWiggle 0.6s ease-in-out 0.3s;
+}
+
+@keyframes pawWiggle {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    25% { transform: scale(1.1) rotate(-8deg); }
+    50% { transform: scale(1) rotate(5deg); }
+    75% { transform: scale(1.05) rotate(-3deg); }
 }
 
 /* ==========================================================================
