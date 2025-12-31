@@ -6,27 +6,22 @@
       <stop offset="100%" style="stop-color:#ec4899" />
     </linearGradient>
   </defs>
-  <!-- Lou ghost shape with wavy bottom and small arms -->
-  <path d="M16 2
-    C22 2 27 6 27 12
-    L27 18
-    C27 19 28 20 28 21
-    C28 23 26 23 25 22
-    C25 24 24 26 22 26
-    C21 28 19 28 18 26
-    L16 28
-    L14 26
-    C13 28 11 28 10 26
-    C8 26 7 24 7 22
-    C6 23 4 23 4 21
-    C4 20 5 19 5 18
-    L5 12
-    C5 6 10 2 16 2Z"
+  <!-- Lou blob shape - organic with bumps -->
+  <path d="M16 3
+    C20 3 24 4 26 7
+    C28 10 28 13 27 16
+    C28 18 28 21 26 23
+    C24 26 21 27 18 27
+    C16 28 14 28 12 27
+    C9 26 6 24 5 21
+    C3 18 3 15 4 12
+    C4 9 3 7 5 5
+    C8 3 12 3 16 3Z"
     fill="url(#louGradient)"/>
   <!-- Left eye - curved arc -->
-  <path d="M10 12 Q12 10 14 12" stroke="#1e1b4b" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+  <path d="M10 13 Q11.5 11 13 13" stroke="#1e1b4b" stroke-width="1.8" stroke-linecap="round" fill="none"/>
   <!-- Right eye - curved arc -->
-  <path d="M18 12 Q20 10 22 12" stroke="#1e1b4b" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+  <path d="M19 13 Q20.5 11 22 13" stroke="#1e1b4b" stroke-width="1.8" stroke-linecap="round" fill="none"/>
   <!-- Smile -->
-  <path d="M11 16 Q16 20 21 16" stroke="#1e1b4b" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+  <path d="M12 18 Q16 22 20 18" stroke="#1e1b4b" stroke-width="1.8" stroke-linecap="round" fill="none"/>
 </svg>

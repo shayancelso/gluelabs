@@ -2845,6 +2845,34 @@ p {
     border-radius: var(--radius-full);
 }
 
+/* Comparison Carousel Dots (mobile only) */
+.comparison-dots {
+    display: none;
+    justify-content: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+}
+
+.comparison-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(99, 102, 241, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+.comparison-dot.active {
+    background: var(--color-primary);
+    transform: scale(1.2);
+}
+
+.comparison-dot:hover {
+    background: var(--color-primary);
+}
+
 /* Section Subheadline */
 .section-subheadline {
     font-size: 1.15rem;
@@ -5743,7 +5771,31 @@ p {
     }
 
     .comparison-grid {
-        grid-template-columns: 1fr;
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        gap: var(--space-md);
+        padding-bottom: var(--space-md);
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .comparison-grid::-webkit-scrollbar {
+        display: none;
+    }
+
+    .comparison-card {
+        flex: 0 0 85%;
+        scroll-snap-align: center;
+    }
+
+    .comparison-divider {
+        display: none;
+    }
+
+    .comparison-dots {
+        display: flex;
     }
 
     .process-layout {
