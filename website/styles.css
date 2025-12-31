@@ -8086,79 +8086,42 @@ p {
 }
 
 /* ==========================================================================
-   CTA Embedded Form
+   CTA Two-Column Layout with Form Card
    ========================================================================== */
 
-.cta-form-container {
-    max-width: 700px;
-    margin: var(--space-xl) auto 0;
+.cta-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3xl);
+    align-items: center;
 }
 
-.cta-form {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
+/* Left column: Copy */
+.cta-copy {
+    text-align: left;
 }
 
-.cta-form .form-row {
-    display: flex;
-    gap: var(--space-sm);
+.cta-copy h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.2;
+    margin-bottom: var(--space-lg);
 }
 
-.cta-form input {
-    flex: 1;
-    padding: 1rem 1.25rem;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: var(--radius-md);
-    font-size: 1rem;
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--color-text);
-    transition: all 0.2s ease;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-}
-
-.cta-form input:focus {
-    outline: none;
-    border-color: var(--color-primary);
-    background: rgba(255, 255, 255, 0.12);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
-}
-
-.cta-form input::placeholder {
-    color: var(--color-text-muted);
-}
-
-.cta-form .btn {
-    align-self: center;
-    min-width: 200px;
-}
-
-.cta-form-container .form-success {
-    text-align: center;
-    padding: var(--space-xl) 0;
-}
-
-.cta-form-container .form-success svg {
-    color: #10b981;
-    margin-bottom: var(--space-md);
-}
-
-.cta-form-container .form-success h4 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: var(--space-xs);
-    color: var(--color-text);
-}
-
-.cta-form-container .form-success p {
+.cta-copy > p {
+    font-size: 1.125rem;
     color: var(--color-text-secondary);
-    font-size: 1rem;
+    margin-bottom: var(--space-md);
+    max-width: 450px;
+}
+
+.cta-copy .cta-trust {
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-sm);
 }
 
 .cta-email {
     display: inline-block;
-    margin-top: var(--space-md);
     color: var(--color-text-secondary);
     font-size: 0.9rem;
     text-decoration: none;
@@ -8169,13 +8132,106 @@ p {
     color: var(--color-primary);
 }
 
-/* Mobile: Stack form inputs */
+/* Right column: Form Card */
+.cta-form-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: var(--radius-xl);
+    padding: var(--space-xl);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.cta-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.cta-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.cta-form label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1a1a2e;
+}
+
+.cta-form input,
+.cta-form textarea {
+    padding: 0.875rem 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    background: #f9fafb;
+    color: #1a1a2e;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.cta-form input:focus,
+.cta-form textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.cta-form input::placeholder,
+.cta-form textarea::placeholder {
+    color: #9ca3af;
+}
+
+.cta-form textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.btn-full {
+    width: 100%;
+    justify-content: center;
+    margin-top: var(--space-sm);
+}
+
+.cta-form-card .form-success {
+    text-align: center;
+    padding: var(--space-xl) 0;
+}
+
+.cta-form-card .form-success svg {
+    color: #10b981;
+    margin-bottom: var(--space-md);
+}
+
+.cta-form-card .form-success h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: var(--space-xs);
+    color: #1a1a2e;
+}
+
+.cta-form-card .form-success p {
+    color: #6b7280;
+    font-size: 0.95rem;
+}
+
+/* Mobile: Stack layout */
 @media (max-width: 768px) {
-    .cta-form .form-row {
-        flex-direction: column;
+    .cta-layout {
+        grid-template-columns: 1fr;
+        gap: var(--space-xl);
     }
 
-    .cta-form .btn {
-        width: 100%;
+    .cta-copy {
+        text-align: center;
+    }
+
+    .cta-copy > p {
+        max-width: 100%;
+    }
+
+    .cta-form-card {
+        padding: var(--space-lg);
     }
 }

@@ -1112,18 +1112,35 @@
             <div class="cta-grid-pattern"></div>
         </div>
         <div class="container">
-            <div class="cta-content" data-animate="fade-up">
-                <h2 id="cta-heading">Let's build something that<br><span class="text-gradient">works for you.</span></h2>
-                <p>Let's talk about what you're building. 30-minute intro call. No pressure, no pitch deck.</p>
+            <div class="cta-layout" data-animate="fade-up">
+                <!-- Left: Copy -->
+                <div class="cta-copy">
+                    <h2 id="cta-heading">Let's build something that <span class="text-gradient">works for you.</span></h2>
+                    <p>Let's talk about what you're building. 30-minute intro call. No pressure, no pitch deck.</p>
+                    <p class="cta-trust">No commitment required. Usually respond within 24 hours.</p>
+                    <a href="mailto:hello@builtbygloo.com" class="cta-email">Or email us at hello@builtbygloo.com</a>
+                </div>
 
-                <div class="cta-form-container">
+                <!-- Right: Form Card -->
+                <div class="cta-form-card">
                     <form action="https://formspree.io/f/xrebzqda" method="POST" class="cta-form" id="ctaForm">
-                        <div class="form-row">
-                            <input type="text" name="name" placeholder="Your Name" required>
-                            <input type="email" name="email" placeholder="Work Email" required>
-                            <input type="text" name="company" placeholder="Company" required>
+                        <div class="form-group">
+                            <label for="name">Name*</label>
+                            <input type="text" id="name" name="name" required>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-large">
+                        <div class="form-group">
+                            <label for="email">Work Email*</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="company">Company*</label>
+                            <input type="text" id="company" name="company" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">What are you looking to build?</label>
+                            <textarea id="message" name="message" rows="3" placeholder="Tell us about your project..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full">
                             <span>Request a Call</span>
                             <svg class="btn-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none">
                                 <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1139,9 +1156,6 @@
                         <p>Expect to hear from us within 24 hours.</p>
                     </div>
                 </div>
-
-                <p class="cta-trust">No commitment required. Usually respond within 24 hours.</p>
-                <a href="mailto:hello@builtbygloo.com" class="cta-email">Or email us at hello@builtbygloo.com</a>
             </div>
         </div>
     </section>
