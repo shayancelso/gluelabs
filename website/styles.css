@@ -4428,6 +4428,359 @@ p {
 }
 
 /* ==========================================================================
+   Results Showcase - Case Study Section
+   ========================================================================== */
+
+.results-showcase {
+    padding: var(--space-3xl) 0;
+    background: linear-gradient(180deg, #ffffff 0%, #f8f5ff 100%);
+}
+
+.results-layout {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3xl);
+    margin-top: var(--space-2xl);
+}
+
+/* Tool Mockup - Left side */
+.tool-mockup {
+    flex: 0 0 480px;
+}
+
+.mockup-window {
+    background: white;
+    border-radius: 16px;
+    box-shadow:
+        0 25px 80px rgba(124, 58, 237, 0.15),
+        0 10px 30px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    border: 1px solid rgba(124, 58, 237, 0.1);
+}
+
+.mockup-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 18px;
+    background: linear-gradient(180deg, #f8f8f8 0%, #f0f0f0 100%);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.mockup-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.mockup-dot.red { background: #ff5f57; }
+.mockup-dot.yellow { background: #ffbd2e; }
+.mockup-dot.green { background: #28c840; }
+
+.mockup-title {
+    margin-left: auto;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+}
+
+.mockup-body {
+    padding: 24px;
+}
+
+.mock-section-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+
+.mock-section-label:first-child {
+    margin-top: 0;
+}
+
+.mock-field {
+    height: 38px;
+    background: linear-gradient(90deg, #f0f0f0 0%, #e8e8e8 50%, #f0f0f0 100%);
+    background-size: 200% 100%;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    animation: shimmer 2s ease-in-out infinite;
+}
+
+.mock-field.short {
+    width: 65%;
+}
+
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.mock-checkbox-group {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.mock-checkbox {
+    width: 80px;
+    height: 32px;
+    background: #f0f0f0;
+    border-radius: 6px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.mock-checkbox.checked {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.15) 0%, rgba(192, 38, 211, 0.15) 100%);
+    border: 2px solid rgba(124, 58, 237, 0.3);
+}
+
+.mock-checkbox.checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--color-primary);
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.mock-progress {
+    height: 10px;
+    background: #f0f0f0;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.mock-progress-bar {
+    height: 100%;
+    width: 78%;
+    background: var(--gradient-primary);
+    border-radius: 5px;
+    animation: progress-pulse 2s ease-in-out infinite;
+}
+
+@keyframes progress-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* Results Content - Right side */
+.results-content {
+    flex: 1;
+}
+
+.results-content h3 {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: var(--space-sm);
+}
+
+.results-desc {
+    font-size: 1.1rem;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    margin-bottom: var(--space-lg);
+}
+
+.results-stats {
+    display: flex;
+    gap: var(--space-xl);
+    margin-bottom: var(--space-lg);
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 3rem;
+    font-weight: 800;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    margin-bottom: 6px;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    font-weight: 500;
+}
+
+.results-footnote {
+    font-size: 0.95rem;
+    color: var(--color-text-secondary);
+    font-style: italic;
+    padding-top: var(--space-md);
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Workflow Timeline */
+.workflow-timeline {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--space-2xl);
+    padding-top: var(--space-2xl);
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.workflow-step {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    padding: 0 var(--space-sm);
+}
+
+.step-icon {
+    width: 70px;
+    height: 70px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--space-md);
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 8px 30px rgba(124, 58, 237, 0.15);
+    border: 2px solid rgba(124, 58, 237, 0.1);
+    animation: step-activate 8s ease-in-out infinite;
+}
+
+/* Sequential activation - each step lights up in order */
+.workflow-step:nth-child(1) .step-icon { animation-delay: 0s; }
+.workflow-step:nth-child(2) .step-icon { animation-delay: 2s; }
+.workflow-step:nth-child(3) .step-icon { animation-delay: 4s; }
+.workflow-step:nth-child(4) .step-icon { animation-delay: 6s; }
+
+@keyframes step-activate {
+    0%, 5% {
+        transform: scale(1);
+        box-shadow: 0 8px 30px rgba(124, 58, 237, 0.15);
+    }
+    10%, 20% {
+        transform: scale(1.15);
+        box-shadow: 0 0 40px rgba(124, 58, 237, 0.5), 0 0 60px rgba(192, 38, 211, 0.3);
+    }
+    30%, 100% {
+        transform: scale(1);
+        box-shadow: 0 8px 30px rgba(124, 58, 237, 0.15);
+    }
+}
+
+.step-icon svg {
+    stroke: url(#icon-gradient);
+}
+
+/* Gradient for SVG icons */
+.workflow-timeline {
+    --icon-gradient-start: #7c3aed;
+    --icon-gradient-end: #c026d3;
+}
+
+.step-icon svg {
+    stroke: var(--color-primary);
+}
+
+.step-icon svg path,
+.step-icon svg circle {
+    stroke: url(#workflow-gradient);
+}
+
+/* Fallback gradient effect using filter */
+.step-icon svg {
+    filter: drop-shadow(0 0 0 transparent);
+    stroke: #7c3aed;
+}
+
+.step-icon {
+    background: linear-gradient(white, white) padding-box,
+                var(--gradient-primary) border-box;
+    border: 2px solid transparent;
+}
+
+.step-logo {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+}
+
+.step-icon-success {
+    background: linear-gradient(white, white) padding-box,
+                linear-gradient(135deg, #16a34a, #22c55e) border-box;
+}
+
+.step-connector {
+    position: absolute;
+    top: 35px;
+    left: calc(50% + 35px);
+    width: calc(100% - 70px);
+    height: 3px;
+    background: linear-gradient(90deg, rgba(124, 58, 237, 0.2), rgba(192, 38, 211, 0.2));
+    z-index: 1;
+    overflow: hidden;
+}
+
+.step-connector::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+    animation: connector-flow 8s ease-in-out infinite;
+}
+
+/* Connectors flow after their corresponding circle activates */
+.workflow-step:nth-child(1) .step-connector::after { animation-delay: 0.8s; }
+.workflow-step:nth-child(2) .step-connector::after { animation-delay: 2.8s; }
+.workflow-step:nth-child(3) .step-connector::after { animation-delay: 4.8s; }
+
+@keyframes connector-flow {
+    0%, 5% { left: -100%; opacity: 0; }
+    8% { opacity: 1; }
+    15%, 20% { left: 100%; opacity: 1; }
+    25%, 100% { left: 100%; opacity: 0; }
+}
+
+.workflow-step:last-child .step-connector {
+    display: none;
+}
+
+.workflow-step h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 4px;
+    opacity: 0.9;
+    transition: opacity 0.3s ease;
+}
+
+.workflow-step:hover h4 {
+    opacity: 1;
+}
+
+.workflow-step p {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    line-height: 1.4;
+}
+
+/* ==========================================================================
    Services Section
    ========================================================================== */
 
@@ -6604,6 +6957,74 @@ p {
 
     .orbit-desc {
         display: none;
+    }
+
+    /* Results Showcase Mobile */
+    .results-layout {
+        flex-direction: column;
+        gap: var(--space-xl);
+    }
+
+    .tool-mockup {
+        flex: none;
+        width: 100%;
+        max-width: 360px;
+    }
+
+    .mockup-body {
+        padding: 16px;
+    }
+
+    .results-content {
+        text-align: center;
+    }
+
+    .results-content h3 {
+        font-size: 1.5rem;
+    }
+
+    .results-stats {
+        justify-content: center;
+        gap: var(--space-lg);
+    }
+
+    .stat-number {
+        font-size: 2.25rem;
+    }
+
+    .results-footnote {
+        text-align: center;
+    }
+
+    /* Workflow Timeline Mobile */
+    .workflow-timeline {
+        flex-direction: column;
+        gap: var(--space-lg);
+        align-items: center;
+    }
+
+    .workflow-step {
+        display: flex;
+        align-items: center;
+        gap: var(--space-md);
+        text-align: left;
+        width: 100%;
+        max-width: 280px;
+    }
+
+    .step-icon {
+        flex-shrink: 0;
+        width: 50px;
+        height: 50px;
+        margin: 0;
+    }
+
+    .step-connector {
+        display: none;
+    }
+
+    .workflow-step h4 {
+        font-size: 0.85rem;
     }
 
     /* Services Grid Mobile */
