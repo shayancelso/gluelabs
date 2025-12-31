@@ -4776,6 +4776,342 @@ p {
 }
 
 /* ==========================================================================
+   Solutions Grid Section - Stripe Style
+   ========================================================================== */
+
+.solutions-section {
+    padding: var(--space-3xl) 0;
+    background: var(--color-bg);
+    overflow: hidden;
+}
+
+.solutions-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3xl);
+    align-items: center;
+}
+
+.solutions-content h2 {
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    line-height: 1.2;
+    margin-bottom: var(--space-md);
+}
+
+.solutions-content p {
+    font-size: 1.1rem;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    margin-bottom: var(--space-lg);
+}
+
+.solutions-bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.solutions-bullets li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) 0;
+    font-size: 1rem;
+    color: var(--color-text);
+}
+
+.bullet-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--gradient-primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+/* Solutions Grid Wrapper */
+.solutions-grid-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin-left: auto;
+}
+
+.connection-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.connection-path {
+    stroke-dasharray: 150;
+    stroke-dashoffset: 150;
+    opacity: 0;
+}
+
+/* Animate connection paths in sequence with the services */
+.connection-path.path-1 {
+    animation: draw-line 12s linear infinite;
+    animation-delay: 0s;
+}
+.connection-path.path-2 {
+    animation: draw-line 12s linear infinite;
+    animation-delay: 2s;
+}
+.connection-path.path-3 {
+    animation: draw-line 12s linear infinite;
+    animation-delay: 4s;
+}
+.connection-path.path-4 {
+    animation: draw-line 12s linear infinite;
+    animation-delay: 6s;
+}
+.connection-path.path-5 {
+    animation: draw-line 12s linear infinite;
+    animation-delay: 8s;
+}
+.connection-path.path-6 {
+    animation: draw-line 12s linear infinite;
+    animation-delay: 10s;
+}
+
+@keyframes draw-line {
+    0%, 5% {
+        stroke-dashoffset: 150;
+        opacity: 0;
+    }
+    8% {
+        opacity: 1;
+    }
+    15%, 16.66% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+    }
+    20% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 0;
+        stroke-dashoffset: 0;
+    }
+}
+
+/* Solutions Grid */
+.solutions-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    z-index: 2;
+}
+
+.grid-row {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+/* Stagger the rows */
+.grid-row.row-2,
+.grid-row.row-4 {
+    margin-left: 30px;
+}
+
+/* Solution Cards */
+.solution-card {
+    width: 72px;
+    height: 72px;
+    border-radius: var(--radius-lg);
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.solution-card.placeholder {
+    background: transparent;
+    border: 1px dashed rgba(0, 0, 0, 0.08);
+}
+
+.solution-card.placeholder .card-icon {
+    display: none;
+}
+
+/* Card Icon */
+.card-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #a0a0a0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Card Label */
+.card-label {
+    position: absolute;
+    bottom: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--color-text);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Active state animation - cycles through each service */
+.solution-card[data-service] {
+    animation: service-cycle 12s ease-in-out infinite;
+}
+
+.solution-card[data-service="apps"] { animation-delay: 0s; }
+.solution-card[data-service="tools"] { animation-delay: 2s; }
+.solution-card[data-service="agents"] { animation-delay: 4s; }
+.solution-card[data-service="calculators"] { animation-delay: 6s; }
+.solution-card[data-service="workflows"] { animation-delay: 8s; }
+.solution-card[data-service="integrations"] { animation-delay: 10s; }
+
+@keyframes service-cycle {
+    0%, 5% {
+        background: white;
+        border-color: rgba(0, 0, 0, 0.08);
+        box-shadow: none;
+        transform: scale(1);
+    }
+    8%, 16.66% {
+        background: white;
+        border-color: transparent;
+        box-shadow: 0 8px 30px rgba(124, 58, 237, 0.25), 0 0 0 2px rgba(124, 58, 237, 0.3);
+        transform: scale(1.1);
+    }
+    20%, 100% {
+        background: white;
+        border-color: rgba(0, 0, 0, 0.08);
+        box-shadow: none;
+        transform: scale(1);
+    }
+}
+
+/* Icon color animation synced with card */
+.solution-card[data-service] .card-icon {
+    animation: icon-color 12s ease-in-out infinite;
+}
+
+.solution-card[data-service="apps"] .card-icon { animation-delay: 0s; }
+.solution-card[data-service="tools"] .card-icon { animation-delay: 2s; }
+.solution-card[data-service="agents"] .card-icon { animation-delay: 4s; }
+.solution-card[data-service="calculators"] .card-icon { animation-delay: 6s; }
+.solution-card[data-service="workflows"] .card-icon { animation-delay: 8s; }
+.solution-card[data-service="integrations"] .card-icon { animation-delay: 10s; }
+
+@keyframes icon-color {
+    0%, 5% {
+        color: #a0a0a0;
+    }
+    8%, 16.66% {
+        color: var(--color-primary);
+    }
+    20%, 100% {
+        color: #a0a0a0;
+    }
+}
+
+/* Label visibility animation */
+.solution-card[data-service] .card-label {
+    animation: label-show 12s ease-in-out infinite;
+}
+
+.solution-card[data-service="apps"] .card-label { animation-delay: 0s; }
+.solution-card[data-service="tools"] .card-label { animation-delay: 2s; }
+.solution-card[data-service="agents"] .card-label { animation-delay: 4s; }
+.solution-card[data-service="calculators"] .card-label { animation-delay: 6s; }
+.solution-card[data-service="workflows"] .card-label { animation-delay: 8s; }
+.solution-card[data-service="integrations"] .card-label { animation-delay: 10s; }
+
+@keyframes label-show {
+    0%, 5% {
+        opacity: 0;
+    }
+    8%, 16.66% {
+        opacity: 1;
+    }
+    20%, 100% {
+        opacity: 0;
+    }
+}
+
+/* Hover interactions */
+.solution-card[data-service]:hover {
+    box-shadow: 0 8px 30px rgba(124, 58, 237, 0.25), 0 0 0 2px rgba(124, 58, 237, 0.3);
+    transform: scale(1.1);
+    animation-play-state: paused;
+}
+
+.solution-card[data-service]:hover .card-icon {
+    color: var(--color-primary);
+    animation-play-state: paused;
+}
+
+.solution-card[data-service]:hover .card-label {
+    opacity: 1;
+    animation-play-state: paused;
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+    .solutions-layout {
+        grid-template-columns: 1fr;
+        gap: var(--space-2xl);
+    }
+
+    .solutions-grid-wrapper {
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .solutions-section {
+        padding: var(--space-2xl) 0;
+    }
+
+    .solution-card {
+        width: 60px;
+        height: 60px;
+    }
+
+    .card-icon {
+        width: 32px;
+        height: 32px;
+    }
+
+    .card-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .grid-row.row-2,
+    .grid-row.row-4 {
+        margin-left: 20px;
+    }
+}
+
+/* ==========================================================================
    Services Section
    ========================================================================== */
 
