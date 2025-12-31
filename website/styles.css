@@ -8086,136 +8086,96 @@ p {
 }
 
 /* ==========================================================================
-   Book a Call Modal
+   CTA Embedded Form
    ========================================================================== */
 
-.modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-    z-index: 10000;
-    padding: var(--space-md);
+.cta-form-container {
+    max-width: 700px;
+    margin: var(--space-xl) auto 0;
 }
 
-.modal-overlay.active {
-    opacity: 1;
-    visibility: visible;
-}
-
-.modal-content {
-    max-width: 420px;
-    width: 100%;
-    padding: var(--space-xl);
-    border-radius: var(--radius-lg);
-    position: relative;
-    transform: translateY(20px) scale(0.95);
-    transition: transform 0.3s ease;
-}
-
-.modal-overlay.active .modal-content {
-    transform: translateY(0) scale(1);
-}
-
-.modal-close {
-    position: absolute;
-    top: var(--space-md);
-    right: var(--space-md);
-    width: 36px;
-    height: 36px;
-    border: none;
-    background: rgba(0, 0, 0, 0.05);
-    border-radius: 50%;
-    font-size: 1.5rem;
-    color: var(--color-text-secondary);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-    line-height: 1;
-}
-
-.modal-close:hover {
-    background: rgba(0, 0, 0, 0.1);
-    color: var(--color-text);
-}
-
-.modal-content h3 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: var(--space-xs);
-    color: var(--color-text);
-}
-
-.modal-content > p {
-    color: var(--color-text-secondary);
-    margin-bottom: var(--space-lg);
-    font-size: 0.95rem;
-}
-
-.book-call-form {
+.cta-form {
     display: flex;
     flex-direction: column;
+    gap: var(--space-md);
+}
+
+.cta-form .form-row {
+    display: flex;
     gap: var(--space-sm);
 }
 
-.book-call-form .form-group {
-    width: 100%;
-}
-
-.book-call-form input {
-    width: 100%;
-    padding: 0.875rem 1rem;
-    border: 1px solid var(--color-border);
+.cta-form input {
+    flex: 1;
+    padding: 1rem 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: var(--radius-md);
     font-size: 1rem;
-    background: var(--color-bg);
+    background: rgba(255, 255, 255, 0.08);
     color: var(--color-text);
     transition: all 0.2s ease;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
 }
 
-.book-call-form input:focus {
+.cta-form input:focus {
     outline: none;
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
 }
 
-.book-call-form input::placeholder {
+.cta-form input::placeholder {
     color: var(--color-text-muted);
 }
 
-.btn-full {
-    width: 100%;
-    justify-content: center;
-    margin-top: var(--space-xs);
+.cta-form .btn {
+    align-self: center;
+    min-width: 200px;
 }
 
-.form-success {
+.cta-form-container .form-success {
     text-align: center;
-    padding: var(--space-lg) 0;
+    padding: var(--space-xl) 0;
 }
 
-.form-success svg {
+.cta-form-container .form-success svg {
     color: #10b981;
     margin-bottom: var(--space-md);
 }
 
-.form-success h4 {
-    font-size: 1.25rem;
+.cta-form-container .form-success h4 {
+    font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: var(--space-xs);
     color: var(--color-text);
 }
 
-.form-success p {
+.cta-form-container .form-success p {
+    color: var(--color-text-secondary);
+    font-size: 1rem;
+}
+
+.cta-email {
+    display: inline-block;
+    margin-top: var(--space-md);
     color: var(--color-text-secondary);
     font-size: 0.9rem;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.cta-email:hover {
+    color: var(--color-primary);
+}
+
+/* Mobile: Stack form inputs */
+@media (max-width: 768px) {
+    .cta-form .form-row {
+        flex-direction: column;
+    }
+
+    .cta-form .btn {
+        width: 100%;
+    }
 }
