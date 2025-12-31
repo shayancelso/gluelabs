@@ -4838,7 +4838,7 @@ p {
 .solutions-grid-wrapper {
     position: relative;
     width: 100%;
-    max-width: 400px;
+    max-width: 360px;
     margin-left: auto;
 }
 
@@ -4917,13 +4917,14 @@ p {
 .grid-row {
     display: flex;
     gap: 12px;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 /* Stagger the rows */
 .grid-row.row-2,
 .grid-row.row-4 {
-    margin-left: 30px;
+    margin-left: 0;
+    padding-left: 36px;
 }
 
 /* Solution Cards */
