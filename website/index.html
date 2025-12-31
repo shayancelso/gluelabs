@@ -671,29 +671,10 @@
 
                 <!-- Right: Icon Grid -->
                 <div class="solutions-grid-wrapper" data-animate="fade-up" data-delay="100">
-                    <!-- SVG for connecting lines -->
-                    <svg class="connection-lines" viewBox="0 0 360 336" preserveAspectRatio="xMidYMid meet">
-                        <defs>
-                            <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#7c3aed"/>
-                                <stop offset="50%" style="stop-color:#c026d3"/>
-                                <stop offset="100%" style="stop-color:#ec4899"/>
-                            </linearGradient>
-                        </defs>
-                        <!-- Connection paths: Apps(204,36)→Tools(156,120)→Agents(324,120)→Calc(204,204)→Workflows(72,288)→Integrations(324,288) -->
-                        <path class="connection-path path-1" d="M204,36 Q180,78 156,120" fill="none" stroke="url(#lineGradient)" stroke-width="2"/>
-                        <path class="connection-path path-2" d="M156,120 Q240,120 324,120" fill="none" stroke="url(#lineGradient)" stroke-width="2"/>
-                        <path class="connection-path path-3" d="M324,120 Q264,162 204,204" fill="none" stroke="url(#lineGradient)" stroke-width="2"/>
-                        <path class="connection-path path-4" d="M204,204 Q138,246 72,288" fill="none" stroke="url(#lineGradient)" stroke-width="2"/>
-                        <path class="connection-path path-5" d="M72,288 Q198,288 324,288" fill="none" stroke="url(#lineGradient)" stroke-width="2"/>
-                        <path class="connection-path path-6" d="M324,288 Q264,162 204,36" fill="none" stroke="url(#lineGradient)" stroke-width="2"/>
-                    </svg>
-
                     <!-- Grid of solution cards -->
                     <div class="solutions-grid">
                         <!-- Row 1 -->
                         <div class="grid-row row-1">
-                            <div class="solution-card placeholder"></div>
                             <div class="solution-card placeholder"></div>
                             <div class="solution-card" data-service="apps">
                                 <div class="card-icon">
@@ -706,11 +687,21 @@
                                 <span class="card-label">Apps</span>
                             </div>
                             <div class="solution-card placeholder"></div>
+                            <div class="solution-card" data-service="dashboards">
+                                <div class="card-icon">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="3" width="7" height="9"/>
+                                        <rect x="14" y="3" width="7" height="5"/>
+                                        <rect x="14" y="12" width="7" height="9"/>
+                                        <rect x="3" y="16" width="7" height="5"/>
+                                    </svg>
+                                </div>
+                                <span class="card-label">Dashboards</span>
+                            </div>
                         </div>
 
                         <!-- Row 2 -->
                         <div class="grid-row row-2">
-                            <div class="solution-card placeholder"></div>
                             <div class="solution-card" data-service="tools">
                                 <div class="card-icon">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -731,13 +722,28 @@
                                         <path d="M9 13v2"/>
                                     </svg>
                                 </div>
-                                <span class="card-label">Agents</span>
+                                <span class="card-label">AI Agents</span>
                             </div>
+                            <div class="solution-card placeholder"></div>
                         </div>
 
                         <!-- Row 3 -->
                         <div class="grid-row row-3">
                             <div class="solution-card placeholder"></div>
+                            <div class="solution-card" data-service="automations">
+                                <div class="card-icon">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 2v4"/>
+                                        <path d="m6.8 15-3.5 2"/>
+                                        <path d="m20.7 17-3.5-2"/>
+                                        <path d="M6.8 9 3.3 7"/>
+                                        <path d="m20.7 7-3.5 2"/>
+                                        <circle cx="12" cy="12" r="6"/>
+                                        <path d="M12 9v3l1.5 1.5"/>
+                                    </svg>
+                                </div>
+                                <span class="card-label">Automations</span>
+                            </div>
                             <div class="solution-card placeholder"></div>
                             <div class="solution-card" data-service="calculators">
                                 <div class="card-icon">
@@ -756,7 +762,6 @@
                                 </div>
                                 <span class="card-label">Calculators</span>
                             </div>
-                            <div class="solution-card placeholder"></div>
                         </div>
 
                         <!-- Row 4 -->
@@ -769,7 +774,6 @@
                                 </div>
                                 <span class="card-label">Workflows</span>
                             </div>
-                            <div class="solution-card placeholder"></div>
                             <div class="solution-card placeholder"></div>
                             <div class="solution-card" data-service="integrations">
                                 <div class="card-icon">
@@ -787,6 +791,7 @@
                                 </div>
                                 <span class="card-label">Integrations</span>
                             </div>
+                            <div class="solution-card placeholder"></div>
                         </div>
                     </div>
                 </div>
