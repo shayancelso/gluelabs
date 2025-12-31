@@ -725,3 +725,62 @@ function throttle(func, limit) {
         });
     });
 })();
+
+// ==========================================================================
+// Tool Library Carousel Dots (Mobile)
+// ==========================================================================
+
+(function initToolCarousel() {
+    const grid = document.querySelector('.tools-bento-grid');
+    const dotsContainer = document.getElementById('toolCarouselDots');
+    const dots = dotsContainer ? dotsContainer.querySelectorAll('.dot') : [];
+    const cards = document.querySelectorAll('.bento-card');
+
+    if (!grid || !dots.length || !cards.length) return;
+
+    // Update active dot based on scroll position (2 cards per page)
+    function updateActiveDot() {
+        const scrollLeft = grid.scrollLeft;
+        const cardWidth = cards[0].offsetWidth;
+        const gap = 8; // 0.5rem gap on mobile
+        const pageWidth = (cardWidth * 2) + gap; // 2 cards per page
+        const activeIndex = Math.round(scrollLeft / pageWidth);
+
+        dots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === activeIndex);
+        });
+    }
+
+    // Throttle function for scroll performance
+    function throttle(func, limit) {
+        let inThrottle;
+        return function() {
+            if (!inThrottle) {
+                func.apply(this, arguments);
+                inThrottle = true;
+                setTimeout(() => inThrottle = false, limit);
+            }
+        };
+    }
+
+    // Scroll event listener
+    grid.addEventListener('scroll', throttle(updateActiveDot, 50), { passive: true });
+
+    // Dot click handler - scroll to page (2 cards)
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            const cardWidth = cards[0].offsetWidth;
+            const gap = 8;
+            const pageWidth = (cardWidth * 2) + gap;
+            const scrollTarget = index * pageWidth;
+
+            grid.scrollTo({
+                left: scrollTarget,
+                behavior: 'smooth'
+            });
+        });
+    });
+
+    // Initial update
+    updateActiveDot();
+})();
