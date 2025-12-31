@@ -5404,6 +5404,28 @@ p {
     color: var(--color-text-muted);
 }
 
+/* Testimonial Carousel Dots */
+.testimonial-dots {
+    display: none;
+    justify-content: center;
+    gap: 8px;
+    margin-top: var(--space-md);
+}
+
+.testimonial-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--glass-border);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.testimonial-dot.active {
+    background: var(--color-primary);
+    transform: scale(1.2);
+}
+
 /* ==========================================================================
    Team Section
    ========================================================================== */
@@ -6995,6 +7017,55 @@ p {
 
     .heatmap-cell {
         min-height: 30px;
+    }
+
+    /* Hero Cube - Reset overflow scaling for mobile */
+    .hero-visual {
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: var(--space-md);
+        overflow: hidden;
+    }
+
+    .hero-cube-container {
+        max-width: 100%;
+        width: 100%;
+        margin: 0 auto;
+        overflow: hidden;
+    }
+
+    .hero-cube-iframe {
+        width: 140%;
+        height: 140%;
+        margin-left: -20%;
+        margin-top: -20%;
+        transform: scale(0.7);
+        transform-origin: center center;
+    }
+
+    /* Testimonials Carousel */
+    .testimonials-grid {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        gap: var(--space-md);
+        padding-bottom: var(--space-md);
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .testimonials-grid::-webkit-scrollbar {
+        display: none;
+    }
+
+    .testimonial-card {
+        flex: 0 0 85%;
+        scroll-snap-align: center;
+    }
+
+    .testimonial-dots {
+        display: flex;
     }
 
     /* Demo Section Mobile */
