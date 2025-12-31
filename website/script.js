@@ -784,3 +784,101 @@ function throttle(func, limit) {
     // Initial update
     updateActiveDot();
 })();
+
+// ==========================================================================
+// Book a Call Modal
+// ==========================================================================
+
+(function initBookCallModal() {
+    const modal = document.getElementById('bookCallModal');
+    const modalClose = document.querySelector('.modal-close');
+    const form = document.getElementById('bookCallForm');
+    const formSuccess = document.getElementById('formSuccess');
+
+    if (!modal) return;
+
+    // Open modal when "Book a Call" buttons clicked
+    // Target buttons with href="#contact" or class "btn-book-call"
+    document.querySelectorAll('a[href="#contact"], .btn-book-call').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+    });
+
+    // Close modal function
+    function closeModal() {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    // Close on X button click
+    if (modalClose) {
+        modalClose.addEventListener('click', closeModal);
+    }
+
+    // Close on overlay click (outside modal content)
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    // Handle form submission with AJAX
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span>Sending...</span>';
+
+            try {
+                const formData = new FormData(form);
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    // Show success state
+                    form.style.display = 'none';
+                    if (formSuccess) {
+                        formSuccess.style.display = 'block';
+                    }
+
+                    // Auto-close after 3 seconds
+                    setTimeout(() => {
+                        closeModal();
+                        // Reset form for next use
+                        form.reset();
+                        form.style.display = 'block';
+                        if (formSuccess) {
+                            formSuccess.style.display = 'none';
+                        }
+                    }, 3000);
+                } else {
+                    throw new Error('Form submission failed');
+                }
+            } catch (error) {
+                alert('Something went wrong. Please try again.');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            }
+        });
+    }
+})();
