@@ -684,3 +684,44 @@ function throttle(func, limit) {
         if (section.el) observer.observe(section.el);
     });
 })();
+
+// ==========================================================================
+// Comparison Carousel Dots (Mobile)
+// ==========================================================================
+
+(function initComparisonCarousel() {
+    const grid = document.querySelector('.comparison-grid');
+    const dots = document.querySelectorAll('.comparison-dot');
+    const cards = document.querySelectorAll('.comparison-card');
+
+    if (!grid || !dots.length || !cards.length) return;
+
+    // Update active dot based on scroll position
+    function updateActiveDot() {
+        const scrollLeft = grid.scrollLeft;
+        const cardWidth = cards[0].offsetWidth;
+        const gap = 24; // var(--space-md) = 1.5rem = 24px
+        const activeIndex = Math.round(scrollLeft / (cardWidth + gap));
+
+        dots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === activeIndex);
+        });
+    }
+
+    // Scroll event listener
+    grid.addEventListener('scroll', throttle(updateActiveDot, 50), { passive: true });
+
+    // Dot click handler - scroll to card
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            const cardWidth = cards[0].offsetWidth;
+            const gap = 24;
+            const scrollTarget = index * (cardWidth + gap);
+
+            grid.scrollTo({
+                left: scrollTarget,
+                behavior: 'smooth'
+            });
+        });
+    });
+})();
