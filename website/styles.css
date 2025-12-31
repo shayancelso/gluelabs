@@ -4853,8 +4853,8 @@ p {
 }
 
 .connection-path {
-    stroke-dasharray: 150;
-    stroke-dashoffset: 150;
+    stroke-dasharray: 400;
+    stroke-dashoffset: 400;
     opacity: 0;
 }
 
@@ -4886,7 +4886,7 @@ p {
 
 @keyframes draw-line {
     0%, 5% {
-        stroke-dashoffset: 150;
+        stroke-dashoffset: 400;
         opacity: 0;
     }
     8% {
