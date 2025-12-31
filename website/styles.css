@@ -4846,7 +4846,7 @@ p {
 .solutions-grid {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 36px;
     position: relative;
     z-index: 2;
 }
