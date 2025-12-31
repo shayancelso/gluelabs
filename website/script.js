@@ -114,17 +114,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const processModern = document.querySelector('.process-modern');
     const processCards = document.querySelectorAll('.process-card');
+    const processItems = document.querySelectorAll('.process-item');
     const processConnectors = document.querySelectorAll('.process-connector');
 
-    if (processModern && processCards.length > 0) {
+    if (processModern && (processCards.length > 0 || processItems.length > 0)) {
         const processObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    // Animate cards with stagger
+                    // Animate cards with stagger (old style)
                     processCards.forEach((card, index) => {
                         setTimeout(() => {
                             card.classList.add('visible');
                         }, index * 200);
+                    });
+
+                    // Animate items with stagger (new clean style)
+                    processItems.forEach((item, index) => {
+                        setTimeout(() => {
+                            item.classList.add('visible');
+                        }, index * 150);
                     });
 
                     // Animate connectors after cards
@@ -191,365 +199,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }, { threshold: 0.5 });
 
     counters.forEach(counter => counterObserver.observe(counter));
-
-    // ==========================================================================
-    // Demo Tabs
-    // ==========================================================================
-
-    const demoTabs = document.querySelectorAll('.demo-tab');
-    const demoPanels = document.querySelectorAll('.demo-panel');
-
-    demoTabs.forEach((tab, index) => {
-        tab.addEventListener('click', () => {
-            activateTab(tab);
-        });
-
-        // Keyboard navigation
-        tab.addEventListener('keydown', (e) => {
-            let targetIndex;
-            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-                e.preventDefault();
-                targetIndex = (index + 1) % demoTabs.length;
-            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-                e.preventDefault();
-                targetIndex = (index - 1 + demoTabs.length) % demoTabs.length;
-            } else if (e.key === 'Home') {
-                e.preventDefault();
-                targetIndex = 0;
-            } else if (e.key === 'End') {
-                e.preventDefault();
-                targetIndex = demoTabs.length - 1;
-            }
-
-            if (targetIndex !== undefined) {
-                demoTabs[targetIndex].focus();
-                activateTab(demoTabs[targetIndex]);
-            }
-        });
-    });
-
-    function activateTab(tab) {
-        const targetId = tab.dataset.tab;
-
-        demoTabs.forEach(t => {
-            t.classList.remove('active');
-            t.setAttribute('aria-selected', 'false');
-            t.setAttribute('tabindex', '-1');
-        });
-        demoPanels.forEach(p => p.classList.remove('active'));
-
-        tab.classList.add('active');
-        tab.setAttribute('aria-selected', 'true');
-        tab.setAttribute('tabindex', '0');
-
-        const targetPanel = document.getElementById(`demo-${targetId}`);
-        if (targetPanel) {
-            targetPanel.classList.add('active');
-        }
-
-        // Initialize ROI chart when ROI tab is activated
-        if (targetId === 'roi' && typeof window.initRoiChartNow === 'function') {
-            setTimeout(window.initRoiChartNow, 100);
-        }
-    }
-
-    // ==========================================================================
-    // Demo ROI Calculator (in demo section) with Live Chart
-    // ==========================================================================
-
-    const calcTeam = document.getElementById('calc-team');
-    const calcDeal = document.getElementById('calc-deal');
-    const calcHours = document.getElementById('calc-hours');
-    const calcSolution = document.getElementById('calc-solution');
-
-    const calcTeamValue = document.getElementById('calc-team-value');
-    const calcHoursValue = document.getElementById('calc-hours-value');
-
-    const calcBreakeven = document.getElementById('calc-breakeven');
-    const calcProductivity = document.getElementById('calc-productivity');
-    const calcRoi = document.getElementById('calc-roi');
-
-    const HOURLY_RATE = 100;
-    const GLUE_COST = 30000;
-    const WEEKS_PER_YEAR = 52;
-
-    // Initialize ROI Chart
-    let roiChart = null;
-    const roiChartCanvas = document.getElementById('roi-chart');
-
-    function initRoiChart() {
-        if (!roiChartCanvas || typeof Chart === 'undefined') return;
-
-        const ctx = roiChartCanvas.getContext('2d');
-
-        roiChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: Array.from({ length: 25 }, (_, i) => i), // 0-24 months
-                datasets: [
-                    {
-                        label: 'Cumulative Value',
-                        data: [],
-                        borderColor: '#a855f7',
-                        backgroundColor: 'rgba(168, 85, 247, 0.1)',
-                        fill: true,
-                        tension: 0.4,
-                        borderWidth: 2,
-                        pointRadius: 0,
-                        pointHoverRadius: 4
-                    },
-                    {
-                        label: 'Investment',
-                        data: [],
-                        borderColor: '#f472b6',
-                        backgroundColor: 'transparent',
-                        borderWidth: 2,
-                        borderDash: [5, 5],
-                        pointRadius: 0,
-                        pointHoverRadius: 0
-                    },
-                    {
-                        label: 'Break-even',
-                        data: [],
-                        borderColor: '#22c55e',
-                        backgroundColor: '#22c55e',
-                        pointRadius: 6,
-                        pointHoverRadius: 8,
-                        pointStyle: 'circle',
-                        showLine: false
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(15, 15, 30, 0.9)',
-                        titleColor: '#fff',
-                        bodyColor: 'rgba(255, 255, 255, 0.8)',
-                        borderColor: 'rgba(168, 85, 247, 0.3)',
-                        borderWidth: 1,
-                        padding: 12,
-                        displayColors: true,
-                        filter: (item) => item.raw !== null,
-                        callbacks: {
-                            title: (items) => `Month ${items[0].label}`,
-                            label: (item) => {
-                                const value = item.raw;
-                                if (value === null) return null;
-                                if (item.dataset.label === 'Break-even') {
-                                    return '✓ Break-even reached!';
-                                }
-                                return `${item.dataset.label}: $${value.toLocaleString()}`;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.05)',
-                            drawBorder: false
-                        },
-                        ticks: {
-                            color: 'rgba(255, 255, 255, 0.4)',
-                            font: { size: 10 },
-                            maxTicksLimit: 7,
-                            callback: (val) => val === 0 ? 'Now' : `${val}mo`
-                        }
-                    },
-                    y: {
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.05)',
-                            drawBorder: false
-                        },
-                        ticks: {
-                            color: 'rgba(255, 255, 255, 0.4)',
-                            font: { size: 10 },
-                            callback: (val) => {
-                                if (val >= 1000000) return '$' + (val / 1000000).toFixed(1) + 'M';
-                                if (val >= 1000) return '$' + (val / 1000).toFixed(0) + 'K';
-                                return '$' + val;
-                            }
-                        },
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    }
-
-    function calculateDemoROI() {
-        if (!calcTeam || !calcDeal || !calcHours) return;
-
-        const teamSize = parseInt(calcTeam.value) || 10;
-        const avgDeal = parseInt(calcDeal.value) || 25000;
-        const hoursWasted = parseInt(calcHours.value) || 8;
-
-        if (calcTeamValue) calcTeamValue.textContent = teamSize;
-        if (calcHoursValue) calcHoursValue.textContent = hoursWasted + ' hrs';
-
-        // Calculate monthly value generation
-        const timeSavedPerWeek = hoursWasted * 0.7 * teamSize;
-        const monthlyValue = Math.round((timeSavedPerWeek * (WEEKS_PER_YEAR / 12)) * HOURLY_RATE);
-
-        // Generate chart data for 24 months
-        const cumulativeValues = [];
-        const investmentLine = [];
-        let breakEvenMonth = null;
-
-        for (let month = 0; month <= 24; month++) {
-            const cumulative = month * monthlyValue;
-            cumulativeValues.push(cumulative);
-            investmentLine.push(GLUE_COST);
-
-            if (breakEvenMonth === null && cumulative >= GLUE_COST) {
-                breakEvenMonth = month;
-            }
-        }
-
-        // Create break-even point data (sparse array with only the break-even point)
-        const breakEvenData = new Array(25).fill(null);
-        if (breakEvenMonth !== null && breakEvenMonth <= 24) {
-            breakEvenData[breakEvenMonth] = GLUE_COST;
-        }
-
-        // Initialize chart if needed, then update
-        if (!roiChart && roiChartCanvas && typeof Chart !== 'undefined') {
-            initRoiChart();
-        }
-        if (roiChart) {
-            roiChart.data.datasets[0].data = cumulativeValues;
-            roiChart.data.datasets[1].data = investmentLine;
-            roiChart.data.datasets[2].data = breakEvenData;
-            roiChart.update('none');
-        }
-
-        // Calculate final values
-        const totalValue24Mo = cumulativeValues[24];
-        const roi = Math.round(((totalValue24Mo - GLUE_COST) / GLUE_COST) * 100);
-
-        // Update UI
-        if (calcBreakeven) {
-            calcBreakeven.textContent = breakEvenMonth
-                ? `Month ${breakEvenMonth}`
-                : 'Month 1';
-        }
-        if (calcProductivity) calcProductivity.textContent = '$' + totalValue24Mo.toLocaleString();
-        if (calcRoi) calcRoi.textContent = roi.toLocaleString() + '%';
-    }
-
-    // Initialize chart when ROI panel becomes visible
-    const roiPanel = document.getElementById('demo-roi');
-
-    function tryInitChart() {
-        if (!roiChart && roiChartCanvas && typeof Chart !== 'undefined') {
-            initRoiChart();
-            calculateDemoROI();
-        } else if (roiChart) {
-            calculateDemoROI();
-        }
-    }
-
-    // Expose globally for activateTab to use
-    window.initRoiChartNow = tryInitChart;
-
-    // Watch for ROI panel becoming active
-    if (roiPanel) {
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if (mutation.attributeName === 'class' && roiPanel.classList.contains('active')) {
-                    setTimeout(tryInitChart, 50);
-                }
-            });
-        });
-        observer.observe(roiPanel, { attributes: true });
-    }
-
-    // ROI tab click handler - most reliable method
-    const roiTab = document.querySelector('[data-tab="roi"]');
-    if (roiTab) {
-        roiTab.addEventListener('click', () => {
-            setTimeout(tryInitChart, 100);
-            setTimeout(tryInitChart, 300); // Backup call
-        });
-    }
-
-    // Input handlers
-    if (calcTeam) calcTeam.addEventListener('input', calculateDemoROI);
-    if (calcDeal) calcDeal.addEventListener('input', calculateDemoROI);
-    if (calcHours) calcHours.addEventListener('input', calculateDemoROI);
-    if (calcSolution) calcSolution.addEventListener('change', calculateDemoROI);
-
-    // Initialize on page load if ROI panel is visible
-    setTimeout(() => {
-        if (roiPanel && roiPanel.classList.contains('active')) {
-            tryInitChart();
-        }
-    }, 500);
-
-    // ==========================================================================
-    // Work-back Planner Interactivity
-    // ==========================================================================
-
-    const timelinePhases = document.querySelectorAll('.timeline-phase');
-    const workbackProgress = document.querySelector('.workback-progress .progress-value');
-    const timelineProgress = document.querySelector('.timeline-progress');
-    const timelineToday = document.querySelector('.timeline-today');
-
-    // Click to expand/collapse phase details on mobile
-    timelinePhases.forEach(phase => {
-        phase.addEventListener('click', () => {
-            // On mobile, toggle active state for task visibility
-            if (window.innerWidth <= 768) {
-                const wasActive = phase.classList.contains('expanded');
-                timelinePhases.forEach(p => p.classList.remove('expanded'));
-                if (!wasActive) {
-                    phase.classList.add('expanded');
-                }
-            }
-        });
-    });
-
-    // Animate progress on scroll into view
-    const workbackPanel = document.getElementById('demo-workback');
-    if (workbackPanel) {
-        const workbackObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    // Animate the progress ring
-                    const ring = workbackPanel.querySelector('.progress-ring .ring-fill');
-                    if (ring) {
-                        ring.style.transition = 'stroke-dashoffset 1s ease-out';
-                    }
-                    // Animate the timeline progress bar
-                    if (timelineProgress) {
-                        timelineProgress.style.transition = 'width 1s ease-out';
-                    }
-                }
-            });
-        }, { threshold: 0.3 });
-
-        workbackObserver.observe(workbackPanel);
-    }
-
-    // Hover effect to highlight related tasks
-    timelinePhases.forEach(phase => {
-        phase.addEventListener('mouseenter', () => {
-            phase.style.transform = 'translateY(-2px)';
-        });
-        phase.addEventListener('mouseleave', () => {
-            phase.style.transform = 'translateY(0)';
-        });
-    });
 
     // ==========================================================================
     // FAQ Accordion
@@ -921,6 +570,49 @@ document.addEventListener('DOMContentLoaded', function() {
         }, { threshold: 0.2 });
 
         heroObserver.observe(heroSection);
+    }
+
+    // ==========================================================================
+    // Prototype Stack - Click to Swap with Dot Navigation
+    // ==========================================================================
+
+    const prototypeStack = document.querySelector('.prototype-stack');
+    const prototypeDots = document.querySelectorAll('.prototype-dot');
+
+    if (prototypeStack) {
+        // Function to update dot active states
+        function updatePrototypeDots() {
+            const isSwapped = prototypeStack.classList.contains('swapped');
+            prototypeDots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === (isSwapped ? 1 : 0));
+            });
+        }
+
+        // Click on images to swap
+        prototypeStack.addEventListener('click', function(e) {
+            // Don't swap if clicking on a dot (dots handle themselves)
+            if (e.target.classList.contains('prototype-dot')) return;
+
+            this.classList.toggle('swapped');
+            updatePrototypeDots();
+        });
+
+        // Click on dots to swap
+        prototypeDots.forEach((dot, index) => {
+            dot.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const isSwapped = prototypeStack.classList.contains('swapped');
+                const shouldSwap = (index === 1 && !isSwapped) || (index === 0 && isSwapped);
+
+                if (shouldSwap) {
+                    prototypeStack.classList.toggle('swapped');
+                    updatePrototypeDots();
+                }
+            });
+        });
+
+        // Add cursor pointer to indicate clickability
+        prototypeStack.style.cursor = 'pointer';
     }
 
 });
