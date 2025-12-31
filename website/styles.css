@@ -4224,108 +4224,207 @@ p {
    AI Tools Orbital Section
    ========================================================================== */
 
-.ai-orbit-section {
+.ai-network-section {
     padding: var(--space-3xl) 0;
-    background: var(--color-bg);
+    background: #ffffff;
     overflow: hidden;
 }
 
-.orbit-system {
-    position: relative;
-    width: 400px;
-    height: 400px;
-    margin: var(--space-2xl) auto;
+/* Split layout - orbit left, text right */
+.ai-stack-layout {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xl);
 }
 
-/* Center element with Gloo logo + Lou */
+.ai-stack-visual {
+    flex: 0 0 500px;
+}
+
+.ai-stack-content {
+    flex: 1;
+}
+
+.ai-stack-content h2 {
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    line-height: 1.15;
+    margin-top: var(--space-sm);
+}
+
+.ai-stack-text {
+    font-size: 1.1rem;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    margin-top: var(--space-md);
+}
+
+.ai-stack-features {
+    margin-top: var(--space-lg);
+    list-style: none;
+    padding: 0;
+}
+
+.ai-stack-features li {
+    position: relative;
+    padding-left: 28px;
+    margin-bottom: var(--space-sm);
+    color: var(--color-text-secondary);
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.ai-stack-features li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 10px;
+    height: 10px;
+    background: var(--gradient-primary);
+    border-radius: 50%;
+}
+
+.orbit-container {
+    position: relative;
+    width: 500px;
+    height: 500px;
+}
+
+/* Center hub - Gloo logo */
 .orbit-center {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    z-index: 10;
-}
-
-.orbit-center .center-logo {
-    width: 100px;
-    height: auto;
-}
-
-.orbit-center .lou-mascot {
-    width: 70px;
-    height: auto;
-    margin-top: -15px;
-}
-
-/* Orbital ring */
-.orbit-ring {
-    position: absolute;
-    inset: 0;
-    border: 2px dashed rgba(124, 58, 237, 0.2);
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(145deg, #ffffff 0%, #f8f5ff 100%);
     border-radius: 50%;
-    animation: orbit 25s linear infinite;
-}
-
-/* Individual orbiting logos */
-.orbit-logo {
-    position: absolute;
-    width: 56px;
-    height: 56px;
-    background: white;
-    border-radius: var(--radius-lg);
-    box-shadow:
-        0 4px 20px rgba(0, 0, 0, 0.08),
-        0 1px 3px rgba(0, 0, 0, 0.05);
     display: flex;
     align-items: center;
     justify-content: center;
-    animation: counter-orbit 25s linear infinite;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.orbit-logo:hover {
     box-shadow:
-        0 8px 30px rgba(124, 58, 237, 0.15),
-        0 2px 6px rgba(0, 0, 0, 0.08);
+        0 20px 60px rgba(124, 58, 237, 0.15),
+        0 8px 25px rgba(0, 0, 0, 0.08);
+    z-index: 10;
+    border: 2px solid rgba(124, 58, 237, 0.1);
 }
 
-/* Position logos at 4 cardinal points */
-.orbit-logo:nth-child(1) {
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
+.center-glow {
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(124, 58, 237, 0.1) 0%, transparent 70%);
+    animation: center-pulse 3s ease-in-out infinite;
+    z-index: -1;
 }
 
-.orbit-logo:nth-child(2) {
+@keyframes center-pulse {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.2); opacity: 1; }
+}
+
+.center-logo {
+    width: 65px;
+    height: auto;
+}
+
+/* Orbital ring - rotates anti-clockwise */
+.orbit-ring {
+    position: absolute;
     top: 50%;
-    right: 0;
-    transform: translateY(-50%);
-}
-
-.orbit-logo:nth-child(3) {
-    bottom: 0;
     left: 50%;
-    transform: translateX(-50%);
+    width: 400px;
+    height: 400px;
+    margin: -200px 0 0 -200px;
+    border: 2px dashed rgba(124, 58, 237, 0.12);
+    border-radius: 50%;
+    animation: orbit-spin 45s linear infinite reverse;
 }
 
-.orbit-logo:nth-child(4) {
-    top: 50%;
-    left: 0;
-    transform: translateY(-50%);
-}
-
-/* Orbit keyframes */
-@keyframes orbit {
+@keyframes orbit-spin {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
 
-@keyframes counter-orbit {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(-360deg); }
+/* Pause orbit on hover */
+.orbit-container:hover .orbit-ring {
+    animation-play-state: paused;
+}
+
+.orbit-container:hover .orbit-card {
+    animation-play-state: paused;
+}
+
+/* Orbit items - positioned by angle on the ring */
+.orbit-item {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    transform: rotate(var(--angle)) translateX(200px);
+}
+
+/* Counter-rotate the card to keep it upright */
+.orbit-card {
+    position: absolute;
+    transform: translate(-50%, -50%) rotate(calc(-1 * var(--angle)));
+    animation: counter-spin 45s linear infinite;
+    width: 90px;
+    height: 100px;
+    background: white;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 8px;
+    box-shadow:
+        0 8px 30px rgba(0, 0, 0, 0.08),
+        0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(124, 58, 237, 0.06);
+}
+
+@keyframes counter-spin {
+    from { transform: translate(-50%, -50%) rotate(calc(-1 * var(--angle))); }
+    to { transform: translate(-50%, -50%) rotate(calc(-1 * var(--angle) + 360deg)); }
+}
+
+.orbit-card:hover {
+    transform: translate(-50%, -50%) rotate(calc(-1 * var(--angle))) scale(1.15) !important;
+    box-shadow:
+        0 15px 50px rgba(124, 58, 237, 0.2),
+        0 5px 15px rgba(0, 0, 0, 0.1);
+    z-index: 20;
+}
+
+.orbit-card img {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.orbit-card:hover img {
+    transform: scale(1.1);
+}
+
+.orbit-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-top: 6px;
+    line-height: 1;
+}
+
+.orbit-desc {
+    font-size: 0.6rem;
+    color: var(--color-text-secondary);
+    text-align: center;
+    margin-top: 2px;
+    line-height: 1.2;
 }
 
 /* ==========================================================================
@@ -6439,29 +6538,72 @@ p {
         font-size: 2rem;
     }
 
-    /* AI Orbit Section Mobile */
-    .orbit-system {
-        width: 300px;
-        height: 300px;
+    /* AI Tools Orbital Section Mobile */
+    .ai-stack-layout {
+        flex-direction: column;
+        gap: var(--space-xl);
     }
 
-    .orbit-center .center-logo {
-        width: 70px;
+    .ai-stack-visual {
+        flex: none;
     }
 
-    .orbit-center .lou-mascot {
-        width: 50px;
-        margin-top: -10px;
+    .ai-stack-content {
+        text-align: center;
     }
 
-    .orbit-logo {
-        width: 44px;
-        height: 44px;
+    .ai-stack-features {
+        text-align: left;
+        max-width: 320px;
+        margin-left: auto;
+        margin-right: auto;
     }
 
-    .orbit-logo svg {
-        width: 22px;
-        height: 22px;
+    .orbit-container {
+        width: 340px;
+        height: 340px;
+    }
+
+    .orbit-center {
+        width: 80px;
+        height: 80px;
+    }
+
+    .center-logo {
+        width: 45px;
+    }
+
+    .orbit-ring {
+        width: 280px;
+        height: 280px;
+        margin: -140px 0 0 -140px;
+        animation-duration: 60s;
+    }
+
+    .orbit-item {
+        transform: rotate(var(--angle)) translateX(140px);
+    }
+
+    .orbit-card {
+        width: 60px;
+        height: 70px;
+        padding: 8px 4px;
+        border-radius: 12px;
+        animation-duration: 60s;
+    }
+
+    .orbit-card img {
+        width: 28px;
+        height: 28px;
+    }
+
+    .orbit-label {
+        font-size: 0.55rem;
+        margin-top: 4px;
+    }
+
+    .orbit-desc {
+        display: none;
     }
 
     /* Services Grid Mobile */
