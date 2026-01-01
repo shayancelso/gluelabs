@@ -1,0 +1,8 @@
+# Robots.txt for Gloo
+# https://buildwithgloo.com
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://buildwithgloo.com/sitemap.xml
