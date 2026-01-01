@@ -6836,10 +6836,12 @@ p {
     /* Mobile Navigation Adjustments */
     .nav {
         padding: var(--space-xs) var(--space-sm);
+        background: transparent !important;
     }
 
     .nav.scrolled {
         padding: var(--space-xs) var(--space-sm);
+        background: transparent !important;
     }
 
     .nav-container {
