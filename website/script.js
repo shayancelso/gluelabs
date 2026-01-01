@@ -6,6 +6,15 @@
 document.addEventListener('DOMContentLoaded', function() {
 
     // ==========================================================================
+    // Security: HTML Escape Helper
+    // ==========================================================================
+    function escapeHTML(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    // ==========================================================================
     // Navigation
     // ==========================================================================
 
@@ -355,12 +364,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (demoCoverageValue) demoCoverageValue.textContent = account.coverage;
         if (demoRankValue) demoRankValue.textContent = account.rank;
 
-        // Render grid
+        // Render grid (escapeHTML prevents XSS if data source ever changes)
         demoVizGrid.innerHTML = items.map((item, i) => `
             <div class="viz-product ${item.status === 'opportunity' ? 'highlight' : ''}" style="animation-delay: ${i * 0.05}s">
-                <span class="product-name">${item.name}</span>
+                <span class="product-name">${escapeHTML(item.name)}</span>
                 <div class="product-bar"><div class="bar-fill ${item.status}" style="width: 100%"></div></div>
-                <span class="product-status ${item.status}">${item.status === 'opportunity' ? item.value + ' Opportunity' : item.value}</span>
+                <span class="product-status ${item.status}">${item.status === 'opportunity' ? escapeHTML(item.value) + ' Opportunity' : escapeHTML(item.value)}</span>
             </div>
         `).join('');
     }
@@ -890,5 +899,23 @@ function throttle(func, limit) {
             submitBtn.disabled = false;
             submitBtn.innerHTML = originalText;
         }
+    });
+
+    // ==========================================================================
+    // Lou Mascot - Click Interaction
+    // ==========================================================================
+
+    // Add click handler to all Lou mascots - bounce/wave on click
+    document.querySelectorAll('.lou-mascot').forEach(lou => {
+        lou.style.cursor = 'pointer';
+        lou.addEventListener('click', () => {
+            // Add clicked class to trigger bounce animation
+            lou.classList.add('clicked');
+
+            // Remove class after animation completes to allow re-triggering
+            lou.addEventListener('animationend', () => {
+                lou.classList.remove('clicked');
+            }, { once: true });
+        });
     });
 })();

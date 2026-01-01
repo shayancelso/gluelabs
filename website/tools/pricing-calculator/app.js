@@ -3,6 +3,20 @@
  * UI interactions and data visualization for the pricing strategy platform
  */
 
+// Security: HTML escape helper to prevent XSS
+function escapeHTML(str) {
+    if (str === null || str === undefined) return '';
+    const div = document.createElement('div');
+    div.textContent = String(str);
+    return div.innerHTML;
+}
+
+// Escape for HTML attribute values (handles quotes)
+function escapeAttr(str) {
+    if (str === null || str === undefined) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
 class PricingApp {
     constructor() {
         this.engine = new PricingEngine();
@@ -171,14 +185,14 @@ class PricingApp {
 
         tierDiv.innerHTML = `
             <div class="tier-header">
-                <input type="text" class="tier-name-input" value="${tier.name}" placeholder="Tier name">
+                <input type="text" class="tier-name-input" value="${escapeAttr(tier.name)}" placeholder="Tier name">
                 <button class="remove-tier-btn" title="Remove tier">×</button>
             </div>
-            
+
             <div class="tier-pricing">
                 <div class="price-input-group">
                     <span class="price-symbol">$</span>
-                    <input type="number" class="tier-price-input" value="${tier.price}" min="0" step="1">
+                    <input type="number" class="tier-price-input" value="${escapeAttr(tier.price)}" min="0" step="1">
                     <select class="tier-billing-select">
                         <option value="monthly" ${tier.billingCycle === 'monthly' ? 'selected' : ''}>per month</option>
                         <option value="annual" ${tier.billingCycle === 'annual' ? 'selected' : ''}>per year</option>
@@ -189,19 +203,19 @@ class PricingApp {
             <div class="tier-metrics">
                 <div class="metric-group">
                     <label>Customer Distribution</label>
-                    <input type="number" class="tier-percentage-input" value="${tier.targetPercentage}" min="0" max="100" step="5">
+                    <input type="number" class="tier-percentage-input" value="${escapeAttr(tier.targetPercentage)}" min="0" max="100" step="5">
                     <span class="metric-suffix">% of customers</span>
                 </div>
                 <div class="metric-group">
                     <label>Conversion Rate</label>
-                    <input type="number" class="tier-conversion-input" value="${tier.conversionRate}" min="0" max="100" step="0.5">
+                    <input type="number" class="tier-conversion-input" value="${escapeAttr(tier.conversionRate)}" min="0" max="100" step="0.5">
                     <span class="metric-suffix">% of leads</span>
                 </div>
             </div>
 
             <div class="tier-features">
                 <label>Key features</label>
-                <textarea class="tier-features-input" rows="4" placeholder="Core features&#10;Email support&#10;Basic integrations&#10;Monthly reports">${tier.features.join('\n')}</textarea>
+                <textarea class="tier-features-input" rows="4" placeholder="Core features&#10;Email support&#10;Basic integrations&#10;Monthly reports">${escapeHTML(tier.features.join('\n'))}</textarea>
             </div>
         `;
 
