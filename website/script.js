@@ -858,6 +858,14 @@ function throttle(func, limit) {
             });
 
             if (response.ok) {
+                // Track form submission in Google Analytics
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'generate_lead', {
+                        'event_category': 'form',
+                        'event_label': 'Contact Form'
+                    });
+                }
+
                 // Show success state
                 form.style.display = 'none';
                 if (formSuccess) {
