@@ -901,21 +901,4 @@ function throttle(func, limit) {
         }
     });
 
-    // ==========================================================================
-    // Lou Mascot - Click Interaction
-    // ==========================================================================
-
-    // Add click handler to all Lou mascots - bounce/wave on click
-    document.querySelectorAll('.lou-mascot').forEach(lou => {
-        lou.style.cursor = 'pointer';
-        lou.addEventListener('click', () => {
-            // Add clicked class to trigger bounce animation
-            lou.classList.add('clicked');
-
-            // Remove class after animation completes to allow re-triggering
-            lou.addEventListener('animationend', () => {
-                lou.classList.remove('clicked');
-            }, { once: true });
-        });
-    });
 })();
