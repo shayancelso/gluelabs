@@ -237,7 +237,7 @@ p {
 }
 
 .logo-img {
-    height: 95px;
+    height: 115px;
     width: auto;
     display: block;
     transition: height 0.3s ease, filter 0.3s ease;
@@ -245,7 +245,7 @@ p {
 
 /* Shrink logo when scrolled */
 .nav.scrolled .logo-img {
-    height: 65px;
+    height: 80px;
 }
 
 /* Shimmer effect on logo hover - uses brightness pulse */
@@ -6853,11 +6853,11 @@ p {
     }
 
     .logo-img {
-        height: 70px;
+        height: 85px;
     }
 
     .nav.scrolled .logo-img {
-        height: 52px;
+        height: 60px;
     }
 
     /* Mobile Navigation with Backdrop */
