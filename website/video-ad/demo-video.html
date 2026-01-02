@@ -627,6 +627,20 @@
             background-clip: text;
         }
 
+        .cta-subheadline {
+            font-family: var(--font-display);
+            font-size: 48px;
+            font-weight: 600;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-top: 10px;
+            opacity: 0;
+            animation: fadeSlideUp 0.6s var(--ease-smooth) forwards;
+            animation-delay: 26s;
+        }
+
         .cta-button {
             margin-top: 40px;
             padding: 20px 50px;
@@ -838,7 +852,8 @@
         <!-- Scene 5: CTA (24-30s) -->
         <div class="scene scene-5">
             <img src="../Logo/Lou.png" class="mascot-final" alt="Lou mascot">
-            <h1 class="cta-headline">Built <span>for you</span>, not bought by you</h1>
+            <h1 class="cta-headline">One size satisfies <span>none</span>.</h1>
+            <h2 class="cta-subheadline">Solutions custom to you.</h2>
             <div class="cta-button">Book a call today</div>
             <div class="logo-lockup">
                 <img src="../images/gloo-logo.png" class="logo-final" alt="Gloo">
