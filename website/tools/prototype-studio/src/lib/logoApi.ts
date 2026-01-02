@@ -22,12 +22,13 @@ export async function fetchLogoForDomain(url: string): Promise<string | null> {
     // logo.dev provides free logos for domains
     const logoUrl = `https://img.logo.dev/${domain}?token=pk_EkJniMrxRz69M3yIqyxVuA`;
 
-    // Test if the logo loads
-    const response = await fetch(logoUrl, { method: 'HEAD' });
-    if (response.ok) {
-      return logoUrl;
-    }
-    return null;
+    // Test if the logo loads using an Image element (more reliable than fetch HEAD)
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve(logoUrl);
+      img.onerror = () => resolve(null);
+      img.src = logoUrl;
+    });
   } catch {
     return null;
   }
