@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate High-Quality Gloo GIF</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a2e;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+        h1 { margin-bottom: 20px; color: #E84393; }
+        .controls { margin-bottom: 30px; display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #E84393, #9B4DCA);
+            color: white;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        button:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(232,67,147,0.4); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .preview-section { display: flex; gap: 40px; flex-wrap: wrap; justify-content: center; align-items: flex-start; }
+        .preview-box { text-align: center; }
+        .preview-box h3 { margin-bottom: 15px; color: #9B4DCA; }
+        canvas { border-radius: 12px; background: #000; }
+        #status { margin-top: 20px; padding: 15px; background: rgba(155,77,202,0.2); border-radius: 8px; max-width: 500px; text-align: center; }
+        #downloadLink { display: none; margin-top: 20px; }
+        #downloadLink a {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .size-info { font-size: 12px; color: #888; margin-top: 8px; }
+    </style>
+</head>
+<body>
+    <h1>Gloo GIF Generator</h1>
+
+    <div class="controls">
+        <button onclick="generateGIF(200, 200)">Generate 200x200</button>
+        <button onclick="generateGIF(300, 300)">Generate 300x300</button>
+        <button onclick="generateGIF(400, 400)">Generate 400x400 (HD)</button>
+    </div>
+
+    <div class="preview-section">
+        <div class="preview-box">
+            <h3>Live Preview</h3>
+            <canvas id="previewCanvas" width="300" height="300"></canvas>
+            <div class="size-info">Animation Preview</div>
+        </div>
+        <div class="preview-box" id="outputBox" style="display:none;">
+            <h3>Generated GIF</h3>
+            <img id="outputGif" style="border-radius: 12px; background: #000;">
+            <div class="size-info" id="gifSize"></div>
+        </div>
+    </div>
+
+    <div id="status">Click a button above to generate your GIF</div>
+    <div id="downloadLink"></div>
+
+    <script>
+        const previewCanvas = document.getElementById('previewCanvas');
+        const previewCtx = previewCanvas.getContext('2d');
+        let animationFrame = 0;
+
+        // Draw the gloo character
+        function drawGloo(ctx, centerX, centerY, size, time) {
+            const scale = size / 200;
+
+            ctx.save();
+            ctx.translate(centerX, centerY);
+
+            // Floating animation
+            const floatY = Math.sin(time * 2.5) * 8 * scale;
+            ctx.translate(0, floatY);
+
+            // Ambient glow
+            const glowSize = 90 * scale;
+            const glowPulse = 1 + Math.sin(time * 3) * 0.15;
+            const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, glowSize * glowPulse);
+            gradient.addColorStop(0, 'rgba(232, 67, 147, 0.4)');
+            gradient.addColorStop(0.5, 'rgba(155, 77, 202, 0.2)');
+            gradient.addColorStop(1, 'rgba(155, 77, 202, 0)');
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(0, 0, glowSize * glowPulse, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Main body path - organic blob shape
+            ctx.beginPath();
+            const s = scale * 0.8;
+
+            // Create smooth blob shape
+            ctx.moveTo(0 * s, -70 * s);
+            ctx.bezierCurveTo(35 * s, -72 * s, 55 * s, -60 * s, 65 * s, -45 * s);
+            ctx.bezierCurveTo(82 * s, -42 * s, 92 * s, -25 * s, 90 * s, -5 * s);
+            ctx.bezierCurveTo(92 * s, 15 * s, 82 * s, 32 * s, 65 * s, 40 * s);
+            ctx.bezierCurveTo(75 * s, 58 * s, 65 * s, 78 * s, 45 * s, 85 * s);
+            ctx.bezierCurveTo(25 * s, 95 * s, 0 * s, 93 * s, -20 * s, 82 * s);
+            ctx.bezierCurveTo(-42 * s, 90 * s, -62 * s, 80 * s, -72 * s, 60 * s);
+            ctx.bezierCurveTo(-88 * s, 50 * s, -90 * s, 28 * s, -82 * s, 8 * s);
+            ctx.bezierCurveTo(-92 * s, -12 * s, -88 * s, -35 * s, -70 * s, -48 * s);
+            ctx.bezierCurveTo(-72 * s, -62 * s, -55 * s, -75 * s, -32 * s, -72 * s);
+            ctx.bezierCurveTo(-18 * s, -78 * s, -5 * s, -75 * s, 0 * s, -70 * s);
+            ctx.closePath();
+
+            // Main gradient fill
+            const bodyGrad = ctx.createLinearGradient(-60 * s, -60 * s, 60 * s, 60 * s);
+            bodyGrad.addColorStop(0, '#8B5CF6');
+            bodyGrad.addColorStop(0.3, '#A855F7');
+            bodyGrad.addColorStop(0.6, '#D946EF');
+            bodyGrad.addColorStop(1, '#EC4899');
+            ctx.fillStyle = bodyGrad;
+            ctx.fill();
+
+            // Highlight overlay
+            const highlightGrad = ctx.createRadialGradient(-25 * s, -35 * s, 0, -10 * s, -20 * s, 80 * s);
+            highlightGrad.addColorStop(0, 'rgba(255,255,255,0.45)');
+            highlightGrad.addColorStop(0.4, 'rgba(255,255,255,0.1)');
+            highlightGrad.addColorStop(1, 'rgba(255,255,255,0)');
+            ctx.fillStyle = highlightGrad;
+            ctx.fill();
+
+            // Inner shadow
+            const shadowGrad = ctx.createRadialGradient(0, 40 * s, 0, 0, 30 * s, 70 * s);
+            shadowGrad.addColorStop(0, 'rgba(91,31,158,0.35)');
+            shadowGrad.addColorStop(1, 'rgba(91,31,158,0)');
+            ctx.fillStyle = shadowGrad;
+            ctx.fill();
+
+            // Specular highlights
+            ctx.fillStyle = 'rgba(255,255,255,0.5)';
+            ctx.beginPath();
+            ctx.ellipse(-38 * s, -42 * s, 18 * s, 10 * s, -0.5, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = 'rgba(255,255,255,0.35)';
+            ctx.beginPath();
+            ctx.ellipse(-22 * s, -55 * s, 8 * s, 5 * s, -0.4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Eyes
+            ctx.strokeStyle = '#3D1A5C';
+            ctx.lineWidth = 5 * scale;
+            ctx.lineCap = 'round';
+
+            // Left eye
+            ctx.beginPath();
+            ctx.moveTo(-28 * s, -5 * s);
+            ctx.quadraticCurveTo(-18 * s, -20 * s, -8 * s, -5 * s);
+            ctx.stroke();
+
+            // Right eye
+            ctx.beginPath();
+            ctx.moveTo(8 * s, -5 * s);
+            ctx.quadraticCurveTo(18 * s, -20 * s, 28 * s, -5 * s);
+            ctx.stroke();
+
+            // Smile
+            ctx.beginPath();
+            ctx.moveTo(-18 * s, 18 * s);
+            ctx.quadraticCurveTo(0 * s, 40 * s, 18 * s, 18 * s);
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        // Draw loading dots
+        function drawDots(ctx, centerX, baseY, time, scale) {
+            const dotSpacing = 18 * scale;
+            const dotRadius = 5 * scale;
+
+            for (let i = 0; i < 3; i++) {
+                const delay = i * 0.15;
+                const bounce = Math.sin((time - delay) * 10) * 0.5 + 0.5;
+                const alpha = 0.4 + bounce * 0.6;
+                const size = dotRadius * (0.8 + bounce * 0.4);
+                const y = baseY - bounce * 6 * scale;
+                const x = centerX + (i - 1) * dotSpacing;
+
+                const dotGrad = ctx.createRadialGradient(x, y, 0, x, y, size);
+                dotGrad.addColorStop(0, `rgba(236, 72, 153, ${alpha})`);
+                dotGrad.addColorStop(1, `rgba(155, 77, 202, ${alpha * 0.7})`);
+
+                ctx.fillStyle = dotGrad;
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Animation loop for preview
+        function animate() {
+            const time = Date.now() / 1000;
+            previewCtx.fillStyle = '#000000';
+            previewCtx.fillRect(0, 0, previewCanvas.width, previewCanvas.height);
+
+            drawGloo(previewCtx, 150, 130, 200, time);
+            drawDots(previewCtx, 150, 250, time, 1);
+
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // Generate GIF
+        function generateGIF(width, height) {
+            const status = document.getElementById('status');
+            const downloadLink = document.getElementById('downloadLink');
+            const outputBox = document.getElementById('outputBox');
+            const outputGif = document.getElementById('outputGif');
+            const gifSize = document.getElementById('gifSize');
+
+            status.textContent = 'Generating high-quality GIF... Please wait.';
+            downloadLink.style.display = 'none';
+
+            const gif = new GIF({
+                workers: 2,
+                quality: 1,
+                width: width,
+                height: height,
+                workerScript: 'https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.worker.js'
+            });
+
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = width;
+            tempCanvas.height = height;
+            const tempCtx = tempCanvas.getContext('2d');
+
+            // Generate 30 frames for smooth animation (1.2 second loop)
+            const frameCount = 30;
+            const frameDuration = 40; // ms per frame
+
+            for (let i = 0; i < frameCount; i++) {
+                const time = (i / frameCount) * (Math.PI * 2 / 2.5); // Match animation cycle
+
+                tempCtx.fillStyle = '#000000';
+                tempCtx.fillRect(0, 0, width, height);
+
+                const scale = width / 300;
+                drawGloo(tempCtx, width / 2, height * 0.43, width * 0.67, time);
+                drawDots(tempCtx, width / 2, height * 0.83, time, scale);
+
+                gif.addFrame(tempCtx, { copy: true, delay: frameDuration });
+                status.textContent = `Rendering frame ${i + 1}/${frameCount}...`;
+            }
+
+            gif.on('finished', function(blob) {
+                const url = URL.createObjectURL(blob);
+                const sizeKB = (blob.size / 1024).toFixed(1);
+
+                outputGif.src = url;
+                outputGif.width = width;
+                outputGif.height = height;
+                outputBox.style.display = 'block';
+                gifSize.textContent = `${width}x${height} - ${sizeKB} KB`;
+
+                downloadLink.innerHTML = `<a href="${url}" download="gloo-loading-${width}x${height}.gif">Download GIF (${sizeKB} KB)</a>`;
+                downloadLink.style.display = 'block';
+
+                status.textContent = `GIF generated successfully! ${width}x${height} at ${sizeKB} KB`;
+            });
+
+            gif.render();
+        }
+    </script>
+</body>
+</html>

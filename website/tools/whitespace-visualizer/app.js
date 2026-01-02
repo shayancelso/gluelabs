@@ -32,21 +32,51 @@ class WhitespaceApp {
     initializeEventListeners() {
         // Single file upload handler
         document.getElementById('data-upload').addEventListener('change', (e) => this.handleSingleFileUpload(e));
-        
+
         // Sample data loader
         document.getElementById('load-sample-data').addEventListener('click', () => this.loadSampleData());
-        
+
         // Modal close handlers
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 this.closeModal();
             }
         });
-        
+
         // Close modal when clicking on overlay
         document.getElementById('opportunity-modal').addEventListener('click', (e) => {
             if (e.target.id === 'opportunity-modal') {
                 this.closeModal();
+            }
+        });
+
+        // Drag and drop events for Lou animation
+        this.initializeDragDropEvents();
+    }
+
+    initializeDragDropEvents() {
+        const uploadZone = document.querySelector('.upload-zone');
+        if (!uploadZone) return;
+
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('drag-over');
+        });
+
+        uploadZone.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('drag-over');
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('drag-over');
+
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                const input = document.getElementById('data-upload');
+                input.files = files;
+                input.dispatchEvent(new Event('change'));
             }
         });
     }
@@ -98,6 +128,22 @@ class WhitespaceApp {
         element.textContent = message;
         element.className = `upload-status ${type}`;
         element.style.display = 'block';
+
+        // Update Lou's state
+        this.updateLouState(type);
+    }
+
+    updateLouState(state) {
+        const louWrapper = document.getElementById('lou-upload');
+        if (!louWrapper) return;
+
+        // Remove all state classes
+        louWrapper.classList.remove('processing', 'success', 'error');
+
+        // Add new state class
+        if (state === 'processing' || state === 'success' || state === 'error') {
+            louWrapper.classList.add(state);
+        }
     }
 
     updateUploadButton(button, text) {
@@ -154,42 +200,30 @@ class WhitespaceApp {
     }
 
     displayResults(results) {
-        console.log('🚀 DISPLAY RESULTS CALLED');
-        console.log('Analysis results:', results); // Debug log
         
         // Check if analytics dashboard exists in DOM
         const analyticsSection = document.querySelector('.analytics-dashboard');
         if (!analyticsSection) {
-            console.error('❌ Analytics dashboard section not found in DOM');
             // Let's try to find any analytics elements
             const allAnalyticsElements = document.querySelectorAll('[id*="analytics"], [class*="analytics"]');
-            console.log('Found analytics elements:', allAnalyticsElements);
         } else {
-            console.log('✅ Analytics dashboard section found in DOM');
         }
         
-        console.log('📊 About to call displayStats...');
         this.displayStats(results.stats);
         
-        console.log('📋 About to call displayMatrix...');
         this.displayMatrix(results.matrix);
         
-        console.log('💰 About to call displayRevenueProjections...');
         this.displayRevenueProjections(results.stats.revenueProjections);
         
-        console.log('📚 About to call displayExpansionPlaybooks...');
         this.displayExpansionPlaybooks();
         
-        console.log('📊 About to call displayDashboard...');
         this.displayDashboard(results.opportunities, results.stats);
         
-        console.log('✅ All display functions called');
     }
 
     displayStats(stats) {
         const statsContainer = document.getElementById('analysis-stats');
         
-        console.log('Stats object:', stats); // Debug log
         
         // Check if whitespace metrics are available
         if (stats.whitespaceMetrics) {
@@ -237,7 +271,6 @@ class WhitespaceApp {
     displayRevenueProjections(projections) {
         const projectionsContainer = document.getElementById('revenue-projections');
         
-        console.log('New projections structure:', projections); // Debug log
         
         // Handle both old and new projection structures
         const quarters = projections.quarters || {
@@ -279,7 +312,7 @@ class WhitespaceApp {
             </div>
             
             <div class="methodology-section">
-                <h5>📊 How We Calculate These Projections</h5>
+                <h5>How We Calculate These Projections</h5>
                 <div class="methodology-grid">
                     <div class="methodology-item">
                         <strong>Q1:</strong> High-confidence opportunities (Score 80+) with prerequisites met
@@ -365,7 +398,6 @@ class WhitespaceApp {
         const playbooksContainer = document.getElementById('expansion-playbooks');
         const playbooks = this.engine.generateExpansionPlaybooks();
         
-        console.log('Generated playbooks:', playbooks); // Debug log
         
         // Add controls section
         const controlsHTML = `
@@ -870,6 +902,137 @@ class WhitespaceApp {
         });
     }
 
+    // Matrix Filter Animation System
+    applyMatrixFilter(filterType) {
+        const matrixContent = document.getElementById('whitespace-matrix');
+        const matrixLayout = matrixContent.querySelector('.matrix-layout');
+        const allCells = matrixContent.querySelectorAll('.matrix-cell');
+        const filterButtons = document.querySelectorAll('.matrix-filter-btn');
+        const legend = document.getElementById('matrix-legend');
+
+        // Update active button
+        filterButtons.forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.dataset.filter === filterType) {
+                btn.classList.add('active');
+            }
+        });
+
+        // Remove existing filter classes
+        matrixContent.classList.remove('filter-all', 'filter-high-priority', 'filter-at-risk');
+        legend.classList.remove('high-priority', 'at-risk');
+
+        // Reset all cells
+        allCells.forEach(cell => {
+            cell.classList.remove('filtered-in', 'filtered-out', 'risk-low', 'risk-medium', 'risk-high');
+            // Remove stagger classes
+            for (let i = 1; i <= 8; i++) {
+                cell.classList.remove(`stagger-${i}`);
+            }
+            // Remove risk indicator if exists
+            const indicator = cell.querySelector('.risk-indicator');
+            if (indicator) indicator.remove();
+        });
+
+        if (filterType === 'all') {
+            // Show all cells normally
+            matrixContent.classList.add('filter-all');
+            if (matrixLayout) matrixLayout.classList.remove('reflow-active');
+            return;
+        }
+
+        // Apply filter class to container
+        matrixContent.classList.add(`filter-${filterType}`);
+        legend.classList.add(filterType === 'high-priority' ? 'high-priority' : 'at-risk');
+
+        if (filterType === 'high-priority') {
+            this.applyHighPriorityFilter(allCells, matrixLayout);
+        } else if (filterType === 'at-risk') {
+            this.applyAtRiskFilter(allCells, matrixLayout);
+        }
+    }
+
+    applyHighPriorityFilter(allCells, matrixLayout) {
+        // High priority: Show adopted (green) and high-value opportunities (purple)
+        // Dim everything else
+        let staggerIndex = 0;
+
+        allCells.forEach(cell => {
+            const isAdopted = cell.classList.contains('adopted');
+            const isOpportunity = cell.classList.contains('opportunity');
+
+            if (isAdopted || isOpportunity) {
+                // These are priority items - highlight them
+                cell.classList.add('filtered-in');
+                staggerIndex++;
+                if (staggerIndex <= 8) {
+                    cell.classList.add(`stagger-${staggerIndex}`);
+                }
+            } else {
+                // Dim non-priority items
+                cell.classList.add('filtered-out');
+            }
+        });
+
+        // Enable reflow effect
+        if (matrixLayout) {
+            matrixLayout.classList.add('reflow-active');
+        }
+    }
+
+    applyAtRiskFilter(allCells, matrixLayout) {
+        // At Risk: Color opportunities by their score (yellow=low risk, red=high risk)
+        // This simulates churn/risk scoring
+        let staggerIndex = 0;
+
+        allCells.forEach(cell => {
+            const isOpportunity = cell.classList.contains('opportunity');
+            const isAdopted = cell.classList.contains('adopted');
+
+            if (isOpportunity) {
+                // Get the opportunity value to determine risk level
+                const valueElement = cell.querySelector('.opportunity-value');
+                let value = 0;
+                if (valueElement) {
+                    const valueText = valueElement.textContent.replace(/[^0-9.]/g, '');
+                    value = parseFloat(valueText) || 0;
+                }
+
+                // Determine risk level based on value (higher value = higher risk if not captured)
+                let riskLevel;
+                if (value >= 100) {
+                    riskLevel = 'high';
+                } else if (value >= 50) {
+                    riskLevel = 'medium';
+                } else {
+                    riskLevel = 'low';
+                }
+
+                cell.classList.add('filtered-in', `risk-${riskLevel}`);
+                staggerIndex++;
+                if (staggerIndex <= 8) {
+                    cell.classList.add(`stagger-${staggerIndex}`);
+                }
+
+                // Add pulsing risk indicator dot
+                const indicator = document.createElement('div');
+                indicator.className = `risk-indicator ${riskLevel}`;
+                cell.appendChild(indicator);
+            } else if (isAdopted) {
+                // Adopted accounts are "safe" - dim them slightly
+                cell.classList.add('filtered-out');
+            } else {
+                // N/A cells - dim completely
+                cell.classList.add('filtered-out');
+            }
+        });
+
+        // Enable reflow effect
+        if (matrixLayout) {
+            matrixLayout.classList.add('reflow-active');
+        }
+    }
+
     displayDashboard(opportunities, stats) {
         // Top opportunities
         const topOpportunitiesHTML = opportunities.slice(0, 5).map(opp => `
@@ -1023,7 +1186,7 @@ class WhitespaceApp {
             </div>
             
             <div class="detail-section">
-                <h4>🎯 Account Intelligence</h4>
+                <h4>Account Intelligence</h4>
                 <div class="intelligence-grid">
                     <div class="intelligence-item">
                         <div class="intelligence-label">Expansion Readiness</div>
@@ -1056,7 +1219,7 @@ class WhitespaceApp {
             </div>
             
             <div class="detail-section">
-                <h4>⚡ Next Best Action</h4>
+                <h4>Next Best Action</h4>
                 <div class="action-recommendation">
                     <p class="next-action">${nextBestAction}</p>
                 </div>
@@ -1091,7 +1254,6 @@ class WhitespaceApp {
         // Parse the quarter data if it's a string
         const data = typeof quarterData === 'string' ? JSON.parse(quarterData.replace(/&quot;/g, '"')) : quarterData;
         
-        console.log('Quarter breakdown data:', quarter, data);
         
         if (!data.breakdown || data.breakdown.length === 0) {
             alert(`${quarter.toUpperCase()} has no opportunities assigned yet.`);
@@ -1317,7 +1479,6 @@ class WhitespaceApp {
     displaySimpleAnalytics(stats, opportunities) {
         // Analytics dashboard removed per user request
         return;
-        console.log('🎯 SIMPLE ANALYTICS STARTING...');
         
         try {
             // Find elements and set test values - this should work
@@ -1332,27 +1493,21 @@ class WhitespaceApp {
                 velocityTrend: document.getElementById('velocity-trend')
             };
             
-            console.log('Elements found:', elements);
             
             // Calculate real values from data
             let totalPipeline = 0;
             let highProbCount = 0;
             
-            console.log('Calculating real values from data...');
-            console.log('Opportunities received:', opportunities);
-            console.log('Stats received:', stats);
             
             if (opportunities && opportunities.length > 0) {
                 // Calculate total pipeline - try different property names
                 totalPipeline = opportunities.reduce((sum, opp) => {
                     const value = opp.opportunityValue || opp.value || opp.potentialValue || opp.revenue || 0;
-                    console.log(`Opp value for ${opp.account?.name || 'unknown'}: ${value}`);
                     return sum + value;
                 }, 0);
                 
                 // If still zero, estimate from account data
                 if (totalPipeline === 0 && this.engine.accounts) {
-                    console.log('Pipeline is zero, estimating from account data...');
                     totalPipeline = this.engine.accounts.reduce((sum, acc) => {
                         const potential = acc.whitespaceValue || acc.totalMarketPotential || 0;
                         return sum + potential;
@@ -1401,31 +1556,26 @@ class WhitespaceApp {
                 }
             }
             
-            console.log('Calculated values:', { totalPipeline, highProbCount, avgPenetration, velocityScore });
             
             // Set calculated values with safe formatting
             if (elements.pipeline) {
                 const formattedPipeline = isNaN(totalPipeline) ? '$0' : `$${this.formatCurrency(totalPipeline)}`;
                 elements.pipeline.textContent = formattedPipeline;
-                console.log('✅ Pipeline set to:', formattedPipeline);
             }
             
             if (elements.qualified) {
                 const safeCount = isNaN(highProbCount) ? 0 : highProbCount;
                 elements.qualified.textContent = safeCount.toString();
-                console.log('✅ Qualified set to:', safeCount);
             }
             
             if (elements.penetration) {
                 const safePenetration = isNaN(avgPenetration) ? 45 : avgPenetration;
                 elements.penetration.textContent = `${safePenetration}%`;
-                console.log('✅ Penetration set to:', safePenetration + '%');
             }
             
             if (elements.velocity) {
                 const safeVelocity = isNaN(velocityScore) ? 73 : velocityScore;
                 elements.velocity.textContent = safeVelocity.toString();
-                console.log('✅ Velocity set to:', safeVelocity);
             }
             
             // Set trend texts with real data
@@ -1450,18 +1600,15 @@ class WhitespaceApp {
                 elements.velocityTrend.textContent = velocityText;
             }
             
-            console.log('🎉 Simple analytics complete');
             
             // Now populate some basic charts with placeholder content
             this.displaySimpleCharts();
             
         } catch (error) {
-            console.error('❌ Simple analytics failed:', error);
         }
     }
     
     displaySimpleCharts() {
-        console.log('📊 Adding ultra-simple chart content...');
         
         // Ultra-simplified charts - just text lists to ensure they work
         
@@ -1485,14 +1632,12 @@ class WhitespaceApp {
         // Performance Matrix - Initialize with working functionality
         this.updatePerformanceMatrix();
         
-        console.log('🎉 All ultra-simple charts completed successfully');
         
         // Add interactive functionality to controls
         this.addAnalyticsInteractivity();
     }
     
     addAnalyticsInteractivity() {
-        console.log('🎛️ Adding analytics interactivity...');
         
         // Use event delegation for dynamic elements
         const analyticsContainer = document.querySelector('.analytics-dashboard');
@@ -1554,11 +1699,9 @@ class WhitespaceApp {
             });
         }
         
-        console.log('✅ Analytics interactivity added with event delegation');
     }
     
     updateGrowthTrajectory(timeframe) {
-        console.log(`📈 Updating growth trajectory for ${timeframe}`);
         
         const trajectoryContainer = document.getElementById('growth-trajectory');
         if (!trajectoryContainer) return;
@@ -1621,7 +1764,6 @@ class WhitespaceApp {
     }
     
     updateHeatmapFilter(filterValue) {
-        console.log(`🔥 Updating heatmap filter: ${filterValue}`);
         
         const heatmapContainer = document.getElementById('opportunity-heatmap');
         if (!heatmapContainer) return;
@@ -1695,7 +1837,6 @@ class WhitespaceApp {
     }
     
     updatePerformanceMatrix() {
-        console.log('📊 Updating performance matrix...');
         
         const matrixContainer = document.getElementById('performance-matrix');
         if (!matrixContainer) return;
@@ -1780,38 +1921,22 @@ class WhitespaceApp {
     // Advanced Analytics Dashboard Functions
     displayAdvancedAnalytics(stats, opportunities) {
         try {
-            console.log('🔥 ADVANCED ANALYTICS FUNCTION CALLED!');
-            console.log('=== ANALYTICS DEBUG START ===');
             
             // First check if the dashboard HTML is there
             const dashboardElement = document.querySelector('.analytics-dashboard');
-            console.log('Analytics dashboard element:', dashboardElement);
             
             if (!dashboardElement) {
-                console.error('❌ CRITICAL: .analytics-dashboard element not found in DOM!');
                 return;
             }
             
             // Check if it's visible
             const computedStyle = window.getComputedStyle(dashboardElement);
-            console.log('Dashboard display style:', computedStyle.display);
-            console.log('Dashboard visibility style:', computedStyle.visibility);
-            console.log('Dashboard opacity style:', computedStyle.opacity);
             
             // Check for key metric elements
             const pipelineEl = document.getElementById('total-pipeline-value');
-            console.log('Pipeline element exists:', !!pipelineEl);
             
             const qualifiedEl = document.getElementById('qualified-opportunities');
-            console.log('Qualified element exists:', !!qualifiedEl);
             
-            console.log('Stats object:', stats);
-            console.log('Opportunities array:', opportunities);
-            console.log('Opportunities length:', opportunities ? opportunities.length : 'undefined');
-            console.log('Sample opportunity:', opportunities && opportunities[0] ? opportunities[0] : 'none');
-            console.log('Engine accounts:', this.engine.accounts);
-            console.log('Engine products:', this.engine.products);
-            console.log('=== ANALYTICS DEBUG END ===');
             
             // Validate inputs
             if (!stats) {
@@ -1826,12 +1951,10 @@ class WhitespaceApp {
                 return;
             }
             
-            console.log('Proceeding with analytics display...');
             this.displayKeyMetrics(stats, opportunities);
             this.displayAnalyticsCharts(stats, opportunities);
             this.initializeAnalyticsInteractivity();
             
-            console.log('Advanced analytics displayed successfully');
         } catch (error) {
             console.error('Error displaying advanced analytics:', error);
             this.displayAnalyticsError('Failed to load analytics dashboard: ' + error.message);
@@ -1856,13 +1979,9 @@ class WhitespaceApp {
 
     displayKeyMetrics(stats, opportunities) {
         try {
-            console.log('=== KEY METRICS DEBUG START ===');
-            console.log('Displaying key metrics...', { stats, opportunities });
             
             // Debug opportunity structure
             if (opportunities && opportunities.length > 0) {
-                console.log('First opportunity keys:', Object.keys(opportunities[0]));
-                console.log('First opportunity values:', opportunities[0]);
             }
             
             // Total Pipeline Value - try multiple property names
@@ -1872,26 +1991,20 @@ class WhitespaceApp {
                 totalPipeline = opportunities.reduce((sum, opp) => {
                     // Try different possible property names
                     const value = opp.opportunityValue || opp.value || opp.potentialValue || opp.revenue || 0;
-                    console.log(`Opportunity ${opp.account?.name || 'unknown'}: ${value}`);
                     return sum + value;
                 }, 0);
             }
             
-            console.log('Total pipeline calculated:', totalPipeline);
             
             // If still zero, let's create some test data
             if (totalPipeline === 0 && opportunities && opportunities.length > 0) {
-                console.log('Pipeline is zero, generating test values...');
                 totalPipeline = opportunities.length * 75000; // $75k per opportunity average
-                console.log('Generated test pipeline:', totalPipeline);
             }
             
             const pipelineElement = document.getElementById('total-pipeline-value');
-            console.log('Pipeline element found:', pipelineElement);
             
             if (pipelineElement) {
                 pipelineElement.textContent = `$${this.formatCurrency(totalPipeline)}`;
-                console.log('Pipeline value set to:', pipelineElement.textContent);
             } else {
                 console.error('total-pipeline-value element not found');
             }
@@ -1899,17 +2012,13 @@ class WhitespaceApp {
             // High-Probability Opportunities  
             let highProbOpps = opportunities.filter(opp => {
                 const score = opp.score || opp.probability || opp.opportunityScore || 0;
-                console.log(`Opportunity score for ${opp.account?.name || 'unknown'}: ${score}`);
                 return score >= 70;
             });
             
-            console.log('High probability opportunities:', highProbOpps.length);
             
             // If no high-prob opportunities, create some test data
             if (highProbOpps.length === 0 && opportunities.length > 0) {
-                console.log('No high-prob opportunities found, generating test data...');
                 highProbOpps = opportunities.slice(0, Math.ceil(opportunities.length * 0.3)); // 30% are high-prob
-                console.log('Generated high-prob count:', highProbOpps.length);
             }
             
             const qualifiedElement = document.getElementById('qualified-opportunities');
@@ -1917,7 +2026,6 @@ class WhitespaceApp {
             
             if (qualifiedElement) {
                 qualifiedElement.textContent = highProbOpps.length;
-                console.log('Qualified opportunities set to:', highProbOpps.length);
             }
             if (trendElement) {
                 trendElement.textContent = `${highProbOpps.length} ready for immediate action`;
@@ -1925,7 +2033,6 @@ class WhitespaceApp {
             
             // Average Account Penetration
             if (this.engine.accounts && this.engine.accounts.length > 0) {
-                console.log('Calculating account penetration...');
                 
                 const avgPenetration = this.engine.accounts.reduce((sum, acc) => {
                     // Try different property names for penetration
@@ -1934,18 +2041,15 @@ class WhitespaceApp {
                                       parseFloat(acc.marketPenetration) || 
                                       Math.random() * 60 + 20; // Fallback: 20-80% random
                     
-                    console.log(`Account ${acc.name} penetration: ${penetration}%`);
                     return sum + penetration;
                 }, 0) / this.engine.accounts.length;
                 
-                console.log('Average penetration calculated:', avgPenetration);
                 
                 const penetrationElement = document.getElementById('average-penetration');
                 const penetrationTrendElement = document.getElementById('penetration-trend');
                 
                 if (penetrationElement) {
                     penetrationElement.textContent = `${Math.round(avgPenetration)}%`;
-                    console.log('Penetration value set to:', penetrationElement.textContent);
                 }
                 if (penetrationTrendElement) {
                     penetrationTrendElement.textContent = `${Math.round(100 - avgPenetration)}% whitespace remaining`;
@@ -1964,9 +2068,7 @@ class WhitespaceApp {
                 velocityTrendElement.textContent = 'Speed of opportunity execution';
             }
             
-            console.log('=== KEY METRICS DEBUG END - SUCCESS ===');
         } catch (error) {
-            console.error('=== KEY METRICS DEBUG END - ERROR ===');
             console.error('Error displaying key metrics:', error);
             // Continue with other analytics functions even if metrics fail
         }
@@ -1997,12 +2099,10 @@ class WhitespaceApp {
 
     displayAnalyticsCharts(stats, opportunities) {
         try {
-            console.log('Displaying analytics charts...');
             
             // Revenue Opportunity Heatmap
             try {
                 this.renderOpportunityHeatmap(opportunities);
-                console.log('Opportunity heatmap rendered successfully');
             } catch (error) {
                 console.error('Error rendering opportunity heatmap:', error);
                 this.renderChartError('opportunity-heatmap', 'Failed to load heatmap');
@@ -2011,7 +2111,6 @@ class WhitespaceApp {
             // Account Growth Trajectory
             try {
                 this.renderGrowthTrajectory(stats);
-                console.log('Growth trajectory rendered successfully');
             } catch (error) {
                 console.error('Error rendering growth trajectory:', error);
                 this.renderChartError('growth-trajectory', 'Failed to load growth chart');
@@ -2020,7 +2119,6 @@ class WhitespaceApp {
             // Expansion Success Probability
             try {
                 this.renderProbabilityDistribution(opportunities);
-                console.log('Probability distribution rendered successfully');
             } catch (error) {
                 console.error('Error rendering probability distribution:', error);
                 this.renderChartError('probability-distribution', 'Failed to load probability chart');
@@ -2029,7 +2127,6 @@ class WhitespaceApp {
             // Competitive Risk Assessment
             try {
                 this.renderCompetitiveRiskAssessment(stats);
-                console.log('Risk assessment rendered successfully');
             } catch (error) {
                 console.error('Error rendering risk assessment:', error);
                 this.renderChartError('competitive-risk', 'Failed to load risk assessment');
@@ -2038,13 +2135,11 @@ class WhitespaceApp {
             // Strategic Account Performance Matrix
             try {
                 this.renderPerformanceMatrix(stats);
-                console.log('Performance matrix rendered successfully');
             } catch (error) {
                 console.error('Error rendering performance matrix:', error);
                 this.renderChartError('performance-matrix', 'Failed to load performance matrix');
             }
             
-            console.log('All analytics charts processed');
         } catch (error) {
             console.error('Error displaying analytics charts:', error);
         }
@@ -2351,71 +2446,51 @@ class WhitespaceApp {
 
     updateGrowthTrajectory(timeframe) {
         // Update trajectory based on selected timeframe
-        console.log(`Updating growth trajectory for ${timeframe}`);
     }
 
     filterHeatmap(filter) {
         // Filter heatmap based on selection
-        console.log(`Filtering heatmap by ${filter}`);
     }
 
     updatePerformanceMatrix() {
         // Update matrix based on axis selections
-        console.log('Updating performance matrix');
     }
 
     // Test function to manually trigger analytics
     testAnalytics() {
-        console.log('🧪 TESTING ANALYTICS MANUALLY...');
         
         // First, let's directly test if we can set values in the HTML elements
-        console.log('🔍 Testing direct HTML element access...');
         
         const pipelineEl = document.getElementById('total-pipeline-value');
         const qualifiedEl = document.getElementById('qualified-opportunities');
         const penetrationEl = document.getElementById('average-penetration');
         const velocityEl = document.getElementById('expansion-velocity');
         
-        console.log('Pipeline element:', pipelineEl);
-        console.log('Qualified element:', qualifiedEl);
-        console.log('Penetration element:', penetrationEl);
-        console.log('Velocity element:', velocityEl);
         
         // Try to directly set values
         if (pipelineEl) {
             pipelineEl.textContent = '$1,234,567';
-            console.log('✅ Set pipeline value directly');
         } else {
-            console.error('❌ Pipeline element not found');
         }
         
         if (qualifiedEl) {
             qualifiedEl.textContent = '42';
-            console.log('✅ Set qualified opportunities directly');
         } else {
-            console.error('❌ Qualified element not found');
         }
         
         if (penetrationEl) {
             penetrationEl.textContent = '67%';
-            console.log('✅ Set penetration directly');
         } else {
-            console.error('❌ Penetration element not found');
         }
         
         if (velocityEl) {
             velocityEl.textContent = '89';
-            console.log('✅ Set velocity directly');
         } else {
-            console.error('❌ Velocity element not found');
         }
         
-        console.log('🎯 If you can see these test values in the UI, the HTML is working');
-        console.log('📋 Next, testing with actual data flow...');
         
         // Check if sample data is loaded
         if (!this.engine.accounts || this.engine.accounts.length === 0) {
-            console.log('Loading sample data first...');
             this.loadSampleData();
         }
         
@@ -2432,7 +2507,6 @@ class WhitespaceApp {
             opportunityValue: Math.floor(Math.random() * 100000) + 50000
         }));
         
-        console.log('Test data:', { testStats, testOpportunities });
         
         this.displayAdvancedAnalytics(testStats, testOpportunities);
     }

@@ -1021,3 +1021,50 @@
         width: 100%;
     }
 }
+
+/* ==========================================================================
+   Lou Mascot - Tools Page
+   ========================================================================== */
+
+/* Featured tool card positioning for Lou */
+.featured-tool-card {
+    position: relative;
+}
+
+/* Lou sleeping on Coming Soon cards */
+.featured-tool-card .lou-coming-soon {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    opacity: 0.5;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 5;
+}
+
+.featured-tool-card:hover .lou-coming-soon {
+    opacity: 1;
+    transform: translateY(-4px);
+}
+
+.featured-tool-card:hover .lou-coming-soon .lou-mascot {
+    animation: louFloat 2s ease-in-out infinite;
+}
+
+/* Tools badge Lou adjustment */
+.tools-badge.has-lou {
+    position: relative;
+    padding-right: 36px;
+}
+
+.tools-badge .lou-blob.lou-badge {
+    width: 24px;
+    height: 24px;
+    right: 4px;
+}
+
+/* Hide Lou on smaller featured cards on mobile */
+@media (max-width: 768px) {
+    .featured-tool-card .lou-coming-soon {
+        display: none;
+    }
+}

@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "PRICING_ANALYSIS.md",
+                "file": "prospects/gong-io/research-report.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "PRICING_ANALYSIS"
+              "title": "research-report"
             }
           }
         ]
@@ -94,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "PRICING_ANALYSIS.md",
+                "file": "Untitled.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for PRICING_ANALYSIS"
+              "title": "Backlinks for Untitled"
             }
           },
           {
@@ -113,12 +113,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "PRICING_ANALYSIS.md",
+                "file": "Untitled.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from PRICING_ANALYSIS"
+              "title": "Outgoing links from Untitled"
             }
           },
           {
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "PRICING_ANALYSIS.md",
+                "file": "Untitled.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of PRICING_ANALYSIS"
+              "title": "Outline of Untitled"
             }
           }
         ]
@@ -185,12 +185,51 @@
   },
   "active": "fac3d1e086163671",
   "lastOpenFiles": [
-    "tools/pricing-calculator/script.js",
-    "tools/pricing-calculator/styles.css",
-    "tools/pricing-calculator/data.js",
-    "tools/pricing-calculator/app.js",
-    "tools/pricing-calculator/pricing-engine.js",
-    "tools/pricing-calculator/index.html",
-    "tools/pricing-calculator"
+    "tools/prototype-studio/assets/purify.es-Bzr520pe.js",
+    "tools/prototype-studio/assets/jspdf.es.min-BGaDRChw.js",
+    "tools/prototype-studio/assets/index.es-Cki15kEu.js",
+    "tools/prototype-studio/assets/index-C_vRS_NK.css",
+    "tools/prototype-studio/assets/index-AxpPZRkO.js",
+    "tools/prototype-studio/assets/html2canvas.esm-DXEQVQnt.js",
+    "tools/prototype-studio/assets",
+    "tools/prototype-studio/dist/index.html",
+    "tools/prototype-studio/dist/assets/purify.es-Bzr520pe.js",
+    "tools/prototype-studio/dist/assets/jspdf.es.min-BGaDRChw.js",
+    "tools/prototype-studio/dist/assets/index.es-Cki15kEu.js",
+    "tools/prototype-studio/dist/vite.svg",
+    "tools/prototype-studio/node_modules/react-is/README.md",
+    "tools/prototype-studio/node_modules/tailwindcss/CHANGELOG.md",
+    "tools/prototype-studio/node_modules/tailwindcss/src/postcss-plugins/nesting/README.md",
+    "tools/prototype-studio/node_modules/tailwindcss/src/value-parser/README.md",
+    "tools/prototype-studio/node_modules/tailwindcss/lib/postcss-plugins/nesting/README.md",
+    "tools/prototype-studio/node_modules/tailwindcss/lib/value-parser/README.md",
+    "tools/prototype-studio/node_modules/readdirp/node_modules/picomatch/CHANGELOG.md",
+    "tools/prototype-studio/node_modules/readdirp/node_modules/picomatch/README.md",
+    "tools/prototype-studio/node_modules/readdirp/README.md",
+    "tools/prototype-studio/node_modules/anymatch/node_modules/picomatch/README.md",
+    "tools/prototype-studio/node_modules/anymatch/node_modules/picomatch/CHANGELOG.md",
+    "tools/prototype-studio/node_modules/anymatch/README.md",
+    "tools/prototype-studio/node_modules/micromatch/node_modules/picomatch/README.md",
+    "tools/prototype-studio/node_modules/micromatch/node_modules/picomatch/CHANGELOG.md",
+    "tools/prototype-studio/node_modules/micromatch/README.md",
+    "tools/prototype-studio/node_modules/fast-glob/node_modules/glob-parent/README.md",
+    "tools/prototype-studio/node_modules/fast-glob/node_modules/glob-parent/CHANGELOG.md",
+    "tools/prototype-studio/node_modules/fast-glob/README.md",
+    "tools/prototype-studio/node_modules/chokidar/node_modules/glob-parent/README.md",
+    "tools/prototype-studio/node_modules/chokidar/node_modules/glob-parent/CHANGELOG.md",
+    "tools/prototype-studio/node_modules/chokidar/README.md",
+    "tools/prototype-studio/node_modules/@nodelib/fs.walk/README.md",
+    "tools/prototype-studio/node_modules/@nodelib/fs.stat/README.md",
+    "tools/prototype-studio/node_modules/@nodelib/fs.scandir/README.md",
+    "tools/prototype-studio/node_modules/@alloc/quick-lru/readme.md",
+    "tools/prototype-studio/node_modules/date-fns/docs/logotype.svg",
+    "tools/prototype-studio/node_modules/date-fns/docs/logo.svg",
+    "tools/prototype-studio/src/assets/react.svg",
+    "tools/prototype-studio/public/vite.svg",
+    "images/og-image.png",
+    "images/ChatGPT Image Jan 1, 2026, 02_54_50 PM.png",
+    "images/tools/salesforce.png",
+    "favicon.svg",
+    "images/prototype2.png"
   ]
 }

@@ -192,6 +192,47 @@
     };
 
     // ========================================
+    // Hero Orb Parallax
+    // ========================================
+
+    const OrbParallax = {
+        init() {
+            if (isMobile) return;
+
+            const orbs = document.querySelectorAll('.hero-orbs .orb');
+            if (!orbs.length) return;
+
+            // Different parallax speeds for each orb
+            orbs.forEach((orb, index) => {
+                const speed = 0.2 + (index * 0.1); // Varying speeds
+
+                gsap.to(orb, {
+                    y: () => window.innerHeight * speed,
+                    ease: 'none',
+                    scrollTrigger: {
+                        trigger: '.hero',
+                        start: 'top top',
+                        end: 'bottom top',
+                        scrub: 1
+                    }
+                });
+            });
+
+            // Subtle glow pulse on the gradient mesh
+            const heroMesh = document.querySelector('.hero-mesh');
+            if (heroMesh) {
+                gsap.to(heroMesh, {
+                    opacity: 0.6,
+                    duration: 3,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: 'sine.inOut'
+                });
+            }
+        }
+    };
+
+    // ========================================
     // Enhanced Scroll Animations
     // ========================================
 
@@ -232,14 +273,16 @@
     };
 
     // ========================================
-    // Sticky Scroll "See It Live" Section
+    // Sticky Scroll "See It Live" Section (DISABLED - Now using carousel)
     // ========================================
 
+    /* Removed scroll-jacking - replaced with carousel
     const StickyScrollSection = {
         chapters: ['whitespace', 'health', 'roi', 'workback'],
         currentChapter: 0,
         isInitialized: false,
         progressElement: null,
+        scrollTrigger: null,
 
         init() {
             // Skip on tablet and mobile - use normal tabbed interface
@@ -251,8 +294,8 @@
             // Create progress indicator (fixed position, hidden by default)
             this.createProgressIndicator();
 
-            // Initialize ScrollTrigger for tab switching only (no pinning for now)
-            this.initScrollTrigger(section);
+            // Initialize ScrollTrigger with GSAP pin for proper scroll-jacking
+            this.initPinnedScrollTrigger(section);
 
             this.isInitialized = true;
         },
@@ -273,28 +316,43 @@
             this.progressElement = document.querySelector('.sticky-progress');
         },
 
-        initScrollTrigger(section) {
+        initPinnedScrollTrigger(section) {
             const self = this;
+            const chapters = this.chapters.length; // 4 chapters
 
-            // Simple scroll-based tab switching without pinning
-            ScrollTrigger.create({
+            // Use GSAP's pin feature for proper scroll-jacking
+            // This pins the section in place while user scrolls through the designated distance
+            this.scrollTrigger = ScrollTrigger.create({
                 trigger: section,
-                start: 'top 30%',
-                end: 'bottom 30%',
-                onEnter: () => self.showProgress(),
-                onLeave: () => self.hideProgress(),
-                onEnterBack: () => self.showProgress(),
-                onLeaveBack: () => self.hideProgress(),
+                start: 'top 80px', // Start when section is 80px from top (below fixed nav)
+                end: '+=300%', // Pin for 300% of viewport height (75vh per chapter × 4)
+                pin: true, // This is the key - pins the section in place
+                pinSpacing: true, // Adds space below so content doesn't overlap
+                anticipatePin: 1, // Smooth pin transition
+                onEnter: () => {
+                    section.classList.add('is-pinned');
+                    self.showProgress();
+                },
+                onLeave: () => {
+                    section.classList.remove('is-pinned');
+                    self.hideProgress();
+                },
+                onEnterBack: () => {
+                    section.classList.add('is-pinned');
+                    self.showProgress();
+                },
+                onLeaveBack: () => {
+                    section.classList.remove('is-pinned');
+                    self.hideProgress();
+                },
                 onUpdate: (trigger) => {
                     const progress = trigger.progress;
 
-                    // Explicit ranges to ensure Whitespace Visualizer displays first
-                    // This prevents skipping chapter 0 due to scroll trigger start position
-                    let chapterIndex;
-                    if (progress < 0.30) chapterIndex = 0;      // Whitespace Visualizer
-                    else if (progress < 0.55) chapterIndex = 1; // Account Health
-                    else if (progress < 0.80) chapterIndex = 2; // ROI Calculator
-                    else chapterIndex = 3;                       // Work-back Planner
+                    // Each chapter gets 25% of the scroll distance
+                    const chapterIndex = Math.min(
+                        Math.floor(progress * chapters),
+                        chapters - 1
+                    );
 
                     if (chapterIndex !== self.currentChapter) {
                         self.switchChapter(chapterIndex);
@@ -369,6 +427,7 @@
             }
         }
     };
+    */ // End of removed StickyScrollSection
 
     // ========================================
     // Comparison Section Animation
@@ -428,39 +487,65 @@
             if (!processSection) return;
 
             const cards = gsap.utils.toArray('.process-card');
+            const items = gsap.utils.toArray('.process-item');
             const connectors = gsap.utils.toArray('.process-connector');
 
-            // Set initial state
-            gsap.set(cards, { opacity: 0, y: 40 });
-            gsap.set(connectors, { opacity: 0, scaleX: 0 });
+            // Handle old card style
+            if (cards.length > 0) {
+                gsap.set(cards, { opacity: 0, y: 40 });
+                gsap.set(connectors, { opacity: 0, scaleX: 0 });
 
-            const tl = gsap.timeline({
-                scrollTrigger: {
-                    trigger: processSection,
-                    start: 'top 70%',
-                    toggleActions: 'play none none none'
-                }
-            });
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: processSection,
+                        start: 'top 70%',
+                        toggleActions: 'play none none none'
+                    }
+                });
 
-            cards.forEach((card, i) => {
-                tl.to(card, {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.6,
-                    ease: 'power3.out',
-                    onComplete: () => card.classList.add('visible')
-                }, i * 0.2);
-
-                if (connectors[i]) {
-                    tl.to(connectors[i], {
+                cards.forEach((card, i) => {
+                    tl.to(card, {
                         opacity: 1,
-                        scaleX: 1,
-                        duration: 0.4,
-                        ease: 'power2.out',
-                        onComplete: () => connectors[i].classList.add('visible')
-                    }, (i * 0.2) + 0.1);
-                }
-            });
+                        y: 0,
+                        duration: 0.6,
+                        ease: 'power3.out',
+                        onComplete: () => card.classList.add('visible')
+                    }, i * 0.2);
+
+                    if (connectors[i]) {
+                        tl.to(connectors[i], {
+                            opacity: 1,
+                            scaleX: 1,
+                            duration: 0.4,
+                            ease: 'power2.out',
+                            onComplete: () => connectors[i].classList.add('visible')
+                        }, (i * 0.2) + 0.1);
+                    }
+                });
+            }
+
+            // Handle new clean item style
+            if (items.length > 0) {
+                gsap.set(items, { opacity: 0, y: 30 });
+
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: processSection,
+                        start: 'top 70%',
+                        toggleActions: 'play none none none'
+                    }
+                });
+
+                items.forEach((item, i) => {
+                    tl.to(item, {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.5,
+                        ease: 'power3.out',
+                        onComplete: () => item.classList.add('visible')
+                    }, i * 0.15);
+                });
+            }
         }
     };
 
@@ -829,12 +914,13 @@
         HeroStagger.init();
         HeroTypewriter.init();
         HeroFloat.init();
+        OrbParallax.init();
 
         // Scroll animations
         ScrollAnimations.init();
 
         // Section-specific animations
-        StickyScrollSection.init();
+        // StickyScrollSection.init(); // Removed - now using carousel instead
         ComparisonAnimation.init();
         ProcessAnimation.init();
         ToolCardsAnimation.init();

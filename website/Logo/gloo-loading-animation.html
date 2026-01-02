@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gloo Loading Animation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #000000;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 400px;
+            height: 400px;
+        }
+
+        .gloo-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gloo-character {
+            width: 180px;
+            height: auto;
+            animation: bounce 1.5s ease-in-out infinite;
+            filter: drop-shadow(0 0 25px rgba(155, 77, 202, 0.7));
+        }
+
+        .glow-layer {
+            position: absolute;
+            width: 180px;
+            height: auto;
+            animation: bounce 1.5s ease-in-out infinite, glow-pulse 2s ease-in-out infinite;
+            opacity: 0.6;
+            filter: blur(20px);
+            z-index: -1;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-12px) scale(1.03);
+            }
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% {
+                opacity: 0.5;
+                filter: blur(20px);
+            }
+            50% {
+                opacity: 0.8;
+                filter: blur(30px);
+            }
+        }
+
+        .loading-dots {
+            display: flex;
+            gap: 12px;
+            margin-top: 35px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            background: linear-gradient(135deg, #E84393, #9B4DCA);
+            border-radius: 50%;
+            animation: dot-bounce 1.4s ease-in-out infinite;
+        }
+
+        .dot:nth-child(1) { animation-delay: 0s; }
+        .dot:nth-child(2) { animation-delay: 0.2s; }
+        .dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes dot-bounce {
+            0%, 80%, 100% {
+                transform: translateY(0);
+                opacity: 0.4;
+            }
+            40% {
+                transform: translateY(-8px);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="gloo-wrapper">
+            <!-- Glow layer behind -->
+            <svg class="glow-layer" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="glowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#7B2FBE"/>
+                        <stop offset="50%" style="stop-color:#E84393"/>
+                        <stop offset="100%" style="stop-color:#9B4DCA"/>
+                    </linearGradient>
+                </defs>
+                <path d="M100,25
+                         C130,25 145,40 150,55
+                         C165,55 180,70 180,90
+                         C180,110 170,125 155,130
+                         C160,145 155,165 140,175
+                         C125,185 105,185 90,180
+                         C75,190 50,185 40,170
+                         C25,165 20,145 25,125
+                         C15,115 15,95 25,80
+                         C20,65 30,45 50,40
+                         C55,30 75,25 100,25 Z"
+                      fill="url(#glowGrad)"/>
+            </svg>
+
+            <!-- Main character -->
+            <svg class="gloo-character" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#7B2FBE"/>
+                        <stop offset="40%" style="stop-color:#9B4DCA"/>
+                        <stop offset="70%" style="stop-color:#E84393"/>
+                        <stop offset="100%" style="stop-color:#FF6B9D"/>
+                    </linearGradient>
+                    <radialGradient id="highlight" cx="30%" cy="25%" r="50%">
+                        <stop offset="0%" style="stop-color:rgba(255,255,255,0.4)"/>
+                        <stop offset="100%" style="stop-color:rgba(255,255,255,0)"/>
+                    </radialGradient>
+                </defs>
+
+                <!-- Main blob body - cloud/flower shape -->
+                <path d="M100,25
+                         C130,25 145,40 150,55
+                         C165,55 180,70 180,90
+                         C180,110 170,125 155,130
+                         C160,145 155,165 140,175
+                         C125,185 105,185 90,180
+                         C75,190 50,185 40,170
+                         C25,165 20,145 25,125
+                         C15,115 15,95 25,80
+                         C20,65 30,45 50,40
+                         C55,30 75,25 100,25 Z"
+                      fill="url(#bodyGrad)"/>
+
+                <!-- Highlight overlay -->
+                <path d="M100,25
+                         C130,25 145,40 150,55
+                         C165,55 180,70 180,90
+                         C180,110 170,125 155,130
+                         C160,145 155,165 140,175
+                         C125,185 105,185 90,180
+                         C75,190 50,185 40,170
+                         C25,165 20,145 25,125
+                         C15,115 15,95 25,80
+                         C20,65 30,45 50,40
+                         C55,30 75,25 100,25 Z"
+                      fill="url(#highlight)"/>
+
+                <!-- Left eye - happy curved -->
+                <path d="M70,85 Q80,75 90,85"
+                      stroke="#2a1a3a" stroke-width="5" stroke-linecap="round" fill="none"/>
+
+                <!-- Right eye - happy curved -->
+                <path d="M110,85 Q120,75 130,85"
+                      stroke="#2a1a3a" stroke-width="5" stroke-linecap="round" fill="none"/>
+
+                <!-- Smile -->
+                <path d="M80,110 Q100,130 120,110"
+                      stroke="#2a1a3a" stroke-width="5" stroke-linecap="round" fill="none"/>
+
+                <!-- Small highlight spots -->
+                <ellipse cx="60" cy="55" rx="12" ry="8" fill="rgba(255,255,255,0.35)" transform="rotate(-20,60,55)"/>
+                <ellipse cx="75" cy="45" rx="6" ry="4" fill="rgba(255,255,255,0.25)" transform="rotate(-20,75,45)"/>
+            </svg>
+        </div>
+        <div class="loading-dots">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+    </div>
+</body>
+</html>

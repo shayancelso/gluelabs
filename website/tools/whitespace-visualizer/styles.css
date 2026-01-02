@@ -294,7 +294,7 @@
 .matrix-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: var(--space-xl);
     flex-wrap: wrap;
     gap: var(--space-lg);
@@ -308,10 +308,85 @@
     font-family: var(--font-display);
 }
 
+.matrix-controls {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    align-items: flex-end;
+}
+
+/* Matrix Filter Buttons */
+.matrix-filter-buttons {
+    display: flex;
+    gap: var(--space-xs);
+    background: var(--color-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: 4px;
+}
+
+.matrix-filter-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    background: transparent;
+    border: none;
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-md);
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.matrix-filter-btn svg {
+    transition: transform 0.3s ease;
+}
+
+.matrix-filter-btn:hover {
+    background: var(--glass-bg);
+    color: var(--color-text);
+}
+
+.matrix-filter-btn:hover svg {
+    transform: scale(1.1);
+}
+
+.matrix-filter-btn.active {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.matrix-filter-btn[data-filter="high-priority"].active {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+.matrix-filter-btn[data-filter="at-risk"].active {
+    background: linear-gradient(135deg, #f59e0b, #ef4444);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
 .matrix-legend {
     display: flex;
     gap: var(--space-lg);
     flex-wrap: wrap;
+    transition: opacity 0.3s ease;
+}
+
+/* Dynamic legend colors */
+.matrix-legend.high-priority .legend-color.adopted {
+    background: #22c55e;
+}
+
+.matrix-legend.high-priority .legend-color.opportunity {
+    background: #a855f7;
+}
+
+.matrix-legend.at-risk .legend-color.opportunity {
+    background: linear-gradient(90deg, #fbbf24, #f59e0b, #ef4444);
 }
 
 .legend-item {
@@ -540,6 +615,130 @@
     opacity: 0.9;
     margin-top: 2px;
 }
+
+/* ==========================================================================
+   Matrix Filter Animations
+   ========================================================================== */
+
+/* Base transition for all cells */
+.matrix-cell {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Filtered out (dimmed) state */
+.matrix-cell.filtered-out {
+    opacity: 0.15;
+    transform: scale(0.95);
+    filter: grayscale(0.8);
+}
+
+/* Filtered in (highlighted) state */
+.matrix-cell.filtered-in {
+    animation: filterPopIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes filterPopIn {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.5;
+    }
+    50% {
+        transform: scale(1.08);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* High Priority Filter Styles */
+.matrix-content.filter-high-priority .matrix-cell.opportunity.filtered-in {
+    background: linear-gradient(135deg, #a855f7, #7c3aed);
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+}
+
+.matrix-content.filter-high-priority .matrix-cell.adopted.filtered-in {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.3);
+}
+
+/* At Risk Filter Styles */
+.matrix-content.filter-at-risk .matrix-cell.opportunity.filtered-in {
+    animation: riskPulse 2s ease-in-out infinite, filterPopIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.matrix-content.filter-at-risk .matrix-cell.opportunity.risk-low {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    box-shadow: 0 0 15px rgba(251, 191, 36, 0.4);
+}
+
+.matrix-content.filter-at-risk .matrix-cell.opportunity.risk-medium {
+    background: linear-gradient(135deg, #f97316, #ea580c);
+    box-shadow: 0 0 18px rgba(249, 115, 22, 0.5);
+}
+
+.matrix-content.filter-at-risk .matrix-cell.opportunity.risk-high {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    box-shadow: 0 0 22px rgba(239, 68, 68, 0.6);
+}
+
+@keyframes riskPulse {
+    0%, 100% {
+        box-shadow: 0 0 15px currentColor;
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 25px currentColor;
+        transform: scale(1.02);
+    }
+}
+
+/* Risk level indicators */
+.matrix-cell .risk-indicator {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: riskBlink 1.5s ease-in-out infinite;
+}
+
+.matrix-cell .risk-indicator.low {
+    background: #fbbf24;
+}
+
+.matrix-cell .risk-indicator.medium {
+    background: #f97316;
+}
+
+.matrix-cell .risk-indicator.high {
+    background: #ef4444;
+}
+
+@keyframes riskBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+/* Reflow animation for prioritized items */
+.matrix-layout.reflow-active .product-row {
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.matrix-layout.reflow-active .matrix-cell.filtered-in {
+    order: -1;
+}
+
+/* Stagger animation delay for cells */
+.matrix-cell.stagger-1 { animation-delay: 0.05s; }
+.matrix-cell.stagger-2 { animation-delay: 0.1s; }
+.matrix-cell.stagger-3 { animation-delay: 0.15s; }
+.matrix-cell.stagger-4 { animation-delay: 0.2s; }
+.matrix-cell.stagger-5 { animation-delay: 0.25s; }
+.matrix-cell.stagger-6 { animation-delay: 0.3s; }
+.matrix-cell.stagger-7 { animation-delay: 0.35s; }
+.matrix-cell.stagger-8 { animation-delay: 0.4s; }
 
 /* ==========================================================================
    Revenue Projections Section
@@ -1479,8 +1678,9 @@
 }
 
 .growth-drivers li::before {
-    content: "🚀";
-    font-size: 1rem;
+    content: "→";
+    font-size: 0.9rem;
+    color: var(--color-primary);
 }
 
 /* ==========================================================================
@@ -5344,6 +5544,84 @@ select:focus {
     
     .timeline-progress {
         display: none;
+    }
+}
+
+/* ==========================================================================
+   Lou Mascot - Whitespace Tool Specific
+   ========================================================================== */
+
+/* Lou in upload zone */
+.lou-upload-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: var(--space-sm);
+    position: relative;
+}
+
+.lou-upload-wrapper .lou-mascot {
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Lou reacts to file hover */
+.upload-zone.drag-over .lou-upload-wrapper .lou-mascot {
+    animation: louBounce 0.4s ease-in-out infinite;
+}
+
+/* Lou processing state */
+.lou-upload-wrapper.processing .lou-mascot {
+    animation: louFloat 1.2s ease-in-out infinite, louGlow 1.5s ease-in-out infinite;
+}
+
+/* Lou success state */
+.lou-upload-wrapper.success .lou-mascot {
+    animation: louCelebrate 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Lou error state */
+.lou-upload-wrapper.error .lou-mascot {
+    animation: louWobble 0.6s ease-in-out;
+    opacity: 0.8;
+}
+
+/* Hide Lou when upload zone is minimized */
+.upload-zone.minimized .lou-upload-wrapper {
+    display: none;
+}
+
+/* Lou loading dots for processing state */
+.lou-upload-dots {
+    display: none;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.lou-upload-wrapper.processing + .lou-upload-dots,
+.lou-upload-wrapper.processing .lou-upload-dots {
+    display: flex;
+}
+
+.lou-upload-dots .dot {
+    width: 6px;
+    height: 6px;
+    background: var(--gradient-primary);
+    border-radius: 50%;
+    animation: louDotBounce 1.4s ease-in-out infinite;
+}
+
+.lou-upload-dots .dot:nth-child(1) { animation-delay: 0s; }
+.lou-upload-dots .dot:nth-child(2) { animation-delay: 0.2s; }
+.lou-upload-dots .dot:nth-child(3) { animation-delay: 0.4s; }
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .lou-upload-wrapper .lou-mascot,
+    .upload-zone.drag-over .lou-upload-wrapper .lou-mascot,
+    .lou-upload-wrapper.processing .lou-mascot,
+    .lou-upload-wrapper.success .lou-mascot,
+    .lou-upload-wrapper.error .lou-mascot {
+        animation: none !important;
     }
 }
 

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 80" width="240" height="80">
+  <defs>
+    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6b21a8"/>
+      <stop offset="50%" stop-color="#9333ea"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <mask id="ooMask">
+      <rect width="100%" height="100%" fill="white"/>
+      <circle cx="152" cy="48" r="16" fill="black"/>
+      <circle cx="192" cy="48" r="16" fill="black"/>
+    </mask>
+  </defs>
+
+  <!-- Letter g -->
+  <path d="M8 28 C8 14 20 8 36 8 C52 8 64 14 64 28 L64 48 C64 62 52 68 36 68 L36 76 C36 84 28 88 16 88 L8 88 L8 80 L16 80 C24 80 28 78 28 74 L28 68 C12 68 8 62 8 48 Z M28 16 C16 16 16 22 16 28 L16 48 C16 54 16 60 28 60 L36 60 C48 60 56 56 56 48 L56 28 C56 20 48 16 36 16 Z"
+        fill="url(#logoGradient)"/>
+
+  <!-- Letter l -->
+  <rect x="72" y="8" width="12" height="60" rx="2" fill="url(#logoGradient)"/>
+
+  <!-- First o (purple) -->
+  <circle cx="120" cy="48" r="28" fill="none" stroke="url(#logoGradient)" stroke-width="12"/>
+
+  <!-- Second o (pink) with overlap -->
+  <circle cx="168" cy="48" r="28" fill="none" stroke="url(#logoGradient)" stroke-width="12"/>
+
+  <!-- Overlap intersection effect -->
+  <path d="M140 30 Q144 48 140 66" fill="none" stroke="#7c3aed" stroke-width="6" opacity="0.6"/>
+</svg>
