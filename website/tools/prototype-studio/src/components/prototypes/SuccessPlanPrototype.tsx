@@ -17,6 +17,46 @@ import { cn } from '@/lib/utils';
 import { type BrandConfig } from './PrototypeBrandingBar';
 import { toast } from 'sonner';
 import { MSPDiscoveryConfig, Person, MSPStage } from '@/lib/mspDiscoveryTransform';
+import { useOnboarding, OnboardingStep } from '@/hooks/useOnboarding';
+import { OnboardingTooltip } from './OnboardingTooltip';
+import { ContactDialog } from './ContactDialog';
+import { LikeWhatYouSeeBanner } from './LikeWhatYouSeeBanner';
+import { exportToPortraitPdf } from '@/lib/exportPdf';
+import { PdfPage } from './pdf/PdfPage';
+import { SuccessPlanPdfTimeline } from './pdf/SuccessPlanPdfTimeline';
+
+const SUCCESS_PLAN_ONBOARDING_STEPS: OnboardingStep[] = [
+  {
+    targetSelector: '[data-onboarding="msp-header"]',
+    title: 'Welcome to Mutual Success Plan',
+    description: 'Align your sales team with your prospect\'s buying process. Research shows deals with mutual action plans have 32% higher win rates and 20% shorter sales cycles. Let\'s build your roadmap.',
+    position: 'bottom',
+  },
+  {
+    targetSelector: '[data-onboarding="timeline-section"]',
+    title: 'Set Your Timeline',
+    description: 'Choose a target close date or sales cycle length. All stages work backwards from here.',
+    position: 'right',
+  },
+  {
+    targetSelector: '[data-onboarding="team-section"]',
+    title: 'Define Your Teams',
+    description: 'Add people from both sides. This enables assigning accountability for each stage.',
+    position: 'right',
+  },
+  {
+    targetSelector: '[data-onboarding="stages-section"]',
+    title: 'Configure Stages',
+    description: 'Each stage has a name, duration, and owner. Add custom stages or adjust durations as needed.',
+    position: 'right',
+  },
+  {
+    targetSelector: '[data-onboarding="gantt-chart"]',
+    title: 'Visualize the Timeline',
+    description: 'The timeline updates automatically. Export to PDF to share with your prospect.',
+    position: 'left',
+  },
+];
 
 interface Stage {
   id: string;
@@ -64,12 +104,36 @@ export function SuccessPlanPrototype({ onClose, initialBrandConfig, discoveryDat
   const [brandConfig] = useState<BrandConfig>(initialBrandConfig);
   const [isExporting, setIsExporting] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
+  const pdfExportRef = useRef<HTMLDivElement>(null);
   const [targetDate, setTargetDate] = useState<Date>(() => {
     return addDays(new Date(), 42);
   });
   const [stages, setStages] = useState<Stage[]>(defaultStages);
   const [people, setPeople] = useState<Person[]>(defaultPeople);
   const [selectedCycle, setSelectedCycle] = useState<string>('42');
+  const [showContactDialog, setShowContactDialog] = useState(false);
+  const [bannerState, setBannerState] = useState<'hidden' | 'expanded' | 'minimized'>('hidden');
+
+  // Onboarding
+  const onboarding = useOnboarding({
+    toolId: 'success_plan',
+    steps: SUCCESS_PLAN_ONBOARDING_STEPS,
+    onComplete: () => {
+      if (bannerState === 'hidden') {
+        setTimeout(() => setBannerState('expanded'), 500);
+      }
+    },
+  });
+
+  // Show banner after 30 seconds if not already shown
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (bannerState === 'hidden' && !onboarding.isActive) {
+        setBannerState('expanded');
+      }
+    }, 30000);
+    return () => clearTimeout(timer);
+  }, [bannerState, onboarding.isActive]);
 
   // Apply discovery data on mount
   useEffect(() => {
@@ -101,38 +165,19 @@ export function SuccessPlanPrototype({ onClose, initialBrandConfig, discoveryDat
   const sellers = useMemo(() => people.filter(p => p.side === 'seller'), [people]);
   const buyers = useMemo(() => people.filter(p => p.side === 'buyer'), [people]);
 
-  // Handle PDF export
+  // Handle PDF export using new system
   const handleExportPdf = async () => {
-    if (!contentRef.current || isExporting) return;
+    if (!pdfExportRef.current || isExporting) return;
     
     setIsExporting(true);
     toast.info('Generating PDF...');
     
     try {
-      const html2canvas = (await import('html2canvas')).default;
-      const jsPDF = (await import('jspdf')).default;
-      
-      const canvas = await html2canvas(contentRef.current, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#ffffff',
-        logging: false,
-        ignoreElements: (el) => el.classList?.contains('no-print'),
+      await exportToPortraitPdf({
+        toolName: 'Mutual Success Plan',
+        accountName: brandConfig.companyName || 'Plan',
+        element: pdfExportRef.current,
       });
-
-      const imgData = canvas.toDataURL('image/png');
-      const imgWidth = canvas.width;
-      const imgHeight = canvas.height;
-      
-      const pdf = new jsPDF({
-        orientation: 'landscape',
-        unit: 'px',
-        format: [imgWidth, imgHeight],
-      });
-
-      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-      pdf.save(`${brandConfig.companyName || 'Success'}-Plan.pdf`);
       
       toast.success('PDF exported successfully!');
     } catch (error) {
@@ -267,7 +312,20 @@ export function SuccessPlanPrototype({ onClose, initialBrandConfig, discoveryDat
   // Stats
   const totalDays = stages.reduce((sum, s) => sum + s.durationDays, 0);
 
-  // Get stage position and width for Gantt chart
+  // Generate executive summary for PDF
+  const pdfSummary = useMemo(() => {
+    const weeksToClose = Math.ceil(totalDays / 7);
+    return `This ${stages.length}-stage mutual success plan aligns both teams toward a target close date of ${format(targetDate, 'MMMM d, yyyy')}. With ${sellers.length} seller and ${buyers.length} buyer stakeholders sharing accountability across ${weeksToClose} weeks, this structured approach ensures alignment and increases win probability.`;
+  }, [stages.length, targetDate, totalDays, sellers.length, buyers.length]);
+
+  // PDF metrics
+  const pdfMetrics = useMemo(() => [
+    { label: 'Target Close', value: format(targetDate, 'MMM d, yyyy') },
+    { label: 'Total Duration', value: `${Math.ceil(totalDays / 7)} weeks` },
+    { label: 'Stages', value: stages.length.toString(), color: brandConfig.primaryColor },
+    { label: 'Sales Team', value: sellers.length.toString() },
+    { label: 'Buyer Team', value: buyers.length.toString() },
+  ], [targetDate, totalDays, stages.length, sellers.length, buyers.length, brandConfig.primaryColor]);
   const getStagePosition = (stage: StageWithDates) => {
     const startOffset = differenceInDays(stage.startDate, timelineBounds.start);
     const width = stage.durationDays;
@@ -339,6 +397,7 @@ export function SuccessPlanPrototype({ onClose, initialBrandConfig, discoveryDat
       {/* Header */}
       <div className="relative z-10 p-3 md:p-6 pb-0">
         <div 
+          data-onboarding="msp-header"
           className="rounded-xl md:rounded-2xl p-3 md:p-6"
           style={{
             background: `linear-gradient(135deg, ${brandConfig.primaryColor}, ${brandConfig.secondaryColor})`,
@@ -377,6 +436,15 @@ export function SuccessPlanPrototype({ onClose, initialBrandConfig, discoveryDat
                 <span className="hidden sm:inline">{isExporting ? 'Exporting...' : 'Export PDF'}</span>
                 <span className="sm:hidden">{isExporting ? '...' : 'PDF'}</span>
               </Button>
+              <Button 
+                variant="secondary" 
+                size="sm" 
+                onClick={onClose}
+                className="bg-white/20 hover:bg-white/30 border-0 h-8 md:h-9 text-white"
+              >
+                <X className="h-4 w-4" />
+                <span className="hidden md:inline ml-2">Close</span>
+              </Button>
             </div>
           </div>
         </div>
@@ -389,7 +457,7 @@ export function SuccessPlanPrototype({ onClose, initialBrandConfig, discoveryDat
           <ScrollArea className="flex-1">
             <div className="p-3 md:p-6 space-y-4 md:space-y-6">
               {/* Team Members Configuration */}
-              <div className="grid grid-cols-2 gap-3 md:gap-4">
+              <div data-onboarding="team-section" className="grid grid-cols-2 gap-3 md:gap-4">
                 {/* Sales Team */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
@@ -490,7 +558,7 @@ export function SuccessPlanPrototype({ onClose, initialBrandConfig, discoveryDat
               </div>
 
               {/* Target Date */}
-              <div className="space-y-2 md:space-y-3">
+              <div data-onboarding="timeline-section" className="space-y-2 md:space-y-3">
                 <Label className="text-xs md:text-sm font-medium flex items-center gap-2">
                   <Target className="h-3.5 w-3.5 md:h-4 md:w-4" style={{ color: brandConfig.primaryColor }} />
                   Target Sign Date
@@ -541,7 +609,7 @@ export function SuccessPlanPrototype({ onClose, initialBrandConfig, discoveryDat
               </div>
 
               {/* Stages */}
-              <div className="space-y-2 md:space-y-3">
+              <div data-onboarding="stages-section" className="space-y-2 md:space-y-3">
                 <div className="flex items-center justify-between">
                   <Label className="text-xs md:text-sm font-medium">Stages</Label>
                   <Button 
@@ -636,7 +704,7 @@ export function SuccessPlanPrototype({ onClose, initialBrandConfig, discoveryDat
         </div>
 
         {/* Right Panel - Gantt Chart Preview */}
-        <div className="flex-1 flex flex-col overflow-hidden bg-background/80 backdrop-blur-sm rounded-xl md:rounded-l-none md:rounded-r-xl">
+        <div data-onboarding="gantt-chart" className="flex-1 flex flex-col overflow-hidden bg-background/80 backdrop-blur-sm rounded-xl md:rounded-l-none md:rounded-r-xl">
           <ScrollArea className="flex-1">
             <div className="p-3 md:p-8">
               {/* Timeline Header */}
@@ -838,6 +906,89 @@ export function SuccessPlanPrototype({ onClose, initialBrandConfig, discoveryDat
           background-color: #ffffff;
         }
       `}</style>
+
+      {/* Onboarding Tooltip */}
+      {onboarding.isActive && onboarding.currentStepData && (
+        <OnboardingTooltip
+          step={onboarding.currentStepData}
+          currentStep={onboarding.currentStep}
+          totalSteps={onboarding.totalSteps}
+          onNext={onboarding.nextStep}
+          onPrev={onboarding.prevStep}
+          onSkip={onboarding.skipTour}
+          onContactRequest={onboarding.requestContact}
+          isActive={onboarding.isActive}
+        />
+      )}
+
+      {/* Like What You See Banner */}
+      <LikeWhatYouSeeBanner
+        state={bannerState}
+        companyName={brandConfig.companyName}
+        onContact={() => {
+          setBannerState('minimized');
+          setShowContactDialog(true);
+        }}
+        onMinimize={() => setBannerState('minimized')}
+        onExpand={() => setBannerState('expanded')}
+      />
+
+      {/* Contact Dialog */}
+      <ContactDialog
+        open={showContactDialog}
+        onClose={() => setShowContactDialog(false)}
+        brandConfig={brandConfig}
+        toolInterest="success-plan"
+      />
+
+      {/* Hidden PDF Export - Portrait Single Page */}
+      <PdfPage
+        ref={pdfExportRef}
+        logoUrl={brandConfig.logoUrl}
+        companyName={brandConfig.companyName}
+        toolName="Mutual Success Plan"
+        subtitle={`Target Close: ${format(targetDate, 'MMMM d, yyyy')}`}
+        primaryColor={brandConfig.primaryColor}
+        secondaryColor={brandConfig.secondaryColor}
+        badges={brandConfig.industry ? [{ label: 'Industry', value: brandConfig.industry }] : []}
+        benefitBlurb="Mutual success plans increase win rates by 32% and shorten sales cycles by 20%. This roadmap aligns both teams on milestones, ownership, and a clear path to value."
+        orientation="portrait"
+      >
+        <div className="flex flex-col h-full gap-3">
+          {/* Key Metrics */}
+          <div className="grid grid-cols-5 gap-3">
+            {pdfMetrics.map((metric, i) => (
+              <div key={i} className="bg-gray-50 rounded-lg p-3 text-center">
+                <div className="text-xs text-gray-500 mb-1">{metric.label}</div>
+                <div className="text-lg font-bold" style={{ color: metric.color || '#1a1a2e' }}>
+                  {metric.value}
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          {/* Timeline */}
+          <div className="flex-1 border border-gray-100 rounded-lg overflow-hidden">
+            <SuccessPlanPdfTimeline
+              stagesWithDates={stagesWithDates}
+              people={people}
+              targetDate={targetDate}
+              primaryColor={brandConfig.primaryColor}
+              secondaryColor={brandConfig.secondaryColor || brandConfig.primaryColor}
+            />
+          </div>
+          
+          {/* Summary */}
+          <div className="bg-gray-50 rounded-lg px-4 py-3">
+            <div className="text-xs text-gray-500 uppercase tracking-wide mb-1 font-medium">
+              Executive Summary
+            </div>
+            <p className="text-sm text-gray-700 leading-relaxed">
+              {pdfSummary}
+            </p>
+          </div>
+        </div>
+      </PdfPage>
     </div>
   );
 }

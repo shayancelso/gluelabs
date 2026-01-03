@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Upload, Globe, RotateCcw, Palette, Pipette, AlertTriangle, Crosshair } from 'lucide-react';
+import { Upload, RotateCcw, Palette, Pipette, AlertTriangle, Crosshair, Loader2, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -18,6 +18,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { isLightColor } from '@/lib/colorUtils';
 import { fetchLogoForDomain, getCompanyNameFromDomain, extractDomain } from '@/lib/logoApi';
+import { supabase } from '@/integrations/supabase/client';
 
 export interface BrandConfig {
   logoUrl: string | null;
@@ -27,7 +28,6 @@ export interface BrandConfig {
   backgroundColor: string;
   textColor: string;
   companyName: string;
-  // Extended fields for enhanced prototypes
   industry?: string;
   employeeCount?: string;
   headquarters?: string;
@@ -107,7 +107,7 @@ function rgbToHex(r: number, g: number, b: number): string {
   return '#' + [r, g, b].map(x => Math.min(255, Math.max(0, Math.round(x))).toString(16).padStart(2, '0')).join('');
 }
 
-// Color picker component with full picker
+// Color picker component with eyedropper inside popup (matching Template Studio)
 function ColorSwatch({ 
   color, 
   label, 
@@ -117,6 +117,7 @@ function ColorSwatch({
   label: string; 
   onChange: (color: string) => void;
 }) {
+  const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState(color);
   const [hue, setHue] = useState(0);
@@ -214,6 +215,32 @@ function ColorSwatch({
     }
   };
 
+  const handleEyedropper = async () => {
+    if (!('EyeDropper' in window)) {
+      toast({
+        title: 'Not Supported',
+        description: 'Eyedropper is only available in Chrome/Edge browsers.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      // @ts-ignore - EyeDropper API types may not be available
+      const eyeDropper = new window.EyeDropper();
+      const result = await eyeDropper.open();
+      const pickedColor = result.sRGBHex;
+      
+      handleColorChange(pickedColor);
+      toast({
+        title: 'Color Picked',
+        description: `Selected ${pickedColor}`,
+      });
+    } catch (e) {
+      console.log('Eyedropper cancelled or error:', e);
+    }
+  };
+
   const [pureHueR, pureHueG, pureHueB] = hsvToRgb(hue, 1, 1);
   const pureHueColor = rgbToHex(pureHueR, pureHueG, pureHueB);
 
@@ -244,7 +271,19 @@ function ColorSwatch({
       </TooltipProvider>
       <PopoverContent className="w-64 p-3" align="center">
         <div className="space-y-3">
-          <Label className="text-xs font-medium">{label}</Label>
+          <div className="flex items-center justify-between">
+            <Label className="text-xs font-medium">{label}</Label>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleEyedropper}
+              className="h-7 px-2 gap-1.5 text-xs"
+              title="Pick color from screen"
+            >
+              <Crosshair className="h-3.5 w-3.5" />
+              Pick
+            </Button>
+          </div>
           
           {/* 2D Saturation/Brightness Picker */}
           <div
@@ -255,7 +294,6 @@ function ColorSwatch({
             }}
             onMouseDown={handlePickerMouseDown}
           >
-            {/* Picker indicator */}
             <div
               className="absolute w-4 h-4 border-2 border-white rounded-full shadow-md pointer-events-none"
               style={{
@@ -276,7 +314,6 @@ function ColorSwatch({
             }}
             onMouseDown={handleHueMouseDown}
           >
-            {/* Hue indicator */}
             <div
               className="absolute w-3 h-6 border-2 border-white rounded-sm shadow-md pointer-events-none -top-1"
               style={{
@@ -316,9 +353,7 @@ function ColorSwatch({
                 key={preset}
                 className="w-5 h-5 rounded border border-border/50 hover:scale-125 transition-transform"
                 style={{ backgroundColor: preset }}
-                onClick={() => {
-                  handleColorChange(preset);
-                }}
+                onClick={() => handleColorChange(preset)}
               />
             ))}
           </div>
@@ -328,29 +363,27 @@ function ColorSwatch({
   );
 }
 
-// Score a color for brand-worthiness (prefer saturated, mid-tone colors)
+// Score a color for brand-worthiness
 function scoreBrandColor(r: number, g: number, b: number): number {
   const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
   const max = Math.max(r, g, b) / 255;
   const min = Math.min(r, g, b) / 255;
   const saturation = max === 0 ? 0 : (max - min) / max;
   
-  // Penalize very dark or very light colors
   let luminanceScore = 1;
   if (luminance < 0.15) luminanceScore = 0.3;
   else if (luminance > 0.85) luminanceScore = 0.4;
-  else if (luminance >= 0.25 && luminance <= 0.75) luminanceScore = 1.3; // Prefer mid-tones
+  else if (luminance >= 0.25 && luminance <= 0.75) luminanceScore = 1.3;
   
-  // Prefer medium-high saturation (typical for brand colors)
   let saturationScore = 1;
-  if (saturation < 0.15) saturationScore = 0.2; // Gray-ish
-  else if (saturation >= 0.25 && saturation <= 0.85) saturationScore = 1.5; // Sweet spot
-  else if (saturation > 0.85) saturationScore = 1.2; // Very saturated is good too
+  if (saturation < 0.15) saturationScore = 0.2;
+  else if (saturation >= 0.25 && saturation <= 0.85) saturationScore = 1.5;
+  else if (saturation > 0.85) saturationScore = 1.2;
   
   return saturationScore * luminanceScore;
 }
 
-// Color distance using weighted Euclidean distance
+// Color distance
 function colorDistance(r1: number, g1: number, b1: number, r2: number, g2: number, b2: number): number {
   return Math.sqrt(
     2 * Math.pow(r1 - r2, 2) + 
@@ -359,7 +392,7 @@ function colorDistance(r1: number, g1: number, b1: number, r2: number, g2: numbe
   );
 }
 
-// Extract colors from an image using canvas
+// Extract colors from an image
 async function extractColorsFromImage(imageUrl: string): Promise<{ primary: string; secondary: string; accent: string } | null> {
   return new Promise((resolve) => {
     const img = new Image();
@@ -373,7 +406,6 @@ async function extractColorsFromImage(imageUrl: string): Promise<{ primary: stri
         return;
       }
 
-      // Sample at a reasonable size
       const sampleSize = 100;
       canvas.width = sampleSize;
       canvas.height = sampleSize;
@@ -383,7 +415,6 @@ async function extractColorsFromImage(imageUrl: string): Promise<{ primary: stri
         const imageData = ctx.getImageData(0, 0, sampleSize, sampleSize);
         const pixels = imageData.data;
 
-        // Collect all colors with their frequency and brand score
         const colorCounts: Map<string, { count: number; r: number; g: number; b: number; score: number }> = new Map();
 
         for (let i = 0; i < pixels.length; i += 4) {
@@ -392,20 +423,16 @@ async function extractColorsFromImage(imageUrl: string): Promise<{ primary: stri
           const b = pixels[i + 2];
           const a = pixels[i + 3];
 
-          // Skip transparent pixels
           if (a < 128) continue;
 
-          // Skip near-black and near-white pixels (widened threshold)
           const luminance = (0.299 * r + 0.587 * g + 0.114 * b);
           if (luminance < 15 || luminance > 245) continue;
 
-          // Skip very desaturated colors (grays) with lowered threshold
           const max = Math.max(r, g, b);
           const min = Math.min(r, g, b);
           const saturation = max === 0 ? 0 : (max - min) / max;
           if (saturation < 0.08) continue;
 
-          // Quantize to reduce color variations
           const qr = Math.round(r / 16) * 16;
           const qg = Math.round(g / 16) * 16;
           const qb = Math.round(b / 16) * 16;
@@ -422,7 +449,6 @@ async function extractColorsFromImage(imageUrl: string): Promise<{ primary: stri
           }
         }
 
-        // Sort by weighted score (frequency * brand score)
         const sortedColors = Array.from(colorCounts.values())
           .map(c => ({ ...c, weightedScore: c.count * c.score }))
           .sort((a, b) => b.weightedScore - a.weightedScore)
@@ -433,14 +459,11 @@ async function extractColorsFromImage(imageUrl: string): Promise<{ primary: stri
           return;
         }
 
-        // Function to convert RGB to hex
         const toHex = (r: number, g: number, b: number) => 
           '#' + [r, g, b].map(x => Math.min(255, Math.max(0, x)).toString(16).padStart(2, '0')).join('');
 
-        // Pick distinct colors for primary, secondary, accent
         const primary = sortedColors[0];
         
-        // Find secondary that's different enough from primary (increased threshold)
         let secondary = sortedColors[1] || primary;
         for (const color of sortedColors.slice(1)) {
           const diff = colorDistance(color.r, color.g, color.b, primary.r, primary.g, primary.b);
@@ -450,7 +473,6 @@ async function extractColorsFromImage(imageUrl: string): Promise<{ primary: stri
           }
         }
 
-        // Find accent that's different from both (increased threshold)
         let accent = sortedColors[2] || secondary;
         for (const color of sortedColors.slice(2)) {
           const diffP = colorDistance(color.r, color.g, color.b, primary.r, primary.g, primary.b);
@@ -483,138 +505,115 @@ async function extractColorsFromImage(imageUrl: string): Promise<{ primary: stri
 export function PrototypeBrandingBar({ brandConfig, onBrandChange, onReset }: PrototypeBrandingBarProps) {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [websiteUrl, setWebsiteUrl] = useState('');
-  const [isExtracting, setIsExtracting] = useState(false);
-  const [logoUrlInput, setLogoUrlInput] = useState('');
-  const [isLoadingLogoUrl, setIsLoadingLogoUrl] = useState(false);
-  const [isEyeDropperActive, setIsEyeDropperActive] = useState(false);
-  const [eyeDropperTarget, setEyeDropperTarget] = useState<'primary' | 'secondary' | 'accent' | null>(null);
+  const [companyInput, setCompanyInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Check if EyeDropper API is available
-  const isEyeDropperSupported = typeof window !== 'undefined' && 'EyeDropper' in window;
-
-  // Handle eyedropper color pick
-  const handleEyeDropper = async (target: 'primary' | 'secondary' | 'accent') => {
-    if (!isEyeDropperSupported) {
+  // Handle company lookup
+  const handleCompanyLookup = async () => {
+    if (!companyInput.trim()) {
       toast({
-        title: 'Not supported',
-        description: 'The eyedropper tool is not supported in your browser. Try Chrome or Edge.',
+        title: 'Enter a company',
+        description: 'Please enter a company name or website URL.',
         variant: 'destructive',
       });
       return;
     }
 
-    setIsEyeDropperActive(true);
-    setEyeDropperTarget(target);
-
+    setIsLoading(true);
+    
     try {
-      // @ts-ignore - EyeDropper API
-      const eyeDropper = new window.EyeDropper();
-      const result = await eyeDropper.open();
+      // Format the input - check if it looks like a domain/URL
+      let formattedUrl = companyInput.trim();
+      let domain = extractDomain(formattedUrl);
       
-      const colorField = target === 'primary' ? 'primaryColor' : 
-                        target === 'secondary' ? 'secondaryColor' : 'accentColor';
+      // If no domain extracted, treat as company name and try common patterns
+      if (!domain) {
+        const companySlug = formattedUrl.toLowerCase().replace(/[^a-z0-9]/g, '');
+        formattedUrl = `https://${companySlug}.com`;
+        domain = companySlug + '.com';
+      }
       
-      onBrandChange({ ...brandConfig, [colorField]: result.sRGBHex });
+      const companyName = getCompanyNameFromDomain(domain || formattedUrl);
+
+      // Try to fetch logo from logo.dev API
+      const logoDevUrl = await fetchLogoForDomain(domain || formattedUrl);
       
-      toast({
-        title: 'Color picked',
-        description: `${target.charAt(0).toUpperCase() + target.slice(1)} color set to ${result.sRGBHex}`,
-      });
-    } catch (e) {
-      // User cancelled or error
-      console.log('EyeDropper cancelled or error:', e);
-    } finally {
-      setIsEyeDropperActive(false);
-      setEyeDropperTarget(null);
-    }
-  };
+      let logoUrl = logoDevUrl;
+      let extractedColors = null;
+      let companyData = null;
 
-  // Handle logo URL submission
-  const handleLogoUrlSubmit = async () => {
-    if (!logoUrlInput.trim()) return;
-    
-    setIsLoadingLogoUrl(true);
-    
-    // Format URL
-    let url = logoUrlInput.trim();
-    if (!url.startsWith('http://') && !url.startsWith('https://')) {
-      url = `https://${url}`;
-    }
-
-    // First, verify the image can be loaded by creating a test image
-    const testImage = new Image();
-    testImage.crossOrigin = 'anonymous';
-    
-    const imageLoaded = await new Promise<boolean>((resolve) => {
-      testImage.onload = () => resolve(true);
-      testImage.onerror = () => resolve(false);
-      testImage.src = url;
-    });
-
-    if (!imageLoaded) {
-      // Image failed to load with CORS, try without crossOrigin
-      const testImageNoCors = new Image();
-      const imageLoadedNoCors = await new Promise<boolean>((resolve) => {
-        testImageNoCors.onload = () => resolve(true);
-        testImageNoCors.onerror = () => resolve(false);
-        testImageNoCors.src = url;
-      });
-
-      if (!imageLoadedNoCors) {
-        setIsLoadingLogoUrl(false);
-        toast({
-          title: 'Failed to load logo',
-          description: 'Could not load image from that URL. Check the URL is correct.',
-          variant: 'destructive',
-        });
-        return;
+      // If logo.dev found a logo, use it and extract colors
+      if (logoDevUrl) {
+        try {
+          extractedColors = await extractColorsFromImage(logoDevUrl);
+        } catch (e) {
+          console.error('Error extracting colors from logo:', e);
+        }
       }
 
-      // Image loads but CORS blocked - still use it, just can't extract colors
-      onBrandChange({ ...brandConfig, logoUrl: url });
-      setIsLoadingLogoUrl(false);
-      toast({
-        title: 'Logo loaded',
-        description: 'Logo applied. Colors could not be extracted due to CORS restrictions.',
-      });
-      return;
-    }
-
-    // Image loaded successfully with CORS, try to extract colors
-    try {
-      const extractedColors = await extractColorsFromImage(url);
-      
-      if (extractedColors) {
-        onBrandChange({ 
-          ...brandConfig, 
-          logoUrl: url,
-          primaryColor: extractedColors.primary,
-          secondaryColor: extractedColors.secondary,
-          accentColor: extractedColors.accent,
+      // Also try the company-research edge function for additional data
+      try {
+        const { data, error } = await supabase.functions.invoke('company-research', {
+          body: { companyName: companyName, website: formattedUrl }
         });
-        
+
+        if (!error && data) {
+          companyData = data;
+          if (!logoUrl && data.logo_url) {
+            logoUrl = data.logo_url;
+            try {
+              extractedColors = await extractColorsFromImage(data.logo_url);
+            } catch (e) {
+              console.error('Error extracting colors from research logo:', e);
+            }
+          }
+        }
+      } catch (e) {
+        console.error('Company research error (non-fatal):', e);
+      }
+
+      // Update brand config
+      onBrandChange({
+        ...brandConfig,
+        companyName: companyData?.company_name || companyName,
+        logoUrl: logoUrl || brandConfig.logoUrl,
+        industry: companyData?.industry || brandConfig.industry,
+        companyDescription: companyData?.description || brandConfig.companyDescription,
+        primaryColor: extractedColors?.primary || companyData?.primary_color || brandConfig.primaryColor,
+        secondaryColor: extractedColors?.secondary || companyData?.secondary_color || brandConfig.secondaryColor,
+        accentColor: extractedColors?.accent || brandConfig.accentColor,
+      });
+
+      if (logoUrl && extractedColors) {
         toast({
-          title: 'Logo loaded & colors extracted',
-          description: 'Colors were automatically extracted from the logo.',
+          title: 'Branding loaded!',
+          description: `Logo and colors applied for ${companyData?.company_name || companyName}.`,
+        });
+      } else if (logoUrl) {
+        toast({
+          title: 'Logo found',
+          description: 'Logo applied. Adjust colors as needed.',
         });
       } else {
-        onBrandChange({ ...brandConfig, logoUrl: url });
-        
         toast({
-          title: 'Logo loaded',
-          description: 'Could not extract colors. Click the color circles to set them manually.',
+          title: 'Company info loaded',
+          description: 'Upload a logo to auto-detect brand colors.',
         });
       }
     } catch (error) {
-      // Still apply the logo even if color extraction fails
-      onBrandChange({ ...brandConfig, logoUrl: url });
+      // Fallback: extract company name from input
+      const companyName = getCompanyNameFromDomain(companyInput) || companyInput;
+      onBrandChange({
+        ...brandConfig,
+        companyName: companyName,
+      });
+      
       toast({
-        title: 'Logo loaded',
-        description: 'Logo applied but color extraction failed.',
+        title: 'Partial match',
+        description: 'Company name extracted. Upload a logo for brand colors.',
       });
     } finally {
-      setIsLoadingLogoUrl(false);
+      setIsLoading(false);
     }
   };
 
@@ -622,10 +621,7 @@ export function PrototypeBrandingBar({ brandConfig, onBrandChange, onReset }: Pr
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // Create a temporary URL for preview
     const url = URL.createObjectURL(file);
-    
-    // Try to extract colors from the logo
     const extractedColors = await extractColorsFromImage(url);
     
     if (extractedColors) {
@@ -639,290 +635,140 @@ export function PrototypeBrandingBar({ brandConfig, onBrandChange, onReset }: Pr
       
       toast({
         title: 'Logo uploaded & colors extracted',
-        description: 'Colors were automatically extracted from your logo. Click the color circles to adjust.',
+        description: 'Colors were automatically extracted from your logo.',
       });
     } else {
       onBrandChange({ ...brandConfig, logoUrl: url });
       
       toast({
         title: 'Logo uploaded',
-        description: 'Could not extract colors (logo may be black/white). Click the color circles to set them manually.',
-        variant: 'default',
+        description: 'Could not extract colors. Set them manually below.',
       });
     }
   };
 
-  const handleExtractBranding = async () => {
-    if (!websiteUrl.trim()) {
-      toast({
-        title: 'Enter a website URL',
-        description: 'Please enter a valid website URL to extract branding.',
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    setIsExtracting(true);
-    
-    try {
-      toast({
-        title: 'Extracting branding...',
-        description: 'Fetching logo and analyzing brand colors.',
-      });
-
-      // Format the URL
-      let formattedUrl = websiteUrl.trim();
-      if (!formattedUrl.startsWith('http://') && !formattedUrl.startsWith('https://')) {
-        formattedUrl = `https://${formattedUrl}`;
-      }
-      
-      const domain = extractDomain(formattedUrl);
-      const companyNameFromUrl = getCompanyNameFromDomain(formattedUrl);
-
-      // First, try to fetch logo from logo.dev API
-      const logoDevUrl = await fetchLogoForDomain(formattedUrl);
-      
-      let logoUrl = logoDevUrl;
-      let extractedColors = null;
-
-      // If logo.dev found a logo, use it and extract colors
-      if (logoDevUrl) {
-        try {
-          extractedColors = await extractColorsFromImage(logoDevUrl);
-        } catch (e) {
-          console.error('Error extracting colors from logo.dev logo:', e);
-        }
-      }
-
-      // Update brand config with extracted data
-      onBrandChange({
-        ...brandConfig,
-        companyName: companyNameFromUrl,
-        logoUrl: logoUrl || brandConfig.logoUrl,
-        primaryColor: extractedColors?.primary || brandConfig.primaryColor,
-        secondaryColor: extractedColors?.secondary || brandConfig.secondaryColor,
-        accentColor: extractedColors?.accent || brandConfig.accentColor,
-      });
-
-      if (logoUrl && extractedColors) {
-        toast({
-          title: 'Branding extracted',
-          description: 'Logo and brand colors have been applied automatically.',
-        });
-      } else if (logoUrl) {
-        toast({
-          title: 'Logo found',
-          description: 'Logo applied. Click color circles to adjust brand colors.',
-        });
-      } else {
-        toast({
-          title: 'Company info extracted',
-          description: 'Company name extracted. Upload a logo to auto-detect colors.',
-        });
-      }
-    } catch (error) {
-      // Fallback: at least extract company name from URL
-      try {
-        const companyName = getCompanyNameFromDomain(websiteUrl);
-        
-        onBrandChange({
-          ...brandConfig,
-          companyName: companyName || brandConfig.companyName,
-        });
-        
-        toast({
-          title: 'Partial extraction',
-          description: 'Could not fetch full branding. Company name extracted from URL.',
-        });
-      } catch (urlError) {
-        toast({
-          title: 'Extraction failed',
-          description: 'Could not extract branding from that URL.',
-          variant: 'destructive',
-        });
-      }
-    } finally {
-      setIsExtracting(false);
-    }
-  };
-
-  const handleColorChange = (field: 'primaryColor' | 'secondaryColor' | 'accentColor', value: string) => {
+  const handleColorChange = (field: 'primaryColor' | 'secondaryColor' | 'accentColor' | 'backgroundColor' | 'textColor', value: string) => {
     onBrandChange({ ...brandConfig, [field]: value });
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleCompanyLookup();
+    }
   };
 
   return (
     <Card className="p-4 md:p-6 bg-card/80 backdrop-blur-sm border-border/50 shadow-lg">
       <div className="flex items-center gap-2 mb-3 md:mb-4">
         <Palette className="h-4 w-4 md:h-5 md:w-5 text-primary" />
-        <h3 className="font-semibold text-sm md:text-base">Prospect Branding</h3>
+        <h3 className="font-semibold text-sm md:text-base">Preview with your branding</h3>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-        {/* Logo Upload or URL */}
-        <div className="space-y-2">
-          <Label className="text-xs md:text-sm text-muted-foreground">Logo</Label>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleLogoUpload}
-            className="hidden"
-          />
-          <div className="flex gap-2">
-            <Input
-              placeholder="https://company.com/logo.png"
-              value={logoUrlInput}
-              onChange={(e) => setLogoUrlInput(e.target.value)}
-              className="flex-1 h-9 md:h-10 text-sm"
+      {/* Single company input row */}
+      <div className="space-y-4">
+        <div className="flex flex-col md:flex-row gap-3">
+          {/* Company Input */}
+          <div className="flex-1">
+            <Label className="text-xs text-muted-foreground mb-1.5 block">Company name or website</Label>
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="e.g. nike.com or Acme Inc"
+                  value={companyInput}
+                  onChange={(e) => setCompanyInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  className="pl-9 h-10 text-sm"
+                />
+              </div>
+              <Button
+                onClick={handleCompanyLookup}
+                disabled={!companyInput.trim() || isLoading}
+                className="h-10 px-4"
+                style={{ 
+                  background: `linear-gradient(135deg, ${brandConfig.primaryColor}, ${brandConfig.secondaryColor})` 
+                }}
+              >
+                {isLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  'Load'
+                )}
+              </Button>
+            </div>
+          </div>
+
+          {/* Logo Upload Button */}
+          <div className="flex-shrink-0">
+            <Label className="text-xs text-muted-foreground mb-1.5 block">Or upload logo</Label>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleLogoUpload}
+              className="hidden"
             />
-            <Button
-              variant="secondary"
-              size="icon"
-              onClick={handleLogoUrlSubmit}
-              disabled={!logoUrlInput.trim() || isLoadingLogoUrl}
-              title="Load from URL"
-              className="h-9 w-9 md:h-10 md:w-10"
-            >
-              <Globe className={`h-4 w-4 ${isLoadingLogoUrl ? 'animate-spin' : ''}`} />
-            </Button>
             <Button
               variant="outline"
-              size="icon"
               onClick={() => fileInputRef.current?.click()}
-              title="Upload file"
-              className="h-9 w-9 md:h-10 md:w-10"
+              className="h-10 gap-2"
             >
               <Upload className="h-4 w-4" />
+              <span className="hidden sm:inline">Upload</span>
             </Button>
           </div>
-          {brandConfig.logoUrl && (
-            <div className="mt-2 p-2 bg-muted rounded-lg flex items-center justify-center">
-              <img 
-                src={brandConfig.logoUrl} 
-                alt="Logo preview" 
-                className="max-h-8 md:max-h-10 object-contain"
+        </div>
+
+        {/* Brand Preview & Colors */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between pt-4 border-t border-border/50 gap-3 md:gap-4">
+          <div className="flex items-center gap-4 flex-wrap">
+            {/* Logo & Company Name Preview */}
+            <div className="flex items-center gap-2 min-w-0">
+              {brandConfig.logoUrl ? (
+                <img src={brandConfig.logoUrl} alt="Logo" className="h-8 w-8 object-contain rounded bg-muted p-0.5" />
+              ) : (
+                <div className="h-8 w-8 rounded bg-muted flex items-center justify-center">
+                  <Palette className="h-4 w-4 text-muted-foreground" />
+                </div>
+              )}
+              <span className="font-medium text-sm truncate max-w-[150px]">{brandConfig.companyName}</span>
+            </div>
+
+            {/* 5 Color Swatches */}
+            <div className="flex gap-1.5 items-center">
+              <ColorSwatch 
+                color={brandConfig.primaryColor} 
+                label="Primary Color"
+                onChange={(color) => handleColorChange('primaryColor', color)}
+              />
+              <ColorSwatch 
+                color={brandConfig.secondaryColor} 
+                label="Secondary Color"
+                onChange={(color) => handleColorChange('secondaryColor', color)}
+              />
+              <ColorSwatch 
+                color={brandConfig.accentColor} 
+                label="Accent Color"
+                onChange={(color) => handleColorChange('accentColor', color)}
+              />
+              <ColorSwatch 
+                color={brandConfig.backgroundColor} 
+                label="Background Color"
+                onChange={(color) => handleColorChange('backgroundColor', color)}
+              />
+              <ColorSwatch 
+                color={brandConfig.textColor} 
+                label="Text Color"
+                onChange={(color) => handleColorChange('textColor', color)}
               />
             </div>
-          )}
-        </div>
-
-        {/* Website URL Extraction */}
-        <div className="space-y-2">
-          <Label className="text-xs md:text-sm text-muted-foreground">Extract from Website</Label>
-          <div className="flex gap-2">
-            <Input
-              placeholder="https://company.com"
-              value={websiteUrl}
-              onChange={(e) => setWebsiteUrl(e.target.value)}
-              className="flex-1 h-9 md:h-10 text-sm"
-            />
-            <Button
-              variant="secondary"
-              size="icon"
-              onClick={handleExtractBranding}
-              disabled={isExtracting}
-              className="h-9 w-9 md:h-10 md:w-10"
-            >
-              <Globe className={`h-4 w-4 ${isExtracting ? 'animate-spin' : ''}`} />
-            </Button>
           </div>
-        </div>
 
-      </div>
-
-      {/* Brand Preview & Reset */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between mt-4 md:mt-6 pt-4 border-t border-border/50 gap-3 md:gap-4">
-        <div className="flex items-center gap-3 md:gap-4 flex-wrap">
-          <span className="text-xs md:text-sm text-muted-foreground hidden md:inline">Preview:</span>
-          <div className="flex items-center gap-2">
-            {brandConfig.logoUrl && (
-              <img src={brandConfig.logoUrl} alt="Logo" className="h-5 md:h-6 object-contain" />
-            )}
-            <span className="font-medium text-sm md:text-base">{brandConfig.companyName}</span>
-          </div>
-          <div className="flex gap-1.5 items-center">
-            <ColorSwatch 
-              color={brandConfig.primaryColor} 
-              label="Primary Color"
-              onChange={(color) => handleColorChange('primaryColor', color)}
-            />
-            <ColorSwatch 
-              color={brandConfig.secondaryColor} 
-              label="Secondary Color"
-              onChange={(color) => handleColorChange('secondaryColor', color)}
-            />
-            <ColorSwatch 
-              color={brandConfig.accentColor} 
-              label="Accent Color"
-              onChange={(color) => handleColorChange('accentColor', color)}
-            />
-          </div>
-          
-          {/* Eyedropper buttons - hidden on mobile */}
-          {isEyeDropperSupported && (
-            <div className="hidden md:flex gap-1 items-center ml-2 pl-2 border-l border-border/50">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleEyeDropper('primary')}
-                      disabled={isEyeDropperActive}
-                      className={`h-7 w-7 p-0 ${eyeDropperTarget === 'primary' ? 'ring-2 ring-primary' : ''}`}
-                    >
-                      <Crosshair className="h-4 w-4" style={{ color: brandConfig.primaryColor }} />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent side="top" className="text-xs">
-                    Pick Primary Color
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleEyeDropper('secondary')}
-                      disabled={isEyeDropperActive}
-                      className={`h-7 w-7 p-0 ${eyeDropperTarget === 'secondary' ? 'ring-2 ring-primary' : ''}`}
-                    >
-                      <Crosshair className="h-4 w-4" style={{ color: brandConfig.secondaryColor }} />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent side="top" className="text-xs">
-                    Pick Secondary Color
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleEyeDropper('accent')}
-                      disabled={isEyeDropperActive}
-                      className={`h-7 w-7 p-0 ${eyeDropperTarget === 'accent' ? 'ring-2 ring-primary' : ''}`}
-                    >
-                      <Crosshair className="h-4 w-4" style={{ color: brandConfig.accentColor }} />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent side="top" className="text-xs">
-                    Pick Accent Color
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-          )}
+          <Button variant="ghost" size="sm" onClick={onReset} className="gap-1.5 text-xs self-end md:self-auto">
+            <RotateCcw className="h-3.5 w-3.5" />
+            Reset
+          </Button>
         </div>
-        <Button variant="ghost" size="sm" onClick={onReset} className="gap-1.5 md:gap-2 text-xs md:text-sm self-end md:self-auto">
-          <RotateCcw className="h-3.5 w-3.5 md:h-4 md:w-4" />
-          <span className="hidden md:inline">Reset to Gloo</span>
-          <span className="md:hidden">Reset</span>
-        </Button>
       </div>
     </Card>
   );

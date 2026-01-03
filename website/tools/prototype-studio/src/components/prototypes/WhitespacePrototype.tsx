@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useRef } from 'react';
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { 
   Grid3X3, 
   Plus, 
@@ -59,6 +59,15 @@ import {
   getScoreColor,
   getScoreBadge
 } from '@/lib/colorUtils';
+import { useOnboarding, OnboardingStep } from '@/hooks/useOnboarding';
+import { OnboardingTooltip } from './OnboardingTooltip';
+import { ContactDialog } from './ContactDialog';
+import { LikeWhatYouSeeBanner } from './LikeWhatYouSeeBanner';
+import { exportToMultiPagePdf, formatPdfNumber, formatPdfPercent } from '@/lib/exportPdf';
+import { PdfPage } from './pdf/PdfPage';
+import { WhitespacePdfGrid } from './pdf/WhitespacePdfGrid';
+
+// Onboarding steps will be defined inside the component to access setActiveTab
 
 interface Customer {
   id: string;
@@ -156,6 +165,72 @@ export function WhitespacePrototype({ brandConfig, onClose }: WhitespacePrototyp
   const [ownership, setOwnership] = useState<Ownership[]>(defaultOwnership);
   const [isExporting, setIsExporting] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
+  const pdfPage1Ref = useRef<HTMLDivElement>(null);
+  const pdfPage2Ref = useRef<HTMLDivElement>(null);
+  const [showContactDialog, setShowContactDialog] = useState(false);
+  const [bannerState, setBannerState] = useState<'hidden' | 'expanded' | 'minimized'>('hidden');
+  // Define onboarding steps with tab navigation
+  const onboardingSteps: OnboardingStep[] = useMemo(() => [
+    {
+      targetSelector: '[data-onboarding="whitespace-header"]',
+      title: 'Welcome to Whitespace Analyzer',
+      description: 'Cross-sell and upsell opportunities represent 60-70% of revenue growth potential. Companies using structured whitespace analysis see 25-30% higher expansion revenue. Let\'s explore how it works.',
+      position: 'bottom',
+    },
+    {
+      targetSelector: '[data-onboarding="customer-column"]',
+      title: 'Your Customer Base',
+      description: 'Add your customers here. Click the + button to add new ones, or click a name to edit.',
+      position: 'right',
+    },
+    {
+      targetSelector: '[data-onboarding="product-row"]',
+      title: 'Your Product Catalog',
+      description: 'Define your products along the top. Click a product header to see details like price and category.',
+      position: 'bottom',
+    },
+    {
+      targetSelector: '[data-onboarding="grid-cell"]',
+      title: 'Click for Details',
+      description: 'Click any cell to see detailed analysis including opportunity score, growth drivers, and next best action.',
+      position: 'bottom',
+    },
+    {
+      targetSelector: '[data-onboarding="configure-tab"]',
+      title: 'Configure Your Data',
+      description: 'Switch to Configure to add your own customers and products. In a full implementation, this syncs with your CRM automatically. For now, enter sample data to see the tool in action.',
+      position: 'bottom',
+      action: () => setActiveTab('configure'),
+    },
+    {
+      targetSelector: '[data-onboarding="stats-cards"]',
+      title: 'Export Your Analysis',
+      description: 'These metrics update in real-time. Export to PDF when ready to share with your team.',
+      position: 'bottom',
+      action: () => setActiveTab('preview'),
+    },
+  ], []);
+  
+  // Onboarding
+  const onboarding = useOnboarding({
+    toolId: 'whitespace',
+    steps: onboardingSteps,
+    onComplete: () => {
+      if (bannerState === 'hidden') {
+        setTimeout(() => setBannerState('expanded'), 500);
+      }
+    },
+  });
+
+  // Show banner after 30 seconds if not already shown
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (bannerState === 'hidden' && !onboarding.isActive) {
+        setBannerState('expanded');
+      }
+    }, 30000);
+    return () => clearTimeout(timer);
+  }, [bannerState, onboarding.isActive]);
   
   // Detail dialog state
   const [detailOpen, setDetailOpen] = useState(false);
@@ -380,38 +455,19 @@ export function WhitespacePrototype({ brandConfig, onClose }: WhitespacePrototyp
     return isLightColor(color, 0.7) ? darkestBrandColor : color;
   };
 
-  // Handle PDF export
+  // Handle PDF export using new multi-page system
   const handleExportPdf = async () => {
-    if (!contentRef.current || isExporting) return;
+    if (!pdfPage1Ref.current || !pdfPage2Ref.current || isExporting) return;
     
     setIsExporting(true);
     toast.info('Generating PDF...');
     
     try {
-      const html2canvas = (await import('html2canvas')).default;
-      const jsPDF = (await import('jspdf')).default;
-      
-      const canvas = await html2canvas(contentRef.current, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#ffffff',
-        logging: false,
-        ignoreElements: (el) => el.classList?.contains('no-print'),
+      await exportToMultiPagePdf({
+        toolName: 'Whitespace Analysis',
+        accountName: brandConfig.companyName || 'Analysis',
+        pages: [pdfPage1Ref.current, pdfPage2Ref.current],
       });
-
-      const imgData = canvas.toDataURL('image/png');
-      const imgWidth = canvas.width;
-      const imgHeight = canvas.height;
-      
-      const pdf = new jsPDF({
-        orientation: 'landscape',
-        unit: 'px',
-        format: [imgWidth, imgHeight],
-      });
-
-      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-      pdf.save(`${brandConfig.companyName || 'Whitespace'}-Analysis.pdf`);
       
       toast.success('PDF exported successfully!');
     } catch (error) {
@@ -421,6 +477,22 @@ export function WhitespacePrototype({ brandConfig, onClose }: WhitespacePrototyp
       setIsExporting(false);
     }
   };
+
+  // Generate executive summary for PDF
+  const pdfSummary = useMemo(() => {
+    const whitespaceValue = formatPdfNumber(stats.whitespaceValue);
+    return `This whitespace analysis identifies ${stats.opportunities} expansion opportunities across ${customers.length} customers and ${products.length} products. With ${stats.whitespacePercent}% of the grid representing untapped potential worth approximately ${whitespaceValue} in annual value, prioritizing high-fit accounts could significantly accelerate revenue growth.`;
+  }, [stats, customers.length, products.length]);
+
+  // PDF metrics
+  const pdfMetrics = useMemo(() => [
+    { label: 'Customers', value: customers.length.toString() },
+    { label: 'Products', value: products.length.toString() },
+    { label: 'Adopted', value: stats.adopted.toString(), color: brandConfig.primaryColor },
+    { label: 'Opportunities', value: stats.opportunities.toString() },
+    { label: 'Whitespace', value: `${stats.whitespacePercent}%`, color: '#ef4444' },
+    { label: 'Potential Value', value: formatPdfNumber(stats.whitespaceValue) },
+  ], [customers.length, products.length, stats, brandConfig.primaryColor]);
 
   // Calculate readiness score for selected cell
   const getReadinessScore = useCallback((customer: Customer): number => {
@@ -466,6 +538,7 @@ export function WhitespacePrototype({ brandConfig, onClose }: WhitespacePrototyp
 
         {/* Header with branding */}
         <div 
+          data-onboarding="whitespace-header"
           className="rounded-xl md:rounded-2xl p-4 md:p-6 print:rounded-none print:p-4"
           style={{ 
             background: `linear-gradient(135deg, ${brandConfig.primaryColor}, ${brandConfig.secondaryColor})`,
@@ -523,7 +596,7 @@ export function WhitespacePrototype({ brandConfig, onClose }: WhitespacePrototyp
         </div>
 
         {/* Stats Cards with smart contrast */}
-        <div className="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-4 print:grid-cols-5 print:gap-2">
+        <div data-onboarding="stats-cards" className="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-4 print:grid-cols-5 print:gap-2">
           <Card className="border-border/50 print-break">
             <CardContent className="p-3 md:pt-4 md:pb-3 md:px-4">
               <div className="flex items-center gap-1.5 md:gap-2 text-muted-foreground mb-1">
@@ -603,7 +676,7 @@ export function WhitespacePrototype({ brandConfig, onClose }: WhitespacePrototyp
               <span className="hidden md:inline">Preview Grid</span>
               <span className="md:hidden">Grid</span>
             </TabsTrigger>
-            <TabsTrigger value="configure" className="gap-1.5 md:gap-2 text-xs md:text-sm">
+            <TabsTrigger value="configure" data-onboarding="configure-tab" className="gap-1.5 md:gap-2 text-xs md:text-sm">
               <Settings2 className="h-3.5 w-3.5 md:h-4 md:w-4" />
               <span className="hidden md:inline">Configure Data</span>
               <span className="md:hidden">Config</span>
@@ -644,8 +717,8 @@ export function WhitespacePrototype({ brandConfig, onClose }: WhitespacePrototyp
               <ScrollArea className="w-full">
                 <div className="min-w-max">
                   {/* Header Row */}
-                  <div className="flex border-b bg-muted/30">
-                    <div className="w-48 shrink-0 p-3 font-semibold text-sm border-r sticky left-0 bg-muted/30 z-10">
+                  <div data-onboarding="product-row" className="flex border-b bg-muted/30">
+                    <div data-onboarding="customer-column" className="w-48 shrink-0 p-3 font-semibold text-sm border-r sticky left-0 bg-muted/30 z-10">
                       Customer / Product
                     </div>
                     {products.map(product => (
@@ -695,6 +768,7 @@ export function WhitespacePrototype({ brandConfig, onClose }: WhitespacePrototyp
                               <Tooltip>
                                 <TooltipTrigger asChild>
                                   <button
+                                    data-onboarding={idx === 0 && products.indexOf(product) === 0 ? "grid-cell" : undefined}
                                     onClick={() => handleCellClick(customer, product)}
                                     onDoubleClick={() => handleStatusToggle(customer.id, product.id)}
                                     className="w-full h-10 rounded-lg flex items-center justify-center transition-all hover:scale-105 hover:shadow-md cursor-pointer no-print"
@@ -1266,6 +1340,116 @@ export function WhitespacePrototype({ brandConfig, onClose }: WhitespacePrototyp
             })()}
           </DialogContent>
         </Dialog>
+
+        {/* Onboarding Tooltip */}
+        {onboarding.isActive && onboarding.currentStepData && (
+          <OnboardingTooltip
+            step={onboarding.currentStepData}
+            currentStep={onboarding.currentStep}
+            totalSteps={onboarding.totalSteps}
+            onNext={onboarding.nextStep}
+            onPrev={onboarding.prevStep}
+            onSkip={onboarding.skipTour}
+            onContactRequest={onboarding.requestContact}
+            isActive={onboarding.isActive}
+          />
+        )}
+
+        {/* Like What You See Banner */}
+        <LikeWhatYouSeeBanner
+          state={bannerState}
+          companyName={brandConfig.companyName}
+          onContact={() => {
+            setBannerState('minimized');
+            setShowContactDialog(true);
+          }}
+          onMinimize={() => setBannerState('minimized')}
+          onExpand={() => setBannerState('expanded')}
+        />
+
+        {/* Contact Dialog */}
+        <ContactDialog
+          open={showContactDialog}
+          onClose={() => setShowContactDialog(false)}
+          brandConfig={brandConfig}
+          toolInterest="whitespace"
+        />
+
+        {/* Hidden PDF Export - Page 1: Summary with KPIs */}
+        <PdfPage
+          ref={pdfPage1Ref}
+          logoUrl={brandConfig.logoUrl}
+          companyName={brandConfig.companyName}
+          toolName="Whitespace Analysis"
+          subtitle={brandConfig.industry ? `${brandConfig.industry} • Expansion Opportunity Analysis` : 'Expansion Opportunity Analysis'}
+          primaryColor={brandConfig.primaryColor}
+          secondaryColor={brandConfig.secondaryColor}
+          badges={brandConfig.industry ? [{ label: 'Industry', value: brandConfig.industry }] : []}
+          pageNumber={1}
+          totalPages={2}
+          benefitBlurb="This analysis identifies expansion opportunities across your customer base, revealing gaps in product adoption and potential revenue that can be captured through targeted cross-sell and upsell efforts."
+        >
+          <div className="flex flex-col h-full gap-3">
+            {/* Key Metrics */}
+            <div className="grid grid-cols-6 gap-3">
+              {pdfMetrics.map((metric, i) => (
+                <div key={i} className="bg-gray-50 rounded-lg p-3 text-center">
+                  <div className="text-xs text-gray-500 mb-1">{metric.label}</div>
+                  <div className="text-lg font-bold" style={{ color: metric.color || '#1a1a2e' }}>
+                    {metric.value}
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {/* Summary */}
+            <div className="bg-gray-50 rounded-lg px-4 py-3">
+              <div className="text-xs text-gray-500 uppercase tracking-wide mb-1 font-medium">
+                Executive Summary
+              </div>
+              <p className="text-sm text-gray-700 leading-relaxed">
+                {pdfSummary}
+              </p>
+            </div>
+            
+            {/* Compact Grid Preview */}
+            <div className="flex-1 border border-gray-100 rounded-lg overflow-hidden">
+              <WhitespacePdfGrid
+                customers={customers}
+                products={products}
+                ownership={ownership}
+                primaryColor={brandConfig.primaryColor}
+                secondaryColor={brandConfig.secondaryColor}
+                isDetailPage={false}
+              />
+            </div>
+          </div>
+        </PdfPage>
+        
+        {/* Hidden PDF Export - Page 2: Full Grid Detail */}
+        <PdfPage
+          ref={pdfPage2Ref}
+          logoUrl={brandConfig.logoUrl}
+          companyName={brandConfig.companyName}
+          toolName="Whitespace Analysis"
+          subtitle="Full Grid Detail"
+          primaryColor={brandConfig.primaryColor}
+          secondaryColor={brandConfig.secondaryColor}
+          pageNumber={2}
+          totalPages={2}
+          minimalHeader
+        >
+          <div className="h-full border border-gray-100 rounded-lg overflow-hidden">
+            <WhitespacePdfGrid
+              customers={customers}
+              products={products}
+              ownership={ownership}
+              primaryColor={brandConfig.primaryColor}
+              secondaryColor={brandConfig.secondaryColor}
+              isDetailPage={true}
+            />
+          </div>
+        </PdfPage>
       </div>
     </TooltipProvider>
   );

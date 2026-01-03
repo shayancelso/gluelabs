@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -44,6 +44,61 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { BrandConfig } from "./PrototypeBrandingBar";
+import { useOnboarding, OnboardingStep } from '@/hooks/useOnboarding';
+import { OnboardingTooltip } from './OnboardingTooltip';
+import { ContactDialog } from './ContactDialog';
+import { LikeWhatYouSeeBanner } from './LikeWhatYouSeeBanner';
+import { exportToPortraitPdf, formatPdfNumber } from '@/lib/exportPdf';
+import { PdfPage } from './pdf/PdfPage';
+import { ROIPdfChart } from './pdf/ROIPdfChart';
+
+// Scroll action for toggles section
+const scrollToToggles = () => {
+  const target = document.querySelector('[data-onboarding="toggles-section"]');
+  if (target) {
+    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+};
+
+const ROI_ONBOARDING_STEPS: OnboardingStep[] = [
+  {
+    targetSelector: '[data-onboarding="roi-header"]',
+    title: 'Welcome to ROI Calculator',
+    description: '74% of B2B buyers say demonstrating clear ROI is the most important factor in their purchase decision. Deals with quantified value propositions close 50% faster. Let\'s build your business case.',
+    position: 'bottom',
+  },
+  {
+    targetSelector: '[data-onboarding="investment-section"]',
+    title: 'Set Investment Details',
+    description: 'Enter the upfront cost and monthly fee for your solution.',
+    position: 'right',
+  },
+  {
+    targetSelector: '[data-onboarding="roles-section"]',
+    title: 'Add Team Roles',
+    description: 'Add roles that will benefit from time savings. Adjust hourly rates and hours saved per week.',
+    position: 'right',
+  },
+  {
+    targetSelector: '[data-onboarding="toggles-section"]',
+    title: 'Customize Value Drivers',
+    description: 'Toggle Incremental Revenue and Tool Replacement sections on or off to customize the ROI calculation for your specific use case.',
+    position: 'right',
+    action: scrollToToggles,
+  },
+  {
+    targetSelector: '[data-onboarding="scenario-buttons"]',
+    title: 'Choose a Scenario',
+    description: 'Toggle between Conservative, Realistic, and Aggressive projections.',
+    position: 'right',
+  },
+  {
+    targetSelector: '[data-onboarding="roi-chart"]',
+    title: 'See the Results',
+    description: 'The ROI updates instantly. Export to PDF to share with your prospect.',
+    position: 'left',
+  },
+];
 
 interface Role {
   id: string;
@@ -109,6 +164,31 @@ export function ROIPrototype({ onClose, initialBrandConfig, discoveryData, onEdi
   const [brandConfig] = useState(initialBrandConfig);
   const [isExporting, setIsExporting] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
+  const pdfExportRef = useRef<HTMLDivElement>(null);
+  
+  const [showContactDialog, setShowContactDialog] = useState(false);
+  const [bannerState, setBannerState] = useState<'hidden' | 'expanded' | 'minimized'>('hidden');
+  
+  // Onboarding
+  const onboarding = useOnboarding({
+    toolId: 'roi',
+    steps: ROI_ONBOARDING_STEPS,
+    onComplete: () => {
+      if (bannerState === 'hidden') {
+        setTimeout(() => setBannerState('expanded'), 500);
+      }
+    },
+  });
+
+  // Show banner after 30 seconds if not already shown
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (bannerState === 'hidden' && !onboarding.isActive) {
+        setBannerState('expanded');
+      }
+    }, 30000);
+    return () => clearTimeout(timer);
+  }, [bannerState, onboarding.isActive]);
   
   // Initialize state from discovery data or use defaults
   const getInitialRoles = (): Role[] => {
@@ -172,38 +252,19 @@ export function ROIPrototype({ onClose, initialBrandConfig, discoveryData, onEdi
     toolReplacement: false,
   });
 
-  // Handle PDF export
+  // Handle PDF export using new system
   const handleExportPdf = async () => {
-    if (!contentRef.current || isExporting) return;
+    if (!pdfExportRef.current || isExporting) return;
     
     setIsExporting(true);
     toast.info('Generating PDF...');
     
     try {
-      const html2canvas = (await import('html2canvas')).default;
-      const jsPDF = (await import('jspdf')).default;
-      
-      const canvas = await html2canvas(contentRef.current, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#ffffff',
-        logging: false,
-        ignoreElements: (el) => el.classList?.contains('no-print'),
+      await exportToPortraitPdf({
+        toolName: 'ROI Calculator',
+        accountName: brandConfig.companyName || 'Analysis',
+        element: pdfExportRef.current,
       });
-
-      const imgData = canvas.toDataURL('image/png');
-      const imgWidth = canvas.width;
-      const imgHeight = canvas.height;
-      
-      const pdf = new jsPDF({
-        orientation: 'landscape',
-        unit: 'px',
-        format: [imgWidth, imgHeight],
-      });
-
-      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-      pdf.save(`${brandConfig.companyName || 'ROI'}-Analysis.pdf`);
       
       toast.success('PDF exported successfully!');
     } catch (error) {
@@ -294,6 +355,22 @@ export function ROIPrototype({ onClose, initialBrandConfig, discoveryData, onEdi
     return value.toFixed(0);
   };
 
+  // Generate executive summary for PDF
+  const pdfSummary = useMemo(() => {
+    const totalHeadcount = roles.reduce((sum, r) => sum + r.headcount, 0);
+    const totalHours = roles.reduce((sum, r) => sum + (r.hoursSavedPerWeek * r.headcount), 0);
+    return `Based on ${totalHeadcount} team members across ${roles.length} roles saving ${totalHours.toLocaleString()} hours per week, this solution delivers ${calculations.roi.toFixed(0)}% ROI over ${calculationPeriod} months. With a net benefit of ${formatCurrency(calculations.netBenefit)}, breakeven is achieved at month ${calculations.breakevenMonth}.`;
+  }, [roles, calculations, calculationPeriod, formatCurrency]);
+
+  // PDF metrics
+  const pdfMetrics = useMemo(() => [
+    { label: 'Investment', value: formatCurrency(calculations.totalInvestment) },
+    { label: 'Total Benefits', value: formatCurrency(calculations.totalPeriodBenefits), color: brandConfig.primaryColor },
+    { label: 'Net Value', value: formatCurrency(calculations.netBenefit), color: calculations.netBenefit >= 0 ? '#22c55e' : '#ef4444' },
+    { label: 'ROI', value: `${calculations.roi.toFixed(0)}%`, color: brandConfig.primaryColor },
+    { label: 'Breakeven', value: calculations.breakevenMonth > 0 ? `Month ${calculations.breakevenMonth}` : 'N/A' },
+  ], [calculations, brandConfig.primaryColor, formatCurrency]);
+
   const addRole = () => {
     setRoles([...roles, {
       id: Date.now().toString(),
@@ -358,6 +435,7 @@ export function ROIPrototype({ onClose, initialBrandConfig, discoveryData, onEdi
       <div className="max-w-[1600px] mx-auto space-y-4 md:space-y-6">
         {/* Clean Branded Header - Matching Whitespace Style */}
         <div 
+          data-onboarding="roi-header"
           className="rounded-xl md:rounded-2xl p-4 md:p-6 shadow-lg"
           style={{ 
             background: `linear-gradient(135deg, ${brandConfig.primaryColor}, ${brandConfig.secondaryColor || brandConfig.primaryColor})`,
@@ -460,7 +538,7 @@ export function ROIPrototype({ onClose, initialBrandConfig, discoveryData, onEdi
                 </Card>
 
                 {/* Scenario Selection */}
-                <Card className="border-border/50">
+                <Card data-onboarding="scenario-buttons" className="border-border/50">
                   <CardHeader className="pb-2 md:pb-3 p-3 md:p-6 md:pt-4">
                     <CardTitle className="text-xs md:text-sm font-medium flex items-center gap-2">
                       <Target className="h-3.5 w-3.5 md:h-4 md:w-4" style={{ color: brandConfig.primaryColor }} />
@@ -494,7 +572,7 @@ export function ROIPrototype({ onClose, initialBrandConfig, discoveryData, onEdi
                 </Card>
 
                 {/* Investment Configuration */}
-                <Card className="border-border/50">
+                <Card data-onboarding="investment-section" className="border-border/50">
                   <CardHeader className="pb-3">
                     <CardTitle className="text-sm font-medium flex items-center gap-2">
                       <DollarSign className="h-4 w-4" style={{ color: brandConfig.primaryColor }} />
@@ -552,7 +630,7 @@ export function ROIPrototype({ onClose, initialBrandConfig, discoveryData, onEdi
                 </Card>
 
                 {/* Roles Configuration */}
-                <Card className="border-border/50">
+                <Card data-onboarding="roles-section" className="border-border/50">
                   <CardHeader className="pb-3">
                     <CardTitle className="text-sm font-medium flex items-center justify-between">
                       <span className="flex items-center gap-2">
@@ -626,7 +704,7 @@ export function ROIPrototype({ onClose, initialBrandConfig, discoveryData, onEdi
                 </Card>
 
                 {/* Benefits Configuration */}
-                <Card className="border-border/50">
+                <Card data-onboarding="toggles-section" className="border-border/50">
                   <CardHeader className="pb-3">
                     <CardTitle className="text-sm font-medium flex items-center gap-2">
                       <Zap className="h-4 w-4" style={{ color: brandConfig.primaryColor }} />
@@ -779,7 +857,7 @@ export function ROIPrototype({ onClose, initialBrandConfig, discoveryData, onEdi
           </div>
 
           {/* Right: Live Preview */}
-          <div className="flex-1 space-y-4 md:space-y-6">
+          <div data-onboarding="roi-chart" className="flex-1 space-y-4 md:space-y-6">
             {/* Summary Cards */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
               <Card className="border-border/50">
@@ -1060,6 +1138,145 @@ export function ROIPrototype({ onClose, initialBrandConfig, discoveryData, onEdi
           }
         }
       `}</style>
+
+      {/* Onboarding Tooltip */}
+      {onboarding.isActive && onboarding.currentStepData && (
+        <OnboardingTooltip
+          step={onboarding.currentStepData}
+          currentStep={onboarding.currentStep}
+          totalSteps={onboarding.totalSteps}
+          onNext={onboarding.nextStep}
+          onPrev={onboarding.prevStep}
+          onSkip={onboarding.skipTour}
+          onContactRequest={onboarding.requestContact}
+          isActive={onboarding.isActive}
+        />
+      )}
+
+      {/* Like What You See Banner */}
+      <LikeWhatYouSeeBanner
+        state={bannerState}
+        companyName={brandConfig.companyName}
+        onContact={() => {
+          setBannerState('minimized');
+          setShowContactDialog(true);
+        }}
+        onMinimize={() => setBannerState('minimized')}
+        onExpand={() => setBannerState('expanded')}
+      />
+
+      {/* Contact Dialog */}
+      <ContactDialog
+        open={showContactDialog}
+        onClose={() => setShowContactDialog(false)}
+        brandConfig={brandConfig}
+        toolInterest="roi"
+      />
+
+      {/* Hidden PDF Export - Portrait Single Page */}
+      <PdfPage
+        ref={pdfExportRef}
+        logoUrl={brandConfig.logoUrl}
+        companyName={brandConfig.companyName}
+        toolName="ROI Calculator"
+        subtitle={`${calculationPeriod}-Month Value Analysis`}
+        primaryColor={brandConfig.primaryColor}
+        secondaryColor={brandConfig.secondaryColor}
+        badges={[
+          { label: 'Scenario', value: scenario.charAt(0).toUpperCase() + scenario.slice(1) },
+        ]}
+        benefitBlurb="This analysis helps quantify the financial impact of our solution, showing projected savings, ROI timeline, and breakeven point to support your business case."
+        orientation="portrait"
+      >
+        <div className="flex flex-col h-full gap-3">
+          {/* Key Metrics */}
+          <div className="grid grid-cols-5 gap-3">
+            {pdfMetrics.map((metric, i) => (
+              <div key={i} className="bg-gray-50 rounded-lg p-3 text-center">
+                <div className="text-xs text-gray-500 mb-1">{metric.label}</div>
+                <div className="text-lg font-bold" style={{ color: metric.color || '#1a1a2e' }}>
+                  {metric.value}
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          {/* Benefits Breakdown - show enabled benefits */}
+          {(benefitsEnabled.timeSavings || benefitsEnabled.revenue || benefitsEnabled.toolReplacement) && (
+            <div className="border border-gray-100 rounded-lg p-3">
+              <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                Value Drivers
+              </div>
+              <div className="grid grid-cols-3 gap-3">
+                {benefitsEnabled.timeSavings && (
+                  <div className="bg-gray-50 rounded p-2">
+                    <div className="flex items-center gap-1 text-xs text-gray-500 mb-1">
+                      <Clock className="h-3 w-3" />
+                      Time Savings
+                    </div>
+                    <div className="text-sm font-semibold" style={{ color: brandConfig.primaryColor }}>
+                      {formatCurrency(calculations.annualTimeSavings)}/yr
+                    </div>
+                    <div className="text-[10px] text-gray-400 mt-0.5">
+                      {roles.length} roles, {roles.reduce((s, r) => s + r.headcount, 0)} people
+                    </div>
+                  </div>
+                )}
+                {benefitsEnabled.revenue && revenueItems.length > 0 && (
+                  <div className="bg-gray-50 rounded p-2">
+                    <div className="flex items-center gap-1 text-xs text-gray-500 mb-1">
+                      <TrendingUp className="h-3 w-3" />
+                      Incremental Revenue
+                    </div>
+                    <div className="text-sm font-semibold" style={{ color: brandConfig.primaryColor }}>
+                      {formatCurrency(calculations.annualRevenue)}/yr
+                    </div>
+                    <div className="text-[10px] text-gray-400 mt-0.5">
+                      {revenueItems.map(r => r.name).join(', ')}
+                    </div>
+                  </div>
+                )}
+                {benefitsEnabled.toolReplacement && toolReplacements.length > 0 && (
+                  <div className="bg-gray-50 rounded p-2">
+                    <div className="flex items-center gap-1 text-xs text-gray-500 mb-1">
+                      <DollarSign className="h-3 w-3" />
+                      Tool Replacement
+                    </div>
+                    <div className="text-sm font-semibold" style={{ color: brandConfig.primaryColor }}>
+                      {formatCurrency(calculations.annualToolSavings)}/yr
+                    </div>
+                    <div className="text-[10px] text-gray-400 mt-0.5">
+                      {toolReplacements.map(t => t.toolName).join(', ')}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+          
+          {/* Chart and breakdown */}
+          <div className="flex-1 border border-gray-100 rounded-lg overflow-hidden">
+            <ROIPdfChart
+              chartData={calculations.chartData}
+              breakevenMonth={calculations.breakevenMonth}
+              primaryColor={brandConfig.primaryColor}
+              secondaryColor={brandConfig.secondaryColor || brandConfig.primaryColor}
+              roles={roles}
+              scenarioMultiplier={scenarioMultiplier}
+            />
+          </div>
+          
+          {/* Summary */}
+          <div className="bg-gray-50 rounded-lg px-4 py-3">
+            <div className="text-xs text-gray-500 uppercase tracking-wide mb-1 font-medium">
+              Executive Summary
+            </div>
+            <p className="text-sm text-gray-700 leading-relaxed">
+              {pdfSummary}
+            </p>
+          </div>
+        </div>
+      </PdfPage>
     </div>
   );
 }

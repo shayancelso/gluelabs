@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useMemo, useEffect } from 'react';
 import { X, FileDown, ClipboardList, Building2, Users, Wrench, Target, MessageSquare, ChevronDown, ChevronRight, Plus, Trash2, GripVertical, Check, Edit3, Eye, ArrowUp, ArrowDown, Settings2, CheckCircle2, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,6 +14,13 @@ import { Switch } from '@/components/ui/switch';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import type { BrandConfig } from './PrototypeBrandingBar';
 import { toast } from 'sonner';
+import { useOnboarding, OnboardingStep } from '@/hooks/useOnboarding';
+import { OnboardingTooltip } from './OnboardingTooltip';
+import { ContactDialog } from './ContactDialog';
+import { LikeWhatYouSeeBanner } from './LikeWhatYouSeeBanner';
+import { exportToMultiPagePdf, PDF_WIDTH, PDF_HEIGHT } from '@/lib/exportPdf';
+import { PdfPage } from './pdf/PdfPage';
+import { DiscoveryPdfSummary } from './pdf/DiscoveryPdfSummary';
 
 interface DiscoveryPrototypeProps {
   onClose: () => void;
@@ -375,50 +382,123 @@ export function DiscoveryPrototype({ onClose, initialBrandConfig }: DiscoveryPro
   const [brandConfig] = useState<BrandConfig>(initialBrandConfig);
   const [isExporting, setIsExporting] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
+  const pdfPage1Ref = useRef<HTMLDivElement>(null);
+  const pdfPage2Ref = useRef<HTMLDivElement>(null);
+  const pdfPage3Ref = useRef<HTMLDivElement>(null);
   const [sections, setSections] = useState<Section[]>(DEFAULT_SECTIONS);
   const [processes, setProcesses] = useState<ProcessFollowUp[]>(DEFAULT_PROCESSES);
   const [selectedProcess, setSelectedProcess] = useState<string | null>(null);
   const [responses, setResponses] = useState<Record<string, any>>({});
   const [viewMode, setViewMode] = useState<ViewMode>('preview');
   const [editingItemId, setEditingItemId] = useState<string | null>(null);
+  const [showContactDialog, setShowContactDialog] = useState(false);
+  const [bannerState, setBannerState] = useState<'hidden' | 'expanded' | 'minimized'>('hidden');
 
-  // Handle PDF export
+  // Define onboarding steps with tab navigation - use useCallback for stable actions
+  const switchToEdit = useCallback(() => {
+    setViewMode('edit');
+    // Give the UI more time to render edit mode, then scroll to make sections visible
+    setTimeout(() => {
+      const sectionsNav = document.querySelector('[data-onboarding="sections-nav"]');
+      if (sectionsNav) {
+        sectionsNav.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 300);
+  }, []);
+  
+  const switchToPreview = useCallback(() => setViewMode('preview'), []);
+
+  const onboardingSteps: OnboardingStep[] = useMemo(() => [
+    {
+      targetSelector: '[data-onboarding="discovery-header"]',
+      title: 'Welcome to Discovery Questionnaire',
+      description:
+        'Reps following structured discovery are 40% more likely to hit quota, with 2x higher win rates. Standardize your discovery so every rep uncovers pain points and needs consistently.',
+      position: 'bottom',
+    },
+    {
+      targetSelector: '[data-onboarding="mode-toggle"]',
+      title: 'Edit vs Live Preview',
+      description:
+        'Use Live Preview to see the prospect experience, and Edit Questions to customize the questionnaire. Click Next to jump into Edit mode.',
+      position: 'bottom',
+      action: switchToEdit,
+    },
+    {
+      targetSelector: '[data-onboarding="sections-nav"]',
+      title: 'Organize with Sections',
+      description:
+        'Group related questions into sections. Click the pencil icon to rename, or + to add new sections.',
+      position: 'right',
+    },
+    {
+      targetSelector: '[data-onboarding="question-area"]',
+      title: 'Add & Edit Questions',
+      description:
+        'Click any question to edit it. Choose from multiple types: dropdowns, sliders, text fields, and more.',
+      position: 'left',
+    },
+    {
+      targetSelector: '[data-onboarding="question-options"]',
+      title: 'Configure Options',
+      description:
+        'For choice-based questions, add or edit available options with the + button.',
+      position: 'left',
+    },
+    {
+      targetSelector: '[data-onboarding="mode-toggle"]',
+      title: 'Preview Your Work',
+      description:
+        'Switch to Preview to see exactly what your prospect will experience.',
+      position: 'bottom',
+      action: switchToPreview,
+    },
+  ], [switchToEdit, switchToPreview]);
+
+  // Onboarding
+  const onboarding = useOnboarding({
+    toolId: 'discovery',
+    steps: onboardingSteps,
+    onComplete: () => {
+      // Show banner after onboarding completes
+      if (bannerState === 'hidden') {
+        setTimeout(() => setBannerState('expanded'), 500);
+      }
+    },
+  });
+
+  // Also show banner after 30 seconds if not already shown
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (bannerState === 'hidden' && !onboarding.isActive) {
+        setBannerState('expanded');
+      }
+    }, 30000);
+    return () => clearTimeout(timer);
+  }, [bannerState, onboarding.isActive]);
+
+  // Handle PDF export using html2canvas/jsPDF for auto-download
   const handleExportPdf = async () => {
-    if (!contentRef.current || isExporting) return;
+    if (isExporting) return;
+    if (!pdfPage1Ref.current || !pdfPage2Ref.current || !pdfPage3Ref.current) {
+      toast.error('PDF content not ready');
+      return;
+    }
     
     setIsExporting(true);
     toast.info('Generating PDF...');
     
     try {
-      const html2canvas = (await import('html2canvas')).default;
-      const jsPDF = (await import('jspdf')).default;
-      
-      const canvas = await html2canvas(contentRef.current, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#ffffff',
-        logging: false,
-        ignoreElements: (el) => el.classList?.contains('no-print'),
+      await exportToMultiPagePdf({
+        toolName: 'Discovery Summary',
+        accountName: brandConfig.companyName || 'Client',
+        pages: [pdfPage1Ref.current, pdfPage2Ref.current, pdfPage3Ref.current],
       });
-
-      const imgData = canvas.toDataURL('image/png');
-      const imgWidth = canvas.width;
-      const imgHeight = canvas.height;
       
-      const pdf = new jsPDF({
-        orientation: 'landscape',
-        unit: 'px',
-        format: [imgWidth, imgHeight],
-      });
-
-      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-      pdf.save(`${brandConfig.companyName || 'Discovery'}-Questionnaire.pdf`);
-      
-      toast.success('PDF exported successfully!');
+      toast.success('PDF downloaded successfully!');
     } catch (error) {
       console.error('PDF export failed:', error);
-      toast.error('Failed to export PDF');
+      toast.error('Failed to generate PDF');
     } finally {
       setIsExporting(false);
     }
@@ -640,7 +720,7 @@ export function DiscoveryPrototype({ onClose, initialBrandConfig }: DiscoveryPro
         </div>
 
         {question.type === 'multi-select' && question.options && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 md:gap-2">
+          <div data-onboarding="question-options" className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 md:gap-2">
             {question.options.map((option) => (
               <div
                 key={option.id}
@@ -773,6 +853,7 @@ export function DiscoveryPrototype({ onClose, initialBrandConfig }: DiscoveryPro
       <div 
         key={question.id} 
         className="p-3 rounded-lg border border-border/50 bg-card/30 space-y-3"
+        data-onboarding={idx === 0 ? "question-area" : undefined}
       >
         <div className="flex items-start gap-2">
           <div className="flex flex-col gap-0.5">
@@ -818,7 +899,7 @@ export function DiscoveryPrototype({ onClose, initialBrandConfig }: DiscoveryPro
                   ))}
                 </SelectContent>
               </Select>
-              <div className="flex items-center gap-1 text-xs text-muted-foreground">
+              <div className="flex items-center gap-1">
                 <Checkbox 
                   id={`required-${question.id}`}
                   checked={question.required || false}
@@ -830,700 +911,264 @@ export function DiscoveryPrototype({ onClose, initialBrandConfig }: DiscoveryPro
                     ));
                   }}
                 />
-                <label htmlFor={`required-${question.id}`} className="cursor-pointer">Required</label>
+                <Label htmlFor={`required-${question.id}`} className="text-xs text-muted-foreground">Required</Label>
               </div>
             </div>
-            
-            {/* Options editor for option-based questions */}
-            {['multi-select', 'single-select', 'dropdown'].includes(question.type) && question.options && (
-              <div className="space-y-1 pl-2 border-l-2 border-border/50">
-                {question.options.map((option) => (
-                  <div key={option.id} className="flex items-center gap-1">
-                    <Input
-                      value={option.label}
-                      onChange={(e) => updateQuestionOption(sectionId, question.id, option.id, e.target.value)}
-                      className="h-6 text-xs flex-1"
-                    />
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-6 w-6 p-0 text-muted-foreground hover:text-destructive"
-                      onClick={() => removeQuestionOption(sectionId, question.id, option.id)}
-                    >
-                      <Trash2 className="h-3 w-3" />
-                    </Button>
-                  </div>
-                ))}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-6 text-xs gap-1"
-                  onClick={() => addQuestionOption(sectionId, question.id)}
-                >
-                  <Plus className="h-3 w-3" />
-                  Add Option
-                </Button>
-              </div>
-            )}
           </div>
           <Button
             variant="ghost"
             size="sm"
-            className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
+            className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive shrink-0"
             onClick={() => deleteQuestion(sectionId, question.id)}
           >
-            <Trash2 className="h-4 w-4" />
+            <Trash2 className="h-3.5 w-3.5" />
           </Button>
         </div>
+
+        {/* Option editor for select types */}
+        {['multi-select', 'single-select', 'dropdown'].includes(question.type) && question.options && (
+          <div className="pl-8 space-y-2" data-onboarding="question-options">
+            {question.options.map((option) => (
+              <div key={option.id} className="flex items-center gap-2">
+                <GripVertical className="h-3 w-3 text-muted-foreground" />
+                <Input
+                  value={option.label}
+                  onChange={(e) => updateQuestionOption(sectionId, question.id, option.id, e.target.value)}
+                  className="h-7 text-xs flex-1"
+                />
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 w-6 p-0 text-muted-foreground hover:text-destructive"
+                  onClick={() => removeQuestionOption(sectionId, question.id, option.id)}
+                >
+                  <X className="h-3 w-3" />
+                </Button>
+              </div>
+            ))}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 text-xs gap-1"
+              onClick={() => addQuestionOption(sectionId, question.id)}
+            >
+              <Plus className="h-3 w-3" />
+              Add Option
+            </Button>
+          </div>
+        )}
+
+        {/* Range editor for scale/slider */}
+        {['scale', 'slider'].includes(question.type) && (
+          <div className="pl-8 flex items-center gap-3">
+            <div className="flex items-center gap-1">
+              <Label className="text-xs text-muted-foreground">Min:</Label>
+              <Input
+                type="number"
+                value={question.min || 1}
+                onChange={(e) => {
+                  setSections(sections.map(s => 
+                    s.id === sectionId 
+                      ? { ...s, questions: s.questions.map(q => q.id === question.id ? { ...q, min: parseInt(e.target.value) || 1 } : q) }
+                      : s
+                  ));
+                }}
+                className="h-7 w-16 text-xs"
+              />
+            </div>
+            <div className="flex items-center gap-1">
+              <Label className="text-xs text-muted-foreground">Max:</Label>
+              <Input
+                type="number"
+                value={question.max || 10}
+                onChange={(e) => {
+                  setSections(sections.map(s => 
+                    s.id === sectionId 
+                      ? { ...s, questions: s.questions.map(q => q.id === question.id ? { ...q, max: parseInt(e.target.value) || 10 } : q) }
+                      : s
+                  ));
+                }}
+                className="h-7 w-16 text-xs"
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Placeholder editor for text types */}
+        {['short-text', 'long-text', 'number'].includes(question.type) && (
+          <div className="pl-8">
+            <Input
+              value={question.placeholder || ''}
+              onChange={(e) => {
+                setSections(sections.map(s => 
+                  s.id === sectionId 
+                    ? { ...s, questions: s.questions.map(q => q.id === question.id ? { ...q, placeholder: e.target.value } : q) }
+                    : s
+                ));
+              }}
+              placeholder="Placeholder text..."
+              className="h-7 text-xs"
+            />
+          </div>
+        )}
       </div>
     );
   };
 
-  // Completed Discovery Document View
-  if (viewMode === 'completed') {
-    return (
-      <div 
-        ref={contentRef}
-        className="fixed inset-0 z-50 flex flex-col"
-        style={{
-          background: `
-            radial-gradient(ellipse 80% 60% at 85% 80%, ${brandConfig.primaryColor}15 0%, transparent 50%),
-            radial-gradient(ellipse 60% 50% at 95% 20%, ${brandConfig.secondaryColor}10 0%, transparent 40%),
-            linear-gradient(180deg, #fafafa 0%, #f8f7fc 100%)
-          `,
-        }}
-      >
-        <div 
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            backgroundImage: `radial-gradient(circle, rgba(120, 100, 140, 0.08) 1px, transparent 1px)`,
-            backgroundSize: '28px 28px',
-          }}
-        />
+  // Common background style
+  const backgroundStyle = {
+    background: `
+      radial-gradient(ellipse 80% 60% at 85% 80%, ${brandConfig.primaryColor}15 0%, transparent 50%),
+      radial-gradient(ellipse 60% 50% at 95% 20%, ${brandConfig.secondaryColor}10 0%, transparent 40%),
+      linear-gradient(180deg, #fafafa 0%, #f8f7fc 100%)
+    `,
+  };
 
-        {/* Header */}
-        <div className="relative z-10 p-6 pb-0">
-          <div 
-            className="rounded-2xl p-6"
-            style={{
-              background: `linear-gradient(135deg, ${brandConfig.primaryColor}, ${brandConfig.secondaryColor})`,
-            }}
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                {brandConfig.logoUrl ? (
-                  <div className="bg-white/20 p-2 rounded-xl backdrop-blur-sm">
-                    <img src={brandConfig.logoUrl} alt="Logo" className="h-10 w-auto object-contain" />
-                  </div>
-                ) : (
-                  <div className="bg-white/20 p-3 rounded-xl backdrop-blur-sm">
-                    <CheckCircle2 className="h-8 w-8 text-white" />
-                  </div>
-                )}
-                <div>
-                  <h1 className="text-xl font-bold text-white flex items-center gap-2">
-                    <CheckCircle2 className="h-5 w-5" />
-                    Discovery Document
-                  </h1>
-                  <p className="text-white/80 text-sm">
-                    {brandConfig.companyName || 'Company'} • Completed {new Date().toLocaleDateString()}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <Button 
-                  variant="secondary" 
-                  size="sm" 
-                  onClick={handleExportPdf}
-                  disabled={isExporting}
-                  className="gap-2 bg-white/20 hover:bg-white/30 text-white border-white/30 no-print"
-                >
-                  <FileDown className="h-4 w-4" />
-                  {isExporting ? 'Exporting...' : 'Export PDF'}
-                </Button>
-                <Button 
-                  variant="secondary" 
-                  size="sm" 
-                  className="gap-2 bg-white/20 hover:bg-white/30 text-white border-white/30"
-                  onClick={() => setViewMode('preview')}
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                  Back to Survey
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={onClose}
-                  className="text-white hover:bg-white/20"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
+  const dotGridStyle = {
+    backgroundImage: `radial-gradient(circle, rgba(120, 100, 140, 0.08) 1px, transparent 1px)`,
+    backgroundSize: '28px 28px',
+  };
 
-        {/* Completion Stats */}
-        <div className="relative z-10 px-6 py-4">
-          <div className="grid grid-cols-3 gap-4">
-            <div className="bg-card rounded-xl p-4 border border-border/50">
-              <div className="text-2xl font-bold" style={{ color: brandConfig.primaryColor }}>{completedQuestions}</div>
-              <div className="text-sm text-muted-foreground">Questions Answered</div>
-            </div>
-            <div className="bg-card rounded-xl p-4 border border-border/50">
-              <div className="text-2xl font-bold" style={{ color: brandConfig.secondaryColor }}>{sections.length}</div>
-              <div className="text-sm text-muted-foreground">Sections Completed</div>
-            </div>
-            <div className="bg-card rounded-xl p-4 border border-border/50">
-              <div className="text-2xl font-bold" style={{ color: brandConfig.accentColor }}>{progressPercent}%</div>
-              <div className="text-sm text-muted-foreground">Completion Rate</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Document Content */}
-        <ScrollArea className="relative z-10 flex-1 px-6 pb-6">
-          <div className="bg-card rounded-2xl border border-border/50 p-8 space-y-8">
-            {sections.map((section) => {
-              const Icon = ICON_MAP[section.icon];
-              const hasAnswers = section.questions.some(q => {
-                const val = responses[q.id];
-                if (Array.isArray(val)) return val.length > 0;
-                return val !== undefined && val !== '' && val !== null;
-              });
-
-              return (
-                <div key={section.id} className="space-y-6">
-                  <div className="flex items-center gap-3 pb-2 border-b border-border/50">
-                    <div 
-                      className="h-10 w-10 rounded-xl flex items-center justify-center shrink-0"
-                      style={{ background: `linear-gradient(135deg, ${brandConfig.primaryColor}20, ${brandConfig.secondaryColor}20)` }}
-                    >
-                      <Icon className="h-5 w-5" style={{ color: brandConfig.primaryColor }} />
-                    </div>
-                    <h2 className="text-xl font-semibold">{section.title}</h2>
-                  </div>
-                  <div className="grid gap-4">
-                    {section.questions.map((question) => {
-                      const answer = getAnswerDisplay(question);
-                      const hasAnswer = answer !== 'Not answered';
-                      
-                      return (
-                        <div 
-                          key={question.id} 
-                          className={`p-4 rounded-xl border ${hasAnswer ? 'bg-card border-border/50' : 'bg-muted/30 border-border/30'}`}
-                        >
-                          <div className="flex items-start justify-between gap-4">
-                            <div className="flex-1">
-                              <div className="text-sm text-muted-foreground mb-1">{question.question}</div>
-                              <div className={`font-medium ${hasAnswer ? '' : 'text-muted-foreground italic'}`}>
-                                {answer}
-                              </div>
-                            </div>
-                            {hasAnswer && (
-                              <Check className="h-5 w-5 shrink-0 mt-1" style={{ color: brandConfig.accentColor }} />
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-
-            {/* Industry-specific questions */}
-            {industryQuestions.length > 0 && (
-              <div className="space-y-6 pt-4 border-t border-border/50">
-                <div className="flex items-center gap-3 pb-2 border-b border-border/50">
-                  <div 
-                    className="h-10 w-10 rounded-xl flex items-center justify-center shrink-0"
-                    style={{ background: `linear-gradient(135deg, ${brandConfig.accentColor}20, ${brandConfig.primaryColor}20)` }}
-                  >
-                    <Building2 className="h-5 w-5" style={{ color: brandConfig.accentColor }} />
-                  </div>
-                  <h2 className="text-xl font-semibold">Industry-Specific Insights</h2>
-                </div>
-                <div className="grid gap-4">
-                  {industryQuestions.map((question) => {
-                    const answer = getAnswerDisplay(question);
-                    const hasAnswer = answer !== 'Not answered';
-                    
-                    return (
-                      <div 
-                        key={question.id} 
-                        className={`p-4 rounded-xl border ${hasAnswer ? 'bg-card border-border/50' : 'bg-muted/30 border-border/30'}`}
-                      >
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex-1">
-                            <div className="text-sm text-muted-foreground mb-1">{question.question}</div>
-                            <div className={`font-medium ${hasAnswer ? '' : 'text-muted-foreground italic'}`}>
-                              {answer}
-                            </div>
-                          </div>
-                          {hasAnswer && (
-                            <Check className="h-5 w-5 shrink-0 mt-1" style={{ color: brandConfig.accentColor }} />
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
-            {/* Process-specific questions */}
-            {selectedProcess && (
-              <div className="space-y-6 pt-4 border-t border-border/50">
-                <div className="flex items-center gap-3 pb-2 border-b border-border/50">
-                  <div 
-                    className="h-10 w-10 rounded-xl flex items-center justify-center shrink-0"
-                    style={{ background: `linear-gradient(135deg, ${brandConfig.secondaryColor}20, ${brandConfig.accentColor}20)` }}
-                  >
-                    <Target className="h-5 w-5" style={{ color: brandConfig.secondaryColor }} />
-                  </div>
-                  <h2 className="text-xl font-semibold">
-                    {processes.find(p => p.processId === selectedProcess)?.processName}
-                  </h2>
-                </div>
-                <div className="grid gap-4">
-                  {processes
-                    .find(p => p.processId === selectedProcess)
-                    ?.questions.map((question) => {
-                      const answer = getAnswerDisplay(question);
-                      const hasAnswer = answer !== 'Not answered';
-                      
-                      return (
-                        <div 
-                          key={question.id} 
-                          className={`p-4 rounded-xl border ${hasAnswer ? 'bg-card border-border/50' : 'bg-muted/30 border-border/30'}`}
-                        >
-                          <div className="flex items-start justify-between gap-4">
-                            <div className="flex-1">
-                              <div className="text-sm text-muted-foreground mb-1">{question.question}</div>
-                              <div className={`font-medium ${hasAnswer ? '' : 'text-muted-foreground italic'}`}>
-                                {answer}
-                              </div>
-                            </div>
-                            {hasAnswer && (
-                              <Check className="h-5 w-5 shrink-0 mt-1" style={{ color: brandConfig.accentColor }} />
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
-                </div>
-              </div>
-            )}
-          </div>
-        </ScrollArea>
-      </div>
-    );
-  }
-
-  // Edit Mode View (Full screen editor)
-  if (viewMode === 'edit') {
-    return (
-      <div 
-        className="fixed inset-0 z-50 flex flex-col"
-        style={{
-          background: `
-            radial-gradient(ellipse 80% 60% at 85% 80%, ${brandConfig.primaryColor}15 0%, transparent 50%),
-            radial-gradient(ellipse 60% 50% at 95% 20%, ${brandConfig.secondaryColor}10 0%, transparent 40%),
-            linear-gradient(180deg, #fafafa 0%, #f8f7fc 100%)
-          `,
-        }}
-      >
-        <div 
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            backgroundImage: `radial-gradient(circle, rgba(120, 100, 140, 0.08) 1px, transparent 1px)`,
-            backgroundSize: '28px 28px',
-          }}
-        />
-
-        {/* Header */}
-        <div className="relative z-10 p-6 pb-0">
-          <div 
-            className="rounded-2xl p-6"
-            style={{
-              background: `linear-gradient(135deg, ${brandConfig.primaryColor}, ${brandConfig.secondaryColor})`,
-            }}
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                {brandConfig.logoUrl ? (
-                  <div className="bg-white/20 p-2 rounded-xl backdrop-blur-sm">
-                    <img src={brandConfig.logoUrl} alt="Logo" className="h-10 w-auto object-contain" />
-                  </div>
-                ) : (
-                  <div className="bg-white/20 p-3 rounded-xl backdrop-blur-sm">
-                    <Edit3 className="h-8 w-8 text-white" />
-                  </div>
-                )}
-                <div>
-                  <h1 className="text-xl font-bold text-white flex items-center gap-2">
-                    <Edit3 className="h-5 w-5" />
-                    Edit Questionnaire
-                  </h1>
-                  <p className="text-white/80 text-sm">
-                    Configure sections, questions, and options
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <Button 
-                  variant="secondary" 
-                  size="sm" 
-                  className="gap-2 bg-white/20 hover:bg-white/30 text-white border-white/30"
-                  onClick={() => setViewMode('preview')}
-                >
-                  <Eye className="h-4 w-4" />
-                  Live Preview
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={onClose}
-                  className="text-white hover:bg-white/20"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Edit Content */}
-        <ScrollArea className="relative z-10 flex-1 p-6">
-          <div className="max-w-4xl mx-auto space-y-4">
-            {sections.map((section, sectionIdx) => {
-              const Icon = ICON_MAP[section.icon];
-              
-              return (
-                <div 
-                  key={section.id}
-                  className="rounded-xl border border-border/50 overflow-hidden bg-card/80 backdrop-blur-sm"
-                >
-                  <div className="flex items-center gap-3 p-4 border-b border-border/50 bg-muted/30">
-                    <div className="flex flex-col gap-0.5">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-5 w-5 p-0"
-                        onClick={() => moveSection(section.id, 'up')}
-                        disabled={sectionIdx === 0}
-                      >
-                        <ArrowUp className="h-3 w-3" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-5 w-5 p-0"
-                        onClick={() => moveSection(section.id, 'down')}
-                        disabled={sectionIdx === sections.length - 1}
-                      >
-                        <ArrowDown className="h-3 w-3" />
-                      </Button>
-                    </div>
-                    <div 
-                      className="h-10 w-10 rounded-xl flex items-center justify-center shrink-0"
-                      style={{ backgroundColor: brandConfig.primaryColor + '15' }}
-                    >
-                      <Icon className="h-5 w-5" style={{ color: brandConfig.primaryColor }} />
-                    </div>
-                    <Input
-                      value={section.title}
-                      onChange={(e) => updateSectionTitle(section.id, e.target.value)}
-                      className="flex-1 text-lg font-semibold h-10 bg-background"
-                    />
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
-                      onClick={() => deleteSection(section.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  <div className="p-4 space-y-3">
-                    {section.questions.map((q, idx) => renderEditableQuestion(q, section.id, idx, section.questions.length))}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full gap-1 border-dashed"
-                      onClick={() => addQuestion(section.id)}
-                    >
-                      <Plus className="h-4 w-4" />
-                      Add Question
-                    </Button>
-                  </div>
-                </div>
-              );
-            })}
-
-            <Button
-              variant="outline"
-              className="w-full gap-2 h-14 border-dashed text-muted-foreground hover:text-foreground"
-              onClick={addSection}
-            >
-              <Plus className="h-5 w-5" />
-              Add New Section
-            </Button>
-
-            {/* Process Editor */}
-            <div className="rounded-xl border border-border/50 overflow-hidden bg-card/80 backdrop-blur-sm mt-6">
-              <div className="p-4 border-b border-border/50 bg-muted/30">
-                <h3 className="font-semibold flex items-center gap-2">
-                  <Target className="h-5 w-5" style={{ color: brandConfig.secondaryColor }} />
-                  Process Follow-up Questions
-                </h3>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Configure additional questions based on selected process
-                </p>
-              </div>
-              <div className="p-4 space-y-3">
-                {processes.map((process) => (
-                  <div key={process.processId} className="p-3 rounded-lg border border-border/50 bg-muted/20">
-                    <Input
-                      value={process.processName}
-                      onChange={(e) => updateProcessName(process.processId, e.target.value)}
-                      className="font-medium mb-2 h-8"
-                    />
-                    <p className="text-xs text-muted-foreground">
-                      {process.questions.length} follow-up questions
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </ScrollArea>
-      </div>
-    );
-  }
-
-  // Live Preview Mode (default)
+  // =====================
+  // SINGLE RETURN - Conditional rendering inside
+  // This keeps OnboardingTooltip mounted across all view modes
+  // =====================
   return (
     <div 
       className="fixed inset-0 z-50 flex flex-col"
-      style={{
-        background: `
-          radial-gradient(ellipse 80% 60% at 85% 80%, ${brandConfig.primaryColor}15 0%, transparent 50%),
-          radial-gradient(ellipse 60% 50% at 95% 20%, ${brandConfig.secondaryColor}10 0%, transparent 40%),
-          linear-gradient(180deg, #fafafa 0%, #f8f7fc 100%)
-        `,
-      }}
+      style={backgroundStyle}
     >
       {/* Dot grid overlay */}
       <div 
         className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage: `radial-gradient(circle, rgba(120, 100, 140, 0.08) 1px, transparent 1px)`,
-          backgroundSize: '28px 28px',
-        }}
+        style={dotGridStyle}
       />
 
-      {/* Header */}
-      <div className="relative z-10 p-3 md:p-6 pb-0">
-        <div 
-          className="rounded-xl md:rounded-2xl p-3 md:p-6"
-          style={{
-            background: `linear-gradient(135deg, ${brandConfig.primaryColor}, ${brandConfig.secondaryColor})`,
-          }}
-        >
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2 md:gap-4 min-w-0">
-              {brandConfig.logoUrl ? (
-                <div className="bg-white/20 p-1.5 md:p-2 rounded-lg md:rounded-xl backdrop-blur-sm shrink-0">
-                  <img src={brandConfig.logoUrl} alt="Logo" className="h-6 md:h-10 w-auto object-contain" />
-                </div>
-              ) : (
-                <div className="bg-white/20 p-2 md:p-3 rounded-lg md:rounded-xl backdrop-blur-sm shrink-0">
-                  <ClipboardList className="h-5 w-5 md:h-8 md:w-8 text-white" />
-                </div>
-              )}
-              <div className="min-w-0">
-                <h1 className="text-sm md:text-xl font-bold text-white flex items-center gap-1 md:gap-2">
-                  <ClipboardList className="h-4 w-4 md:h-5 md:w-5 shrink-0 hidden md:block" />
-                  <span className="truncate">{brandConfig.companyName || 'Company'} Discovery</span>
-                </h1>
-                <p className="text-white/80 text-xs md:text-sm truncate hidden sm:block">
-                  Help us understand your needs
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-1.5 md:gap-3 shrink-0">
-              <Button 
-                variant="secondary" 
-                size="sm" 
-                className="gap-1 md:gap-2 bg-white/20 hover:bg-white/30 text-white border-white/30 h-8 px-2 md:px-3 text-xs md:text-sm"
-                onClick={() => setViewMode('edit')}
-              >
-                <Edit3 className="h-3.5 w-3.5 md:h-4 md:w-4" />
-                <span className="hidden md:inline">Edit Questions</span><span className="md:hidden">Edit</span>
-              </Button>
-              <Button 
-                variant="secondary" 
-                size="sm" 
-                onClick={handleExportPdf}
-                disabled={isExporting}
-                className="gap-1 md:gap-2 bg-white/20 hover:bg-white/30 text-white border-white/30 no-print h-8 px-2 md:px-3 text-xs md:text-sm"
-              >
-                <FileDown className="h-3.5 w-3.5 md:h-4 md:w-4" />
-                <span className="hidden sm:inline">{isExporting ? '...' : 'PDF'}</span>
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={onClose}
-                className="text-white hover:bg-white/20 h-8 w-8 p-0"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Progress bar */}
-      <div className="relative z-10 px-3 md:px-6 py-2 md:py-4">
-        <div className="flex items-center justify-between mb-1 md:mb-2">
-          <span className="text-xs md:text-sm text-muted-foreground">Progress</span>
-          <span className="text-xs md:text-sm font-medium" style={{ color: brandConfig.primaryColor }}>
-            {progressPercent}%
-          </span>
-        </div>
-        <div className="h-1.5 md:h-2 rounded-full bg-muted overflow-hidden">
-          <div 
-            className="h-full rounded-full transition-all duration-500"
-            style={{ 
-              width: `${progressPercent}%`,
-              background: `linear-gradient(90deg, ${brandConfig.primaryColor}, ${brandConfig.secondaryColor})`,
-            }}
-          />
-        </div>
-      </div>
-
-      {/* Main content - stacked on mobile */}
-      <div className="relative z-10 flex flex-col md:flex-row flex-1 overflow-hidden px-3 md:px-6 pb-3 md:pb-6 gap-3 md:gap-0">
-        {/* Left Panel - Navigation - Hidden on mobile, shows as horizontal tabs */}
-        <div className="hidden md:flex md:w-[300px] border-r border-border/50 bg-background/60 backdrop-blur-sm rounded-l-xl flex-col">
-          <div className="p-4 border-b border-border/50">
-            <h2 className="font-semibold text-sm">Sections</h2>
-            <p className="text-xs text-muted-foreground mt-1">
-              Click to navigate
-            </p>
-          </div>
-          <ScrollArea className="flex-1">
-            <div className="p-4 space-y-2">
-              {sections.map((section) => {
-                const Icon = ICON_MAP[section.icon];
-                const answeredInSection = section.questions.filter(q => {
-                  const val = responses[q.id];
-                  if (Array.isArray(val)) return val.length > 0;
-                  return val !== undefined && val !== '' && val !== null;
-                }).length;
-
-                return (
-                  <button
-                    key={section.id}
-                    className="w-full flex items-center gap-3 p-3 rounded-xl border border-border/50 hover:border-primary/30 hover:bg-muted/50 transition-all text-left"
-                    onClick={() => toggleSection(section.id)}
-                  >
-                    <div 
-                      className="h-9 w-9 rounded-lg flex items-center justify-center shrink-0"
-                      style={{ backgroundColor: brandConfig.primaryColor + '15' }}
-                    >
-                      <Icon className="h-4 w-4" style={{ color: brandConfig.primaryColor }} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <span className="text-sm font-medium block truncate">{section.title}</span>
-                      <span className="text-xs text-muted-foreground">
-                        {answeredInSection}/{section.questions.length} answered
-                      </span>
-                    </div>
-                    {answeredInSection === section.questions.length && section.questions.length > 0 && (
-                      <CheckCircle2 className="h-4 w-4 shrink-0" style={{ color: brandConfig.accentColor }} />
-                    )}
-                  </button>
-                );
-              })}
-
-              {/* Process Selection */}
-              <div className="pt-4 mt-4 border-t border-border/50">
-                <div className="text-xs font-medium text-muted-foreground mb-2 px-1">Process Interest</div>
-                {processes.map((process) => (
-                  <button
-                    key={process.processId}
-                    className={`w-full flex items-center gap-2 p-2.5 rounded-lg border transition-all text-left mb-1 ${
-                      selectedProcess === process.processId
-                        ? 'border-primary bg-primary/5'
-                        : 'border-border/50 hover:border-primary/30'
-                    }`}
-                    onClick={() => setSelectedProcess(
-                      selectedProcess === process.processId ? null : process.processId
-                    )}
-                    style={selectedProcess === process.processId ? { 
-                      borderColor: brandConfig.secondaryColor, 
-                      backgroundColor: brandConfig.secondaryColor + '10' 
-                    } : undefined}
-                  >
-                    <div 
-                      className="h-4 w-4 rounded-full border-2 flex items-center justify-center shrink-0"
-                      style={{ borderColor: brandConfig.secondaryColor }}
-                    >
-                      {selectedProcess === process.processId && (
-                        <div 
-                          className="h-2 w-2 rounded-full"
-                          style={{ backgroundColor: brandConfig.secondaryColor }}
-                        />
-                      )}
-                    </div>
-                    <span className="text-sm">{process.processName}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </ScrollArea>
-        </div>
-
-        {/* Right Panel - Questions */}
-        <div className="flex-1 bg-background/80 backdrop-blur-sm rounded-xl md:rounded-l-none md:rounded-r-xl flex flex-col overflow-hidden">
-          <div className="p-3 md:p-4 border-b border-border/50 flex items-center justify-between gap-2">
-            <div className="min-w-0">
-              <h2 className="font-semibold text-xs md:text-sm">Questions</h2>
-              <p className="text-[10px] md:text-xs text-muted-foreground">{completedQuestions}/{totalQuestions} answered</p>
-            </div>
-            <Button 
-              size="sm"
-              className="gap-1 md:gap-2 h-8 px-2 md:px-3 text-xs md:text-sm shrink-0"
-              style={{ 
-                background: `linear-gradient(135deg, ${brandConfig.accentColor}, ${brandConfig.primaryColor})`,
+      {/* ==================== COMPLETED VIEW ==================== */}
+      {viewMode === 'completed' && (
+        <>
+          {/* Header */}
+          <div className="relative z-10 p-6 pb-0">
+            <div 
+              className="rounded-2xl p-6"
+              style={{
+                background: `linear-gradient(135deg, ${brandConfig.primaryColor}, ${brandConfig.secondaryColor})`,
               }}
-              onClick={() => setViewMode('completed')}
             >
-              <CheckCircle2 className="h-3.5 w-3.5 md:h-4 md:w-4" />
-              <span className="hidden sm:inline">Complete Survey</span><span className="sm:hidden">Complete</span>
-            </Button>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  {brandConfig.logoUrl ? (
+                    <div className="bg-white/20 p-2 rounded-xl backdrop-blur-sm">
+                      <img src={brandConfig.logoUrl} alt="Logo" className="h-10 w-auto object-contain" />
+                    </div>
+                  ) : (
+                    <div className="bg-white/20 p-3 rounded-xl backdrop-blur-sm">
+                      <CheckCircle2 className="h-8 w-8 text-white" />
+                    </div>
+                  )}
+                  <div>
+                    <h1 className="text-xl font-bold text-white flex items-center gap-2">
+                      <CheckCircle2 className="h-5 w-5" />
+                      Discovery Document
+                    </h1>
+                    <p className="text-white/80 text-sm">
+                      {brandConfig.companyName || 'Company'} • Completed {new Date().toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Button 
+                    variant="secondary" 
+                    size="sm" 
+                    onClick={handleExportPdf}
+                    disabled={isExporting}
+                    className="gap-2 bg-white/20 hover:bg-white/30 text-white border-white/30 no-print"
+                  >
+                    <FileDown className="h-4 w-4" />
+                    {isExporting ? 'Exporting...' : 'Export PDF'}
+                  </Button>
+                  <Button 
+                    variant="secondary" 
+                    size="sm" 
+                    className="gap-2 bg-white/20 hover:bg-white/30 text-white border-white/30"
+                    onClick={() => setViewMode('preview')}
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    Back to Survey
+                  </Button>
+                  <Button 
+                    variant="secondary" 
+                    size="sm" 
+                    onClick={onClose}
+                    className="bg-white/20 hover:bg-white/30 border-0 text-white"
+                  >
+                    <X className="h-4 w-4" />
+                    <span className="ml-2">Close</span>
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
-          <ScrollArea className="flex-1">
-            <div className="p-3 md:p-6 space-y-6 md:space-y-8">
+
+          {/* Completion Stats */}
+          <div className="relative z-10 px-6 py-4">
+            <div className="grid grid-cols-3 gap-4">
+              <div className="bg-card rounded-xl p-4 border border-border/50">
+                <div className="text-2xl font-bold" style={{ color: brandConfig.primaryColor }}>{completedQuestions}</div>
+                <div className="text-sm text-muted-foreground">Questions Answered</div>
+              </div>
+              <div className="bg-card rounded-xl p-4 border border-border/50">
+                <div className="text-2xl font-bold" style={{ color: brandConfig.secondaryColor }}>{sections.length}</div>
+                <div className="text-sm text-muted-foreground">Sections Completed</div>
+              </div>
+              <div className="bg-card rounded-xl p-4 border border-border/50">
+                <div className="text-2xl font-bold" style={{ color: brandConfig.accentColor }}>{progressPercent}%</div>
+                <div className="text-sm text-muted-foreground">Completion Rate</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Document Content */}
+          <ScrollArea className="relative z-10 flex-1 px-6 pb-6">
+            <div ref={contentRef} className="bg-card rounded-2xl border border-border/50 p-8 space-y-8">
               {sections.map((section) => {
                 const Icon = ICON_MAP[section.icon];
+
                 return (
-                  <div key={section.id} className="space-y-3 md:space-y-4">
-                    <div className="flex items-center gap-2 md:gap-3">
+                  <div key={section.id} className="space-y-6">
+                    <div className="flex items-center gap-3 pb-2 border-b border-border/50">
                       <div 
-                        className="h-8 w-8 md:h-10 md:w-10 rounded-lg md:rounded-xl flex items-center justify-center shrink-0"
+                        className="h-10 w-10 rounded-xl flex items-center justify-center shrink-0"
                         style={{ background: `linear-gradient(135deg, ${brandConfig.primaryColor}20, ${brandConfig.secondaryColor}20)` }}
                       >
-                        <Icon className="h-4 w-4 md:h-5 md:w-5" style={{ color: brandConfig.primaryColor }} />
+                        <Icon className="h-5 w-5" style={{ color: brandConfig.primaryColor }} />
                       </div>
-                      <h3 className="text-sm md:text-lg font-semibold">{section.title}</h3>
+                      <h2 className="text-xl font-semibold">{section.title}</h2>
                     </div>
-                    <div className="space-y-3 md:space-y-4 md:pl-13">
-                      {section.questions.map((q) => renderQuestion(q, section.id))}
+                    <div className="grid gap-4">
+                      {section.questions.map((question) => {
+                        const answer = getAnswerDisplay(question);
+                        const hasAnswer = answer !== 'Not answered';
+                        
+                        return (
+                          <div 
+                            key={question.id} 
+                            className={`p-4 rounded-xl border ${hasAnswer ? 'bg-card border-border/50' : 'bg-muted/30 border-border/30'}`}
+                          >
+                            <div className="flex items-start justify-between gap-4">
+                              <div className="flex-1">
+                                <div className="text-sm text-muted-foreground mb-1">{question.question}</div>
+                                <div className={`font-medium ${hasAnswer ? '' : 'text-muted-foreground italic'}`}>
+                                  {answer}
+                                </div>
+                              </div>
+                              {hasAnswer && (
+                                <Check className="h-5 w-5 shrink-0 mt-1" style={{ color: brandConfig.accentColor }} />
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 );
@@ -1531,49 +1176,517 @@ export function DiscoveryPrototype({ onClose, initialBrandConfig }: DiscoveryPro
 
               {/* Industry-specific questions */}
               {industryQuestions.length > 0 && (
-                <div className="space-y-4 pt-4 border-t border-border/50">
-                  <div className="flex items-center gap-3">
+                <div className="space-y-6 pt-4 border-t border-border/50">
+                  <div className="flex items-center gap-3 pb-2 border-b border-border/50">
                     <div 
                       className="h-10 w-10 rounded-xl flex items-center justify-center shrink-0"
                       style={{ background: `linear-gradient(135deg, ${brandConfig.accentColor}20, ${brandConfig.primaryColor}20)` }}
                     >
                       <Building2 className="h-5 w-5" style={{ color: brandConfig.accentColor }} />
                     </div>
-                    <h3 className="text-lg font-semibold">
-                      Industry-Specific Questions
-                    </h3>
+                    <h2 className="text-xl font-semibold">Industry-Specific Insights</h2>
                   </div>
-                  <div className="space-y-4 pl-13">
-                    {industryQuestions.map((q) => renderQuestion(q, undefined, true))}
+                  <div className="grid gap-4">
+                    {industryQuestions.map((question) => {
+                      const answer = getAnswerDisplay(question);
+                      const hasAnswer = answer !== 'Not answered';
+                      
+                      return (
+                        <div 
+                          key={question.id} 
+                          className={`p-4 rounded-xl border ${hasAnswer ? 'bg-card border-border/50' : 'bg-muted/30 border-border/30'}`}
+                        >
+                          <div className="flex items-start justify-between gap-4">
+                            <div className="flex-1">
+                              <div className="text-sm text-muted-foreground mb-1">{question.question}</div>
+                              <div className={`font-medium ${hasAnswer ? '' : 'text-muted-foreground italic'}`}>
+                                {answer}
+                              </div>
+                            </div>
+                            {hasAnswer && (
+                              <Check className="h-5 w-5 shrink-0 mt-1" style={{ color: brandConfig.accentColor }} />
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               )}
 
               {/* Process-specific questions */}
               {selectedProcess && (
-                <div className="space-y-4 pt-4 border-t border-border/50">
-                  <div className="flex items-center gap-3">
+                <div className="space-y-6 pt-4 border-t border-border/50">
+                  <div className="flex items-center gap-3 pb-2 border-b border-border/50">
                     <div 
                       className="h-10 w-10 rounded-xl flex items-center justify-center shrink-0"
                       style={{ background: `linear-gradient(135deg, ${brandConfig.secondaryColor}20, ${brandConfig.accentColor}20)` }}
                     >
                       <Target className="h-5 w-5" style={{ color: brandConfig.secondaryColor }} />
                     </div>
-                    <h3 className="text-lg font-semibold">
-                      {processes.find(p => p.processId === selectedProcess)?.processName} Questions
-                    </h3>
+                    <h2 className="text-xl font-semibold">
+                      {processes.find(p => p.processId === selectedProcess)?.processName}
+                    </h2>
                   </div>
-                  <div className="space-y-4 pl-13">
+                  <div className="grid gap-4">
                     {processes
                       .find(p => p.processId === selectedProcess)
-                      ?.questions.map((q) => renderQuestion(q))}
+                      ?.questions.map((question) => {
+                        const answer = getAnswerDisplay(question);
+                        const hasAnswer = answer !== 'Not answered';
+                        
+                        return (
+                          <div 
+                            key={question.id} 
+                            className={`p-4 rounded-xl border ${hasAnswer ? 'bg-card border-border/50' : 'bg-muted/30 border-border/30'}`}
+                          >
+                            <div className="flex items-start justify-between gap-4">
+                              <div className="flex-1">
+                                <div className="text-sm text-muted-foreground mb-1">{question.question}</div>
+                                <div className={`font-medium ${hasAnswer ? '' : 'text-muted-foreground italic'}`}>
+                                  {answer}
+                                </div>
+                              </div>
+                              {hasAnswer && (
+                                <Check className="h-5 w-5 shrink-0 mt-1" style={{ color: brandConfig.accentColor }} />
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
                   </div>
                 </div>
               )}
             </div>
           </ScrollArea>
-        </div>
-      </div>
+        </>
+      )}
+
+      {/* ==================== EDIT VIEW ==================== */}
+      {viewMode === 'edit' && (
+        <>
+          {/* Header */}
+          <div className="relative z-10 p-6 pb-0">
+            <div 
+              data-onboarding="discovery-header"
+              className="rounded-2xl p-6"
+              style={{
+                background: `linear-gradient(135deg, ${brandConfig.primaryColor}, ${brandConfig.secondaryColor})`,
+              }}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  {brandConfig.logoUrl ? (
+                    <div className="bg-white/20 p-2 rounded-xl backdrop-blur-sm">
+                      <img src={brandConfig.logoUrl} alt="Logo" className="h-10 w-auto object-contain" />
+                    </div>
+                  ) : (
+                    <div className="bg-white/20 p-3 rounded-xl backdrop-blur-sm">
+                      <Edit3 className="h-8 w-8 text-white" />
+                    </div>
+                  )}
+                  <div>
+                    <h1 className="text-xl font-bold text-white flex items-center gap-2">
+                      <Edit3 className="h-5 w-5" />
+                      Edit Questionnaire
+                    </h1>
+                    <p className="text-white/80 text-sm">
+                      Configure sections, questions, and options
+                    </p>
+                  </div>
+                </div>
+                <div data-onboarding="mode-toggle" className="flex items-center gap-3">
+                  <Button 
+                    variant="secondary" 
+                    size="sm" 
+                    className="gap-2 bg-white/20 hover:bg-white/30 text-white border-white/30"
+                    onClick={() => setViewMode('preview')}
+                  >
+                    <Eye className="h-4 w-4" />
+                    Live Preview
+                  </Button>
+                  <Button 
+                    variant="secondary" 
+                    size="sm" 
+                    onClick={onClose}
+                    className="bg-white/20 hover:bg-white/30 border-0 text-white"
+                  >
+                    <X className="h-4 w-4" />
+                    <span className="ml-2">Close</span>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Edit Content */}
+          <ScrollArea className="relative z-10 flex-1 p-6">
+            <div className="max-w-4xl mx-auto space-y-4" data-onboarding="sections-nav">
+              {sections.map((section, sectionIdx) => {
+                const Icon = ICON_MAP[section.icon];
+                
+                return (
+                  <div 
+                    key={section.id}
+                    className="rounded-xl border border-border/50 overflow-hidden bg-card/80 backdrop-blur-sm"
+                  >
+                    <div className="flex items-center gap-3 p-4 border-b border-border/50 bg-muted/30">
+                      <div className="flex flex-col gap-0.5">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-5 w-5 p-0"
+                          onClick={() => moveSection(section.id, 'up')}
+                          disabled={sectionIdx === 0}
+                        >
+                          <ArrowUp className="h-3 w-3" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-5 w-5 p-0"
+                          onClick={() => moveSection(section.id, 'down')}
+                          disabled={sectionIdx === sections.length - 1}
+                        >
+                          <ArrowDown className="h-3 w-3" />
+                        </Button>
+                      </div>
+                      <div 
+                        className="h-10 w-10 rounded-xl flex items-center justify-center shrink-0"
+                        style={{ backgroundColor: brandConfig.primaryColor + '15' }}
+                      >
+                        <Icon className="h-5 w-5" style={{ color: brandConfig.primaryColor }} />
+                      </div>
+                      <Input
+                        value={section.title}
+                        onChange={(e) => updateSectionTitle(section.id, e.target.value)}
+                        className="flex-1 text-lg font-semibold h-10 bg-background"
+                      />
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
+                        onClick={() => deleteSection(section.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <div className="p-4 space-y-3">
+                      {section.questions.map((q, idx) => renderEditableQuestion(q, section.id, idx, section.questions.length))}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full gap-1 border-dashed"
+                        onClick={() => addQuestion(section.id)}
+                      >
+                        <Plus className="h-4 w-4" />
+                        Add Question
+                      </Button>
+                    </div>
+                  </div>
+                );
+              })}
+
+              <Button
+                variant="outline"
+                className="w-full gap-2 h-14 border-dashed text-muted-foreground hover:text-foreground"
+                onClick={addSection}
+              >
+                <Plus className="h-5 w-5" />
+                Add New Section
+              </Button>
+
+              {/* Process Editor */}
+              <div className="rounded-xl border border-border/50 overflow-hidden bg-card/80 backdrop-blur-sm mt-6">
+                <div className="p-4 border-b border-border/50 bg-muted/30">
+                  <h3 className="font-semibold flex items-center gap-2">
+                    <Target className="h-5 w-5" style={{ color: brandConfig.secondaryColor }} />
+                    Process Follow-up Questions
+                  </h3>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Configure additional questions based on selected process
+                  </p>
+                </div>
+                <div className="p-4 space-y-3">
+                  {processes.map((process) => (
+                    <div key={process.processId} className="p-3 rounded-lg border border-border/50 bg-muted/20">
+                      <Input
+                        value={process.processName}
+                        onChange={(e) => updateProcessName(process.processId, e.target.value)}
+                        className="font-medium mb-2 h-8"
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        {process.questions.length} follow-up questions
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </ScrollArea>
+        </>
+      )}
+
+      {/* ==================== PREVIEW VIEW (default) ==================== */}
+      {viewMode === 'preview' && (
+        <>
+          {/* Header */}
+          <div className="relative z-10 p-3 md:p-6 pb-0">
+            <div 
+              data-onboarding="discovery-header"
+              className="rounded-xl md:rounded-2xl p-3 md:p-6"
+              style={{
+                background: `linear-gradient(135deg, ${brandConfig.primaryColor}, ${brandConfig.secondaryColor})`,
+              }}
+            >
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 md:gap-4 min-w-0">
+                  {brandConfig.logoUrl ? (
+                    <div className="bg-white/20 p-1.5 md:p-2 rounded-lg md:rounded-xl backdrop-blur-sm shrink-0">
+                      <img src={brandConfig.logoUrl} alt="Logo" className="h-6 md:h-10 w-auto object-contain" />
+                    </div>
+                  ) : (
+                    <div className="bg-white/20 p-2 md:p-3 rounded-lg md:rounded-xl backdrop-blur-sm shrink-0">
+                      <ClipboardList className="h-5 w-5 md:h-8 md:w-8 text-white" />
+                    </div>
+                  )}
+                  <div className="min-w-0">
+                    <h1 className="text-sm md:text-xl font-bold text-white flex items-center gap-1 md:gap-2">
+                      <ClipboardList className="h-4 w-4 md:h-5 md:w-5 shrink-0 hidden md:block" />
+                      <span className="truncate">{brandConfig.companyName || 'Company'} Discovery</span>
+                    </h1>
+                    <p className="text-white/80 text-xs md:text-sm truncate hidden sm:block">
+                      Help us understand your needs
+                    </p>
+                  </div>
+                </div>
+                <div data-onboarding="mode-toggle" className="flex items-center gap-1.5 md:gap-3 shrink-0">
+                  <Button 
+                    variant="secondary" 
+                    size="sm" 
+                    className="gap-1 md:gap-2 bg-white/20 hover:bg-white/30 text-white border-white/30 h-8 px-2 md:px-3 text-xs md:text-sm"
+                    onClick={() => setViewMode('edit')}
+                  >
+                    <Edit3 className="h-3.5 w-3.5 md:h-4 md:w-4" />
+                    <span className="hidden md:inline">Edit Questions</span><span className="md:hidden">Edit</span>
+                  </Button>
+                  <Button 
+                    variant="secondary" 
+                    size="sm" 
+                    onClick={handleExportPdf}
+                    disabled={isExporting}
+                    className="gap-1 md:gap-2 bg-white/20 hover:bg-white/30 text-white border-white/30 no-print h-8 px-2 md:px-3 text-xs md:text-sm"
+                  >
+                    <FileDown className="h-3.5 w-3.5 md:h-4 md:w-4" />
+                    <span className="hidden sm:inline">{isExporting ? '...' : 'PDF'}</span>
+                  </Button>
+                  <Button 
+                    variant="secondary" 
+                    size="sm" 
+                    onClick={onClose}
+                    className="bg-white/20 hover:bg-white/30 border-0 h-8 text-white"
+                  >
+                    <X className="h-4 w-4" />
+                    <span className="hidden md:inline ml-2">Close</span>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Progress bar */}
+          <div className="relative z-10 px-3 md:px-6 py-2 md:py-4">
+            <div className="flex items-center justify-between mb-1 md:mb-2">
+              <span className="text-xs md:text-sm text-muted-foreground">Progress</span>
+              <span className="text-xs md:text-sm font-medium" style={{ color: brandConfig.primaryColor }}>
+                {progressPercent}%
+              </span>
+            </div>
+            <div className="h-1.5 md:h-2 rounded-full bg-muted overflow-hidden">
+              <div 
+                className="h-full rounded-full transition-all duration-500"
+                style={{ 
+                  width: `${progressPercent}%`,
+                  background: `linear-gradient(90deg, ${brandConfig.primaryColor}, ${brandConfig.secondaryColor})`,
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Main content */}
+          <div ref={contentRef} className="relative z-10 flex-1 flex flex-col md:flex-row gap-3 md:gap-6 px-3 md:px-6 pb-3 md:pb-6 overflow-hidden">
+            {/* Mobile Section Navigation */}
+            <div className="md:hidden">
+              <ScrollArea className="w-full">
+                <div className="flex gap-2 pb-2">
+                  {sections.map((section) => {
+                    const Icon = ICON_MAP[section.icon];
+                    const answeredInSection = section.questions.filter(q => {
+                      const val = responses[q.id];
+                      if (Array.isArray(val)) return val.length > 0;
+                      return val !== undefined && val !== '' && val !== null;
+                    }).length;
+                    const isComplete = answeredInSection === section.questions.length && section.questions.length > 0;
+                    
+                    return (
+                      <Button
+                        key={section.id}
+                        variant={section.isOpen ? 'default' : 'outline'}
+                        size="sm"
+                        className="gap-1 shrink-0 h-8"
+                        onClick={() => {
+                          setSections(sections.map(s => ({ ...s, isOpen: s.id === section.id })));
+                        }}
+                        style={section.isOpen ? { backgroundColor: brandConfig.primaryColor } : undefined}
+                      >
+                        <Icon className="h-3 w-3" />
+                        <span className="text-xs truncate max-w-[80px]">{section.title}</span>
+                        {isComplete && <Check className="h-3 w-3" />}
+                      </Button>
+                    );
+                  })}
+                </div>
+              </ScrollArea>
+            </div>
+
+            {/* Desktop Section Navigation */}
+            <div data-onboarding="sections-nav" className="hidden md:flex flex-col w-64 shrink-0 rounded-xl bg-card/80 backdrop-blur-sm border border-border/50 p-4 overflow-hidden">
+              <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                <ClipboardList className="h-4 w-4" style={{ color: brandConfig.primaryColor }} />
+                Sections
+              </h3>
+              <ScrollArea className="flex-1">
+                <div className="space-y-1">
+                  {sections.map((section) => {
+                    const Icon = ICON_MAP[section.icon];
+                    const answeredInSection = section.questions.filter(q => {
+                      const val = responses[q.id];
+                      if (Array.isArray(val)) return val.length > 0;
+                      return val !== undefined && val !== '' && val !== null;
+                    }).length;
+                    const isComplete = answeredInSection === section.questions.length && section.questions.length > 0;
+                    
+                    return (
+                      <button
+                        key={section.id}
+                        onClick={() => toggleSection(section.id)}
+                        className={`w-full flex items-center gap-3 p-3 rounded-lg text-left transition-all ${
+                          section.isOpen 
+                            ? 'bg-primary/10 border border-primary/20' 
+                            : 'hover:bg-muted/50'
+                        }`}
+                        style={section.isOpen ? { backgroundColor: brandConfig.primaryColor + '15', borderColor: brandConfig.primaryColor + '30' } : undefined}
+                      >
+                        <div 
+                          className="h-8 w-8 rounded-lg flex items-center justify-center shrink-0"
+                          style={{ backgroundColor: section.isOpen ? brandConfig.primaryColor + '20' : 'transparent' }}
+                        >
+                          <Icon className="h-4 w-4" style={{ color: section.isOpen ? brandConfig.primaryColor : 'hsl(var(--muted-foreground))' }} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-medium truncate">{section.title}</div>
+                          <div className="text-xs text-muted-foreground">
+                            {answeredInSection} / {section.questions.length}
+                          </div>
+                        </div>
+                        {isComplete && (
+                          <CheckCircle2 className="h-4 w-4 shrink-0" style={{ color: brandConfig.accentColor }} />
+                        )}
+                      </button>
+                    );
+                  })}
+
+                  {/* Process selection (desktop) */}
+                  <div className="pt-4 mt-4 border-t border-border/50">
+                    <h4 className="text-xs font-medium text-muted-foreground mb-2">Focus Area</h4>
+                    {processes.map((process) => (
+                      <button
+                        key={process.processId}
+                        onClick={() => setSelectedProcess(selectedProcess === process.processId ? null : process.processId)}
+                        className={`w-full flex items-center gap-3 p-3 rounded-lg text-left transition-all ${
+                          selectedProcess === process.processId 
+                            ? 'bg-secondary/10 border border-secondary/20' 
+                            : 'hover:bg-muted/50'
+                        }`}
+                        style={selectedProcess === process.processId ? { backgroundColor: brandConfig.secondaryColor + '15', borderColor: brandConfig.secondaryColor + '30' } : undefined}
+                      >
+                        <Target className="h-4 w-4" style={{ color: selectedProcess === process.processId ? brandConfig.secondaryColor : 'hsl(var(--muted-foreground))' }} />
+                        <span className="text-sm truncate">{process.processName}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </ScrollArea>
+            </div>
+
+            {/* Questions Area */}
+            <ScrollArea className="flex-1 rounded-xl bg-card/80 backdrop-blur-sm border border-border/50">
+              <div data-onboarding="question-area" className="p-3 md:p-6 space-y-4 md:space-y-6">
+                {/* Current section questions */}
+                {sections.filter(s => s.isOpen).map((section) => {
+                  const Icon = ICON_MAP[section.icon];
+                  return (
+                    <div key={section.id} className="space-y-3 md:space-y-4">
+                      <div className="flex items-center gap-2 md:gap-3">
+                        <div 
+                          className="h-8 w-8 md:h-10 md:w-10 rounded-lg md:rounded-xl flex items-center justify-center shrink-0"
+                          style={{ background: `linear-gradient(135deg, ${brandConfig.primaryColor}20, ${brandConfig.secondaryColor}20)` }}
+                        >
+                          <Icon className="h-4 w-4 md:h-5 md:w-5" style={{ color: brandConfig.primaryColor }} />
+                        </div>
+                        <h3 className="text-base md:text-lg font-semibold">{section.title}</h3>
+                      </div>
+                      <div className="space-y-3 md:space-y-4 md:pl-13">
+                        {section.questions.map((q) => renderQuestion(q, section.id))}
+                      </div>
+                    </div>
+                  );
+                })}
+
+                {/* Industry-specific questions (show if industry selected and section open) */}
+                {industryQuestions.length > 0 && sections.find(s => s.id === 'company')?.isOpen && (
+                  <div className="space-y-3 md:space-y-4 pt-3 md:pt-4 border-t border-border/30">
+                    <div className="flex items-center gap-2 md:gap-3">
+                      <div 
+                        className="h-8 w-8 md:h-10 md:w-10 rounded-lg md:rounded-xl flex items-center justify-center shrink-0"
+                        style={{ background: `linear-gradient(135deg, ${brandConfig.accentColor}20, ${brandConfig.primaryColor}20)` }}
+                      >
+                        <Building2 className="h-4 w-4 md:h-5 md:w-5" style={{ color: brandConfig.accentColor }} />
+                      </div>
+                      <h3 className="text-base md:text-lg font-semibold">Industry-Specific Questions</h3>
+                    </div>
+                    <div className="space-y-3 md:space-y-4 md:pl-13">
+                      {industryQuestions.map((q) => renderQuestion(q, undefined, true))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Process follow-up questions */}
+                {selectedProcess && (
+                  <div className="space-y-3 md:space-y-4 pt-3 md:pt-4 border-t border-border/30">
+                    <div className="flex items-center gap-2 md:gap-3">
+                      <div 
+                        className="h-8 w-8 md:h-10 md:w-10 rounded-lg md:rounded-xl flex items-center justify-center shrink-0"
+                        style={{ background: `linear-gradient(135deg, ${brandConfig.secondaryColor}20, ${brandConfig.accentColor}20)` }}
+                      >
+                        <Target className="h-4 w-4 md:h-5 md:w-5" style={{ color: brandConfig.secondaryColor }} />
+                      </div>
+                      <h3 className="text-base md:text-lg font-semibold">
+                        {processes.find(p => p.processId === selectedProcess)?.processName} Questions
+                      </h3>
+                    </div>
+                    <div className="space-y-3 md:space-y-4 md:pl-13">
+                      {processes
+                        .find(p => p.processId === selectedProcess)
+                        ?.questions.map((q) => renderQuestion(q))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </ScrollArea>
+          </div>
+        </>
+      )}
 
       {/* Custom slider styling - no square borders */}
       <style>{`
@@ -1599,6 +1712,108 @@ export function DiscoveryPrototype({ onClose, initialBrandConfig }: DiscoveryPro
           box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
       `}</style>
+
+      {/* ==================== ALWAYS MOUNTED: Onboarding + Banner + Dialog ==================== */}
+      
+      {/* Onboarding Tooltip - always rendered so it persists across view mode changes */}
+      {onboarding.isActive && onboarding.currentStepData && (
+        <OnboardingTooltip
+          step={onboarding.currentStepData}
+          currentStep={onboarding.currentStep}
+          totalSteps={onboarding.totalSteps}
+          onNext={onboarding.nextStep}
+          onPrev={onboarding.prevStep}
+          onSkip={onboarding.skipTour}
+          onContactRequest={onboarding.requestContact}
+          isActive={onboarding.isActive}
+        />
+      )}
+
+      {/* Like What You See Banner */}
+      <LikeWhatYouSeeBanner
+        state={bannerState}
+        companyName={initialBrandConfig.companyName}
+        onContact={() => {
+          setBannerState('minimized');
+          setShowContactDialog(true);
+        }}
+        onMinimize={() => setBannerState('minimized')}
+        onExpand={() => setBannerState('expanded')}
+      />
+
+      {/* Contact Dialog */}
+      <ContactDialog
+        open={showContactDialog}
+        onClose={() => setShowContactDialog(false)}
+        brandConfig={initialBrandConfig}
+        toolInterest="discovery"
+      />
+
+      {/* Hidden PDF Pages for Export - 3 pages: overview + 2 sections each on pages 2 & 3 */}
+      <PdfPage
+        ref={pdfPage1Ref}
+        logoUrl={brandConfig.logoUrl}
+        companyName={brandConfig.companyName || 'Company'}
+        toolName="Discovery Summary"
+        subtitle="Client Discovery Questionnaire"
+        primaryColor={brandConfig.primaryColor || '#3b82f6'}
+        secondaryColor={brandConfig.secondaryColor}
+        badges={brandConfig.industry ? [{ label: 'Industry', value: brandConfig.industry }] : undefined}
+        benefitBlurb="Comprehensive discovery helps identify key challenges, goals, and requirements to deliver tailored solutions."
+      >
+        <DiscoveryPdfSummary
+          sections={sections}
+          responses={responses}
+          primaryColor={brandConfig.primaryColor || '#3b82f6'}
+          pageNumber={1}
+        />
+      </PdfPage>
+      
+      {/* Page 2: First 2 sections with responses */}
+      <PdfPage
+        ref={pdfPage2Ref}
+        logoUrl={brandConfig.logoUrl}
+        companyName={brandConfig.companyName || 'Company'}
+        toolName="Discovery Summary"
+        subtitle="Collected Responses"
+        primaryColor={brandConfig.primaryColor || '#3b82f6'}
+        secondaryColor={brandConfig.secondaryColor}
+        pageNumber={2}
+        totalPages={3}
+        minimalHeader
+      >
+        <DiscoveryPdfSummary
+          sections={sections}
+          responses={responses}
+          primaryColor={brandConfig.primaryColor || '#3b82f6'}
+          pageNumber={2}
+          startSectionIndex={0}
+          totalSectionsPerPage={2}
+        />
+      </PdfPage>
+
+      {/* Page 3: Next 2 sections with responses */}
+      <PdfPage
+        ref={pdfPage3Ref}
+        logoUrl={brandConfig.logoUrl}
+        companyName={brandConfig.companyName || 'Company'}
+        toolName="Discovery Summary"
+        subtitle="Collected Responses"
+        primaryColor={brandConfig.primaryColor || '#3b82f6'}
+        secondaryColor={brandConfig.secondaryColor}
+        pageNumber={3}
+        totalPages={3}
+        minimalHeader
+      >
+        <DiscoveryPdfSummary
+          sections={sections}
+          responses={responses}
+          primaryColor={brandConfig.primaryColor || '#3b82f6'}
+          pageNumber={3}
+          startSectionIndex={2}
+          totalSectionsPerPage={2}
+        />
+      </PdfPage>
     </div>
   );
 }
