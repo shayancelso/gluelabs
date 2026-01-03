@@ -35,14 +35,14 @@ const PROTOTYPE_TOOLS = [
   },
 ];
 
-// Default Gloo branding
+// Default Gloo branding - matches main website colors
 const DEFAULT_BRAND: BrandConfig = {
   logoUrl: null,
-  primaryColor: 'hsl(270, 60%, 50%)',
-  secondaryColor: 'hsl(330, 70%, 60%)',
-  accentColor: 'hsl(290, 55%, 55%)',
-  backgroundColor: 'hsl(0, 0%, 99%)',
-  textColor: 'hsl(240, 10%, 10%)',
+  primaryColor: '#6366f1',
+  secondaryColor: '#ec4899',
+  accentColor: '#8b5cf6',
+  backgroundColor: '#fafafa',
+  textColor: '#0f172a',
   companyName: 'Gloo',
 };
 
@@ -150,13 +150,13 @@ function App() {
     >
       {/* Full-screen container with gradient + dot grid background */}
       <div
-        className="min-h-screen relative overflow-hidden"
+        className="min-h-screen relative overflow-hidden noise-overlay"
         style={{
           background: `
-            radial-gradient(ellipse 80% 60% at 85% 80%, rgba(168, 85, 247, 0.15) 0%, transparent 50%),
-            radial-gradient(ellipse 60% 50% at 95% 20%, rgba(168, 85, 247, 0.08) 0%, transparent 40%),
-            radial-gradient(ellipse 40% 30% at 10% 90%, rgba(168, 85, 247, 0.05) 0%, transparent 40%),
-            linear-gradient(180deg, #fafafa 0%, #f8f7fc 100%)
+            radial-gradient(ellipse 80% 60% at 85% 80%, rgba(99, 102, 241, 0.12) 0%, transparent 50%),
+            radial-gradient(ellipse 60% 50% at 95% 20%, rgba(236, 72, 153, 0.08) 0%, transparent 40%),
+            radial-gradient(ellipse 40% 30% at 10% 90%, rgba(99, 102, 241, 0.06) 0%, transparent 40%),
+            linear-gradient(180deg, #fafafa 0%, #f8f9fc 100%)
           `,
         }}
       >
@@ -164,7 +164,7 @@ function App() {
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            backgroundImage: `radial-gradient(circle, rgba(120, 100, 140, 0.12) 1px, transparent 1px)`,
+            backgroundImage: `radial-gradient(circle, rgba(99, 102, 241, 0.08) 1px, transparent 1px)`,
             backgroundSize: '28px 28px',
           }}
         />
