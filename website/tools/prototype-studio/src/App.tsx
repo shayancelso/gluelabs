@@ -9,12 +9,7 @@ import { SuccessPlanPrototype } from '@/components/prototypes/SuccessPlanPrototy
 import { DiscoveryPrototype } from '@/components/prototypes/DiscoveryPrototype';
 import { WelcomeDialog } from '@/components/prototypes/WelcomeDialog';
 import { ContactDialog } from '@/components/prototypes/ContactDialog';
-import { HeroVisual } from '@/components/prototypes/HeroVisual';
 import louMascot from '@/assets/lou-mascot.png';
-import whitespaceScreenshot from '@/assets/whitespace-visualizer.png';
-import roiScreenshot from '@/assets/ROI-Calculator.png';
-import successPlanScreenshot from '@/assets/mutual-success-plan.png';
-import discoveryScreenshot from '@/assets/discovery-questionnaire.png';
 import {
   startPrototypeSession,
   updateSessionBrand,
@@ -26,30 +21,26 @@ const PROTOTYPE_TOOLS = [
   {
     id: 'whitespace',
     name: 'Whitespace Visualizer',
-    description: 'Account-product opportunity matrix showing adoption and expansion opportunities across...',
+    description: 'Account-product opportunity matrix showing adoption and expansion opportunities across your customer base.',
     icon: Grid3X3,
-    screenshot: whitespaceScreenshot,
   },
   {
     id: 'roi',
     name: 'ROI Calculator',
-    description: 'Interactive calculator to demonstrate time savings, cost reduction, and new impact of...',
+    description: 'Interactive calculator to demonstrate time savings, cost reduction, and revenue impact of your solution.',
     icon: Calculator,
-    screenshot: roiScreenshot,
   },
   {
     id: 'success-plan',
     name: 'Mutual Success Plan',
-    description: 'Work-back implementation planner with milestones, owners, and timelines for customer success..',
+    description: 'Work-back implementation planner with milestones, owners, and timeline for customer success.',
     icon: Target,
-    screenshot: successPlanScreenshot,
   },
   {
     id: 'discovery',
     name: 'Discovery Questionnaire',
-    description: 'Guided discovery flow to understand customer needs and map solutions to their pain points...',
+    description: 'Guided discovery flow to understand prospect needs and map solutions to their pain points.',
     icon: ClipboardList,
-    screenshot: discoveryScreenshot,
   },
 ];
 
@@ -193,49 +184,32 @@ function App() {
         />
 
         {/* Main content */}
-        <div className="px-4 md:px-8 pb-8 md:pb-12 max-w-6xl mx-auto">
-          {/* Hero Section - Google-style prominent search */}
-          <div className="relative min-h-[480px] md:min-h-[550px] lg:min-h-[600px] flex items-center mb-8 md:mb-12">
-            {/* Background visual - pushed far right */}
-            <div className="absolute inset-y-0 -right-20 lg:-right-10 w-[70%] lg:w-[55%] pointer-events-none hidden lg:block">
-              <HeroVisual />
-              {/* Strong gradient fade - keeps left side completely clear */}
-              <div
-                className="absolute inset-y-0 left-0 w-[80%]"
-                style={{
-                  background: 'linear-gradient(to right, #fafafa 0%, #fafafa 30%, #fafafaee 50%, transparent 100%)',
-                }}
-              />
-            </div>
-
-            {/* Main Content - Centered/Left with prominent search */}
-            <div className="relative z-10 w-full max-w-2xl pt-4 md:pt-8">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4 md:mb-5 gradient-text animate-title-in font-display">
-                Try Our Tools
-              </h1>
-              <p className="text-muted-foreground text-base md:text-lg mb-8 md:mb-10 max-w-xl leading-relaxed">
-                See Gloo tools in action with your own branding. Enter your company and personalize the preview.
-              </p>
-
-              {/* Wide Search Bar - Google-style prominence */}
-              <div className="w-full max-w-xl">
-                <PrototypeBrandingBar
-                  brandConfig={brandConfig}
-                  onBrandChange={setBrandConfig}
-                  onReset={handleResetBranding}
-                  compact
-                />
-              </div>
-            </div>
+        <div className="pt-6 md:pt-10 px-4 md:px-8 pb-8 md:pb-12 max-w-7xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-6 md:mb-10">
+            <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-2 md:mb-3 gradient-text animate-title-in font-display">
+              Try Our Tools
+            </h1>
+            <p className="text-muted-foreground text-sm md:text-lg max-w-2xl mx-auto px-2">
+              See Gloo tools in action with your own branding.
+              <span className="hidden md:inline"> Enter your company to get started.</span>
+            </p>
           </div>
 
-          {/* Featured Tools Section */}
-          <div className="mb-12 md:mb-16">
-            <h2 className="text-xl md:text-2xl font-bold mb-6 md:mb-8 flex items-center gap-3">
-              <span className="h-8 w-1.5 rounded-full bg-gradient-to-b from-purple-500 to-pink-500" />
-              Featured Tools
+          {/* Branding Configuration Bar */}
+          <PrototypeBrandingBar
+            brandConfig={brandConfig}
+            onBrandChange={setBrandConfig}
+            onReset={handleResetBranding}
+          />
+
+          {/* Tool Selection Grid */}
+          <div className="mt-6 md:mt-10">
+            <h2 className="text-lg md:text-xl font-semibold mb-4 md:mb-6 flex items-center gap-2">
+              <span className="h-6 md:h-8 w-1 rounded-full bg-gradient-to-b from-primary to-secondary" />
+              Choose a Tool to Preview
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 items-stretch">
               {PROTOTYPE_TOOLS.map((tool) => (
                 <PrototypeToolCard
                   key={tool.id}
@@ -243,7 +217,6 @@ function App() {
                   name={tool.name}
                   description={tool.description}
                   icon={tool.icon}
-                  screenshot={tool.screenshot}
                   onBuild={handleBuildTool}
                   brandConfig={brandConfig}
                 />
@@ -252,24 +225,24 @@ function App() {
           </div>
 
           {/* Contact Section with Lou */}
-          <div className="mb-8">
-            <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 p-6 md:p-8 rounded-2xl bg-gradient-to-br from-pink-500/10 via-purple-500/10 to-pink-500/5 border border-primary/10">
+          <div className="mt-10 md:mt-16 mb-8">
+            <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 p-6 md:p-8 rounded-2xl bg-gradient-to-br from-pink-500/10 via-purple-500/10 to-pink-500/5 border border-primary/10">
               <img
                 src={louMascot}
                 alt="Lou"
-                className="h-20 w-20 md:h-24 md:w-24 object-contain"
+                className="h-16 w-16 md:h-20 md:w-20 object-contain"
               />
-              <div className="text-center md:text-left flex-1">
-                <h3 className="text-xl md:text-2xl font-bold mb-1">Questions about our tools?</h3>
+              <div className="text-center md:text-left">
+                <h3 className="text-lg md:text-xl font-semibold mb-1">Questions about our tools?</h3>
                 <p className="text-muted-foreground text-sm md:text-base">
                   Let's chat about building custom tools for your team.
                 </p>
               </div>
               <Button
                 onClick={() => setShowContactDialog(true)}
-                className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white px-8 py-5 text-base"
+                className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white px-6"
               >
-                Get In Touch
+                Get in Touch
               </Button>
             </div>
           </div>

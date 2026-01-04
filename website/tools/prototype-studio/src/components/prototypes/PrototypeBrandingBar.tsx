@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Upload, RotateCcw, Palette, Pipette, AlertTriangle, Crosshair, Loader2, Search, Sparkles } from 'lucide-react';
+import { Upload, RotateCcw, Palette, Pipette, AlertTriangle, Crosshair, Loader2, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -38,7 +38,6 @@ interface PrototypeBrandingBarProps {
   brandConfig: BrandConfig;
   onBrandChange: (config: BrandConfig) => void;
   onReset: () => void;
-  compact?: boolean;
 }
 
 // HSV to RGB conversion
@@ -503,7 +502,7 @@ async function extractColorsFromImage(imageUrl: string): Promise<{ primary: stri
   });
 }
 
-export function PrototypeBrandingBar({ brandConfig, onBrandChange, onReset, compact = false }: PrototypeBrandingBarProps) {
+export function PrototypeBrandingBar({ brandConfig, onBrandChange, onReset }: PrototypeBrandingBarProps) {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [companyInput, setCompanyInput] = useState('');
@@ -666,83 +665,6 @@ export function PrototypeBrandingBar({ brandConfig, onBrandChange, onReset, comp
     }
   };
 
-  // Compact mode for hero section - Google-style prominent search
-  if (compact) {
-    return (
-      <div className="w-full">
-        {/* Main Search Bar - Google-style */}
-        <div className="relative mb-4">
-          <div className="relative">
-            <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-            <Input
-              placeholder="Enter your company name or website..."
-              value={companyInput}
-              onChange={(e) => setCompanyInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              className="w-full pl-14 pr-32 h-14 text-lg rounded-full border-2 border-gray-200 hover:border-gray-300 focus:border-primary shadow-lg shadow-gray-200/50 hover:shadow-xl transition-all bg-white"
-            />
-            <Button
-              onClick={handleCompanyLookup}
-              disabled={!companyInput.trim() || isLoading}
-              className="absolute right-2 top-1/2 -translate-y-1/2 h-10 px-6 rounded-full font-semibold text-white shadow-md"
-              style={{
-                background: `linear-gradient(135deg, ${brandConfig.primaryColor}, ${brandConfig.secondaryColor})`
-              }}
-            >
-              {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : (
-                <>
-                  <Sparkles className="h-4 w-4 mr-2" />
-                  Try It
-                </>
-              )}
-            </Button>
-          </div>
-          <p className="text-center text-sm text-muted-foreground mt-3">
-            e.g. <span className="text-gray-500">nike.com</span>, <span className="text-gray-500">Stripe</span>, <span className="text-gray-500">Salesforce</span>
-          </p>
-        </div>
-
-        {/* Color customization row - subtle, below the main CTA */}
-        <div className="flex items-center justify-center gap-4 pt-2">
-          <div className="flex items-center gap-2">
-            {brandConfig.logoUrl ? (
-              <img src={brandConfig.logoUrl} alt="Logo" className="h-5 w-5 object-contain rounded" />
-            ) : null}
-            <span className="text-sm text-gray-500">{brandConfig.companyName}</span>
-          </div>
-
-          <div className="flex gap-1.5 items-center">
-            <ColorSwatch
-              color={brandConfig.primaryColor}
-              label="Primary"
-              onChange={(color) => handleColorChange('primaryColor', color)}
-            />
-            <ColorSwatch
-              color={brandConfig.secondaryColor}
-              label="Secondary"
-              onChange={(color) => handleColorChange('secondaryColor', color)}
-            />
-            <ColorSwatch
-              color={brandConfig.accentColor}
-              label="Accent"
-              onChange={(color) => handleColorChange('accentColor', color)}
-            />
-          </div>
-
-          {brandConfig.companyName !== 'Gloo' && (
-            <button
-              onClick={onReset}
-              className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
-            >
-              Reset
-            </button>
-          )}
-        </div>
-      </div>
-    );
-  }
-
-  // Full mode (original)
   return (
     <Card className="p-4 md:p-6 bg-card/80 backdrop-blur-sm border-border/50 shadow-lg">
       <div className="flex items-center gap-2 mb-3 md:mb-4">
@@ -771,8 +693,8 @@ export function PrototypeBrandingBar({ brandConfig, onBrandChange, onReset, comp
                 onClick={handleCompanyLookup}
                 disabled={!companyInput.trim() || isLoading}
                 className="h-10 px-4"
-                style={{
-                  background: `linear-gradient(135deg, ${brandConfig.primaryColor}, ${brandConfig.secondaryColor})`
+                style={{ 
+                  background: `linear-gradient(135deg, ${brandConfig.primaryColor}, ${brandConfig.secondaryColor})` 
                 }}
               >
                 {isLoading ? (
@@ -822,28 +744,28 @@ export function PrototypeBrandingBar({ brandConfig, onBrandChange, onReset, comp
 
             {/* 5 Color Swatches */}
             <div className="flex gap-1.5 items-center">
-              <ColorSwatch
-                color={brandConfig.primaryColor}
+              <ColorSwatch 
+                color={brandConfig.primaryColor} 
                 label="Primary Color"
                 onChange={(color) => handleColorChange('primaryColor', color)}
               />
-              <ColorSwatch
-                color={brandConfig.secondaryColor}
+              <ColorSwatch 
+                color={brandConfig.secondaryColor} 
                 label="Secondary Color"
                 onChange={(color) => handleColorChange('secondaryColor', color)}
               />
-              <ColorSwatch
-                color={brandConfig.accentColor}
+              <ColorSwatch 
+                color={brandConfig.accentColor} 
                 label="Accent Color"
                 onChange={(color) => handleColorChange('accentColor', color)}
               />
-              <ColorSwatch
-                color={brandConfig.backgroundColor}
+              <ColorSwatch 
+                color={brandConfig.backgroundColor} 
                 label="Background Color"
                 onChange={(color) => handleColorChange('backgroundColor', color)}
               />
-              <ColorSwatch
-                color={brandConfig.textColor}
+              <ColorSwatch 
+                color={brandConfig.textColor} 
                 label="Text Color"
                 onChange={(color) => handleColorChange('textColor', color)}
               />
