@@ -16,11 +16,22 @@ export function getCompanyNameFromDomain(url: string): string {
 }
 
 // Fetch logo using logo.dev API
-export async function fetchLogoForDomain(url: string): Promise<string | null> {
+// Supports both domain lookups (e.g., "shopify.com") and brand name searches (e.g., "Shopify")
+export async function fetchLogoForDomain(input: string): Promise<string | null> {
   try {
-    const domain = extractDomain(url);
-    // logo.dev provides free logos for domains
-    const logoUrl = `https://img.logo.dev/${domain}?token=pk_EkJniMrxRz69M3yIqyxVuA`;
+    const trimmed = input.trim();
+    let logoUrl: string;
+
+    // Check if input looks like a domain (contains a dot)
+    if (trimmed.includes('.')) {
+      // Domain lookup
+      const domain = extractDomain(trimmed);
+      logoUrl = `https://img.logo.dev/${domain}?token=pk_EkJniMrxRz69M3yIqyxVuA`;
+    } else {
+      // Brand name lookup - URL encode the name
+      const encodedName = encodeURIComponent(trimmed);
+      logoUrl = `https://img.logo.dev/name/${encodedName}?token=pk_EkJniMrxRz69M3yIqyxVuA`;
+    }
 
     // Test if the logo loads using an Image element (more reliable than fetch HEAD)
     return new Promise((resolve) => {
