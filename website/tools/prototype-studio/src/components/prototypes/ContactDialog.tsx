@@ -13,7 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Loader2, Send, CheckCircle2, Plus, X } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+// Formspree form ID for Prototype Studio leads
 import { toast } from 'sonner';
 import type { BrandConfig } from './PrototypeBrandingBar';
 import louMascot from '@/assets/lou-mascot.png';
@@ -161,7 +161,7 @@ export function ContactDialog({ open, onClose, brandConfig, toolInterest, sessio
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.contactName || !formData.email) {
       toast.error('Please fill in your name and email');
       return;
@@ -170,33 +170,31 @@ export function ContactDialog({ open, onClose, brandConfig, toolInterest, sessio
     setIsSubmitting(true);
 
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
       // Combine selected tools and custom tools
       const allTools = [
         ...selectedTools.map(id => ALL_TOOLS.find(t => t.id === id)?.name || id),
         ...customTools
       ];
-      
-      const insertData = {
-        company_name: formData.companyName || brandConfig.companyName,
-        contact_name: formData.contactName,
-        email: formData.email,
-        role: formData.role || null,
-        tool_interest: allTools.join(', ') || toolInterest || null,
-        message: formData.message || null,
-        brand_config: JSON.parse(JSON.stringify(brandConfig)),
-        user_id: user?.id || null,
-        session_id: sessionId || null,
-      };
 
-      const { error } = await supabase.from('prototype_inquiries').insert([insertData]);
+      const response = await fetch('https://formspree.io/f/xdakygya', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.contactName,
+          email: formData.email,
+          company: formData.companyName || brandConfig.companyName,
+          role: formData.role,
+          tools_of_interest: allTools.join(', ') || toolInterest,
+          message: formData.message,
+          _subject: `Prototype Studio Lead: ${formData.companyName || brandConfig.companyName}`,
+        }),
+      });
 
-      if (error) throw error;
+      if (!response.ok) throw new Error('Submission failed');
 
       setIsSuccess(true);
       toast.success('Thank you! Our team will be in touch soon.');
-      
+
       // Auto close after success
       setTimeout(() => {
         onClose();
