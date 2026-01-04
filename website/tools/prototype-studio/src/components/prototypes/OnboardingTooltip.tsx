@@ -181,7 +181,7 @@ export function OnboardingTooltip({
           </div>
 
           {/* Title */}
-          <h3 className="text-lg font-bold mb-2">{step.title}</h3>
+          <h3 className="text-lg font-bold mb-2 text-white">{step.title}</h3>
           
           {/* Description */}
           <p className="text-sm text-white/90 leading-relaxed mb-4">
