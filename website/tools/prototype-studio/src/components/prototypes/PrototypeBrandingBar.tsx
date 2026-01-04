@@ -523,17 +523,25 @@ export function PrototypeBrandingBar({ brandConfig, onBrandChange, onReset }: Pr
     
     try {
       // Format the input - check if it looks like a domain/URL
-      let formattedUrl = companyInput.trim();
-      let domain = extractDomain(formattedUrl);
-      
-      // If no domain extracted, treat as company name and try common patterns
-      if (!domain) {
-        const companySlug = formattedUrl.toLowerCase().replace(/[^a-z0-9]/g, '');
+      const inputTrimmed = companyInput.trim();
+      let formattedUrl = inputTrimmed;
+      let domain = '';
+      let companyName = inputTrimmed; // Keep original input as company name
+
+      // Check if input looks like a domain/URL (contains a dot or starts with http)
+      const looksLikeDomain = inputTrimmed.includes('.') || inputTrimmed.startsWith('http');
+
+      if (looksLikeDomain) {
+        // It's a domain/URL - extract domain and derive company name
+        domain = extractDomain(inputTrimmed);
+        companyName = getCompanyNameFromDomain(domain);
+      } else {
+        // It's a brand name - create a slug for domain lookup
+        const companySlug = inputTrimmed.toLowerCase().replace(/[^a-z0-9]/g, '');
         formattedUrl = `https://${companySlug}.com`;
         domain = companySlug + '.com';
+        // Keep original input as company name (e.g., "Air Canada" not "Aircanada")
       }
-      
-      const companyName = getCompanyNameFromDomain(domain || formattedUrl);
 
       // Try to fetch logo from logo.dev API
       const logoDevUrl = await fetchLogoForDomain(domain || formattedUrl);
