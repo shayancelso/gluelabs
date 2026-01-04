@@ -11,7 +11,60 @@ class TerritoryApp {
         this.capacityThreshold = 85;
         this.dataLoaded = false;
 
+        // SVG Icons for use throughout the app
+        this.icons = {
+            warning: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>`,
+            success: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>`,
+            info: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="16" x2="12" y2="12"/>
+                <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>`,
+            accounts: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>`,
+            alert: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>`
+        };
+
         this.initializeEventListeners();
+        this.autoLoadSampleData();
+    }
+
+    /**
+     * Auto-load sample data on page initialization
+     */
+    autoLoadSampleData() {
+        // Ensure both engine and sample data are available
+        if (window.sampleTerritoryData && this.engine) {
+            try {
+                this.engine.parseCSV(window.sampleTerritoryData);
+                this.dataLoaded = true;
+                this.runAnalysis();
+            } catch (error) {
+                console.error('Failed to auto-load sample data:', error);
+            }
+        } else if (window.sampleTerritoryData && !this.engine) {
+            // Engine not ready, wait for it
+            console.warn('Territory engine not ready, retrying...');
+            setTimeout(() => {
+                this.engine = window.territoryEngine;
+                this.autoLoadSampleData();
+            }, 100);
+        }
     }
 
     /**
@@ -178,15 +231,28 @@ class TerritoryApp {
     }
 
     /**
-     * Show status message
+     * Show status message - using SVG icons instead of emojis
      */
     showStatus(type, message) {
         const statusEl = document.getElementById('upload-status');
         if (!statusEl) return;
 
+        const icons = {
+            loading: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 6v6l4 2"/>
+            </svg>`,
+            success: this.icons.success,
+            error: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="15" y1="9" x2="9" y2="15"/>
+                <line x1="9" y1="9" x2="15" y2="15"/>
+            </svg>`
+        };
+
         statusEl.className = `upload-status ${type}`;
         statusEl.innerHTML = `
-            <span class="status-icon">${type === 'loading' ? '⏳' : type === 'success' ? '✓' : '✕'}</span>
+            <span class="status-icon">${icons[type] || icons.error}</span>
             <span class="status-message">${message}</span>
         `;
         statusEl.style.display = 'block';
@@ -206,9 +272,11 @@ class TerritoryApp {
      * Run full analysis and update UI
      */
     runAnalysis() {
-        // Hide import section, show analysis
-        document.getElementById('import-section').style.display = 'none';
-        document.getElementById('analysis-section').style.display = 'block';
+        // Analysis section should already be visible (no import section anymore)
+        const analysisSection = document.getElementById('analysis-section');
+        if (analysisSection) {
+            analysisSection.style.display = 'block';
+        }
 
         // Initialize projection controls listeners
         this.initProjectionControls();
@@ -306,7 +374,7 @@ class TerritoryApp {
             value: r.atRiskARR
         })));
 
-        // Update insights with new detailed format
+        // Update insights with new detailed format - using SVG icons instead of emojis
         const insights = this.engine.getEquityInsights();
         const insightsContainer = document.getElementById('equity-insights');
 
@@ -314,7 +382,8 @@ class TerritoryApp {
             insightsContainer.innerHTML = insights.map(insight => `
                 <div class="insight-item ${insight.type}">
                     <div class="insight-icon ${insight.type}">
-                        ${insight.type === 'warning' ? '⚠️' : insight.type === 'success' ? '✓' : 'ℹ️'}
+                        ${insight.type === 'warning' ? this.icons.warning :
+                          insight.type === 'success' ? this.icons.success : this.icons.info}
                     </div>
                     <div class="insight-content">
                         <div class="insight-text">${insight.text}</div>
@@ -329,7 +398,7 @@ class TerritoryApp {
     }
 
     /**
-     * Update smart recommendations panel
+     * Update smart recommendations panel - TABLE-BASED LAYOUT
      */
     updateRecommendationsPanel() {
         const recommendationsContainer = document.getElementById('smart-recommendations');
@@ -339,26 +408,147 @@ class TerritoryApp {
 
         if (recommendations.length === 0) {
             recommendationsContainer.innerHTML = `
-                <div class="no-recommendations">
-                    <span class="success-icon">✓</span>
-                    <p>No immediate actions required. Your team is well-balanced!</p>
+                <div class="recommendations-table-container">
+                    <table class="recommendations-table">
+                        <thead>
+                            <tr>
+                                <th class="th-priority">#</th>
+                                <th class="th-type">Type</th>
+                                <th class="th-action">Recommendation</th>
+                                <th class="th-impact">Impact</th>
+                                <th class="th-expand"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="no-recommendations-row">
+                                <td colspan="5">
+                                    <div class="success-message">
+                                        ${this.icons.success}
+                                        <p>No immediate actions required. Your team is well-balanced!</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             `;
             return;
         }
 
-        recommendationsContainer.innerHTML = recommendations.slice(0, 5).map(rec => `
-            <div class="recommendation-card ${rec.priority}">
-                <div class="rec-header">
-                    <span class="rec-priority ${rec.priority}">${rec.priority.toUpperCase()}</span>
-                    <span class="rec-type">${rec.type.replace('_', ' ')}</span>
-                </div>
-                <div class="rec-action">${rec.action}</div>
-                <div class="rec-impact">${rec.impact}</div>
-                ${rec.reason ? `<div class="rec-reason">${rec.reason}</div>` : ''}
-                ${rec.accounts ? `<div class="rec-accounts">Accounts: ${rec.accounts.slice(0, 3).join(', ')}${rec.accounts.length > 3 ? '...' : ''}</div>` : ''}
+        // Build table rows
+        const rows = recommendations.slice(0, 8).map((rec, index) => {
+            const typeLabel = this.formatRecType(rec.type);
+            const hasDetails = rec.reason || (rec.accounts && rec.accounts.length > 0);
+
+            return `
+                <tr class="rec-row" data-rec-id="${index}">
+                    <td class="rec-priority-cell">${index + 1}</td>
+                    <td class="rec-type-cell">
+                        <span class="rec-type-badge">${typeLabel}</span>
+                    </td>
+                    <td class="rec-action-cell">${rec.action}</td>
+                    <td class="rec-impact-cell">${rec.impact || ''}</td>
+                    <td class="rec-expand-cell">
+                        ${hasDetails ? `
+                            <button class="expand-btn" aria-expanded="false" aria-label="Toggle details">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="6 9 12 15 18 9"/>
+                                </svg>
+                            </button>
+                        ` : ''}
+                    </td>
+                </tr>
+                ${hasDetails ? `
+                    <tr class="rec-details-row hidden" data-rec-id="${index}">
+                        <td colspan="5">
+                            <div class="rec-details-content">
+                                ${rec.reason ? `
+                                    <div class="rec-detail-item">
+                                        <span class="detail-label">Reason:</span>
+                                        <span class="detail-value">${rec.reason}</span>
+                                    </div>
+                                ` : ''}
+                                ${rec.accounts && rec.accounts.length > 0 ? `
+                                    <div class="rec-detail-item">
+                                        <span class="detail-label">Affected Accounts:</span>
+                                        <span class="detail-value">${rec.accounts.slice(0, 5).join(', ')}${rec.accounts.length > 5 ? '...' : ''}</span>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </td>
+                    </tr>
+                ` : ''}
+            `;
+        }).join('');
+
+        recommendationsContainer.innerHTML = `
+            <div class="recommendations-table-container">
+                <table class="recommendations-table">
+                    <thead>
+                        <tr>
+                            <th class="th-priority">#</th>
+                            <th class="th-type">Type</th>
+                            <th class="th-action">Recommendation</th>
+                            <th class="th-impact">Impact</th>
+                            <th class="th-expand"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="recommendations-tbody">
+                        ${rows}
+                    </tbody>
+                </table>
             </div>
-        `).join('');
+        `;
+
+        // Add expand/collapse event listeners
+        this.initRecommendationExpanders();
+    }
+
+    /**
+     * Format recommendation type for display
+     */
+    formatRecType(type) {
+        const typeLabels = {
+            'rebalance': 'Rebalance',
+            'hire': 'Hiring',
+            'expansion': 'Expansion',
+            'risk': 'Risk',
+            'arr_equity': 'ARR Equity',
+            'whitespace_equity': 'Whitespace',
+            'risk_concentration': 'Risk'
+        };
+        return typeLabels[type] || type.replace(/_/g, ' ');
+    }
+
+    /**
+     * Initialize expand/collapse for recommendation rows
+     */
+    initRecommendationExpanders() {
+        const expandBtns = document.querySelectorAll('.recommendations-table .expand-btn');
+
+        expandBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const row = btn.closest('.rec-row');
+                const recId = row.dataset.recId;
+                const detailsRow = document.querySelector(`.rec-details-row[data-rec-id="${recId}"]`);
+
+                if (detailsRow) {
+                    const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+                    btn.setAttribute('aria-expanded', !isExpanded);
+                    detailsRow.classList.toggle('hidden', isExpanded);
+                }
+            });
+        });
+
+        // Also allow clicking the row to expand
+        const recRows = document.querySelectorAll('.rec-row');
+        recRows.forEach(row => {
+            row.addEventListener('click', () => {
+                const btn = row.querySelector('.expand-btn');
+                if (btn) btn.click();
+            });
+        });
     }
 
     /**
@@ -512,7 +702,7 @@ class TerritoryApp {
     }
 
     /**
-     * Update book health scorecard
+     * Update book health scorecard - TABLE-BASED LAYOUT
      */
     updateBookHealth() {
         const container = document.getElementById('book-health-scorecard');
@@ -520,44 +710,224 @@ class TerritoryApp {
 
         const teamHealth = this.engine.getTeamBookHealth();
 
+        // Sort by score ascending (worst first) by default
+        const sortedReps = [...teamHealth.repScores].sort((a, b) => a.score - b.score);
+
+        // Store for sorting
+        this.healthData = teamHealth.repScores;
+
         container.innerHTML = `
-            <div class="book-health-header">
-                <div class="health-score-circle ${teamHealth.overallStatus}">
-                    <span class="score-number">${teamHealth.avgScore}</span>
-                    <span class="score-label">Team Score</span>
+            <div class="health-table-container">
+                <div class="health-summary-bar">
+                    <span class="summary-label">Team Health Score:</span>
+                    <span class="summary-score">${teamHealth.avgScore}</span>
+                    <span class="summary-status">
+                        ${teamHealth.healthyReps.length} of ${this.engine.reps.length} reps healthy
+                        ${teamHealth.criticalReps.length > 0 ?
+                            `<span class="summary-alert">${teamHealth.criticalReps.length} need attention</span>` :
+                            ''}
+                    </span>
                 </div>
-                <div class="health-summary">
-                    <p>${teamHealth.healthyReps.length} of ${this.engine.reps.length} reps have healthy books</p>
-                    ${teamHealth.criticalReps.length > 0 ?
-                        `<p class="critical">${teamHealth.criticalReps.length} rep(s) need attention</p>` : ''}
-                </div>
-            </div>
-            <div class="rep-health-grid">
-                ${teamHealth.repScores.map(rep => `
-                    <div class="rep-health-card ${rep.score >= 80 ? 'healthy' : rep.score >= 60 ? 'warning' : 'critical'}">
-                        <div class="rep-health-header">
-                            <span class="rep-name">${rep.rep}</span>
-                            <span class="rep-score">${rep.score}</span>
-                        </div>
-                        ${rep.issues.length > 0 ? `
-                            <div class="rep-issues">
-                                ${rep.issues.map(issue => `<span class="issue-tag">${issue}</span>`).join('')}
-                            </div>
-                        ` : ''}
-                        ${rep.warnings.length > 0 ? `
-                            <div class="rep-warnings">
-                                ${rep.warnings.map(warning => `<span class="warning-tag">${warning}</span>`).join('')}
-                            </div>
-                        ` : ''}
-                        <div class="rep-health-metrics">
-                            <span>Risk: ${rep.riskPct}%</span>
-                            <span>Penetration: ${rep.penetrationRate}%</span>
-                            <span>Expansion Ready: ${rep.expansionReady}</span>
-                        </div>
-                    </div>
-                `).join('')}
+                <table class="health-table" id="health-table">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-sort="rep">Rep</th>
+                            <th class="sortable sort-asc" data-sort="score">Score</th>
+                            <th class="sortable" data-sort="risk">Risk %</th>
+                            <th>Issues</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="health-tbody">
+                        ${sortedReps.map(rep => this.renderHealthRow(rep)).join('')}
+                    </tbody>
+                </table>
             </div>
         `;
+
+        // Initialize sorting
+        this.initHealthTableSorting();
+    }
+
+    /**
+     * Render a single health table row
+     */
+    renderHealthRow(rep) {
+        const issueCount = rep.issues.length;
+        const warningCount = rep.warnings.length;
+
+        return `
+            <tr class="health-row" data-rep="${rep.rep}">
+                <td class="health-rep-cell">
+                    <span class="rep-name">${rep.rep}</span>
+                </td>
+                <td class="health-score-cell">
+                    <span class="score-value">${rep.score}</span>
+                </td>
+                <td class="health-risk-cell">
+                    <span class="risk-value">${rep.riskPct}%</span>
+                </td>
+                <td class="health-issues-cell">
+                    ${issueCount > 0 ? `<span class="issue-count">${issueCount} issue${issueCount > 1 ? 's' : ''}</span>` : ''}
+                    ${warningCount > 0 ? `<span class="warning-count">${warningCount} warning${warningCount > 1 ? 's' : ''}</span>` : ''}
+                    ${issueCount === 0 && warningCount === 0 ? '<span class="no-issues">None</span>' : ''}
+                </td>
+                <td class="health-actions-cell">
+                    <button class="view-details-btn" data-rep="${rep.rep}">View Details</button>
+                </td>
+            </tr>
+        `;
+    }
+
+    /**
+     * Initialize sorting for health table
+     */
+    initHealthTableSorting() {
+        const table = document.getElementById('health-table');
+        if (!table) return;
+
+        const headers = table.querySelectorAll('th.sortable');
+        this.currentHealthSort = { field: 'score', direction: 'asc' };
+
+        headers.forEach(header => {
+            header.addEventListener('click', () => {
+                const field = header.dataset.sort;
+
+                // Toggle direction if same field
+                if (this.currentHealthSort.field === field) {
+                    this.currentHealthSort.direction = this.currentHealthSort.direction === 'asc' ? 'desc' : 'asc';
+                } else {
+                    this.currentHealthSort.field = field;
+                    this.currentHealthSort.direction = 'asc';
+                }
+
+                // Update header classes
+                headers.forEach(h => h.classList.remove('sort-asc', 'sort-desc'));
+                header.classList.add(this.currentHealthSort.direction === 'asc' ? 'sort-asc' : 'sort-desc');
+
+                // Sort data
+                const sorted = [...this.healthData].sort((a, b) => {
+                    let aVal, bVal;
+                    switch (field) {
+                        case 'rep':
+                            aVal = a.rep.toLowerCase();
+                            bVal = b.rep.toLowerCase();
+                            break;
+                        case 'score':
+                            aVal = a.score;
+                            bVal = b.score;
+                            break;
+                        case 'risk':
+                            aVal = a.riskPct;
+                            bVal = b.riskPct;
+                            break;
+                        default:
+                            return 0;
+                    }
+
+                    if (aVal < bVal) return this.currentHealthSort.direction === 'asc' ? -1 : 1;
+                    if (aVal > bVal) return this.currentHealthSort.direction === 'asc' ? 1 : -1;
+                    return 0;
+                });
+
+                // Re-render tbody
+                const tbody = document.getElementById('health-tbody');
+                tbody.innerHTML = sorted.map(rep => this.renderHealthRow(rep)).join('');
+
+                // Re-attach detail button listeners
+                this.initHealthDetailButtons();
+            });
+        });
+
+        // Initialize detail buttons
+        this.initHealthDetailButtons();
+    }
+
+    /**
+     * Initialize detail button click handlers
+     */
+    initHealthDetailButtons() {
+        const buttons = document.querySelectorAll('.view-details-btn');
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const repName = btn.dataset.rep;
+                this.showRepHealthDetails(repName);
+            });
+        });
+    }
+
+    /**
+     * Show rep health details in modal
+     */
+    showRepHealthDetails(repName) {
+        const repData = this.healthData.find(r => r.rep === repName);
+        if (!repData) return;
+
+        const modalBody = document.getElementById('modal-body');
+        if (!modalBody) return;
+
+        modalBody.innerHTML = `
+            <div class="rep-details-modal">
+                <div class="modal-score-row">
+                    <span class="modal-score-label">Health Score:</span>
+                    <span class="modal-score-value">${repData.score}</span>
+                </div>
+
+                ${repData.issues.length > 0 ? `
+                    <div class="modal-section">
+                        <h4>Issues</h4>
+                        <ul class="modal-list issues">
+                            ${repData.issues.map(issue => `<li>${issue}</li>`).join('')}
+                        </ul>
+                    </div>
+                ` : ''}
+
+                ${repData.warnings.length > 0 ? `
+                    <div class="modal-section">
+                        <h4>Warnings</h4>
+                        <ul class="modal-list warnings">
+                            ${repData.warnings.map(warning => `<li>${warning}</li>`).join('')}
+                        </ul>
+                    </div>
+                ` : ''}
+
+                ${repData.issues.length === 0 && repData.warnings.length === 0 ? `
+                    <div class="modal-section">
+                        <p style="color: var(--color-text-muted);">No issues or warnings for this rep.</p>
+                    </div>
+                ` : ''}
+
+                <div class="modal-section">
+                    <h4>Metrics</h4>
+                    <div class="modal-metrics-grid">
+                        <div class="modal-metric">
+                            <span class="metric-label">Risk %</span>
+                            <span class="metric-value">${repData.riskPct}%</span>
+                        </div>
+                        <div class="modal-metric">
+                            <span class="metric-label">Penetration</span>
+                            <span class="metric-value">${repData.penetrationRate}%</span>
+                        </div>
+                        <div class="modal-metric">
+                            <span class="metric-label">Expansion Ready</span>
+                            <span class="metric-value">${repData.expansionReady}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Update modal title
+        const modalTitle = document.querySelector('#modal h2, #modal .modal-title');
+        if (modalTitle) {
+            modalTitle.textContent = `${repName} - Book Health`;
+        }
+
+        // Show modal
+        const modal = document.getElementById('modal');
+        if (modal) {
+            modal.style.display = 'flex';
+        }
     }
 
     /**
