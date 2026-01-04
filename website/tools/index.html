@@ -69,6 +69,11 @@
           padding-top: 70px;
         }
       }
+      /* Override main site's .noise-overlay which conflicts with React app's class */
+      #root .noise-overlay {
+        position: relative;
+        z-index: auto;
+      }
     </style>
   </head>
   <body>
