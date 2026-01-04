@@ -117,7 +117,7 @@ function App() {
   if (activeTool === 'whitespace') {
     return (
       <div className="min-h-screen w-full bg-gradient-to-br from-background via-background to-muted/30">
-        <div className="p-8 max-w-[1600px] mx-auto">
+        <div className="px-8 pb-8 pt-6 md:pt-8 max-w-[1600px] mx-auto">
           <WhitespacePrototype brandConfig={brandConfig} onClose={handleCloseBuilder} />
         </div>
       </div>

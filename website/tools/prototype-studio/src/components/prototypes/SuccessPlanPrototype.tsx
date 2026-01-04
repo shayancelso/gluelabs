@@ -374,9 +374,9 @@ export function SuccessPlanPrototype({ onClose, initialBrandConfig, discoveryDat
   };
 
   return (
-    <div 
+    <div
       ref={contentRef}
-      className="flex flex-col min-h-[600px] max-h-[80vh] relative"
+      className="flex flex-col min-h-[600px] relative pt-6 md:pt-8"
       style={{
         background: `
           radial-gradient(ellipse 80% 60% at 85% 80%, ${brandConfig.accentColor}15 0%, transparent 50%),

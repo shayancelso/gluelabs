@@ -424,9 +424,9 @@ export function ROIPrototype({ onClose, initialBrandConfig, discoveryData, onEdi
   const textColor = getContrastColor(brandConfig.primaryColor);
 
   return (
-    <div 
+    <div
       ref={contentRef}
-      className="min-h-screen p-4 md:p-6"
+      className="min-h-screen px-4 pb-4 pt-6 md:px-6 md:pb-6 md:pt-8"
       style={{
         backgroundImage: `radial-gradient(circle, ${brandConfig.primaryColor}08 1px, transparent 1px)`,
         backgroundSize: '24px 24px',
