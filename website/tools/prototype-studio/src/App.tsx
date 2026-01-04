@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { X, Grid3X3, Calculator, Target, ClipboardList, Sparkles } from 'lucide-react';
+import { Grid3X3, Calculator, Target, ClipboardList, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PrototypeBrandingBar, type BrandConfig } from '@/components/prototypes/PrototypeBrandingBar';
 import { PrototypeToolCard } from '@/components/prototypes/PrototypeToolCard';
@@ -97,10 +97,6 @@ function App() {
     }
   }, [sessionId, brandConfig]);
 
-  const handleExit = () => {
-    window.location.href = '/tools/';
-  };
-
   const handleResetBranding = () => {
     setBrandConfig(DEFAULT_BRAND);
     hasShownWelcome.current = false;
@@ -187,19 +183,8 @@ function App() {
           }}
         />
 
-        {/* Exit button */}
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={handleExit}
-          className="fixed top-3 left-3 md:top-4 md:left-4 z-50 gap-1.5 md:gap-2 bg-background/80 backdrop-blur-sm border border-border/50 shadow-sm hover:shadow-md transition-all text-xs md:text-sm px-2.5 md:px-3"
-        >
-          <X className="h-3.5 w-3.5 md:h-4 md:w-4" />
-          <span className="hidden sm:inline">Exit</span>
-        </Button>
-
         {/* Main content */}
-        <div className="pt-14 md:pt-20 px-4 md:px-8 pb-8 md:pb-12 max-w-7xl mx-auto">
+        <div className="pt-6 md:pt-10 px-4 md:px-8 pb-8 md:pb-12 max-w-7xl mx-auto">
           {/* Header */}
           <div className="text-center mb-6 md:mb-10">
             <div className="inline-flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1 md:py-1.5 rounded-full bg-primary/10 text-primary text-xs md:text-sm font-medium mb-3 md:mb-4">

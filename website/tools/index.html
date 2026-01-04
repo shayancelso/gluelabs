@@ -44,13 +44,58 @@
     <meta name="twitter:description" content="Create branded, interactive demos of Gloo tools customized for your prospects. Upload their branding and configure sample data to showcase value.">
     <meta name="twitter:image" content="https://buildwithgloo.com/images/og-image.png">
 
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Main site styles for navigation -->
+    <link rel="stylesheet" href="/styles.css">
+
     <!-- Vercel Analytics -->
     <script defer src="/_vercel/insights/script.js"></script>
 
-    <script type="module" crossorigin src="/tools/prototype-studio/assets/index-BDz00cPi.js"></script>
-    <link rel="stylesheet" crossorigin href="/tools/prototype-studio/assets/index-D1p2sd-e.css">
+    <!-- Prototype Studio React app -->
+    <script type="module" crossorigin src="/tools/prototype-studio/assets/index-DnENEMB9.js"></script>
+    <link rel="stylesheet" crossorigin href="/tools/prototype-studio/assets/index--kx6qjMo.css">
+
+    <style>
+      /* Ensure React app content clears the fixed nav */
+      #root {
+        padding-top: 80px;
+      }
+      @media (max-width: 768px) {
+        #root {
+          padding-top: 70px;
+        }
+      }
+    </style>
   </head>
   <body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <img src="/images/gloo-logo.png" alt="Gloo" class="logo-img">
+            </a>
+            <div class="nav-links">
+                <a href="/#demo" class="nav-link">See It Live</a>
+                <a href="/tools/" class="nav-link active">Tools</a>
+                <a href="/#how-it-works" class="nav-link">How It Works</a>
+                <a href="/#case-study" class="nav-link">Results</a>
+                <a href="/#contact" class="btn btn-nav">Book a Call</a>
+            </div>
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- React app mounts here -->
     <div id="root"></div>
+
+    <!-- Main site script for mobile menu -->
+    <script src="/script.js"></script>
   </body>
 </html>
