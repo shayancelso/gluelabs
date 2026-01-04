@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Upload, RotateCcw, Palette, Pipette, AlertTriangle, Crosshair, Loader2, Search } from 'lucide-react';
+import { Upload, RotateCcw, Palette, Pipette, AlertTriangle, Crosshair, Loader2, Search, Check, Sparkles, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -39,6 +39,7 @@ interface PrototypeBrandingBarProps {
   onBrandChange: (config: BrandConfig) => void;
   onReset: () => void;
   compact?: boolean;
+  heroCard?: boolean;
 }
 
 // HSV to RGB conversion
@@ -503,7 +504,7 @@ async function extractColorsFromImage(imageUrl: string): Promise<{ primary: stri
   });
 }
 
-export function PrototypeBrandingBar({ brandConfig, onBrandChange, onReset, compact = false }: PrototypeBrandingBarProps) {
+export function PrototypeBrandingBar({ brandConfig, onBrandChange, onReset, compact = false, heroCard = false }: PrototypeBrandingBarProps) {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [companyInput, setCompanyInput] = useState('');
@@ -665,6 +666,89 @@ export function PrototypeBrandingBar({ brandConfig, onBrandChange, onReset, comp
       handleCompanyLookup();
     }
   };
+
+  // Hero card mode - playful design with big Magicify button
+  if (heroCard) {
+    const hasLoadedBrand = brandConfig.companyName !== 'Gloo';
+
+    return (
+      <Card className="p-5 bg-white/90 backdrop-blur-sm border-border/50 shadow-xl rounded-2xl h-full">
+        {/* Header with icon */}
+        <div className="flex items-center gap-2 mb-4">
+          <div className="h-6 w-6 rounded-full bg-purple-100 flex items-center justify-center">
+            <User className="h-3.5 w-3.5 text-purple-600" />
+          </div>
+          <span className="font-semibold text-sm text-gray-700 uppercase tracking-wide">Branding as Inputs</span>
+        </div>
+
+        {/* Search Input */}
+        <div className="relative mb-4">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="nike.com"
+            value={companyInput}
+            onChange={(e) => setCompanyInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            className="pl-9 h-11 text-sm rounded-xl border-gray-200 bg-gray-50/50"
+          />
+        </div>
+
+        {/* Color Swatches Row with check indicator */}
+        <div className="flex items-center gap-2 mb-5">
+          <div className={`h-6 w-6 rounded-full flex items-center justify-center ${hasLoadedBrand ? 'bg-green-100' : 'bg-gray-100'}`}>
+            <Check className={`h-3.5 w-3.5 ${hasLoadedBrand ? 'text-green-600' : 'text-gray-400'}`} />
+          </div>
+          <div className="flex gap-1.5 items-center">
+            <ColorSwatch
+              color={brandConfig.primaryColor}
+              label="Primary"
+              onChange={(color) => handleColorChange('primaryColor', color)}
+            />
+            <ColorSwatch
+              color={brandConfig.secondaryColor}
+              label="Secondary"
+              onChange={(color) => handleColorChange('secondaryColor', color)}
+            />
+            <ColorSwatch
+              color={brandConfig.accentColor}
+              label="Accent"
+              onChange={(color) => handleColorChange('accentColor', color)}
+            />
+            <ColorSwatch
+              color={brandConfig.backgroundColor}
+              label="Background"
+              onChange={(color) => handleColorChange('backgroundColor', color)}
+            />
+            <ColorSwatch
+              color={brandConfig.textColor}
+              label="Text"
+              onChange={(color) => handleColorChange('textColor', color)}
+            />
+          </div>
+        </div>
+
+        {/* Big Magicify Button */}
+        <Button
+          onClick={handleCompanyLookup}
+          disabled={!companyInput.trim() || isLoading}
+          className="w-full h-12 rounded-xl text-base font-semibold text-white shadow-lg hover:shadow-xl transition-all"
+          style={{
+            background: 'linear-gradient(135deg, #ec4899, #8b5cf6)',
+          }}
+        >
+          {isLoading ? (
+            <Loader2 className="h-5 w-5 animate-spin" />
+          ) : (
+            <>
+              <Sparkles className="h-4 w-4 mr-2" />
+              Magicify My Brand
+              <Sparkles className="h-4 w-4 ml-2" />
+            </>
+          )}
+        </Button>
+      </Card>
+    );
+  }
 
   // Compact mode for hero section
   if (compact) {

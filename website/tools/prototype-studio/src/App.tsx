@@ -11,6 +11,7 @@ import { DiscoveryPrototype } from '@/components/prototypes/DiscoveryPrototype';
 import { WelcomeDialog } from '@/components/prototypes/WelcomeDialog';
 import { ContactDialog } from '@/components/prototypes/ContactDialog';
 import louMascot from '@/assets/lou-mascot.png';
+import louMagicWand from '@/assets/lou-magic-wand.png';
 import {
   startPrototypeSession,
   updateSessionBrand,
@@ -195,31 +196,50 @@ function App() {
 
         {/* Main content */}
         <div className="pt-6 md:pt-10 px-4 md:px-8 pb-8 md:pb-12 max-w-6xl mx-auto relative">
-          {/* Hero Section - Split Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start mb-12 md:mb-16">
-            {/* Left Side - Text + Branding Input */}
-            <div className="pt-4">
-              <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-3 md:mb-4 gradient-text animate-title-in font-display">
-                Try Our Tools
-              </h1>
-              <p className="text-muted-foreground text-sm md:text-lg mb-6 md:mb-8 max-w-md leading-relaxed">
-                See Gloo tools in action with your own branding. Enter your company and personalize the preview.
-              </p>
+          {/* Hero Section - Centered Layout */}
+          <div className="text-center mb-8 md:mb-12">
+            <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-3 md:mb-4 gradient-text animate-title-in font-display">
+              Preview with your branding
+            </h1>
+            <p className="text-muted-foreground text-sm md:text-lg max-w-lg mx-auto leading-relaxed">
+              Enter your company to see Gloo tools in action
+            </p>
+          </div>
 
-              {/* Compact Branding Input */}
-              <div className="max-w-sm">
+          {/* Hero Cards - Side by Side with Lou */}
+          <div className="relative mb-16 md:mb-20">
+            {/* Cards Container */}
+            <div className="flex flex-col md:flex-row items-stretch justify-center gap-6 md:gap-8 max-w-4xl mx-auto">
+              {/* Branding Input Card */}
+              <div className="w-full md:w-[340px] flex-shrink-0">
                 <PrototypeBrandingBar
                   brandConfig={brandConfig}
                   onBrandChange={setBrandConfig}
                   onReset={handleResetBranding}
-                  compact
+                  heroCard
                 />
+              </div>
+
+              {/* Browser Mockup */}
+              <div className="flex-1 max-w-md">
+                <HeroMockup onMagicify={handleMagicify} />
               </div>
             </div>
 
-            {/* Right Side - Hero Mockup */}
-            <div className="flex justify-center lg:justify-end pt-8 lg:pt-0">
-              <HeroMockup onMagicify={handleMagicify} />
+            {/* Lou with Magic Wand - positioned center-bottom */}
+            <div className="absolute left-1/2 -translate-x-1/2 -bottom-12 md:-bottom-16 z-20">
+              <img
+                src={louMagicWand}
+                alt="Lou with magic wand"
+                className="h-32 w-32 md:h-44 md:w-44 object-contain drop-shadow-xl"
+              />
+              {/* Sparkle effects */}
+              <div className="absolute top-2 left-4 animate-sparkle">
+                <div className="w-2 h-2 bg-yellow-300 rounded-full opacity-80" />
+              </div>
+              <div className="absolute top-6 left-8 animate-sparkle-delayed">
+                <div className="w-1.5 h-1.5 bg-pink-300 rounded-full opacity-70" />
+              </div>
             </div>
           </div>
 
