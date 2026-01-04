@@ -551,11 +551,11 @@ export function WhitespacePrototype({ brandConfig, onClose }: WhitespacePrototyp
                 <img src={brandConfig.logoUrl} alt="Logo" className="h-8 md:h-10 object-contain bg-white/20 rounded-lg p-1" />
               )}
               <div className="min-w-0">
-                <h1 className="text-lg md:text-2xl font-bold flex items-center gap-2">
+                <h1 className="text-lg md:text-2xl font-bold flex items-center gap-2 text-white">
                   <Grid3X3 className="h-5 w-5 md:h-6 md:w-6 shrink-0" />
                   <span className="truncate">{brandConfig.companyName} Whitespace</span>
                 </h1>
-                <p className="opacity-80 text-xs md:text-sm flex items-center gap-2">
+                <p className="opacity-80 text-xs md:text-sm flex items-center gap-2 text-white">
                   {brandConfig.industry && (
                     <>
                       <Factory className="h-3 w-3 shrink-0" />
