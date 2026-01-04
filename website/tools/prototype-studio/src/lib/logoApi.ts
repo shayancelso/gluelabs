@@ -39,8 +39,10 @@ export async function fetchLogoForDomain(input: string): Promise<string | null> 
     }
 
     // Brand name lookup - try multiple variations for better matching
+    // logo.dev works best with lowercase + spaces (URL-encoded as %20)
     const variations = [
-      trimmed,                                    // "Air Canada"
+      trimmed.toLowerCase(),                      // "air canada" → "air%20canada" (best match)
+      trimmed,                                    // "Air Canada" → "Air%20Canada"
       trimmed.replace(/\s+/g, ''),                // "AirCanada"
       trimmed.toLowerCase().replace(/\s+/g, ''),  // "aircanada"
     ];
