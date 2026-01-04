@@ -206,61 +206,71 @@ function App() {
             </p>
           </div>
 
-          {/* Hero Cards - Side by Side with Lou */}
+          {/* Hero Section - Layered Layout */}
           <div className="relative mb-16 md:mb-24">
             {/* Floating Badges */}
-            <div className="hidden md:block absolute -left-4 top-8 animate-float">
+            <div className="hidden md:block absolute -left-4 top-8 animate-float z-10">
               <div className="bg-gradient-to-r from-emerald-400 to-teal-400 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg">
                 Expansion
               </div>
             </div>
-            <div className="hidden md:block absolute -right-4 top-16 animate-float-delayed">
+            <div className="hidden md:block absolute -right-4 top-16 animate-float-delayed z-10">
               <div className="bg-gradient-to-r from-purple-400 to-indigo-400 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg">
                 Analyzed
               </div>
             </div>
-            <div className="hidden md:block absolute left-8 bottom-24 animate-float">
+            <div className="hidden md:block absolute left-8 bottom-24 animate-float z-10">
               <div className="bg-gradient-to-r from-pink-400 to-rose-400 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg">
                 Whitespace
               </div>
             </div>
-            <div className="hidden md:block absolute right-12 bottom-32 animate-float-delayed">
+            <div className="hidden md:block absolute right-12 bottom-32 animate-float-delayed z-10">
               <div className="bg-gradient-to-r from-amber-400 to-orange-400 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg">
                 $2.4M Pipeline
               </div>
             </div>
 
-            {/* Cards Container */}
-            <div className="flex flex-col md:flex-row items-stretch justify-center gap-6 md:gap-10 max-w-5xl mx-auto">
-              {/* Branding Input Card - BIGGER */}
-              <div className="w-full md:w-[420px] flex-shrink-0">
+            {/* Layered Container */}
+            <div className="relative max-w-2xl mx-auto">
+              {/* Background: Browser Mockup with fade */}
+              <div className="absolute inset-0 flex justify-end items-start pt-8 pr-0 md:pr-4">
+                <div className="w-[320px] md:w-[400px] opacity-40 transform translate-x-16 md:translate-x-24">
+                  <div
+                    className="relative"
+                    style={{
+                      maskImage: 'linear-gradient(to left, transparent 0%, black 40%)',
+                      WebkitMaskImage: 'linear-gradient(to left, transparent 0%, black 40%)',
+                    }}
+                  >
+                    <HeroMockup onMagicify={handleMagicify} />
+                  </div>
+                </div>
+              </div>
+
+              {/* Lou peeking from behind the card */}
+              <div className="absolute -right-4 md:right-8 bottom-4 md:bottom-8 z-30">
+                <img
+                  src={louMagicWand}
+                  alt="Lou with magic wand"
+                  className="h-28 w-28 md:h-40 md:w-40 object-contain drop-shadow-xl"
+                />
+                {/* Sparkle effects */}
+                <div className="absolute top-1 left-2 animate-sparkle">
+                  <div className="w-2 h-2 bg-yellow-300 rounded-full opacity-80" />
+                </div>
+                <div className="absolute top-4 left-6 animate-sparkle-delayed">
+                  <div className="w-1.5 h-1.5 bg-pink-300 rounded-full opacity-70" />
+                </div>
+              </div>
+
+              {/* Foreground: Branding Input Card - STRETCHED */}
+              <div className="relative z-20 w-full max-w-xl">
                 <PrototypeBrandingBar
                   brandConfig={brandConfig}
                   onBrandChange={setBrandConfig}
                   onReset={handleResetBranding}
                   heroCard
                 />
-              </div>
-
-              {/* Browser Mockup */}
-              <div className="flex-1 max-w-lg">
-                <HeroMockup onMagicify={handleMagicify} />
-              </div>
-            </div>
-
-            {/* Lou with Magic Wand - positioned center-bottom */}
-            <div className="absolute left-1/2 -translate-x-1/2 -bottom-12 md:-bottom-16 z-20">
-              <img
-                src={louMagicWand}
-                alt="Lou with magic wand"
-                className="h-36 w-36 md:h-48 md:w-48 object-contain drop-shadow-xl"
-              />
-              {/* Sparkle effects */}
-              <div className="absolute top-2 left-4 animate-sparkle">
-                <div className="w-2 h-2 bg-yellow-300 rounded-full opacity-80" />
-              </div>
-              <div className="absolute top-6 left-8 animate-sparkle-delayed">
-                <div className="w-1.5 h-1.5 bg-pink-300 rounded-full opacity-70" />
               </div>
             </div>
           </div>
