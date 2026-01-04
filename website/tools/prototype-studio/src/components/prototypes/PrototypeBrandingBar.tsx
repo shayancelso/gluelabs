@@ -38,6 +38,7 @@ interface PrototypeBrandingBarProps {
   brandConfig: BrandConfig;
   onBrandChange: (config: BrandConfig) => void;
   onReset: () => void;
+  compact?: boolean;
 }
 
 // HSV to RGB conversion
@@ -502,7 +503,7 @@ async function extractColorsFromImage(imageUrl: string): Promise<{ primary: stri
   });
 }
 
-export function PrototypeBrandingBar({ brandConfig, onBrandChange, onReset }: PrototypeBrandingBarProps) {
+export function PrototypeBrandingBar({ brandConfig, onBrandChange, onReset, compact = false }: PrototypeBrandingBarProps) {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [companyInput, setCompanyInput] = useState('');
@@ -665,6 +666,71 @@ export function PrototypeBrandingBar({ brandConfig, onBrandChange, onReset }: Pr
     }
   };
 
+  // Compact mode for hero section
+  if (compact) {
+    return (
+      <Card className="p-4 bg-card/80 backdrop-blur-sm border-border/50 shadow-lg">
+        <div className="flex items-center gap-2 mb-3">
+          <Palette className="h-4 w-4 text-primary" />
+          <span className="font-semibold text-sm">Preview with your branding</span>
+        </div>
+
+        {/* Search Input */}
+        <div className="relative mb-3">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="e.g. nike.com or Acme Inc"
+            value={companyInput}
+            onChange={(e) => setCompanyInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            className="pl-9 h-9 text-sm"
+          />
+        </div>
+
+        {/* Company Name + Color Swatches Row */}
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 min-w-0">
+            <RotateCcw
+              className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground transition-colors flex-shrink-0"
+              onClick={onReset}
+            />
+            <span className="font-medium text-sm truncate">{brandConfig.companyName}</span>
+          </div>
+
+          {/* Color Swatches */}
+          <div className="flex gap-1.5 items-center ml-auto">
+            <ColorSwatch
+              color={brandConfig.primaryColor}
+              label="Primary"
+              onChange={(color) => handleColorChange('primaryColor', color)}
+            />
+            <ColorSwatch
+              color={brandConfig.secondaryColor}
+              label="Secondary"
+              onChange={(color) => handleColorChange('secondaryColor', color)}
+            />
+            <ColorSwatch
+              color={brandConfig.accentColor}
+              label="Accent"
+              onChange={(color) => handleColorChange('accentColor', color)}
+            />
+            <ColorSwatch
+              color={brandConfig.backgroundColor}
+              label="Background"
+              onChange={(color) => handleColorChange('backgroundColor', color)}
+            />
+            <ColorSwatch
+              color={brandConfig.textColor}
+              label="Text"
+              onChange={(color) => handleColorChange('textColor', color)}
+            />
+          </div>
+        </div>
+      </Card>
+    );
+  }
+
+  // Full mode (original)
   return (
     <Card className="p-4 md:p-6 bg-card/80 backdrop-blur-sm border-border/50 shadow-lg">
       <div className="flex items-center gap-2 mb-3 md:mb-4">
