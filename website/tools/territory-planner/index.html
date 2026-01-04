@@ -1,59 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XLGY974WHR"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XLGY974WHR');
+    </script>
+    <!-- Microsoft Clarity -->
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "uvf6e7zngw");
+    </script>
+    <!-- Lucky Orange -->
+    <script async defer src="https://tools.luckyorange.com/core/lo.js?site-id=89540764"></script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Territory Planner | Glue - Capacity & Account Distribution Tool</title>
+    <title>Territory Planner — Capacity & Account Distribution | Gloo</title>
     <meta name="description" content="Plan territories, balance capacity, and optimize account distribution. Built for RevOps and CS leaders to collaborate on hiring decisions and workload equity.">
 
-    <!-- Open Graph -->
-    <meta property="og:title" content="Territory Planner | Glue">
-    <meta property="og:description" content="Balance capacity, plan territories, and make data-driven hiring decisions.">
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://buildwithgloo.com/tools/territory-planner/">
+
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://buildwithgloo.com/tools/territory-planner">
+    <meta property="og:url" content="https://buildwithgloo.com/tools/territory-planner/">
+    <meta property="og:title" content="Territory Planner — Capacity & Account Distribution | Gloo">
+    <meta property="og:description" content="Balance capacity, plan territories, and make data-driven hiring decisions.">
+    <meta property="og:image" content="https://buildwithgloo.com/images/og-image.png">
+    <meta property="og:site_name" content="Gloo">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Territory Planner | Glue">
+    <meta name="twitter:url" content="https://buildwithgloo.com/tools/territory-planner/">
+    <meta name="twitter:title" content="Territory Planner — Capacity & Account Distribution | Gloo">
     <meta name="twitter:description" content="Balance capacity, plan territories, and make data-driven hiring decisions.">
+    <meta name="twitter:image" content="https://buildwithgloo.com/images/og-image.png">
 
-    <!-- Fonts -->
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/favicon.png?v=3">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Styles -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../styles.css">
     <link rel="stylesheet" href="../tools.css">
     <link rel="stylesheet" href="styles.css">
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
-
-    <!-- Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-XXXXXXXXXX');
-    </script>
+    <!-- Vercel Analytics -->
+    <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
+    <!-- Noise Overlay for texture -->
+    <div class="noise-overlay"></div>
+
     <!-- Navigation -->
     <nav class="nav">
         <div class="nav-container">
-            <a href="/" class="nav-logo">
-                <img src="../../assets/glue-logo.svg" alt="Glue" class="logo-image">
+            <a href="../" class="logo">
+                <img src="/images/gloo-logo.png" alt="Gloo" class="logo-img">
             </a>
             <div class="nav-links">
-                <a href="/tools" class="nav-link">Tools</a>
-                <a href="/#how-it-works" class="nav-link">How It Works</a>
-                <a href="/#pricing" class="nav-link">Pricing</a>
-                <a href="/contact" class="nav-link nav-cta">Get Started</a>
+                <a href="../#demo" class="nav-link">See It Live</a>
+                <a href="../" class="nav-link">Tools</a>
+                <a href="../../#how-it-works" class="nav-link">How It Works</a>
+                <a href="../../#case-study" class="nav-link">Results</a>
+                <a href="../../#contact" class="btn btn-nav">Book a Call</a>
             </div>
             <button class="mobile-menu-btn" aria-label="Toggle menu">
-                <span></span>
                 <span></span>
                 <span></span>
             </button>
@@ -756,27 +775,14 @@
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
-                <div class="footer-brand">
-                    <img src="../../assets/glue-logo.svg" alt="Glue" class="footer-logo">
-                    <p>Helping B2B SaaS companies find hidden revenue in their existing accounts.</p>
+                <div class="footer-logo">
+                    <img src="/images/gloo-logo.png" alt="Gloo" class="logo-img footer-logo-img">
                 </div>
                 <div class="footer-links">
-                    <div class="footer-col">
-                        <h4>Tools</h4>
-                        <a href="/tools/whitespace-visualizer">Whitespace Visualizer</a>
-                        <a href="/tools/territory-planner">Territory Planner</a>
-                        <a href="/tools/account-health">Account Health</a>
-                    </div>
-                    <div class="footer-col">
-                        <h4>Company</h4>
-                        <a href="/about">About</a>
-                        <a href="/contact">Contact</a>
-                        <a href="/privacy">Privacy</a>
-                    </div>
+                    <a href="../">Tools</a>
+                    <a href="../../#pricing">Pricing</a>
+                    <a href="../../#contact">Contact</a>
                 </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 Glue. All rights reserved.</p>
             </div>
         </div>
     </footer>
