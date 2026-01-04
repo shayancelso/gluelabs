@@ -199,19 +199,41 @@ function App() {
           {/* Hero Section - Centered Layout */}
           <div className="text-center mb-8 md:mb-12">
             <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-3 md:mb-4 gradient-text animate-title-in font-display">
-              Preview with your branding
+              Try Our Tools
             </h1>
-            <p className="text-muted-foreground text-sm md:text-lg max-w-lg mx-auto leading-relaxed">
-              Enter your company to see Gloo tools in action
+            <p className="text-muted-foreground text-sm md:text-lg max-w-xl mx-auto leading-relaxed">
+              See Gloo tools in action with your own branding. Enter your company and personalize the preview.
             </p>
           </div>
 
           {/* Hero Cards - Side by Side with Lou */}
-          <div className="relative mb-16 md:mb-20">
+          <div className="relative mb-16 md:mb-24">
+            {/* Floating Badges */}
+            <div className="hidden md:block absolute -left-4 top-8 animate-float">
+              <div className="bg-gradient-to-r from-emerald-400 to-teal-400 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg">
+                Expansion
+              </div>
+            </div>
+            <div className="hidden md:block absolute -right-4 top-16 animate-float-delayed">
+              <div className="bg-gradient-to-r from-purple-400 to-indigo-400 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg">
+                Analyzed
+              </div>
+            </div>
+            <div className="hidden md:block absolute left-8 bottom-24 animate-float">
+              <div className="bg-gradient-to-r from-pink-400 to-rose-400 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg">
+                Whitespace
+              </div>
+            </div>
+            <div className="hidden md:block absolute right-12 bottom-32 animate-float-delayed">
+              <div className="bg-gradient-to-r from-amber-400 to-orange-400 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg">
+                $2.4M Pipeline
+              </div>
+            </div>
+
             {/* Cards Container */}
-            <div className="flex flex-col md:flex-row items-stretch justify-center gap-6 md:gap-8 max-w-4xl mx-auto">
-              {/* Branding Input Card */}
-              <div className="w-full md:w-[340px] flex-shrink-0">
+            <div className="flex flex-col md:flex-row items-stretch justify-center gap-6 md:gap-10 max-w-5xl mx-auto">
+              {/* Branding Input Card - BIGGER */}
+              <div className="w-full md:w-[420px] flex-shrink-0">
                 <PrototypeBrandingBar
                   brandConfig={brandConfig}
                   onBrandChange={setBrandConfig}
@@ -221,7 +243,7 @@ function App() {
               </div>
 
               {/* Browser Mockup */}
-              <div className="flex-1 max-w-md">
+              <div className="flex-1 max-w-lg">
                 <HeroMockup onMagicify={handleMagicify} />
               </div>
             </div>
@@ -231,7 +253,7 @@ function App() {
               <img
                 src={louMagicWand}
                 alt="Lou with magic wand"
-                className="h-32 w-32 md:h-44 md:w-44 object-contain drop-shadow-xl"
+                className="h-36 w-36 md:h-48 md:w-48 object-contain drop-shadow-xl"
               />
               {/* Sparkle effects */}
               <div className="absolute top-2 left-4 animate-sparkle">

@@ -672,33 +672,33 @@ export function PrototypeBrandingBar({ brandConfig, onBrandChange, onReset, comp
     const hasLoadedBrand = brandConfig.companyName !== 'Gloo';
 
     return (
-      <Card className="p-5 bg-white/90 backdrop-blur-sm border-border/50 shadow-xl rounded-2xl h-full">
+      <Card className="p-6 md:p-8 bg-white/95 backdrop-blur-sm border-border/40 shadow-2xl rounded-3xl h-full">
         {/* Header with icon */}
-        <div className="flex items-center gap-2 mb-4">
-          <div className="h-6 w-6 rounded-full bg-purple-100 flex items-center justify-center">
-            <User className="h-3.5 w-3.5 text-purple-600" />
+        <div className="flex items-center gap-3 mb-6">
+          <div className="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center">
+            <User className="h-5 w-5 text-purple-600" />
           </div>
-          <span className="font-semibold text-sm text-gray-700 uppercase tracking-wide">Branding as Inputs</span>
+          <span className="font-bold text-base md:text-lg text-gray-800 uppercase tracking-wide">Branding as Inputs</span>
         </div>
 
         {/* Search Input */}
-        <div className="relative mb-4">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <div className="relative mb-6">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
           <Input
             placeholder="nike.com"
             value={companyInput}
             onChange={(e) => setCompanyInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="pl-9 h-11 text-sm rounded-xl border-gray-200 bg-gray-50/50"
+            className="pl-12 h-14 text-base md:text-lg rounded-2xl border-gray-200 bg-gray-50/50 font-medium"
           />
         </div>
 
         {/* Color Swatches Row with check indicator */}
-        <div className="flex items-center gap-2 mb-5">
-          <div className={`h-6 w-6 rounded-full flex items-center justify-center ${hasLoadedBrand ? 'bg-green-100' : 'bg-gray-100'}`}>
-            <Check className={`h-3.5 w-3.5 ${hasLoadedBrand ? 'text-green-600' : 'text-gray-400'}`} />
+        <div className="flex items-center gap-3 mb-6">
+          <div className={`h-10 w-10 rounded-full flex items-center justify-center border-2 ${hasLoadedBrand ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'}`}>
+            <Check className={`h-5 w-5 ${hasLoadedBrand ? 'text-green-600' : 'text-gray-300'}`} />
           </div>
-          <div className="flex gap-1.5 items-center">
+          <div className="flex gap-2 items-center">
             <ColorSwatch
               color={brandConfig.primaryColor}
               label="Primary"
@@ -731,18 +731,18 @@ export function PrototypeBrandingBar({ brandConfig, onBrandChange, onReset, comp
         <Button
           onClick={handleCompanyLookup}
           disabled={!companyInput.trim() || isLoading}
-          className="w-full h-12 rounded-xl text-base font-semibold text-white shadow-lg hover:shadow-xl transition-all"
+          className="w-full h-14 md:h-16 rounded-2xl text-lg md:text-xl font-bold text-white shadow-xl hover:shadow-2xl transition-all hover:scale-[1.02]"
           style={{
-            background: 'linear-gradient(135deg, #ec4899, #8b5cf6)',
+            background: 'linear-gradient(135deg, #d8b4fe, #c084fc)',
           }}
         >
           {isLoading ? (
-            <Loader2 className="h-5 w-5 animate-spin" />
+            <Loader2 className="h-6 w-6 animate-spin" />
           ) : (
             <>
-              <Sparkles className="h-4 w-4 mr-2" />
+              <Sparkles className="h-5 w-5 mr-2" />
               Magicify My Brand
-              <Sparkles className="h-4 w-4 ml-2" />
+              <Sparkles className="h-5 w-5 ml-2" />
             </>
           )}
         </Button>
