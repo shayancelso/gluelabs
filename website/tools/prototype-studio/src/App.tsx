@@ -9,8 +9,8 @@ import { SuccessPlanPrototype } from '@/components/prototypes/SuccessPlanPrototy
 import { DiscoveryPrototype } from '@/components/prototypes/DiscoveryPrototype';
 import { WelcomeDialog } from '@/components/prototypes/WelcomeDialog';
 import { ContactDialog } from '@/components/prototypes/ContactDialog';
+import { HeroVisual } from '@/components/prototypes/HeroVisual';
 import louMascot from '@/assets/lou-mascot.png';
-import heroMockup from '@/assets/hero.png';
 import whitespaceScreenshot from '@/assets/whitespace-visualizer.png';
 import roiScreenshot from '@/assets/ROI-Calculator.png';
 import successPlanScreenshot from '@/assets/mutual-success-plan.png';
@@ -194,26 +194,22 @@ function App() {
 
         {/* Main content */}
         <div className="px-4 md:px-8 pb-8 md:pb-12 max-w-6xl mx-auto">
-          {/* Hero Section - Large with background image */}
-          <div className="relative min-h-[500px] md:min-h-[600px] flex items-center mb-12 md:mb-16">
-            {/* Background hero image - positioned right */}
-            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[55%] lg:w-[60%] h-full pointer-events-none hidden md:block">
-              <img
-                src={heroMockup}
-                alt="Gloo tool preview"
-                className="w-full h-full object-contain object-right opacity-40 lg:opacity-60"
-              />
+          {/* Hero Section - Large with animated visual */}
+          <div className="relative min-h-[520px] md:min-h-[600px] lg:min-h-[650px] flex items-center mb-8 md:mb-12">
+            {/* Background visual - positioned right */}
+            <div className="absolute inset-y-0 right-0 w-full lg:w-[65%] pointer-events-none hidden md:block">
+              <HeroVisual />
               {/* Gradient fade on left edge */}
               <div
-                className="absolute inset-y-0 left-0 w-1/2"
+                className="absolute inset-y-0 left-0 w-2/3"
                 style={{
-                  background: 'linear-gradient(to right, #fafafaee 0%, transparent 100%)',
+                  background: 'linear-gradient(to right, #fafafa 0%, #fafafacc 40%, transparent 100%)',
                 }}
               />
             </div>
 
             {/* Left Side - Text + Branding Input */}
-            <div className="relative z-10 max-w-xl pt-8 md:pt-12">
+            <div className="relative z-10 max-w-xl pt-4 md:pt-8">
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-4 md:mb-6 gradient-text animate-title-in font-display">
                 Try Our Tools
               </h1>
