@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Grid3X3, Calculator, Target, ClipboardList, Sparkles } from 'lucide-react';
+import { Grid3X3, Calculator, Target, ClipboardList } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PrototypeBrandingBar, type BrandConfig } from '@/components/prototypes/PrototypeBrandingBar';
 import { PrototypeToolCard } from '@/components/prototypes/PrototypeToolCard';
@@ -193,60 +193,42 @@ function App() {
         />
 
         {/* Main content */}
-        <div className="pt-6 md:pt-10 px-4 md:px-8 pb-8 md:pb-12 max-w-6xl mx-auto">
-          {/* Hero Section - Split Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center mb-12 md:mb-16">
+        <div className="px-4 md:px-8 pb-8 md:pb-12 max-w-6xl mx-auto">
+          {/* Hero Section - Large with background image */}
+          <div className="relative min-h-[500px] md:min-h-[600px] flex items-center mb-12 md:mb-16">
+            {/* Background hero image - positioned right */}
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[55%] lg:w-[60%] h-full pointer-events-none hidden md:block">
+              <img
+                src={heroMockup}
+                alt="Gloo tool preview"
+                className="w-full h-full object-contain object-right opacity-40 lg:opacity-60"
+              />
+              {/* Gradient fade on left edge */}
+              <div
+                className="absolute inset-y-0 left-0 w-1/2"
+                style={{
+                  background: 'linear-gradient(to right, #fafafaee 0%, transparent 100%)',
+                }}
+              />
+            </div>
+
             {/* Left Side - Text + Branding Input */}
-            <div>
-              <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-3 md:mb-4 gradient-text animate-title-in font-display">
+            <div className="relative z-10 max-w-xl pt-8 md:pt-12">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-4 md:mb-6 gradient-text animate-title-in font-display">
                 Try Our Tools
               </h1>
-              <p className="text-muted-foreground text-sm md:text-lg mb-6 md:mb-8 max-w-md">
+              <p className="text-muted-foreground text-base md:text-xl mb-8 md:mb-10 max-w-lg leading-relaxed">
                 See Gloo tools in action with your own branding. Enter your company and personalize the preview.
               </p>
 
               {/* Compact Branding Input */}
-              <PrototypeBrandingBar
-                brandConfig={brandConfig}
-                onBrandChange={setBrandConfig}
-                onReset={handleResetBranding}
-                compact
-              />
-            </div>
-
-            {/* Right Side - Hero Mockup with Lou */}
-            <div className="relative flex justify-center lg:justify-end">
-              {/* Lou mascot - positioned top right */}
-              <img
-                src={louMascot}
-                alt="Lou"
-                className="absolute -top-4 md:-top-8 right-4 md:right-0 h-20 w-20 md:h-28 md:w-28 object-contain z-10 drop-shadow-lg"
-              />
-
-              {/* Browser mockup */}
-              <div className="relative">
-                <img
-                  src={heroMockup}
-                  alt="Gloo tool preview"
-                  className="w-full max-w-md rounded-xl shadow-2xl shadow-purple-500/20"
+              <div className="max-w-md">
+                <PrototypeBrandingBar
+                  brandConfig={brandConfig}
+                  onBrandChange={setBrandConfig}
+                  onReset={handleResetBranding}
+                  compact
                 />
-
-                {/* Magicify button */}
-                <Button
-                  onClick={() => {
-                    // Trigger the branding load if not already custom
-                    if (brandConfig.companyName === 'Gloo') {
-                      // Focus the input in the branding bar
-                      const input = document.querySelector('input[placeholder*="nike.com"]') as HTMLInputElement;
-                      if (input) input.focus();
-                    }
-                  }}
-                  className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white px-6 shadow-lg"
-                >
-                  <Sparkles className="mr-2 h-4 w-4" />
-                  Magicify My Brand
-                  <Sparkles className="ml-2 h-4 w-4" />
-                </Button>
               </div>
             </div>
           </div>
