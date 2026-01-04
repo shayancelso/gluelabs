@@ -59,7 +59,7 @@
 }
 
 .tool-interface-compact {
-    padding-top: var(--space-xl);
+    padding-top: var(--space-md);
 }
 
 @media (max-width: 768px) {
