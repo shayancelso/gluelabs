@@ -328,6 +328,28 @@
                     </div>
                 </div>
 
+                <!-- Smart Recommendations -->
+                <div class="dashboard-section recommendations-section">
+                    <div class="section-header">
+                        <h2>Smart Recommendations</h2>
+                        <p class="section-subtitle">AI-powered actions to optimize your team</p>
+                    </div>
+                    <div class="smart-recommendations" id="smart-recommendations">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Book Health Scorecard -->
+                <div class="dashboard-section book-health-section">
+                    <div class="section-header">
+                        <h2>Book of Business Health</h2>
+                        <p class="section-subtitle">Completeness and balance indicators per rep</p>
+                    </div>
+                    <div class="book-health-scorecard" id="book-health-scorecard">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
                 <!-- Projection Engine -->
                 <div class="dashboard-section">
                     <div class="section-header">
@@ -336,20 +358,53 @@
                     </div>
 
                     <div class="projection-controls">
-                        <div class="control-group">
-                            <label>Growth Scenario</label>
-                            <div class="scenario-buttons">
-                                <button class="scenario-btn" data-scenario="conservative">Conservative (+10%)</button>
-                                <button class="scenario-btn active" data-scenario="expected">Expected (+20%)</button>
-                                <button class="scenario-btn" data-scenario="aggressive">Aggressive (+35%)</button>
+                        <div class="controls-grid">
+                            <div class="control-group">
+                                <label>New Logo Growth (Annual)</label>
+                                <div class="slider-container">
+                                    <input type="range" id="new-logo-growth" min="0" max="50" value="15" class="projection-slider">
+                                    <span class="slider-value" id="new-logo-growth-value">15%</span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label>Expansion Rate (Annual)</label>
+                                <div class="slider-container">
+                                    <input type="range" id="expansion-rate" min="0" max="30" value="10" class="projection-slider">
+                                    <span class="slider-value" id="expansion-rate-value">10%</span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label>Expected Churn Rate</label>
+                                <div class="slider-container">
+                                    <input type="range" id="churn-rate" min="0" max="25" value="5" class="projection-slider">
+                                    <span class="slider-value" id="churn-rate-value">5%</span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label>Hiring Lead Time (Days)</label>
+                                <div class="slider-container">
+                                    <input type="range" id="hiring-lead-time" min="30" max="120" value="45" class="projection-slider">
+                                    <span class="slider-value" id="hiring-lead-time-value">45</span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label>New Hire Ramp Time (Days)</label>
+                                <div class="slider-container">
+                                    <input type="range" id="ramp-time" min="30" max="180" value="90" class="projection-slider">
+                                    <span class="slider-value" id="ramp-time-value">90</span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label>Target Capacity Threshold</label>
+                                <div class="slider-container">
+                                    <input type="range" id="capacity-threshold" min="70" max="95" value="80" class="projection-slider">
+                                    <span class="slider-value" id="threshold-value">80%</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="control-group">
-                            <label>Target Capacity Threshold</label>
-                            <div class="slider-container">
-                                <input type="range" id="capacity-threshold" min="70" max="95" value="85" class="capacity-slider">
-                                <span class="slider-value" id="threshold-value">85%</span>
-                            </div>
+                        <div class="capacity-runway-container">
+                            <span class="runway-label">Capacity Runway:</span>
+                            <span class="runway-value" id="capacity-runway">--</span>
                         </div>
                     </div>
 
@@ -384,7 +439,7 @@
                         </div>
 
                         <div class="projection-card projected">
-                            <h4>Projected (90 Days)</h4>
+                            <h4>Projected (12 Months)</h4>
                             <div class="projection-metrics">
                                 <div class="proj-metric">
                                     <span class="proj-value" id="projected-arr">$9.8M</span>
@@ -403,6 +458,13 @@
                                     <span class="proj-label">Hiring Need</span>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Monthly Projection Timeline Chart -->
+                    <div class="monthly-timeline-container">
+                        <div class="monthly-timeline" id="monthly-timeline">
+                            <!-- Populated by JS -->
                         </div>
                     </div>
 

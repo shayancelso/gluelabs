@@ -11,29 +11,68 @@ class TerritoryEngine {
         this.scenarioState = null;
         this.pendingAccounts = [];
 
-        // Industry benchmarks by segment
+        // Industry benchmarks by segment (research-based: Gainsight, SaaStr, ChurnZero)
         this.benchmarks = {
             'SMB': {
-                accountsPerRep: { min: 50, max: 75, ideal: 60 },
+                accountsPerRep: { min: 100, max: 250, ideal: 150 },
                 arrPerRep: { min: 1000000, max: 2000000, ideal: 1500000 },
+                avgDealSize: { min: 5000, max: 20000, ideal: 10000 },
+                touchCadence: 'monthly',
+                hoursPerAccount: 2, // baseline hours/month per account
                 healthyCapacity: 85,
                 atRiskThreshold: 15,
                 avgHealthScore: 70
             },
             'Mid-Market': {
-                accountsPerRep: { min: 25, max: 40, ideal: 32 },
-                arrPerRep: { min: 2000000, max: 4000000, ideal: 3000000 },
+                accountsPerRep: { min: 30, max: 50, ideal: 40 },
+                arrPerRep: { min: 1500000, max: 2500000, ideal: 2000000 },
+                avgDealSize: { min: 25000, max: 100000, ideal: 50000 },
+                touchCadence: 'bi-weekly',
+                hoursPerAccount: 4,
                 healthyCapacity: 80,
                 atRiskThreshold: 12,
                 avgHealthScore: 75
             },
             'Enterprise': {
-                accountsPerRep: { min: 8, max: 15, ideal: 12 },
-                arrPerRep: { min: 5000000, max: 10000000, ideal: 7000000 },
+                accountsPerRep: { min: 8, max: 20, ideal: 14 },
+                arrPerRep: { min: 2600000, max: 5000000, ideal: 3500000 },
+                avgDealSize: { min: 100000, max: 500000, ideal: 250000 },
+                touchCadence: 'weekly',
+                hoursPerAccount: 10,
                 healthyCapacity: 75,
                 atRiskThreshold: 10,
                 avgHealthScore: 80
             }
+        };
+
+        // Time-based capacity configuration
+        this.capacityConfig = {
+            monthlyHours: 160,
+            productivityRate: 0.80, // 80% productive time
+            productiveHours: 128,   // 160 * 0.80
+            // Complexity multipliers for time calculation
+            complexityFactors: {
+                highValueARR: { threshold: 200000, multiplier: 0.3 },
+                atRiskHealth: { threshold: 60, multiplier: 0.5 },
+                highChurnRisk: { threshold: 0.20, multiplier: 0.4 },
+                onboarding: { multiplier: 0.3 },
+                expansionReady: { threshold: 0.5, multiplier: 0.2 }, // whitespace > 50% of TAM
+                enterpriseSegment: { multiplier: 0.3 },
+                midMarketSegment: { multiplier: 0.1 }
+            }
+        };
+
+        // Projection configuration defaults
+        this.projectionConfig = {
+            newLogoGrowth: 0.15,
+            expansionRate: 0.10,
+            churnRate: 0.05,
+            hiringLeadTime: 45,
+            rampTime: 90,
+            rampCurve: [0.25, 0.50, 0.75, 1.0],
+            targetCapacity: 80,
+            maxCapacity: 100,
+            projectionMonths: 12
         };
 
         // Growth scenario multipliers
@@ -135,33 +174,100 @@ class TerritoryEngine {
     }
 
     /**
-     * Calculate complexity score for an account
+     * Calculate complexity score for an account (used in weighted capacity)
      */
     calculateComplexityScore(account) {
-        let score = 1;
+        const factors = this.capacityConfig.complexityFactors;
+        let multiplier = 1.0;
 
-        // Higher ARR = more complexity
-        if (account.current_arr > 500000) score += 0.5;
-        else if (account.current_arr > 100000) score += 0.3;
-        else if (account.current_arr > 50000) score += 0.1;
+        // High-value ARR premium
+        if (account.current_arr > factors.highValueARR.threshold) {
+            multiplier += factors.highValueARR.multiplier;
+        }
 
-        // Unhealthy accounts require more attention
-        if (account.health_score < 60) score += 0.4;
-        else if (account.health_score < 80) score += 0.2;
+        // At-risk health attention
+        if (account.health_score < factors.atRiskHealth.threshold) {
+            multiplier += factors.atRiskHealth.multiplier;
+        }
 
-        // At-risk accounts need intervention
-        if (account.churn_risk > 0.3) score += 0.5;
-        else if (account.churn_risk > 0.15) score += 0.25;
+        // High churn risk effort
+        if (account.churn_risk > factors.highChurnRisk.threshold) {
+            multiplier += factors.highChurnRisk.multiplier;
+        }
 
-        // High whitespace = proactive expansion work
-        if (account.actionable_whitespace > 100000) score += 0.3;
-        else if (account.actionable_whitespace > 50000) score += 0.15;
+        // Onboarding support
+        if (account.lifecycle_stage === 'Onboarding') {
+            multiplier += factors.onboarding.multiplier;
+        }
 
-        // Enterprise accounts are inherently more complex
-        if (account.segment === 'Enterprise') score += 0.3;
-        else if (account.segment === 'Mid-Market') score += 0.1;
+        // Expansion work (whitespace > 50% of TAM)
+        const whitespaceRatio = account.internal_tam > 0
+            ? account.raw_whitespace / account.internal_tam
+            : 0;
+        if (whitespaceRatio > factors.expansionReady.threshold) {
+            multiplier += factors.expansionReady.multiplier;
+        }
 
-        return score;
+        // Segment complexity
+        if (account.segment === 'Enterprise') {
+            multiplier += factors.enterpriseSegment.multiplier;
+        } else if (account.segment === 'Mid-Market') {
+            multiplier += factors.midMarketSegment.multiplier;
+        }
+
+        return multiplier;
+    }
+
+    /**
+     * Calculate time-based hours required for an account
+     */
+    calculateAccountHours(account) {
+        const benchmark = this.benchmarks[account.segment] || this.benchmarks['Mid-Market'];
+        const baseHours = benchmark.hoursPerAccount;
+        const complexityMultiplier = this.calculateComplexityScore(account);
+        return baseHours * complexityMultiplier;
+    }
+
+    /**
+     * Calculate time-based capacity for a rep
+     */
+    calculateTimeBasedCapacity(rep) {
+        const totalHoursRequired = rep.accounts.reduce((sum, account) => {
+            return sum + this.calculateAccountHours(account);
+        }, 0);
+
+        const productiveHours = this.capacityConfig.productiveHours;
+        const capacityScore = (totalHoursRequired / productiveHours) * 100;
+
+        // Calculate time allocation breakdown
+        const atRiskHours = rep.accounts
+            .filter(a => a.is_at_risk)
+            .reduce((sum, a) => sum + this.calculateAccountHours(a), 0);
+
+        const expansionHours = rep.accounts
+            .filter(a => a.actionable_whitespace > 50000 && !a.is_at_risk)
+            .reduce((sum, a) => sum + this.calculateAccountHours(a), 0);
+
+        const renewalHours = rep.accounts
+            .filter(a => a.lifecycle_stage === 'Renewing')
+            .reduce((sum, a) => sum + this.calculateAccountHours(a), 0);
+
+        const maintenanceHours = totalHoursRequired - atRiskHours - expansionHours - renewalHours;
+
+        return {
+            totalHoursRequired: Math.round(totalHoursRequired * 10) / 10,
+            productiveHours,
+            capacityScore: Math.round(capacityScore),
+            capacityStatus: capacityScore > 100 ? 'critical' :
+                           capacityScore > 85 ? 'warning' : 'healthy',
+            headroomHours: Math.max(0, productiveHours - totalHoursRequired),
+            allocation: {
+                atRisk: Math.round((atRiskHours / totalHoursRequired) * 100) || 0,
+                expansion: Math.round((expansionHours / totalHoursRequired) * 100) || 0,
+                renewal: Math.round((renewalHours / totalHoursRequired) * 100) || 0,
+                maintenance: Math.round((maintenanceHours / totalHoursRequired) * 100) || 0
+            }
+        };
     }
 
     /**
@@ -225,41 +331,43 @@ class TerritoryEngine {
     }
 
     /**
-     * Calculate capacity scores for all reps
+     * Calculate capacity scores for all reps (time-based model)
      */
     calculateCapacityScores() {
-        const avgComplexity = this.reps.reduce((sum, r) => sum + r.totalComplexity, 0) / this.reps.length;
-
         this.reps.forEach(rep => {
             const benchmark = this.benchmarks[rep.primarySegment];
 
-            // Base capacity from account count
-            const accountCapacity = (rep.accountCount / benchmark.accountsPerRep.ideal) * 40;
+            // Use time-based capacity calculation
+            const timeCapacity = this.calculateTimeBasedCapacity(rep);
 
-            // ARR capacity component
-            const arrCapacity = (rep.totalARR / benchmark.arrPerRep.ideal) * 30;
-
-            // Complexity adjustment
-            const complexityCapacity = (rep.totalComplexity / avgComplexity) * 30;
-
-            rep.capacityScore = Math.min(150, Math.round(accountCapacity + arrCapacity + complexityCapacity));
-
-            // Determine capacity status
-            if (rep.capacityScore > 100) {
-                rep.capacityStatus = 'critical';
-            } else if (rep.capacityScore > benchmark.healthyCapacity) {
-                rep.capacityStatus = 'warning';
-            } else {
-                rep.capacityStatus = 'healthy';
-            }
+            rep.capacityScore = timeCapacity.capacityScore;
+            rep.capacityStatus = timeCapacity.capacityStatus;
+            rep.hoursRequired = timeCapacity.totalHoursRequired;
+            rep.headroomHours = timeCapacity.headroomHours;
+            rep.timeAllocation = timeCapacity.allocation;
 
             // Calculate benchmark comparison
-            const arrPerRepBenchmark = (benchmark.arrPerRep.min + benchmark.arrPerRep.max) / 2;
-            const accountsBenchmark = (benchmark.accountsPerRep.min + benchmark.accountsPerRep.max) / 2;
+            const arrPerRepBenchmark = benchmark.arrPerRep.ideal;
+            const accountsBenchmark = benchmark.accountsPerRep.ideal;
 
             rep.benchmarkComparison = {
                 arrDiff: ((rep.totalARR / arrPerRepBenchmark) - 1) * 100,
-                accountsDiff: ((rep.accountCount / accountsBenchmark) - 1) * 100
+                accountsDiff: ((rep.accountCount / accountsBenchmark) - 1) * 100,
+                arrIdeal: arrPerRepBenchmark,
+                accountsIdeal: accountsBenchmark
+            };
+
+            // Calculate how far over/under capacity (in accounts and ARR)
+            const productiveHours = this.capacityConfig.productiveHours;
+            const avgHoursPerAccount = rep.accountCount > 0
+                ? rep.hoursRequired / rep.accountCount
+                : benchmark.hoursPerAccount;
+            const capacityInAccounts = Math.round(productiveHours / avgHoursPerAccount);
+
+            rep.capacityHeadroom = {
+                accounts: capacityInAccounts - rep.accountCount,
+                hoursRemaining: timeCapacity.headroomHours,
+                arrCapacity: Math.round((timeCapacity.headroomHours / rep.hoursRequired) * rep.totalARR) || 0
             };
         });
     }
@@ -313,89 +421,261 @@ class TerritoryEngine {
     }
 
     /**
-     * Calculate equity scores for different dimensions
+     * Calculate Gini coefficient (0 = perfect equality, 1 = perfect inequality)
+     */
+    calculateGiniCoefficient(values) {
+        if (values.length < 2) return 0;
+        const sorted = [...values].sort((a, b) => a - b);
+        const n = sorted.length;
+        const totalSum = sorted.reduce((a, b) => a + b, 0);
+        if (totalSum === 0) return 0;
+
+        let numerator = 0;
+        sorted.forEach((val, i) => {
+            numerator += (2 * (i + 1) - n - 1) * val;
+        });
+
+        return numerator / (n * totalSum);
+    }
+
+    /**
+     * Calculate equity scores for different dimensions with dollar disparities
      */
     calculateEquityScores() {
         if (this.reps.length < 2) {
             return {
-                arr: 100,
-                whitespace: 100,
-                capacity: 100,
-                risk: 100
+                arr: { score: 100, gini: 0, max: null, min: null, gap: 0, ratio: 1 },
+                whitespace: { score: 100, gini: 0, max: null, min: null, gap: 0, ratio: 1 },
+                capacity: { score: 100, gini: 0, max: null, min: null, gap: 0, ratio: 1 },
+                risk: { score: 100, gini: 0, max: null, min: null, gap: 0, ratio: 1 }
             };
         }
 
-        const calculateEquity = (values) => {
+        const calculateEquityDetail = (values, reps, metric) => {
+            // Calculate basic stats
             const mean = values.reduce((a, b) => a + b, 0) / values.length;
             const variance = values.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / values.length;
             const stdDev = Math.sqrt(variance);
-            const cv = (stdDev / mean) * 100; // Coefficient of variation
-            // Convert CV to equity score (lower CV = higher equity)
-            return Math.max(0, Math.min(100, 100 - cv));
+            const cv = mean !== 0 ? (stdDev / mean) * 100 : 0;
+
+            // Calculate Gini coefficient
+            const gini = this.calculateGiniCoefficient(values);
+
+            // Find max and min
+            let maxIdx = 0, minIdx = 0;
+            values.forEach((val, i) => {
+                if (val > values[maxIdx]) maxIdx = i;
+                if (val < values[minIdx]) minIdx = i;
+            });
+
+            const maxVal = values[maxIdx];
+            const minVal = values[minIdx];
+            const gap = maxVal - minVal;
+            const ratio = minVal !== 0 ? maxVal / minVal : maxVal > 0 ? Infinity : 1;
+
+            return {
+                score: Math.max(0, Math.min(100, 100 - cv)),
+                gini: Math.round(gini * 100) / 100,
+                max: { rep: reps[maxIdx].name, value: maxVal },
+                min: { rep: reps[minIdx].name, value: minVal },
+                gap,
+                ratio: Math.round(ratio * 100) / 100,
+                mean: Math.round(mean),
+                stdDev: Math.round(stdDev)
+            };
         };
 
         return {
-            arr: Math.round(calculateEquity(this.reps.map(r => r.totalARR))),
-            whitespace: Math.round(calculateEquity(this.reps.map(r => r.totalActionableWhitespace))),
-            capacity: Math.round(calculateEquity(this.reps.map(r => r.capacityScore))),
-            risk: Math.round(calculateEquity(this.reps.map(r => r.atRiskARR)))
+            arr: calculateEquityDetail(this.reps.map(r => r.totalARR), this.reps, 'arr'),
+            whitespace: calculateEquityDetail(this.reps.map(r => r.totalActionableWhitespace), this.reps, 'whitespace'),
+            capacity: calculateEquityDetail(this.reps.map(r => r.capacityScore), this.reps, 'capacity'),
+            risk: calculateEquityDetail(this.reps.map(r => r.atRiskARR), this.reps, 'risk')
         };
     }
 
     /**
-     * Generate equity insights
+     * Generate specific rebalancing recommendations
+     */
+    generateRebalancingRecommendations() {
+        const recommendations = [];
+        const equity = this.calculateEquityScores();
+
+        // Find overloaded and underutilized reps
+        const overloaded = this.reps.filter(r => r.capacityScore > 100)
+            .sort((a, b) => b.capacityScore - a.capacityScore);
+        const underutilized = this.reps.filter(r => r.capacityScore < 70)
+            .sort((a, b) => a.capacityScore - b.capacityScore);
+
+        // Generate account move recommendations for overloaded reps
+        overloaded.forEach(rep => {
+            // Find accounts that could be moved (not at-risk, mid-sized ARR)
+            const moveableAccounts = rep.accounts
+                .filter(a => !a.is_at_risk && a.current_arr < 200000)
+                .sort((a, b) => a.current_arr - b.current_arr);
+
+            if (moveableAccounts.length > 0 && underutilized.length > 0) {
+                // Calculate how many hours need to be offloaded
+                const excessHours = rep.hoursRequired - this.capacityConfig.productiveHours;
+                let hoursToMove = excessHours;
+                let accountsToMove = [];
+
+                for (const account of moveableAccounts) {
+                    if (hoursToMove <= 0) break;
+                    const accountHours = this.calculateAccountHours(account);
+                    accountsToMove.push(account);
+                    hoursToMove -= accountHours;
+                }
+
+                // Find best target rep
+                const bestTarget = underutilized[0];
+                const totalMoveARR = accountsToMove.reduce((sum, a) => sum + a.current_arr, 0);
+
+                if (accountsToMove.length > 0) {
+                    recommendations.push({
+                        priority: 'high',
+                        type: 'rebalance',
+                        fromRep: rep.name,
+                        toRep: bestTarget.name,
+                        accounts: accountsToMove.map(a => a.account_name),
+                        accountCount: accountsToMove.length,
+                        arrImpact: totalMoveARR,
+                        action: `Move ${accountsToMove.length} account${accountsToMove.length > 1 ? 's' : ''} (${this.formatCurrency(totalMoveARR)} ARR) from ${rep.name} to ${bestTarget.name}`,
+                        impact: `${rep.name} capacity: ${rep.capacityScore}% → ~${Math.round(rep.capacityScore - (excessHours / this.capacityConfig.productiveHours * 100))}%, ${bestTarget.name} capacity: ${bestTarget.capacityScore}% → ~${Math.round(bestTarget.capacityScore + ((excessHours - hoursToMove) / this.capacityConfig.productiveHours * 100))}%`,
+                        reason: `${rep.name} is ${rep.capacityScore - 100} points over capacity`
+                    });
+                }
+            }
+        });
+
+        // ARR equity recommendations
+        if (equity.arr.ratio > 1.5 && equity.arr.gap > 500000) {
+            const targetMove = Math.round(equity.arr.gap / 2);
+            recommendations.push({
+                priority: 'medium',
+                type: 'arr_equity',
+                fromRep: equity.arr.max.rep,
+                toRep: equity.arr.min.rep,
+                action: `Consider moving ~${this.formatCurrency(targetMove)} ARR from ${equity.arr.max.rep} to ${equity.arr.min.rep}`,
+                impact: `Would improve ARR equity from ${Math.round(equity.arr.score)}% to ~${Math.round(equity.arr.score + 15)}%`,
+                reason: `${equity.arr.max.rep} has ${equity.arr.ratio.toFixed(1)}x more ARR than ${equity.arr.min.rep} (${this.formatCurrency(equity.arr.gap)} gap)`
+            });
+        }
+
+        // Whitespace concentration warning
+        if (equity.whitespace.ratio > 2) {
+            recommendations.push({
+                priority: 'medium',
+                type: 'whitespace_equity',
+                action: `Whitespace is concentrated with ${equity.whitespace.max.rep} (${this.formatCurrency(equity.whitespace.max.value)})`,
+                impact: `Expansion opportunities are not evenly distributed`,
+                reason: `${equity.whitespace.max.rep} has ${equity.whitespace.ratio.toFixed(1)}x more whitespace than ${equity.whitespace.min.rep}`
+            });
+        }
+
+        // Risk concentration warning
+        const highRiskReps = this.reps.filter(r => (r.atRiskARR / r.totalARR) > 0.25);
+        highRiskReps.forEach(rep => {
+            const riskPct = Math.round((rep.atRiskARR / rep.totalARR) * 100);
+            recommendations.push({
+                priority: 'high',
+                type: 'risk_concentration',
+                rep: rep.name,
+                action: `${rep.name} should focus on at-risk accounts (${this.formatCurrency(rep.atRiskARR)} at risk)`,
+                impact: `Reduce churn risk of ${riskPct}% of their book`,
+                reason: `${rep.name} has ${riskPct}% of their ARR at risk (target: <15%)`
+            });
+        });
+
+        return recommendations;
+    }
+
+    /**
+     * Generate equity insights with dollar-value details
      */
     getEquityInsights() {
         const insights = [];
         const summary = this.getSummaryMetrics();
+        const equity = this.calculateEquityScores();
 
-        // Find imbalances
-        const maxARRRep = this.reps.reduce((max, r) => r.totalARR > max.totalARR ? r : max);
-        const minARRRep = this.reps.reduce((min, r) => r.totalARR < min.totalARR ? r : min);
-        const arrRatio = maxARRRep.totalARR / minARRRep.totalARR;
-
-        if (arrRatio > 2) {
+        // ARR imbalance with dollar amounts
+        if (equity.arr.ratio > 1.5 && equity.arr.gap > 300000) {
             insights.push({
                 type: 'warning',
-                text: `${maxARRRep.name} manages ${arrRatio.toFixed(1)}x more ARR than ${minARRRep.name}. Consider rebalancing.`
+                metric: 'arr',
+                text: `${equity.arr.max.rep} manages ${equity.arr.ratio.toFixed(1)}x more ARR than ${equity.arr.min.rep}`,
+                detail: `Gap: ${this.formatCurrency(equity.arr.gap)} | ${equity.arr.max.rep}: ${this.formatCurrency(equity.arr.max.value)} vs ${equity.arr.min.rep}: ${this.formatCurrency(equity.arr.min.value)}`
             });
         }
 
-        // Whitespace concentration
-        const maxWSRep = this.reps.reduce((max, r) => r.totalActionableWhitespace > max.totalActionableWhitespace ? r : max);
-        const wsShare = (maxWSRep.totalActionableWhitespace / summary.totalActionableWhitespace) * 100;
-
-        if (wsShare > 40) {
+        // Whitespace concentration with dollar amounts
+        if (equity.whitespace.ratio > 2 && equity.whitespace.gap > 200000) {
+            const wsShare = summary.totalActionableWhitespace > 0
+                ? Math.round((equity.whitespace.max.value / summary.totalActionableWhitespace) * 100)
+                : 0;
             insights.push({
                 type: 'info',
-                text: `${wsShare.toFixed(0)}% of actionable whitespace is concentrated with ${maxWSRep.name}.`
+                metric: 'whitespace',
+                text: `${wsShare}% of whitespace concentrated with ${equity.whitespace.max.rep}`,
+                detail: `${equity.whitespace.max.rep}: ${this.formatCurrency(equity.whitespace.max.value)} | Team avg: ${this.formatCurrency(equity.whitespace.mean)}`
             });
         }
 
-        // Overloaded reps
+        // Capacity imbalance
         const overloadedReps = this.reps.filter(r => r.capacityScore > 100);
+        const underutilizedReps = this.reps.filter(r => r.capacityScore < 60);
+
         if (overloadedReps.length > 0) {
+            const totalOverHours = overloadedReps.reduce((sum, r) =>
+                sum + (r.hoursRequired - this.capacityConfig.productiveHours), 0);
             insights.push({
                 type: 'warning',
-                text: `${overloadedReps.length} team member(s) are over capacity: ${overloadedReps.map(r => r.name).join(', ')}.`
+                metric: 'capacity',
+                text: `${overloadedReps.length} team member(s) over capacity: ${overloadedReps.map(r => `${r.name} (${r.capacityScore}%)`).join(', ')}`,
+                detail: `Total excess: ${Math.round(totalOverHours)} hours/month that need redistribution`
+            });
+        }
+
+        if (underutilizedReps.length > 0) {
+            const totalHeadroom = underutilizedReps.reduce((sum, r) => sum + r.headroomHours, 0);
+            insights.push({
+                type: 'info',
+                metric: 'capacity',
+                text: `${underutilizedReps.length} team member(s) have significant capacity: ${underutilizedReps.map(r => `${r.name} (${r.capacityScore}%)`).join(', ')}`,
+                detail: `Available: ${Math.round(totalHeadroom)} hours/month for new accounts`
             });
         }
 
         // Risk concentration
-        const highRiskReps = this.reps.filter(r => (r.atRiskARR / r.totalARR) > 0.2);
+        const highRiskReps = this.reps.filter(r => r.totalARR > 0 && (r.atRiskARR / r.totalARR) > 0.20);
         if (highRiskReps.length > 0) {
+            const totalRiskARR = highRiskReps.reduce((sum, r) => sum + r.atRiskARR, 0);
             insights.push({
                 type: 'warning',
-                text: `${highRiskReps.length} team member(s) have >20% at-risk ARR: ${highRiskReps.map(r => r.name).join(', ')}.`
+                metric: 'risk',
+                text: `${highRiskReps.length} team member(s) have >20% at-risk ARR`,
+                detail: `Total at-risk: ${this.formatCurrency(totalRiskARR)} across ${highRiskReps.map(r => r.name).join(', ')}`
             });
         }
 
         // Success indicators
-        const balancedReps = this.reps.filter(r => r.capacityScore >= 60 && r.capacityScore <= 85);
-        if (balancedReps.length === this.reps.length) {
+        const healthyReps = this.reps.filter(r => r.capacityScore >= 60 && r.capacityScore <= 85);
+        if (healthyReps.length === this.reps.length) {
             insights.push({
                 type: 'success',
-                text: 'All team members are within healthy capacity range.'
+                metric: 'capacity',
+                text: 'All team members are within healthy capacity range (60-85%)',
+                detail: `Team avg: ${summary.avgCapacity}% capacity`
+            });
+        }
+
+        // Overall equity health
+        const avgEquityScore = (equity.arr.score + equity.whitespace.score + equity.capacity.score) / 3;
+        if (avgEquityScore >= 80) {
+            insights.push({
+                type: 'success',
+                metric: 'equity',
+                text: 'Overall team equity is healthy',
+                detail: `ARR: ${Math.round(equity.arr.score)}% | Whitespace: ${Math.round(equity.whitespace.score)}% | Capacity: ${Math.round(equity.capacity.score)}%`
             });
         }
 
@@ -403,85 +683,422 @@ class TerritoryEngine {
     }
 
     /**
-     * Calculate projections for hiring needs
+     * Calculate book of business health for each rep
      */
-    calculateProjections(scenario = 'expected', capacityThreshold = 85) {
+    calculateBookHealth(rep) {
+        if (!rep || rep.accountCount === 0) {
+            return { score: 0, issues: ['No accounts assigned'] };
+        }
+
+        const issues = [];
+        const warnings = [];
+        let score = 100;
+
+        // Segment mix analysis
+        const segmentCounts = { SMB: 0, 'Mid-Market': 0, Enterprise: 0 };
+        const segmentARR = { SMB: 0, 'Mid-Market': 0, Enterprise: 0 };
+        rep.accounts.forEach(a => {
+            segmentCounts[a.segment] = (segmentCounts[a.segment] || 0) + 1;
+            segmentARR[a.segment] = (segmentARR[a.segment] || 0) + a.current_arr;
+        });
+
+        // Check for segment concentration (>70% ARR in one segment)
+        const maxSegmentARR = Math.max(...Object.values(segmentARR));
+        const maxSegmentPct = rep.totalARR > 0 ? (maxSegmentARR / rep.totalARR) * 100 : 0;
+        if (maxSegmentPct > 70) {
+            warnings.push(`${Math.round(maxSegmentPct)}% ARR concentrated in one segment`);
+            score -= 10;
+        }
+
+        // Lifecycle mix analysis
+        const lifecycleCounts = { Onboarding: 0, Adopting: 0, Renewing: 0, Mature: 0 };
+        rep.accounts.forEach(a => {
+            lifecycleCounts[a.lifecycle_stage] = (lifecycleCounts[a.lifecycle_stage] || 0) + 1;
+        });
+
+        // Check for lifecycle bottleneck (>40% in one stage)
+        const maxLifecyclePct = rep.accountCount > 0
+            ? (Math.max(...Object.values(lifecycleCounts)) / rep.accountCount) * 100
+            : 0;
+        if (maxLifecyclePct > 40) {
+            warnings.push(`${Math.round(maxLifecyclePct)}% accounts in single lifecycle stage`);
+            score -= 5;
+        }
+
+        // Risk concentration
+        const riskPct = rep.totalARR > 0 ? (rep.atRiskARR / rep.totalARR) * 100 : 0;
+        if (riskPct > 25) {
+            issues.push(`High risk concentration: ${Math.round(riskPct)}% ARR at risk`);
+            score -= 20;
+        } else if (riskPct > 15) {
+            warnings.push(`${Math.round(riskPct)}% ARR at risk`);
+            score -= 10;
+        }
+
+        // Capacity assessment
+        if (rep.capacityScore > 100) {
+            issues.push(`Over capacity: ${rep.capacityScore}%`);
+            score -= 15;
+        } else if (rep.capacityScore > 90) {
+            warnings.push(`Near capacity limit: ${rep.capacityScore}%`);
+            score -= 5;
+        }
+
+        // Expansion potential
+        const penetrationRate = rep.accounts.reduce((sum, a) => sum + a.internal_tam, 0);
+        const currentPenetration = penetrationRate > 0 ? (rep.totalARR / penetrationRate) * 100 : 0;
+        const expansionReady = rep.accounts.filter(a =>
+            a.health_score >= 80 && a.actionable_whitespace > 50000
+        ).length;
+
+        if (expansionReady === 0 && rep.accountCount > 5) {
+            warnings.push('No expansion-ready accounts (healthy + whitespace)');
+            score -= 5;
+        }
+
+        // Health score distribution
+        const lowHealthAccounts = rep.accounts.filter(a => a.health_score < 60).length;
+        const lowHealthPct = rep.accountCount > 0 ? (lowHealthAccounts / rep.accountCount) * 100 : 0;
+        if (lowHealthPct > 30) {
+            issues.push(`${Math.round(lowHealthPct)}% accounts need health intervention`);
+            score -= 15;
+        }
+
+        return {
+            score: Math.max(0, score),
+            segmentMix: segmentCounts,
+            segmentARR,
+            lifecycleMix: lifecycleCounts,
+            riskPct: Math.round(riskPct),
+            penetrationRate: Math.round(currentPenetration),
+            expansionReady,
+            lowHealthAccounts,
+            issues,
+            warnings
+        };
+    }
+
+    /**
+     * Get team-wide book health summary
+     */
+    getTeamBookHealth() {
+        const repHealthScores = this.reps.map(rep => ({
+            rep: rep.name,
+            ...this.calculateBookHealth(rep)
+        }));
+
+        const avgScore = repHealthScores.reduce((sum, r) => sum + r.score, 0) / this.reps.length;
+        const criticalReps = repHealthScores.filter(r => r.score < 60);
+        const healthyReps = repHealthScores.filter(r => r.score >= 80);
+
+        return {
+            avgScore: Math.round(avgScore),
+            repScores: repHealthScores,
+            criticalReps,
+            healthyReps,
+            overallStatus: avgScore >= 80 ? 'healthy' : avgScore >= 60 ? 'warning' : 'critical'
+        };
+    }
+
+    /**
+     * Update projection configuration
+     */
+    updateProjectionConfig(newConfig) {
+        this.projectionConfig = { ...this.projectionConfig, ...newConfig };
+    }
+
+    /**
+     * Calculate projections for hiring needs with configurable levers
+     */
+    calculateProjections(config = {}) {
+        const projConfig = { ...this.projectionConfig, ...config };
         const summary = this.getSummaryMetrics();
-        const growthRate = this.growthScenarios[scenario];
 
-        // Project 90 days out
-        const projectedARR = summary.totalARR * (1 + growthRate);
-        const expectedChurn = summary.totalAtRiskARR * 0.35; // Assume 35% of at-risk churns
-        const netProjectedARR = projectedARR - expectedChurn;
+        // Current state
+        const currentTotalHours = this.reps.reduce((sum, r) => sum + (r.hoursRequired || 0), 0);
+        const currentCapacity = (currentTotalHours / (this.reps.length * this.capacityConfig.productiveHours)) * 100;
+        const currentHeadroomHours = (this.reps.length * this.capacityConfig.productiveHours) - currentTotalHours;
 
-        // Calculate required headcount based on current ARR/rep ratio
-        const currentArrPerRep = summary.totalARR / summary.teamSize;
-        const targetArrPerRep = currentArrPerRep * (capacityThreshold / summary.avgCapacity);
-        const requiredHeadcount = netProjectedARR / targetArrPerRep;
+        // Generate 12-month projections
+        const monthlyProjections = this.generateMonthlyProjection(projConfig);
 
-        // Calculate projected capacity
-        const projectedCapacity = (netProjectedARR / (summary.teamSize * targetArrPerRep)) * 100;
+        // Find when capacity threshold is hit
+        const thresholdMonth = monthlyProjections.find(m => m.capacity > projConfig.targetCapacity);
 
-        // Hiring recommendation
-        const hiringNeed = Math.max(0, Math.ceil(requiredHeadcount - summary.teamSize));
+        // Calculate total hiring need
+        const finalMonth = monthlyProjections[monthlyProjections.length - 1];
+        const hiringNeed = Math.max(0, Math.ceil(finalMonth.requiredHeadcount - summary.teamSize));
 
-        // Calculate headroom
-        const headroom = (summary.teamSize * targetArrPerRep) - summary.totalARR;
+        // Calculate capacity runway (months until threshold)
+        const capacityRunway = thresholdMonth
+            ? monthlyProjections.indexOf(thresholdMonth)
+            : projConfig.projectionMonths;
 
         return {
             current: {
                 teamSize: summary.teamSize,
                 totalARR: summary.totalARR,
-                avgCapacity: summary.avgCapacity,
-                headroom: Math.max(0, headroom)
+                avgCapacity: Math.round(currentCapacity),
+                headroomHours: Math.round(currentHeadroomHours),
+                headroomARR: this.estimateARRFromHours(currentHeadroomHours)
             },
             projected: {
-                totalARR: netProjectedARR,
-                projectedCapacity: Math.round(projectedCapacity),
-                requiredHeadcount: requiredHeadcount.toFixed(1),
+                totalARR: finalMonth.arr,
+                projectedCapacity: Math.round(finalMonth.capacity),
+                requiredHeadcount: finalMonth.requiredHeadcount.toFixed(1),
                 hiringNeed,
-                expectedChurn
+                expectedChurn: monthlyProjections.reduce((sum, m) => sum + m.churn, 0),
+                expectedExpansion: monthlyProjections.reduce((sum, m) => sum + m.expansion, 0),
+                expectedNewLogos: monthlyProjections.reduce((sum, m) => sum + m.newLogos, 0)
             },
-            timeline: this.generateHiringTimeline(scenario, hiringNeed, capacityThreshold)
+            capacityRunway,
+            thresholdMonth: thresholdMonth ? thresholdMonth.month : null,
+            monthlyProjections,
+            config: projConfig,
+            timeline: this.generateHiringTimeline(projConfig, hiringNeed, capacityRunway)
         };
     }
 
     /**
-     * Generate hiring timeline
+     * Estimate ARR capacity from available hours
      */
-    generateHiringTimeline(scenario, hiringNeed, capacityThreshold) {
+    estimateARRFromHours(hours) {
+        if (this.reps.length === 0 || hours <= 0) return 0;
+        const avgARRPerHour = this.reps.reduce((sum, r) =>
+            sum + (r.hoursRequired > 0 ? r.totalARR / r.hoursRequired : 0), 0) / this.reps.length;
+        return Math.round(hours * avgARRPerHour);
+    }
+
+    /**
+     * Generate month-by-month projection data
+     */
+    generateMonthlyProjection(config) {
+        const summary = this.getSummaryMetrics();
+        const projections = [];
+
+        let currentARR = summary.totalARR;
+        let currentTeamSize = summary.teamSize;
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const startMonth = new Date().getMonth();
+
+        // Calculate monthly rates
+        const monthlyNewLogoRate = config.newLogoGrowth / 12;
+        const monthlyExpansionRate = config.expansionRate / 12;
+        const monthlyChurnRate = config.churnRate / 12;
+
+        // Track new hires and their ramp
+        let newHires = [];
+
+        for (let i = 0; i < config.projectionMonths; i++) {
+            const monthIdx = (startMonth + i) % 12;
+            const monthName = monthNames[monthIdx];
+
+            // Calculate ARR changes
+            const newLogos = currentARR * monthlyNewLogoRate;
+            const expansion = currentARR * monthlyExpansionRate;
+            const churn = currentARR * monthlyChurnRate;
+            const netChange = newLogos + expansion - churn;
+
+            currentARR += netChange;
+
+            // Estimate hours required for new ARR
+            const avgARRPerHour = summary.totalARR / (summary.teamSize * this.capacityConfig.productiveHours) || 1000;
+            const totalHoursRequired = currentARR / avgARRPerHour;
+
+            // Calculate effective team capacity (accounting for ramping hires)
+            let effectiveCapacity = currentTeamSize * this.capacityConfig.productiveHours;
+
+            // Add ramped capacity from previous hires
+            newHires.forEach((hire, idx) => {
+                const monthsSinceHire = i - hire.month;
+                if (monthsSinceHire >= 0 && monthsSinceHire < config.rampCurve.length) {
+                    effectiveCapacity += this.capacityConfig.productiveHours * config.rampCurve[monthsSinceHire];
+                } else if (monthsSinceHire >= config.rampCurve.length) {
+                    effectiveCapacity += this.capacityConfig.productiveHours;
+                }
+            });
+
+            const capacity = (totalHoursRequired / effectiveCapacity) * 100;
+            const requiredHeadcount = totalHoursRequired / this.capacityConfig.productiveHours;
+
+            // Determine if hiring is triggered
+            let hireTriggered = false;
+            if (capacity > config.targetCapacity && i > 0) {
+                // Hire to bring capacity back to target
+                const newHireNeeded = Math.ceil((capacity - config.targetCapacity) / 100 * currentTeamSize);
+                if (newHireNeeded > newHires.filter(h => h.month === i).length) {
+                    newHires.push({ month: i, rampStart: i + Math.ceil(config.hiringLeadTime / 30) });
+                    hireTriggered = true;
+                }
+            }
+
+            // Calculate headroom
+            const headroomHours = Math.max(0, effectiveCapacity - totalHoursRequired);
+            const headroomARR = headroomHours * avgARRPerHour;
+
+            projections.push({
+                month: monthName,
+                monthIndex: i,
+                arr: Math.round(currentARR),
+                newLogos: Math.round(newLogos),
+                expansion: Math.round(expansion),
+                churn: Math.round(churn),
+                capacity: Math.round(capacity),
+                requiredHeadcount,
+                effectiveTeamSize: currentTeamSize + newHires.filter(h => h.rampStart <= i).length,
+                headroomHours: Math.round(headroomHours),
+                headroomARR: Math.round(headroomARR),
+                hireTriggered,
+                isOverCapacity: capacity > config.targetCapacity,
+                isCritical: capacity > config.maxCapacity
+            });
+        }
+
+        return projections;
+    }
+
+    /**
+     * Generate hiring timeline with new config system
+     */
+    generateHiringTimeline(config, hiringNeed, capacityRunway) {
         const timeline = [];
         const summary = this.getSummaryMetrics();
-        const growthRate = this.growthScenarios[scenario];
 
         if (hiringNeed <= 0) {
             timeline.push({
-                date: 'Current',
+                date: 'Now',
+                type: 'status',
                 action: 'No immediate hiring needed',
-                reason: `Team capacity at ${summary.avgCapacity}%, below ${capacityThreshold}% threshold`
+                reason: `Team capacity at ${summary.avgCapacity}%, with ${capacityRunway}+ months runway`,
+                urgency: 'low'
             });
             return timeline;
         }
 
-        // Calculate when threshold will be hit
-        const daysToThreshold = Math.round((capacityThreshold - summary.avgCapacity) / (growthRate / 90 * summary.avgCapacity));
-
-        timeline.push({
-            date: `Day ${Math.max(0, daysToThreshold - 45)}`,
-            action: 'Start recruiting',
-            reason: 'Allow 45 days for hiring process'
-        });
-
-        for (let i = 0; i < hiringNeed; i++) {
-            const startDay = daysToThreshold + (i * 30);
+        // Add recruiting start milestone
+        const recruitStartMonth = Math.max(0, capacityRunway - Math.ceil(config.hiringLeadTime / 30));
+        if (recruitStartMonth <= 1) {
             timeline.push({
-                date: `Day ${startDay}`,
+                date: 'Now',
+                type: 'urgent',
+                action: 'Start recruiting immediately',
+                reason: `Capacity threshold will be reached in ${capacityRunway} month(s)`,
+                urgency: 'high'
+            });
+        } else {
+            timeline.push({
+                date: `Month ${recruitStartMonth}`,
+                type: 'action',
+                action: 'Begin recruiting process',
+                reason: `Allow ${config.hiringLeadTime} days for hiring process`,
+                urgency: 'medium'
+            });
+        }
+
+        // Add hiring milestones
+        for (let i = 0; i < Math.min(hiringNeed, 5); i++) {
+            const hireMonth = capacityRunway + i;
+            timeline.push({
+                date: `Month ${hireMonth}`,
+                type: 'hire',
                 action: `Hire CSM #${summary.teamSize + i + 1}`,
-                reason: i === 0 ? 'Capacity threshold reached' : 'Continued growth'
+                reason: i === 0 ? 'Capacity threshold reached' : 'Continued growth absorption',
+                urgency: i === 0 ? 'high' : 'medium'
+            });
+
+            // Add ramp milestone
+            const rampCompleteMonth = hireMonth + Math.ceil(config.rampTime / 30);
+            timeline.push({
+                date: `Month ${rampCompleteMonth}`,
+                type: 'milestone',
+                action: `CSM #${summary.teamSize + i + 1} fully ramped`,
+                reason: `${config.rampTime}-day ramp period complete`,
+                urgency: 'low'
+            });
+        }
+
+        if (hiringNeed > 5) {
+            timeline.push({
+                date: `Month ${capacityRunway + 5}+`,
+                type: 'info',
+                action: `${hiringNeed - 5} additional hires needed`,
+                reason: 'Based on projected growth trajectory',
+                urgency: 'low'
             });
         }
 
         return timeline;
+    }
+
+    /**
+     * Generate smart recommendations based on current state
+     */
+    generateSmartRecommendations() {
+        const recommendations = [];
+        const summary = this.getSummaryMetrics();
+        const projections = this.calculateProjections();
+        const equity = this.calculateEquityScores();
+        const rebalancing = this.generateRebalancingRecommendations();
+
+        // Add rebalancing recommendations
+        recommendations.push(...rebalancing);
+
+        // Hiring recommendations based on projections
+        if (projections.capacityRunway <= 2) {
+            recommendations.push({
+                priority: 'high',
+                type: 'hire',
+                action: `Start recruiting now - capacity threshold in ${projections.capacityRunway} month(s)`,
+                impact: `Prevents capacity crisis and burnout`,
+                reason: `Current capacity ${summary.avgCapacity}%, runway only ${projections.capacityRunway} months`
+            });
+        } else if (projections.capacityRunway <= 4) {
+            recommendations.push({
+                priority: 'medium',
+                type: 'hire',
+                action: `Plan hiring for Month ${projections.capacityRunway - 2}`,
+                impact: `${projections.projected.hiringNeed} hire(s) needed over 12 months`,
+                reason: `Growth projection shows ${projections.capacityRunway} months until capacity threshold`
+            });
+        }
+
+        // Expansion opportunity recommendations
+        const expansionReady = this.accounts.filter(a =>
+            a.health_score >= 80 && a.actionable_whitespace > 50000
+        );
+        if (expansionReady.length > 0) {
+            const totalExpansion = expansionReady.reduce((sum, a) => sum + a.actionable_whitespace, 0);
+            recommendations.push({
+                priority: 'medium',
+                type: 'expansion',
+                action: `${expansionReady.length} accounts ready for expansion (${this.formatCurrency(totalExpansion)} potential)`,
+                impact: `Could accelerate NRR by ${Math.round((totalExpansion / summary.totalARR) * 100)}%`,
+                reason: 'Healthy accounts with significant whitespace',
+                accounts: expansionReady.slice(0, 5).map(a => a.account_name)
+            });
+        }
+
+        // At-risk focus recommendations
+        const criticalRisk = this.accounts.filter(a =>
+            a.churn_risk > 0.3 || (a.health_score < 50 && a.current_arr > 50000)
+        );
+        if (criticalRisk.length > 0) {
+            const riskARR = criticalRisk.reduce((sum, a) => sum + a.current_arr, 0);
+            recommendations.push({
+                priority: 'high',
+                type: 'risk',
+                action: `${criticalRisk.length} critical accounts need immediate attention (${this.formatCurrency(riskARR)} ARR)`,
+                impact: `Prevent potential ${this.formatCurrency(riskARR * 0.4)} in churn`,
+                reason: 'High churn risk or very low health score',
+                accounts: criticalRisk.slice(0, 5).map(a => a.account_name)
+            });
+        }
+
+        // Sort by priority
+        const priorityOrder = { high: 0, medium: 1, low: 2 };
+        recommendations.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+
+        return recommendations;
     }
 
     /**

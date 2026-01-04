@@ -210,10 +210,14 @@ class TerritoryApp {
         document.getElementById('import-section').style.display = 'none';
         document.getElementById('analysis-section').style.display = 'block';
 
+        // Initialize projection controls listeners
+        this.initProjectionControls();
+
         // Update all sections
         this.updateSummaryMetrics();
         this.updateTeamTable();
         this.updateEquityAnalysis();
+        this.updateBookHealth();
         this.updateProjections();
         this.updateScenarioComparison();
         this.updateBenchmarks();
@@ -270,16 +274,16 @@ class TerritoryApp {
     }
 
     /**
-     * Update equity analysis section
+     * Update equity analysis section with enhanced dollar-value disparities
      */
     updateEquityAnalysis() {
         const equity = this.engine.calculateEquityScores();
 
-        // Update equity scores
-        document.getElementById('arr-equity-score').textContent = `${equity.arr}%`;
-        document.getElementById('ws-equity-score').textContent = `${equity.whitespace}%`;
-        document.getElementById('capacity-equity-score').textContent = `${equity.capacity}%`;
-        document.getElementById('risk-equity-score').textContent = `${equity.risk}%`;
+        // Update equity scores with new structure
+        document.getElementById('arr-equity-score').textContent = `${Math.round(equity.arr.score)}%`;
+        document.getElementById('ws-equity-score').textContent = `${Math.round(equity.whitespace.score)}%`;
+        document.getElementById('capacity-equity-score').textContent = `${Math.round(equity.capacity.score)}%`;
+        document.getElementById('risk-equity-score').textContent = `${Math.round(equity.risk.score)}%`;
 
         // Update equity charts
         this.renderEquityChart('arr-equity-chart', this.engine.reps.map(r => ({
@@ -302,20 +306,59 @@ class TerritoryApp {
             value: r.atRiskARR
         })));
 
-        // Update insights
+        // Update insights with new detailed format
         const insights = this.engine.getEquityInsights();
         const insightsContainer = document.getElementById('equity-insights');
 
         if (insightsContainer) {
             insightsContainer.innerHTML = insights.map(insight => `
-                <div class="insight-item">
+                <div class="insight-item ${insight.type}">
                     <div class="insight-icon ${insight.type}">
                         ${insight.type === 'warning' ? '⚠️' : insight.type === 'success' ? '✓' : 'ℹ️'}
                     </div>
-                    <div class="insight-text">${insight.text}</div>
+                    <div class="insight-content">
+                        <div class="insight-text">${insight.text}</div>
+                        ${insight.detail ? `<div class="insight-detail">${insight.detail}</div>` : ''}
+                    </div>
                 </div>
             `).join('');
         }
+
+        // Update recommendations panel
+        this.updateRecommendationsPanel();
+    }
+
+    /**
+     * Update smart recommendations panel
+     */
+    updateRecommendationsPanel() {
+        const recommendationsContainer = document.getElementById('smart-recommendations');
+        if (!recommendationsContainer) return;
+
+        const recommendations = this.engine.generateSmartRecommendations();
+
+        if (recommendations.length === 0) {
+            recommendationsContainer.innerHTML = `
+                <div class="no-recommendations">
+                    <span class="success-icon">✓</span>
+                    <p>No immediate actions required. Your team is well-balanced!</p>
+                </div>
+            `;
+            return;
+        }
+
+        recommendationsContainer.innerHTML = recommendations.slice(0, 5).map(rec => `
+            <div class="recommendation-card ${rec.priority}">
+                <div class="rec-header">
+                    <span class="rec-priority ${rec.priority}">${rec.priority.toUpperCase()}</span>
+                    <span class="rec-type">${rec.type.replace('_', ' ')}</span>
+                </div>
+                <div class="rec-action">${rec.action}</div>
+                <div class="rec-impact">${rec.impact}</div>
+                ${rec.reason ? `<div class="rec-reason">${rec.reason}</div>` : ''}
+                ${rec.accounts ? `<div class="rec-accounts">Accounts: ${rec.accounts.slice(0, 3).join(', ')}${rec.accounts.length > 3 ? '...' : ''}</div>` : ''}
+            </div>
+        `).join('');
     }
 
     /**
@@ -339,46 +382,212 @@ class TerritoryApp {
     }
 
     /**
-     * Update projections section
+     * Update projections section with configurable levers
      */
     updateProjections() {
-        const projections = this.engine.calculateProjections(this.currentScenario, this.capacityThreshold);
+        // Get projection config from UI controls
+        const config = this.getProjectionConfig();
+        const projections = this.engine.calculateProjections(config);
 
         // Current state
         document.getElementById('current-team-size').textContent = projections.current.teamSize;
         document.getElementById('current-total-arr').textContent = this.engine.formatCurrency(projections.current.totalARR);
         document.getElementById('current-avg-capacity').textContent = `${projections.current.avgCapacity}%`;
-        document.getElementById('current-headroom').textContent = this.engine.formatCurrency(projections.current.headroom);
+        document.getElementById('current-headroom').textContent = this.engine.formatCurrency(projections.current.headroomARR || 0);
 
-        // Projected state
+        // Projected state (12-month outlook)
         document.getElementById('projected-arr').textContent = this.engine.formatCurrency(projections.projected.totalARR);
 
         const projCapacityEl = document.getElementById('projected-capacity');
         projCapacityEl.textContent = `${projections.projected.projectedCapacity}%`;
-        projCapacityEl.className = projections.projected.projectedCapacity > this.capacityThreshold ? 'proj-value warning' : 'proj-value';
+        projCapacityEl.className = projections.projected.projectedCapacity > config.targetCapacity ? 'proj-value warning' : 'proj-value';
 
         document.getElementById('required-headcount').textContent = projections.projected.requiredHeadcount;
         document.getElementById('hire-recommendation').textContent = projections.projected.hiringNeed > 0 ?
             `+${projections.projected.hiringNeed}` : 'None';
 
-        // Update timeline
+        // Update capacity runway indicator
+        const runwayEl = document.getElementById('capacity-runway');
+        if (runwayEl) {
+            const runwayText = projections.capacityRunway >= 12
+                ? '12+ months'
+                : `${projections.capacityRunway} month${projections.capacityRunway !== 1 ? 's' : ''}`;
+            runwayEl.textContent = runwayText;
+            runwayEl.className = projections.capacityRunway <= 2 ? 'runway-critical' :
+                                 projections.capacityRunway <= 4 ? 'runway-warning' : 'runway-healthy';
+        }
+
+        // Update monthly projection timeline
+        this.renderMonthlyTimeline(projections.monthlyProjections, config);
+
+        // Update hiring timeline
         this.renderHiringTimeline(projections.timeline);
     }
 
     /**
-     * Render hiring timeline
+     * Get projection configuration from UI controls
+     */
+    getProjectionConfig() {
+        return {
+            newLogoGrowth: parseFloat(document.getElementById('new-logo-growth')?.value || 15) / 100,
+            expansionRate: parseFloat(document.getElementById('expansion-rate')?.value || 10) / 100,
+            churnRate: parseFloat(document.getElementById('churn-rate')?.value || 5) / 100,
+            hiringLeadTime: parseInt(document.getElementById('hiring-lead-time')?.value || 45),
+            rampTime: parseInt(document.getElementById('ramp-time')?.value || 90),
+            targetCapacity: parseInt(document.getElementById('capacity-threshold')?.value || 80),
+            projectionMonths: 12
+        };
+    }
+
+    /**
+     * Render monthly projection timeline chart
+     */
+    renderMonthlyTimeline(projections, config) {
+        const container = document.getElementById('monthly-timeline');
+        if (!container) return;
+
+        const maxCapacity = Math.max(...projections.map(p => p.capacity), 100);
+
+        container.innerHTML = `
+            <div class="timeline-chart">
+                <div class="timeline-header">
+                    <span>Capacity Projection (12 Months)</span>
+                    <span class="timeline-legend">
+                        <span class="legend-item healthy">Healthy</span>
+                        <span class="legend-item warning">Warning</span>
+                        <span class="legend-item critical">Critical</span>
+                    </span>
+                </div>
+                <div class="timeline-bars">
+                    ${projections.map(p => {
+                        const height = Math.min(100, (p.capacity / maxCapacity) * 100);
+                        const barClass = p.isCritical ? 'critical' :
+                                        p.isOverCapacity ? 'warning' : 'healthy';
+                        return `
+                            <div class="timeline-bar-container">
+                                <div class="timeline-bar ${barClass}" style="height: ${height}%"
+                                     title="${p.month}: ${p.capacity}% capacity, ${this.engine.formatCurrency(p.arr)} ARR">
+                                    ${p.hireTriggered ? '<span class="hire-marker">+1</span>' : ''}
+                                </div>
+                                <span class="timeline-label">${p.month.substring(0, 3)}</span>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+                <div class="timeline-threshold" style="bottom: ${(config.targetCapacity / maxCapacity) * 100}%">
+                    <span>${config.targetCapacity}% target</span>
+                </div>
+            </div>
+            <div class="timeline-summary">
+                <div class="summary-item">
+                    <span class="summary-label">Expected Expansion</span>
+                    <span class="summary-value positive">+${this.engine.formatCurrency(projections.reduce((s, p) => s + p.expansion, 0))}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Expected Churn</span>
+                    <span class="summary-value negative">-${this.engine.formatCurrency(projections.reduce((s, p) => s + p.churn, 0))}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Net Growth</span>
+                    <span class="summary-value">${this.engine.formatCurrency(projections[projections.length - 1].arr - projections[0].arr)}</span>
+                </div>
+            </div>
+        `;
+    }
+
+    /**
+     * Render hiring timeline with enhanced styling
      */
     renderHiringTimeline(timeline) {
         const container = document.querySelector('.timeline-content');
         if (!container) return;
 
         container.innerHTML = timeline.map(item => `
-            <div class="timeline-item">
+            <div class="timeline-item ${item.urgency || ''} ${item.type || ''}">
                 <div class="timeline-date">${item.date}</div>
                 <div class="timeline-action">${item.action}</div>
                 <div class="timeline-reason">${item.reason}</div>
             </div>
         `).join('');
+    }
+
+    /**
+     * Update book health scorecard
+     */
+    updateBookHealth() {
+        const container = document.getElementById('book-health-scorecard');
+        if (!container) return;
+
+        const teamHealth = this.engine.getTeamBookHealth();
+
+        container.innerHTML = `
+            <div class="book-health-header">
+                <div class="health-score-circle ${teamHealth.overallStatus}">
+                    <span class="score-number">${teamHealth.avgScore}</span>
+                    <span class="score-label">Team Score</span>
+                </div>
+                <div class="health-summary">
+                    <p>${teamHealth.healthyReps.length} of ${this.engine.reps.length} reps have healthy books</p>
+                    ${teamHealth.criticalReps.length > 0 ?
+                        `<p class="critical">${teamHealth.criticalReps.length} rep(s) need attention</p>` : ''}
+                </div>
+            </div>
+            <div class="rep-health-grid">
+                ${teamHealth.repScores.map(rep => `
+                    <div class="rep-health-card ${rep.score >= 80 ? 'healthy' : rep.score >= 60 ? 'warning' : 'critical'}">
+                        <div class="rep-health-header">
+                            <span class="rep-name">${rep.rep}</span>
+                            <span class="rep-score">${rep.score}</span>
+                        </div>
+                        ${rep.issues.length > 0 ? `
+                            <div class="rep-issues">
+                                ${rep.issues.map(issue => `<span class="issue-tag">${issue}</span>`).join('')}
+                            </div>
+                        ` : ''}
+                        ${rep.warnings.length > 0 ? `
+                            <div class="rep-warnings">
+                                ${rep.warnings.map(warning => `<span class="warning-tag">${warning}</span>`).join('')}
+                            </div>
+                        ` : ''}
+                        <div class="rep-health-metrics">
+                            <span>Risk: ${rep.riskPct}%</span>
+                            <span>Penetration: ${rep.penetrationRate}%</span>
+                            <span>Expansion Ready: ${rep.expansionReady}</span>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    /**
+     * Initialize projection control listeners
+     */
+    initProjectionControls() {
+        const controls = [
+            'new-logo-growth',
+            'expansion-rate',
+            'churn-rate',
+            'hiring-lead-time',
+            'ramp-time',
+            'capacity-threshold'
+        ];
+
+        controls.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('input', () => this.updateProjections());
+                // Update display value for range inputs
+                const displayEl = document.getElementById(`${id}-value`);
+                if (displayEl) {
+                    el.addEventListener('input', () => {
+                        displayEl.textContent = el.type === 'range'
+                            ? (id.includes('rate') || id.includes('growth') ? `${el.value}%` : el.value)
+                            : el.value;
+                    });
+                }
+            }
+        });
     }
 
     /**
