@@ -421,7 +421,8 @@ export function ROIPrototype({ onClose, initialBrandConfig, discoveryData, onEdi
     setToolReplacements(toolReplacements.filter(tool => tool.id !== id));
   };
 
-  const textColor = getContrastColor(brandConfig.primaryColor);
+  // Force white text on gradient headers for better visibility
+  const textColor = '#ffffff';
 
   return (
     <div

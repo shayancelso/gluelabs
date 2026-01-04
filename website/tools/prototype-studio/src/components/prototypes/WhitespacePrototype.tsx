@@ -537,12 +537,12 @@ export function WhitespacePrototype({ brandConfig, onClose }: WhitespacePrototyp
         `}</style>
 
         {/* Header with branding */}
-        <div 
+        <div
           data-onboarding="whitespace-header"
           className="rounded-xl md:rounded-2xl p-4 md:p-6 print:rounded-none print:p-4"
-          style={{ 
+          style={{
             background: `linear-gradient(135deg, ${brandConfig.primaryColor}, ${brandConfig.secondaryColor})`,
-            color: getContrastColor(brandConfig.primaryColor)
+            color: '#ffffff'
           }}
         >
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-0">
@@ -569,24 +569,22 @@ export function WhitespacePrototype({ brandConfig, onClose }: WhitespacePrototyp
               </div>
             </div>
             <div className="flex items-center gap-2 no-print self-end md:self-auto">
-              <Button 
-                variant="secondary" 
-                size="sm" 
+              <Button
+                variant="secondary"
+                size="sm"
                 onClick={handleExportPdf}
                 disabled={isExporting}
-                className="bg-white/20 hover:bg-white/30 border-0 text-xs md:text-sm h-8 md:h-9"
-                style={{ color: getContrastColor(brandConfig.primaryColor) }}
+                className="bg-white/20 hover:bg-white/30 border-0 text-xs md:text-sm h-8 md:h-9 text-white"
               >
                 <Download className="h-4 w-4 mr-1.5 md:mr-2" />
                 <span className="hidden md:inline">{isExporting ? 'Exporting...' : 'Export PDF'}</span>
                 <span className="md:hidden">{isExporting ? '...' : 'PDF'}</span>
               </Button>
-              <Button 
-                variant="secondary" 
-                size="sm" 
-                onClick={onClose} 
-                className="bg-white/20 hover:bg-white/30 border-0 h-8 md:h-9"
-                style={{ color: getContrastColor(brandConfig.primaryColor) }}
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={onClose}
+                className="bg-white/20 hover:bg-white/30 border-0 h-8 md:h-9 text-white"
               >
                 <X className="h-4 w-4" />
                 <span className="hidden md:inline ml-2">Close</span>
