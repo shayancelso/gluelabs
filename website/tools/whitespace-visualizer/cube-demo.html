@@ -157,7 +157,6 @@
             height: 100%;
             position: relative;
             transform-style: preserve-3d;
-            transform: translateZ(calc(var(--cube-size) / -2));
         }
 
         /* Cube faces */
@@ -791,22 +790,11 @@
         }
 
         @keyframes shadowPulse {
-            0% { transform: translateX(-50%) scale(1); opacity: 0.6; }
-            25% { transform: translateX(-45%) scale(1.05); opacity: 0.5; }
-            50% { transform: translateX(-50%) scale(1); opacity: 0.6; }
-            75% { transform: translateX(-55%) scale(1.05); opacity: 0.5; }
-            100% { transform: translateX(-50%) scale(1); opacity: 0.6; }
+            0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.6; }
+            50% { transform: translateX(-50%) scale(1.05); opacity: 0.5; }
         }
 
-        /* Subtle floating animation for the entire scene */
-        .scene {
-            animation: sceneFloat 8s ease-in-out infinite;
-        }
-
-        @keyframes sceneFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
+        /* Scene stays stationary - cube spins in place */
 
         /* Bottom info bar */
         .info-bar {
