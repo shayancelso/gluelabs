@@ -128,6 +128,8 @@ All following tools are conceptualized with defined purposes:
 
 ## AI Assistant Guidelines
 
+**After completing a task that involves tool use, provide a quick summary of the work you've done.**
+
 ### Conversation Context
 When discussing optimizations or new features, always consider:
 1. **Business Impact**: How does this affect customer value or business metrics?

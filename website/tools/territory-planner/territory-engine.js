@@ -42,6 +42,16 @@ class TerritoryEngine {
                 healthyCapacity: 75,
                 atRiskThreshold: 10,
                 avgHealthScore: 80
+            },
+            'Partners': {
+                accountsPerRep: { min: 10, max: 25, ideal: 15 },
+                arrPerRep: { min: 1500000, max: 3500000, ideal: 2500000 },
+                avgDealSize: { min: 75000, max: 300000, ideal: 150000 },
+                touchCadence: 'bi-weekly',
+                hoursPerAccount: 6,
+                healthyCapacity: 80,
+                atRiskThreshold: 10,
+                avgHealthScore: 78
             }
         };
 
