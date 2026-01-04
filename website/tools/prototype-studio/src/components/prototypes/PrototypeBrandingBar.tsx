@@ -673,11 +673,19 @@ export function PrototypeBrandingBar({ brandConfig, onBrandChange, onReset, comp
 
     return (
       <Card className="p-6 md:p-8 bg-white/95 backdrop-blur-sm border-border/40 shadow-2xl rounded-3xl h-full">
-        {/* Header with icon */}
+        {/* Header with icon or brand logo */}
         <div className="flex items-center gap-3 mb-6">
-          <div className="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center">
-            <User className="h-5 w-5 text-purple-600" />
-          </div>
+          {brandConfig.logoUrl ? (
+            <img
+              src={brandConfig.logoUrl}
+              alt={brandConfig.companyName}
+              className="h-10 w-10 rounded-xl object-contain bg-gray-50 p-1 border border-gray-100"
+            />
+          ) : (
+            <div className="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center">
+              <User className="h-5 w-5 text-purple-600" />
+            </div>
+          )}
           <span className="font-bold text-base md:text-lg text-gray-800 uppercase tracking-wide">Branding as Inputs</span>
         </div>
 

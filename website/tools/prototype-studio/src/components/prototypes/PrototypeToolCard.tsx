@@ -37,9 +37,18 @@ export function PrototypeToolCard({
 
       {/* Card Content */}
       <div className="p-4">
-        <h3 className="font-bold text-gray-900 mb-1.5 text-base">
-          {name}
-        </h3>
+        <div className="flex items-center gap-2 mb-1.5">
+          {brandConfig.logoUrl && (
+            <img
+              src={brandConfig.logoUrl}
+              alt={brandConfig.companyName}
+              className="h-5 w-5 rounded object-contain flex-shrink-0"
+            />
+          )}
+          <h3 className="font-bold text-gray-900 text-base">
+            {name}
+          </h3>
+        </div>
 
         <p className="text-sm text-gray-500 leading-relaxed line-clamp-2 mb-4">
           {description}
