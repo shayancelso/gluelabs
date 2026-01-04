@@ -464,10 +464,9 @@
 }
 
 .tool-hero {
-    padding: var(--space-3xl) 0;
+    padding: var(--space-xl) 0 var(--space-lg);
     position: relative;
     overflow: hidden;
-    min-height: 70vh;
     display: flex;
     align-items: center;
 }
@@ -491,37 +490,37 @@
 .tool-hero-header {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: var(--space-2xl);
+    gap: var(--space-lg);
     align-items: center;
-    margin-bottom: var(--space-2xl);
+    margin-bottom: 0;
 }
 
 .tool-icon-hero {
-    width: 120px;
-    height: 120px;
-    border-radius: var(--radius-xl);
+    width: 80px;
+    height: 80px;
+    border-radius: var(--radius-lg);
     background: var(--gradient-primary);
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    box-shadow: 0 20px 40px rgba(99, 102, 241, 0.3);
+    box-shadow: 0 12px 24px rgba(99, 102, 241, 0.25);
 }
 
 .tool-hero-text h1 {
-    font-size: clamp(2.5rem, 4vw, 3.5rem);
-    font-weight: 800;
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
+    font-weight: 700;
     font-family: var(--font-display);
     color: var(--color-text);
-    line-height: 1.1;
-    margin-bottom: var(--space-md);
+    line-height: 1.2;
+    margin-bottom: var(--space-xs);
 }
 
 .tool-hero-subtitle {
-    font-size: 1.25rem;
+    font-size: 1rem;
     color: var(--color-text-secondary);
-    line-height: 1.6;
-    margin-bottom: var(--space-xl);
+    line-height: 1.5;
+    margin-bottom: 0;
 }
 
 .tool-hero-stats {
