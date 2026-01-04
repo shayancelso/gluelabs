@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Grid3X3, Calculator, Target, ClipboardList, Sparkles } from 'lucide-react';
+import { Grid3X3, Calculator, Target, ClipboardList } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PrototypeBrandingBar, type BrandConfig } from '@/components/prototypes/PrototypeBrandingBar';
 import { PrototypeToolCard } from '@/components/prototypes/PrototypeToolCard';
@@ -187,10 +187,6 @@ function App() {
         <div className="pt-6 md:pt-10 px-4 md:px-8 pb-8 md:pb-12 max-w-7xl mx-auto">
           {/* Header */}
           <div className="text-center mb-6 md:mb-10">
-            <div className="inline-flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1 md:py-1.5 rounded-full bg-primary/10 text-primary text-xs md:text-sm font-medium mb-3 md:mb-4">
-              <Sparkles className="h-3.5 w-3.5 md:h-4 md:w-4" />
-              Interactive Tool Demos
-            </div>
             <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-2 md:mb-3 gradient-text animate-title-in font-display">
               Try Our Tools
             </h1>
