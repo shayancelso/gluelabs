@@ -15,31 +15,44 @@ export function getCompanyNameFromDomain(url: string): string {
   return name.charAt(0).toUpperCase() + name.slice(1);
 }
 
+// Helper to test if a logo URL loads
+function testLogoUrl(url: string): Promise<string | null> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve(url);
+    img.onerror = () => resolve(null);
+    img.src = url;
+  });
+}
+
 // Fetch logo using logo.dev API
-// Supports both domain lookups (e.g., "shopify.com") and brand name searches (e.g., "Shopify")
+// Supports both domain lookups (e.g., "shopify.com") and brand name searches (e.g., "Shopify", "Air Canada")
 export async function fetchLogoForDomain(input: string): Promise<string | null> {
   try {
     const trimmed = input.trim();
-    let logoUrl: string;
 
     // Check if input looks like a domain (contains a dot)
     if (trimmed.includes('.')) {
-      // Domain lookup
       const domain = extractDomain(trimmed);
-      logoUrl = `https://img.logo.dev/${domain}?token=pk_EkJniMrxRz69M3yIqyxVuA`;
-    } else {
-      // Brand name lookup - URL encode the name
-      const encodedName = encodeURIComponent(trimmed);
-      logoUrl = `https://img.logo.dev/name/${encodedName}?token=pk_EkJniMrxRz69M3yIqyxVuA`;
+      const logoUrl = `https://img.logo.dev/${domain}?token=pk_EkJniMrxRz69M3yIqyxVuA`;
+      return testLogoUrl(logoUrl);
     }
 
-    // Test if the logo loads using an Image element (more reliable than fetch HEAD)
-    return new Promise((resolve) => {
-      const img = new Image();
-      img.onload = () => resolve(logoUrl);
-      img.onerror = () => resolve(null);
-      img.src = logoUrl;
-    });
+    // Brand name lookup - try multiple variations for better matching
+    const variations = [
+      trimmed,                                    // "Air Canada"
+      trimmed.replace(/\s+/g, ''),                // "AirCanada"
+      trimmed.toLowerCase().replace(/\s+/g, ''),  // "aircanada"
+    ];
+
+    for (const name of variations) {
+      const encodedName = encodeURIComponent(name);
+      const logoUrl = `https://img.logo.dev/name/${encodedName}?token=pk_EkJniMrxRz69M3yIqyxVuA`;
+      const result = await testLogoUrl(logoUrl);
+      if (result) return result;
+    }
+
+    return null;
   } catch {
     return null;
   }
