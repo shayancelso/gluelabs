@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom'; // Not used in standalone prototype
 import { useDropzone } from 'react-dropzone';
 import { supabase } from '@/integrations/supabase/client';
 import { 
@@ -35,7 +35,7 @@ import {
   getOutcomeColor,
   getRenewalMilestones,
 } from '@/lib/renewalDiscoveryTransform';
-import { BrandConfig } from '@/components/templates/TemplateBrandingBar';
+import { BrandConfig } from './PrototypeBrandingBar';
 import { format, differenceInDays, addDays, isSameDay, startOfMonth, endOfMonth, eachDayOfInterval } from 'date-fns';
 
 interface RenewalTrackerProps {
@@ -142,7 +142,7 @@ export function RenewalTrackerPrototype({
   clientId,
   sessionId,
 }: RenewalTrackerProps) {
-  const navigate = useNavigate();
+  // const navigate = useNavigate(); // Not used in standalone prototype
   const { toast } = useToast();
   const config = { ...RENEWAL_DEFAULTS, ...discoveryData };
   

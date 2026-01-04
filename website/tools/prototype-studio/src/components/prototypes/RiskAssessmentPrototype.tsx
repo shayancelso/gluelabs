@@ -22,7 +22,7 @@ import {
   ShoppingCart,
   ClipboardList
 } from 'lucide-react';
-import { BrandConfig } from '@/components/templates/TemplateBrandingBar';
+import { BrandConfig } from './PrototypeBrandingBar';
 import { RiskAssessmentDiscoveryConfig, getCategoryWeightAdjustment } from '@/lib/riskAssessmentDiscoveryTransform';
 import { CustomerSelector, Customer } from './CustomerSelector';
 import { supabase } from '@/integrations/supabase/client';

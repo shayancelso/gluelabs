@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Grid3X3, Calculator, Target, ClipboardList } from 'lucide-react';
+import { Grid3X3, Calculator, Target, ClipboardList, CalendarClock, ShieldAlert } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PrototypeBrandingBar, type BrandConfig } from '@/components/prototypes/PrototypeBrandingBar';
 import { PrototypeToolCard } from '@/components/prototypes/PrototypeToolCard';
@@ -8,6 +8,8 @@ import { WhitespacePrototype } from '@/components/prototypes/WhitespacePrototype
 import { ROIPrototype } from '@/components/prototypes/ROIPrototype';
 import { SuccessPlanPrototype } from '@/components/prototypes/SuccessPlanPrototype';
 import { DiscoveryPrototype } from '@/components/prototypes/DiscoveryPrototype';
+import { RenewalTrackerPrototype } from '@/components/prototypes/RenewalTrackerPrototype';
+import { RiskAssessmentPrototype } from '@/components/prototypes/RiskAssessmentPrototype';
 import { WelcomeDialog } from '@/components/prototypes/WelcomeDialog';
 import { ContactDialog } from '@/components/prototypes/ContactDialog';
 import louMascot from '@/assets/lou-mascot.png';
@@ -43,6 +45,18 @@ const PROTOTYPE_TOOLS = [
     name: 'Discovery Questionnaire',
     description: 'Guided discovery flow to understand customer needs and map solutions to their pain points...',
     icon: ClipboardList,
+  },
+  {
+    id: 'renewal-tracker',
+    name: 'Renewal Tracker',
+    description: 'Renewal pipeline management with risk scoring, milestone tracking, and outcome forecasting...',
+    icon: CalendarClock,
+  },
+  {
+    id: 'risk-assessment',
+    name: 'Risk Assessment',
+    description: 'Churn risk evaluation with weighted indicator scoring and trend analysis...',
+    icon: ShieldAlert,
   },
 ];
 
@@ -156,6 +170,24 @@ function App() {
   if (activeTool === 'discovery') {
     return (
       <DiscoveryPrototype
+        onClose={handleCloseBuilder}
+        initialBrandConfig={brandConfig}
+      />
+    );
+  }
+
+  if (activeTool === 'renewal-tracker') {
+    return (
+      <RenewalTrackerPrototype
+        onClose={handleCloseBuilder}
+        initialBrandConfig={brandConfig}
+      />
+    );
+  }
+
+  if (activeTool === 'risk-assessment') {
+    return (
+      <RiskAssessmentPrototype
         onClose={handleCloseBuilder}
         initialBrandConfig={brandConfig}
       />
