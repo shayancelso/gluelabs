@@ -38,6 +38,7 @@ interface PrototypeBrandingBarProps {
   brandConfig: BrandConfig;
   onBrandChange: (config: BrandConfig) => void;
   onReset: () => void;
+  compact?: boolean;
 }
 
 // HSV to RGB conversion
@@ -502,7 +503,7 @@ async function extractColorsFromImage(imageUrl: string): Promise<{ primary: stri
   });
 }
 
-export function PrototypeBrandingBar({ brandConfig, onBrandChange, onReset }: PrototypeBrandingBarProps) {
+export function PrototypeBrandingBar({ brandConfig, onBrandChange, onReset, compact = false }: PrototypeBrandingBarProps) {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [companyInput, setCompanyInput] = useState('');
@@ -665,6 +666,83 @@ export function PrototypeBrandingBar({ brandConfig, onBrandChange, onReset }: Pr
     }
   };
 
+  // Compact mode for hero section
+  if (compact) {
+    return (
+      <Card className="p-4 bg-card/80 backdrop-blur-sm border-border/50 shadow-lg max-w-md">
+        <div className="flex items-center gap-2 mb-3">
+          <Palette className="h-4 w-4 text-primary" />
+          <h3 className="font-semibold text-sm">Preview with your branding</h3>
+        </div>
+
+        {/* Search Input */}
+        <div className="relative mb-4">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="e.g. nike.com or Acme Inc"
+            value={companyInput}
+            onChange={(e) => setCompanyInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            className="pl-9 h-10 text-sm pr-16"
+          />
+          <Button
+            onClick={handleCompanyLookup}
+            disabled={!companyInput.trim() || isLoading}
+            size="sm"
+            className="absolute right-1 top-1/2 -translate-y-1/2 h-8 px-3"
+            style={{
+              background: `linear-gradient(135deg, ${brandConfig.primaryColor}, ${brandConfig.secondaryColor})`
+            }}
+          >
+            {isLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : 'Load'}
+          </Button>
+        </div>
+
+        {/* Company Name + Color Swatches Row */}
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 min-w-0">
+            {brandConfig.logoUrl ? (
+              <img src={brandConfig.logoUrl} alt="Logo" className="h-6 w-6 object-contain rounded bg-muted p-0.5" />
+            ) : (
+              <RotateCcw className="h-4 w-4 text-muted-foreground cursor-pointer" onClick={onReset} />
+            )}
+            <span className="font-medium text-sm truncate max-w-[100px]">{brandConfig.companyName}</span>
+          </div>
+
+          {/* Color Swatches */}
+          <div className="flex gap-1 items-center ml-auto">
+            <ColorSwatch
+              color={brandConfig.primaryColor}
+              label="Primary"
+              onChange={(color) => handleColorChange('primaryColor', color)}
+            />
+            <ColorSwatch
+              color={brandConfig.secondaryColor}
+              label="Secondary"
+              onChange={(color) => handleColorChange('secondaryColor', color)}
+            />
+            <ColorSwatch
+              color={brandConfig.accentColor}
+              label="Accent"
+              onChange={(color) => handleColorChange('accentColor', color)}
+            />
+            <ColorSwatch
+              color={brandConfig.backgroundColor}
+              label="Background"
+              onChange={(color) => handleColorChange('backgroundColor', color)}
+            />
+            <ColorSwatch
+              color={brandConfig.textColor}
+              label="Text"
+              onChange={(color) => handleColorChange('textColor', color)}
+            />
+          </div>
+        </div>
+      </Card>
+    );
+  }
+
+  // Full mode (original)
   return (
     <Card className="p-4 md:p-6 bg-card/80 backdrop-blur-sm border-border/50 shadow-lg">
       <div className="flex items-center gap-2 mb-3 md:mb-4">
@@ -693,8 +771,8 @@ export function PrototypeBrandingBar({ brandConfig, onBrandChange, onReset }: Pr
                 onClick={handleCompanyLookup}
                 disabled={!companyInput.trim() || isLoading}
                 className="h-10 px-4"
-                style={{ 
-                  background: `linear-gradient(135deg, ${brandConfig.primaryColor}, ${brandConfig.secondaryColor})` 
+                style={{
+                  background: `linear-gradient(135deg, ${brandConfig.primaryColor}, ${brandConfig.secondaryColor})`
                 }}
               >
                 {isLoading ? (
@@ -744,28 +822,28 @@ export function PrototypeBrandingBar({ brandConfig, onBrandChange, onReset }: Pr
 
             {/* 5 Color Swatches */}
             <div className="flex gap-1.5 items-center">
-              <ColorSwatch 
-                color={brandConfig.primaryColor} 
+              <ColorSwatch
+                color={brandConfig.primaryColor}
                 label="Primary Color"
                 onChange={(color) => handleColorChange('primaryColor', color)}
               />
-              <ColorSwatch 
-                color={brandConfig.secondaryColor} 
+              <ColorSwatch
+                color={brandConfig.secondaryColor}
                 label="Secondary Color"
                 onChange={(color) => handleColorChange('secondaryColor', color)}
               />
-              <ColorSwatch 
-                color={brandConfig.accentColor} 
+              <ColorSwatch
+                color={brandConfig.accentColor}
                 label="Accent Color"
                 onChange={(color) => handleColorChange('accentColor', color)}
               />
-              <ColorSwatch 
-                color={brandConfig.backgroundColor} 
+              <ColorSwatch
+                color={brandConfig.backgroundColor}
                 label="Background Color"
                 onChange={(color) => handleColorChange('backgroundColor', color)}
               />
-              <ColorSwatch 
-                color={brandConfig.textColor} 
+              <ColorSwatch
+                color={brandConfig.textColor}
                 label="Text Color"
                 onChange={(color) => handleColorChange('textColor', color)}
               />

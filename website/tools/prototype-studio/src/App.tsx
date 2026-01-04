@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Grid3X3, Calculator, Target, ClipboardList } from 'lucide-react';
+import { Grid3X3, Calculator, Target, ClipboardList, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PrototypeBrandingBar, type BrandConfig } from '@/components/prototypes/PrototypeBrandingBar';
 import { PrototypeToolCard } from '@/components/prototypes/PrototypeToolCard';
@@ -10,6 +10,11 @@ import { DiscoveryPrototype } from '@/components/prototypes/DiscoveryPrototype';
 import { WelcomeDialog } from '@/components/prototypes/WelcomeDialog';
 import { ContactDialog } from '@/components/prototypes/ContactDialog';
 import louMascot from '@/assets/lou-mascot.png';
+import heroMockup from '@/assets/hero.png';
+import whitespaceScreenshot from '@/assets/whitespace-visualizer.png';
+import roiScreenshot from '@/assets/ROI-Calculator.png';
+import successPlanScreenshot from '@/assets/mutual-success-plan.png';
+import discoveryScreenshot from '@/assets/discovery-questionnaire.png';
 import {
   startPrototypeSession,
   updateSessionBrand,
@@ -21,26 +26,30 @@ const PROTOTYPE_TOOLS = [
   {
     id: 'whitespace',
     name: 'Whitespace Visualizer',
-    description: 'Account-product opportunity matrix showing adoption and expansion opportunities across your customer base.',
+    description: 'Account-product opportunity matrix showing adoption and expansion opportunities across...',
     icon: Grid3X3,
+    screenshot: whitespaceScreenshot,
   },
   {
     id: 'roi',
     name: 'ROI Calculator',
-    description: 'Interactive calculator to demonstrate time savings, cost reduction, and revenue impact of your solution.',
+    description: 'Interactive calculator to demonstrate time savings, cost reduction, and new impact of...',
     icon: Calculator,
+    screenshot: roiScreenshot,
   },
   {
     id: 'success-plan',
     name: 'Mutual Success Plan',
-    description: 'Work-back implementation planner with milestones, owners, and timeline for customer success.',
+    description: 'Work-back implementation planner with milestones, owners, and timelines for customer success..',
     icon: Target,
+    screenshot: successPlanScreenshot,
   },
   {
     id: 'discovery',
     name: 'Discovery Questionnaire',
-    description: 'Guided discovery flow to understand prospect needs and map solutions to their pain points.',
+    description: 'Guided discovery flow to understand customer needs and map solutions to their pain points...',
     icon: ClipboardList,
+    screenshot: discoveryScreenshot,
   },
 ];
 
@@ -184,32 +193,71 @@ function App() {
         />
 
         {/* Main content */}
-        <div className="pt-6 md:pt-10 px-4 md:px-8 pb-8 md:pb-12 max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-6 md:mb-10">
-            <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-2 md:mb-3 gradient-text animate-title-in font-display">
-              Try Our Tools
-            </h1>
-            <p className="text-muted-foreground text-sm md:text-lg max-w-2xl mx-auto px-2">
-              See Gloo tools in action with your own branding.
-              <span className="hidden md:inline"> Enter your company to get started.</span>
-            </p>
+        <div className="pt-6 md:pt-10 px-4 md:px-8 pb-8 md:pb-12 max-w-6xl mx-auto">
+          {/* Hero Section - Split Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center mb-12 md:mb-16">
+            {/* Left Side - Text + Branding Input */}
+            <div>
+              <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-3 md:mb-4 gradient-text animate-title-in font-display">
+                Try Our Tools
+              </h1>
+              <p className="text-muted-foreground text-sm md:text-lg mb-6 md:mb-8 max-w-md">
+                See Gloo tools in action with your own branding. Enter your company and personalize the preview.
+              </p>
+
+              {/* Compact Branding Input */}
+              <PrototypeBrandingBar
+                brandConfig={brandConfig}
+                onBrandChange={setBrandConfig}
+                onReset={handleResetBranding}
+                compact
+              />
+            </div>
+
+            {/* Right Side - Hero Mockup with Lou */}
+            <div className="relative flex justify-center lg:justify-end">
+              {/* Lou mascot - positioned top right */}
+              <img
+                src={louMascot}
+                alt="Lou"
+                className="absolute -top-4 md:-top-8 right-4 md:right-0 h-20 w-20 md:h-28 md:w-28 object-contain z-10 drop-shadow-lg"
+              />
+
+              {/* Browser mockup */}
+              <div className="relative">
+                <img
+                  src={heroMockup}
+                  alt="Gloo tool preview"
+                  className="w-full max-w-md rounded-xl shadow-2xl shadow-purple-500/20"
+                />
+
+                {/* Magicify button */}
+                <Button
+                  onClick={() => {
+                    // Trigger the branding load if not already custom
+                    if (brandConfig.companyName === 'Gloo') {
+                      // Focus the input in the branding bar
+                      const input = document.querySelector('input[placeholder*="nike.com"]') as HTMLInputElement;
+                      if (input) input.focus();
+                    }
+                  }}
+                  className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white px-6 shadow-lg"
+                >
+                  <Sparkles className="mr-2 h-4 w-4" />
+                  Magicify My Brand
+                  <Sparkles className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+            </div>
           </div>
 
-          {/* Branding Configuration Bar */}
-          <PrototypeBrandingBar
-            brandConfig={brandConfig}
-            onBrandChange={setBrandConfig}
-            onReset={handleResetBranding}
-          />
-
-          {/* Tool Selection Grid */}
-          <div className="mt-6 md:mt-10">
-            <h2 className="text-lg md:text-xl font-semibold mb-4 md:mb-6 flex items-center gap-2">
-              <span className="h-6 md:h-8 w-1 rounded-full bg-gradient-to-b from-primary to-secondary" />
-              Choose a Tool to Preview
+          {/* Featured Tools Section */}
+          <div className="mb-12 md:mb-16">
+            <h2 className="text-xl md:text-2xl font-bold mb-6 md:mb-8 flex items-center gap-3">
+              <span className="h-8 w-1.5 rounded-full bg-gradient-to-b from-purple-500 to-pink-500" />
+              Featured Tools
             </h2>
-            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 items-stretch">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
               {PROTOTYPE_TOOLS.map((tool) => (
                 <PrototypeToolCard
                   key={tool.id}
@@ -217,6 +265,7 @@ function App() {
                   name={tool.name}
                   description={tool.description}
                   icon={tool.icon}
+                  screenshot={tool.screenshot}
                   onBuild={handleBuildTool}
                   brandConfig={brandConfig}
                 />
@@ -225,24 +274,24 @@ function App() {
           </div>
 
           {/* Contact Section with Lou */}
-          <div className="mt-10 md:mt-16 mb-8">
-            <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 p-6 md:p-8 rounded-2xl bg-gradient-to-br from-pink-500/10 via-purple-500/10 to-pink-500/5 border border-primary/10">
+          <div className="mb-8">
+            <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 p-6 md:p-8 rounded-2xl bg-gradient-to-br from-pink-500/10 via-purple-500/10 to-pink-500/5 border border-primary/10">
               <img
                 src={louMascot}
                 alt="Lou"
-                className="h-16 w-16 md:h-20 md:w-20 object-contain"
+                className="h-20 w-20 md:h-24 md:w-24 object-contain"
               />
-              <div className="text-center md:text-left">
-                <h3 className="text-lg md:text-xl font-semibold mb-1">Questions about our tools?</h3>
+              <div className="text-center md:text-left flex-1">
+                <h3 className="text-xl md:text-2xl font-bold mb-1">Questions about our tools?</h3>
                 <p className="text-muted-foreground text-sm md:text-base">
                   Let's chat about building custom tools for your team.
                 </p>
               </div>
               <Button
                 onClick={() => setShowContactDialog(true)}
-                className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white px-6"
+                className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white px-8 py-5 text-base"
               >
-                Get in Touch
+                Get In Touch
               </Button>
             </div>
           </div>
