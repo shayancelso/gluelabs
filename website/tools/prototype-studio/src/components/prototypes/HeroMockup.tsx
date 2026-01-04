@@ -2,9 +2,10 @@ import { User } from 'lucide-react';
 
 interface HeroMockupProps {
   onMagicify: () => void;
+  brandLogo?: string | null;
 }
 
-export function HeroMockup({ onMagicify }: HeroMockupProps) {
+export function HeroMockup({ onMagicify, brandLogo }: HeroMockupProps) {
   return (
     <div className="relative h-full">
       {/* Browser mockup */}
@@ -22,9 +23,13 @@ export function HeroMockup({ onMagicify }: HeroMockupProps) {
         <div className="p-4 bg-gradient-to-br from-purple-50/50 to-pink-50/30 min-h-[200px]">
           {/* Your Brand header */}
           <div className="flex items-center gap-2 mb-4">
-            <div className="h-6 w-6 rounded-full bg-purple-100 flex items-center justify-center">
-              <User className="h-3.5 w-3.5 text-purple-500" />
-            </div>
+            {brandLogo ? (
+              <img src={brandLogo} alt="" className="h-6 w-6 rounded object-contain" />
+            ) : (
+              <div className="h-6 w-6 rounded-full bg-purple-100 flex items-center justify-center">
+                <User className="h-3.5 w-3.5 text-purple-500" />
+              </div>
+            )}
             <span className="text-sm font-semibold text-purple-600">Your Brand</span>
           </div>
 

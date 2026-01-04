@@ -231,28 +231,57 @@ function App() {
             </div>
 
             {/* Layered Container */}
-            <div className="relative max-w-3xl mx-auto">
-              {/* Background: Browser Mockup with fade */}
-              <div className="absolute inset-0 flex justify-end items-start pt-8 pr-0 md:pr-4">
-                <div className="w-[320px] md:w-[400px] opacity-40 transform translate-x-16 md:translate-x-24">
-                  <div
-                    className="relative"
-                    style={{
-                      maskImage: 'linear-gradient(to left, transparent 0%, black 40%)',
-                      WebkitMaskImage: 'linear-gradient(to left, transparent 0%, black 40%)',
-                    }}
-                  >
-                    <HeroMockup onMagicify={handleMagicify} />
+            <div className="relative max-w-3xl mx-auto min-h-[320px] md:min-h-[380px]">
+              {/* Background Top Left: Chart mockup with fade */}
+              <div className="hidden md:block absolute -left-8 -top-4 opacity-30">
+                <div
+                  className="w-[280px]"
+                  style={{
+                    maskImage: 'linear-gradient(to right, transparent 0%, black 50%)',
+                    WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 50%)',
+                  }}
+                >
+                  <div className="bg-white rounded-2xl shadow-lg border border-gray-200/50 p-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      {brandConfig.logoUrl ? (
+                        <img src={brandConfig.logoUrl} alt="" className="h-5 w-5 object-contain rounded" />
+                      ) : (
+                        <div className="h-5 w-5 rounded bg-purple-100" />
+                      )}
+                      <span className="text-xs font-medium text-gray-500">Revenue Growth</span>
+                    </div>
+                    {/* Mini chart bars */}
+                    <div className="flex items-end gap-1.5 h-16">
+                      <div className="w-6 bg-gradient-to-t from-purple-400 to-purple-300 rounded-t" style={{ height: '40%' }} />
+                      <div className="w-6 bg-gradient-to-t from-purple-400 to-purple-300 rounded-t" style={{ height: '55%' }} />
+                      <div className="w-6 bg-gradient-to-t from-purple-400 to-purple-300 rounded-t" style={{ height: '45%' }} />
+                      <div className="w-6 bg-gradient-to-t from-pink-400 to-pink-300 rounded-t" style={{ height: '70%' }} />
+                      <div className="w-6 bg-gradient-to-t from-pink-400 to-pink-300 rounded-t" style={{ height: '85%' }} />
+                      <div className="w-6 bg-gradient-to-t from-emerald-400 to-emerald-300 rounded-t" style={{ height: '100%' }} />
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Lou peeking from behind the card */}
-              <div className="absolute -right-4 md:right-8 bottom-4 md:bottom-8 z-30">
+              {/* Background Bottom Right: Browser Mockup with fade */}
+              <div className="hidden md:block absolute -right-12 bottom-0 opacity-30">
+                <div
+                  className="w-[320px]"
+                  style={{
+                    maskImage: 'linear-gradient(to left, transparent 0%, black 50%)',
+                    WebkitMaskImage: 'linear-gradient(to left, transparent 0%, black 50%)',
+                  }}
+                >
+                  <HeroMockup onMagicify={handleMagicify} brandLogo={brandConfig.logoUrl} />
+                </div>
+              </div>
+
+              {/* Lou peeking from behind the card - bottom right */}
+              <div className="absolute right-0 md:right-4 -bottom-8 md:-bottom-12 z-30">
                 <img
                   src={louMagicWand}
                   alt="Lou with magic wand"
-                  className="h-28 w-28 md:h-40 md:w-40 object-contain drop-shadow-xl"
+                  className="h-28 w-28 md:h-36 md:w-36 object-contain drop-shadow-xl"
                 />
                 {/* Sparkle effects */}
                 <div className="absolute top-1 left-2 animate-sparkle">
@@ -263,8 +292,8 @@ function App() {
                 </div>
               </div>
 
-              {/* Foreground: Branding Input Card - STRETCHED WIDE */}
-              <div className="relative z-20 w-full max-w-2xl mx-auto">
+              {/* Foreground: Centered Branding Input Card */}
+              <div className="relative z-20 w-full max-w-xl mx-auto pt-4">
                 <PrototypeBrandingBar
                   brandConfig={brandConfig}
                   onBrandChange={setBrandConfig}
