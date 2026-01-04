@@ -231,7 +231,7 @@ function App() {
             </div>
 
             {/* Layered Container */}
-            <div className="relative max-w-2xl mx-auto">
+            <div className="relative max-w-3xl mx-auto">
               {/* Background: Browser Mockup with fade */}
               <div className="absolute inset-0 flex justify-end items-start pt-8 pr-0 md:pr-4">
                 <div className="w-[320px] md:w-[400px] opacity-40 transform translate-x-16 md:translate-x-24">
@@ -263,8 +263,8 @@ function App() {
                 </div>
               </div>
 
-              {/* Foreground: Branding Input Card - STRETCHED */}
-              <div className="relative z-20 w-full max-w-xl">
+              {/* Foreground: Branding Input Card - STRETCHED WIDE */}
+              <div className="relative z-20 w-full max-w-2xl mx-auto">
                 <PrototypeBrandingBar
                   brandConfig={brandConfig}
                   onBrandChange={setBrandConfig}
