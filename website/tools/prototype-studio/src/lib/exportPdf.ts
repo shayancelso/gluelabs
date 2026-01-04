@@ -154,6 +154,54 @@ export async function exportToMultiPagePdf(config: MultiPagePdfExportConfig): Pr
 }
 
 /**
+ * Export multiple HTML elements as pages in a single portrait PDF
+ * Each element should be sized to PDF_PORTRAIT_WIDTH x PDF_PORTRAIT_HEIGHT
+ */
+export async function exportToMultiPagePortraitPdf(config: MultiPagePdfExportConfig): Promise<void> {
+  const { toolName, accountName, pages } = config;
+
+  if (pages.length === 0) {
+    throw new Error('No pages provided for PDF export');
+  }
+
+  // Create PDF with A4 portrait dimensions
+  const pdf = new jsPDF({
+    orientation: 'portrait',
+    unit: 'px',
+    format: [PDF_PORTRAIT_WIDTH, PDF_PORTRAIT_HEIGHT],
+    hotfixes: ['px_scaling'],
+  });
+
+  for (let i = 0; i < pages.length; i++) {
+    const element = pages[i];
+
+    // Add new page for all pages after the first
+    if (i > 0) {
+      pdf.addPage([PDF_PORTRAIT_WIDTH, PDF_PORTRAIT_HEIGHT], 'portrait');
+    }
+
+    // Capture the element as canvas
+    const canvas = await html2canvas(element, {
+      scale: 2, // 2x for crisp output
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: '#ffffff',
+      logging: false,
+      width: PDF_PORTRAIT_WIDTH,
+      height: PDF_PORTRAIT_HEIGHT,
+    });
+
+    // Add the canvas as an image
+    const imgData = canvas.toDataURL('image/png');
+    pdf.addImage(imgData, 'PNG', 0, 0, PDF_PORTRAIT_WIDTH, PDF_PORTRAIT_HEIGHT);
+  }
+
+  // Generate filename and save
+  const filename = generatePdfFilename(toolName, accountName);
+  pdf.save(filename);
+}
+
+/**
  * Format large numbers for display
  */
 export function formatPdfNumber(value: number): string {

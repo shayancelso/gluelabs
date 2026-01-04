@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Grid3X3, Calculator, Target, ClipboardList, Heart } from 'lucide-react';
+import { Grid3X3, Calculator, Target, ClipboardList, Map, CreditCard, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PrototypeBrandingBar, type BrandConfig } from '@/components/prototypes/PrototypeBrandingBar';
 import { PrototypeToolCard } from '@/components/prototypes/PrototypeToolCard';
@@ -8,7 +8,9 @@ import { WhitespacePrototype } from '@/components/prototypes/WhitespacePrototype
 import { ROIPrototype } from '@/components/prototypes/ROIPrototype';
 import { SuccessPlanPrototype } from '@/components/prototypes/SuccessPlanPrototype';
 import { DiscoveryPrototype } from '@/components/prototypes/DiscoveryPrototype';
-import { NPSAccountHub } from '@/components/prototypes/NPSAccountHub';
+import { TerritoryPlannerPrototype } from '@/components/prototypes/TerritoryPlannerPrototype';
+import { SaaSPricingPrototype } from '@/components/prototypes/SaaSPricingPrototype';
+import { NPSHubPrototype } from '@/components/prototypes/NPSHubPrototype';
 import { WelcomeDialog } from '@/components/prototypes/WelcomeDialog';
 import { ContactDialog } from '@/components/prototypes/ContactDialog';
 import louMascot from '@/assets/lou-mascot.png';
@@ -46,10 +48,22 @@ const PROTOTYPE_TOOLS = [
     icon: ClipboardList,
   },
   {
+    id: 'territory-planner',
+    name: 'Territory Planner',
+    description: 'Capacity, equity, and hiring needs analysis for GTM leadership with scenario modeling...',
+    icon: Map,
+  },
+  {
+    id: 'saas-pricing',
+    name: 'SaaS Pricing Calculator',
+    description: 'Strategic revenue modeling with pricing tiers, growth projections, and time-to-goal analysis...',
+    icon: CreditCard,
+  },
+  {
     id: 'nps-hub',
     name: 'NPS Account Hub',
-    description: 'Customer satisfaction tracking with NPS scoring, feedback analysis, and account health insights...',
-    icon: Heart,
+    description: 'Track NPS scores, identify at-risk accounts, and manage follow-up actions for customer success...',
+    icon: MessageSquare,
   },
 ];
 
@@ -169,9 +183,27 @@ function App() {
     );
   }
 
+  if (activeTool === 'territory-planner') {
+    return (
+      <TerritoryPlannerPrototype
+        onClose={handleCloseBuilder}
+        initialBrandConfig={brandConfig}
+      />
+    );
+  }
+
+  if (activeTool === 'saas-pricing') {
+    return (
+      <SaaSPricingPrototype
+        onClose={handleCloseBuilder}
+        initialBrandConfig={brandConfig}
+      />
+    );
+  }
+
   if (activeTool === 'nps-hub') {
     return (
-      <NPSAccountHub
+      <NPSHubPrototype
         onClose={handleCloseBuilder}
         initialBrandConfig={brandConfig}
       />
