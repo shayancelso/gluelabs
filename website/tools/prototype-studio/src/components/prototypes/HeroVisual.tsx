@@ -3,8 +3,8 @@ import { Grid3X3, TrendingUp, Users, DollarSign, Sparkles } from 'lucide-react';
 export function HeroVisual() {
   return (
     <div className="relative w-full h-full min-h-[400px] md:min-h-[500px]">
-      {/* Main browser window mockup */}
-      <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[90%] max-w-[600px]">
+      {/* Main browser window mockup - pushed right */}
+      <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[95%] max-w-[550px] translate-x-8">
         {/* Browser chrome */}
         <div className="rounded-2xl overflow-hidden shadow-2xl shadow-purple-500/20 border border-white/50 backdrop-blur-sm bg-white/80">
           {/* Browser header */}
@@ -89,7 +89,7 @@ export function HeroVisual() {
 
       {/* Floating card - Top right */}
       <div
-        className="absolute top-8 right-4 md:right-8 bg-white/90 backdrop-blur-sm rounded-xl p-3 shadow-xl shadow-purple-500/10 border border-white/50 animate-float"
+        className="absolute top-12 right-0 translate-x-4 bg-white/90 backdrop-blur-sm rounded-xl p-3 shadow-xl shadow-purple-500/10 border border-white/50 animate-float"
         style={{ animationDelay: '0s' }}
       >
         <div className="flex items-center gap-2">
@@ -103,9 +103,9 @@ export function HeroVisual() {
         </div>
       </div>
 
-      {/* Floating card - Bottom left */}
+      {/* Floating card - Bottom right */}
       <div
-        className="absolute bottom-16 left-4 md:left-0 bg-white/90 backdrop-blur-sm rounded-xl p-3 shadow-xl shadow-pink-500/10 border border-white/50 animate-float"
+        className="absolute bottom-20 right-12 bg-white/90 backdrop-blur-sm rounded-xl p-3 shadow-xl shadow-pink-500/10 border border-white/50 animate-float"
         style={{ animationDelay: '1s' }}
       >
         <div className="flex items-center gap-2">
@@ -119,9 +119,9 @@ export function HeroVisual() {
         </div>
       </div>
 
-      {/* Floating card - Middle right */}
+      {/* Floating card - Middle far right */}
       <div
-        className="absolute top-1/2 -translate-y-1/2 right-0 translate-x-4 bg-white/90 backdrop-blur-sm rounded-xl p-3 shadow-xl shadow-indigo-500/10 border border-white/50 animate-float hidden lg:block"
+        className="absolute top-1/2 -translate-y-1/2 right-0 translate-x-12 bg-white/90 backdrop-blur-sm rounded-xl p-3 shadow-xl shadow-indigo-500/10 border border-white/50 animate-float hidden xl:block"
         style={{ animationDelay: '0.5s' }}
       >
         <div className="flex items-center gap-2">
@@ -135,20 +135,20 @@ export function HeroVisual() {
         </div>
       </div>
 
-      {/* Sparkle decorations */}
-      <div className="absolute top-4 left-1/4 text-purple-400/40 animate-pulse">
+      {/* Sparkle decorations - pushed right */}
+      <div className="absolute top-8 right-1/3 text-purple-400/40 animate-pulse">
         <Sparkles className="h-4 w-4" />
       </div>
-      <div className="absolute bottom-8 right-1/4 text-pink-400/40 animate-pulse" style={{ animationDelay: '0.5s' }}>
+      <div className="absolute bottom-12 right-8 text-pink-400/40 animate-pulse" style={{ animationDelay: '0.5s' }}>
         <Sparkles className="h-5 w-5" />
       </div>
-      <div className="absolute top-1/3 right-8 text-indigo-400/40 animate-pulse" style={{ animationDelay: '1s' }}>
+      <div className="absolute top-1/3 right-4 text-indigo-400/40 animate-pulse" style={{ animationDelay: '1s' }}>
         <Sparkles className="h-3 w-3" />
       </div>
 
-      {/* Gradient orbs for depth */}
-      <div className="absolute top-1/4 right-1/4 w-32 h-32 bg-purple-400/20 rounded-full blur-3xl" />
-      <div className="absolute bottom-1/4 right-1/3 w-24 h-24 bg-pink-400/20 rounded-full blur-3xl" />
+      {/* Gradient orbs for depth - pushed right */}
+      <div className="absolute top-1/4 right-8 w-32 h-32 bg-purple-400/20 rounded-full blur-3xl" />
+      <div className="absolute bottom-1/4 right-16 w-24 h-24 bg-pink-400/20 rounded-full blur-3xl" />
       <div className="absolute top-1/2 right-0 w-40 h-40 bg-indigo-400/10 rounded-full blur-3xl" />
     </div>
   );

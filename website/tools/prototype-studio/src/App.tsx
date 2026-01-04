@@ -194,31 +194,31 @@ function App() {
 
         {/* Main content */}
         <div className="px-4 md:px-8 pb-8 md:pb-12 max-w-6xl mx-auto">
-          {/* Hero Section - Large with animated visual */}
-          <div className="relative min-h-[520px] md:min-h-[600px] lg:min-h-[650px] flex items-center mb-8 md:mb-12">
-            {/* Background visual - positioned right */}
-            <div className="absolute inset-y-0 right-0 w-full lg:w-[65%] pointer-events-none hidden md:block">
+          {/* Hero Section - Google-style prominent search */}
+          <div className="relative min-h-[480px] md:min-h-[550px] lg:min-h-[600px] flex items-center mb-8 md:mb-12">
+            {/* Background visual - pushed far right */}
+            <div className="absolute inset-y-0 -right-20 lg:-right-10 w-[70%] lg:w-[55%] pointer-events-none hidden lg:block">
               <HeroVisual />
-              {/* Gradient fade on left edge */}
+              {/* Strong gradient fade - keeps left side completely clear */}
               <div
-                className="absolute inset-y-0 left-0 w-2/3"
+                className="absolute inset-y-0 left-0 w-[80%]"
                 style={{
-                  background: 'linear-gradient(to right, #fafafa 0%, #fafafacc 40%, transparent 100%)',
+                  background: 'linear-gradient(to right, #fafafa 0%, #fafafa 30%, #fafafaee 50%, transparent 100%)',
                 }}
               />
             </div>
 
-            {/* Left Side - Text + Branding Input */}
-            <div className="relative z-10 max-w-xl pt-4 md:pt-8">
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-4 md:mb-6 gradient-text animate-title-in font-display">
+            {/* Main Content - Centered/Left with prominent search */}
+            <div className="relative z-10 w-full max-w-2xl pt-4 md:pt-8">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4 md:mb-5 gradient-text animate-title-in font-display">
                 Try Our Tools
               </h1>
-              <p className="text-muted-foreground text-base md:text-xl mb-8 md:mb-10 max-w-lg leading-relaxed">
+              <p className="text-muted-foreground text-base md:text-lg mb-8 md:mb-10 max-w-xl leading-relaxed">
                 See Gloo tools in action with your own branding. Enter your company and personalize the preview.
               </p>
 
-              {/* Compact Branding Input */}
-              <div className="max-w-md">
+              {/* Wide Search Bar - Google-style prominence */}
+              <div className="w-full max-w-xl">
                 <PrototypeBrandingBar
                   brandConfig={brandConfig}
                   onBrandChange={setBrandConfig}

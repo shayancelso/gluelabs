@@ -666,64 +666,52 @@ export function PrototypeBrandingBar({ brandConfig, onBrandChange, onReset, comp
     }
   };
 
-  // Compact mode for hero section
+  // Compact mode for hero section - Google-style prominent search
   if (compact) {
     return (
-      <Card className="p-5 bg-card/90 backdrop-blur-sm border-primary/20 shadow-xl shadow-primary/10 max-w-md">
-        {/* Prominent Header */}
-        <div className="mb-4">
-          <div className="flex items-center gap-2 mb-1">
-            <Sparkles className="h-5 w-5 text-primary" />
-            <h3 className="font-bold text-lg bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              See it with YOUR brand
-            </h3>
+      <div className="w-full">
+        {/* Main Search Bar - Google-style */}
+        <div className="relative mb-4">
+          <div className="relative">
+            <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <Input
+              placeholder="Enter your company name or website..."
+              value={companyInput}
+              onChange={(e) => setCompanyInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              className="w-full pl-14 pr-32 h-14 text-lg rounded-full border-2 border-gray-200 hover:border-gray-300 focus:border-primary shadow-lg shadow-gray-200/50 hover:shadow-xl transition-all bg-white"
+            />
+            <Button
+              onClick={handleCompanyLookup}
+              disabled={!companyInput.trim() || isLoading}
+              className="absolute right-2 top-1/2 -translate-y-1/2 h-10 px-6 rounded-full font-semibold text-white shadow-md"
+              style={{
+                background: `linear-gradient(135deg, ${brandConfig.primaryColor}, ${brandConfig.secondaryColor})`
+              }}
+            >
+              {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : (
+                <>
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  Try It
+                </>
+              )}
+            </Button>
           </div>
-          <p className="text-sm text-muted-foreground">
-            Enter your company to instantly customize all tools
+          <p className="text-center text-sm text-muted-foreground mt-3">
+            e.g. <span className="text-gray-500">nike.com</span>, <span className="text-gray-500">Stripe</span>, <span className="text-gray-500">Salesforce</span>
           </p>
         </div>
 
-        {/* Search Input - Larger and more prominent */}
-        <div className="relative mb-4">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-          <Input
-            placeholder="Type your company (e.g. Nike, Stripe...)"
-            value={companyInput}
-            onChange={(e) => setCompanyInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            className="pl-11 h-12 text-base pr-24 input-glow rounded-xl border-primary/30"
-          />
-          <Button
-            onClick={handleCompanyLookup}
-            disabled={!companyInput.trim() || isLoading}
-            size="sm"
-            className="absolute right-1.5 top-1/2 -translate-y-1/2 h-9 px-4 rounded-lg font-medium"
-            style={{
-              background: `linear-gradient(135deg, ${brandConfig.primaryColor}, ${brandConfig.secondaryColor})`
-            }}
-          >
-            {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : (
-              <>
-                Try It
-                <Sparkles className="h-3.5 w-3.5 ml-1.5" />
-              </>
-            )}
-          </Button>
-        </div>
-
-        {/* Company Name + Color Swatches Row */}
-        <div className="flex items-center gap-3 pt-3 border-t border-border/50">
-          <div className="flex items-center gap-2 min-w-0">
+        {/* Color customization row - subtle, below the main CTA */}
+        <div className="flex items-center justify-center gap-4 pt-2">
+          <div className="flex items-center gap-2">
             {brandConfig.logoUrl ? (
-              <img src={brandConfig.logoUrl} alt="Logo" className="h-6 w-6 object-contain rounded bg-muted p-0.5" />
-            ) : (
-              <RotateCcw className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-primary transition-colors" onClick={onReset} />
-            )}
-            <span className="font-medium text-sm truncate max-w-[100px]">{brandConfig.companyName}</span>
+              <img src={brandConfig.logoUrl} alt="Logo" className="h-5 w-5 object-contain rounded" />
+            ) : null}
+            <span className="text-sm text-gray-500">{brandConfig.companyName}</span>
           </div>
 
-          {/* Color Swatches */}
-          <div className="flex gap-1 items-center ml-auto">
+          <div className="flex gap-1.5 items-center">
             <ColorSwatch
               color={brandConfig.primaryColor}
               label="Primary"
@@ -739,19 +727,18 @@ export function PrototypeBrandingBar({ brandConfig, onBrandChange, onReset, comp
               label="Accent"
               onChange={(color) => handleColorChange('accentColor', color)}
             />
-            <ColorSwatch
-              color={brandConfig.backgroundColor}
-              label="Background"
-              onChange={(color) => handleColorChange('backgroundColor', color)}
-            />
-            <ColorSwatch
-              color={brandConfig.textColor}
-              label="Text"
-              onChange={(color) => handleColorChange('textColor', color)}
-            />
           </div>
+
+          {brandConfig.companyName !== 'Gloo' && (
+            <button
+              onClick={onReset}
+              className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              Reset
+            </button>
+          )}
         </div>
-      </Card>
+      </div>
     );
   }
 
