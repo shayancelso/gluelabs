@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Upload, RotateCcw, Palette, Pipette, AlertTriangle, Crosshair, Loader2, Search } from 'lucide-react';
+import { Upload, RotateCcw, Palette, Pipette, AlertTriangle, Crosshair, Loader2, Search, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -669,42 +669,55 @@ export function PrototypeBrandingBar({ brandConfig, onBrandChange, onReset, comp
   // Compact mode for hero section
   if (compact) {
     return (
-      <Card className="p-4 bg-card/80 backdrop-blur-sm border-border/50 shadow-lg max-w-md">
-        <div className="flex items-center gap-2 mb-3">
-          <Palette className="h-4 w-4 text-primary" />
-          <h3 className="font-semibold text-sm">Preview with your branding</h3>
+      <Card className="p-5 bg-card/90 backdrop-blur-sm border-primary/20 shadow-xl shadow-primary/10 max-w-md">
+        {/* Prominent Header */}
+        <div className="mb-4">
+          <div className="flex items-center gap-2 mb-1">
+            <Sparkles className="h-5 w-5 text-primary" />
+            <h3 className="font-bold text-lg bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+              See it with YOUR brand
+            </h3>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Enter your company to instantly customize all tools
+          </p>
         </div>
 
-        {/* Search Input */}
+        {/* Search Input - Larger and more prominent */}
         <div className="relative mb-4">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
           <Input
-            placeholder="e.g. nike.com or Acme Inc"
+            placeholder="Type your company (e.g. Nike, Stripe...)"
             value={companyInput}
             onChange={(e) => setCompanyInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="pl-9 h-10 text-sm pr-16"
+            className="pl-11 h-12 text-base pr-24 input-glow rounded-xl border-primary/30"
           />
           <Button
             onClick={handleCompanyLookup}
             disabled={!companyInput.trim() || isLoading}
             size="sm"
-            className="absolute right-1 top-1/2 -translate-y-1/2 h-8 px-3"
+            className="absolute right-1.5 top-1/2 -translate-y-1/2 h-9 px-4 rounded-lg font-medium"
             style={{
               background: `linear-gradient(135deg, ${brandConfig.primaryColor}, ${brandConfig.secondaryColor})`
             }}
           >
-            {isLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : 'Load'}
+            {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : (
+              <>
+                Try It
+                <Sparkles className="h-3.5 w-3.5 ml-1.5" />
+              </>
+            )}
           </Button>
         </div>
 
         {/* Company Name + Color Swatches Row */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 pt-3 border-t border-border/50">
           <div className="flex items-center gap-2 min-w-0">
             {brandConfig.logoUrl ? (
               <img src={brandConfig.logoUrl} alt="Logo" className="h-6 w-6 object-contain rounded bg-muted p-0.5" />
             ) : (
-              <RotateCcw className="h-4 w-4 text-muted-foreground cursor-pointer" onClick={onReset} />
+              <RotateCcw className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-primary transition-colors" onClick={onReset} />
             )}
             <span className="font-medium text-sm truncate max-w-[100px]">{brandConfig.companyName}</span>
           </div>
