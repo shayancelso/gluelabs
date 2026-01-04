@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom'; // Not used in standalone prototype
 import { useDropzone } from 'react-dropzone';
 import { supabase } from '@/integrations/supabase/client';
 import { 
@@ -34,7 +34,7 @@ import {
   shouldFlagAsRisk,
   getFollowupSlaDays 
 } from '@/lib/npsDiscoveryTransform';
-import { BrandConfig } from '@/components/templates/TemplateBrandingBar';
+import { BrandConfig } from './PrototypeBrandingBar';
 import { format, differenceInDays, addDays, subDays } from 'date-fns';
 
 interface NPSAccountHubProps {
