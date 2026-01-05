@@ -1305,7 +1305,7 @@ export function SaaSPricingPrototype({ onClose, initialBrandConfig }: SaaSPricin
           open={showContactDialog}
           onClose={() => setShowContactDialog(false)}
           brandConfig={brandConfig}
-          toolInterest="c666ae0e-d432-44a3-a308-e407dc7d51e6"
+          toolInterest="saas-pricing"
         />
 
         {/* Like What You See Banner */}

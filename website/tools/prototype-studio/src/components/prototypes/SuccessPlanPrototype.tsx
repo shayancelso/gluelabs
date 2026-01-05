@@ -1054,7 +1054,7 @@ export function SuccessPlanPrototype({ onClose, initialBrandConfig, discoveryDat
           open={showContactDialog}
           onClose={() => setShowContactDialog(false)}
           brandConfig={brandConfig}
-          toolInterest="4b10fb29-f178-45aa-b90f-4c75750430fb"
+          toolInterest="success-plan"
         />
       )}
 

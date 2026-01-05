@@ -1186,7 +1186,7 @@ export function ROIPrototype({ onClose, initialBrandConfig, discoveryData, onEdi
           open={showContactDialog}
           onClose={() => setShowContactDialog(false)}
           brandConfig={brandConfig}
-          toolInterest="1a17eb71-c5ba-4e6b-a1f0-4f848c36b333"
+          toolInterest="roi"
         />
       )}
 

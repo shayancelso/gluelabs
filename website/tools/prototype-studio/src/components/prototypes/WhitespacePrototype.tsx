@@ -1458,7 +1458,7 @@ export function WhitespacePrototype({ brandConfig, onClose }: WhitespacePrototyp
           open={showContactDialog}
           onClose={() => setShowContactDialog(false)}
           brandConfig={brandConfig}
-          toolInterest="046e63a3-82fd-4dba-b58b-c3ae253d85d1"
+          toolInterest="whitespace"
         />
 
         {/* Hidden PDF Export - Page 1: Summary with KPIs */}

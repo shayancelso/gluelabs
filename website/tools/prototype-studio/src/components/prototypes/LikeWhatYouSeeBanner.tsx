@@ -27,14 +27,13 @@ export function LikeWhatYouSeeBanner({
     return (
       <button
         onClick={onExpand}
-        className="fixed bottom-6 right-6 z-50 h-36 w-36 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 shadow-xl shadow-purple-500/30 flex items-center justify-center transition-all duration-300 hover:scale-110 animate-fade-in"
+        className="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 shadow-xl shadow-purple-500/30 flex items-center justify-center transition-all duration-300 hover:scale-110 animate-fade-in overflow-visible"
         aria-label="Open contact banner"
       >
         <img
           src={louContact}
           alt="Lou"
-          className="h-28 w-28 object-contain"
-          style={{ animation: 'bounce 2s ease-in-out infinite' }}
+          className="h-28 w-28 object-contain absolute -top-8 -left-8"
         />
       </button>
     );
@@ -47,12 +46,11 @@ export function LikeWhatYouSeeBanner({
     >
       <div className="flex items-center gap-3 md:gap-4 bg-gradient-to-r from-pink-500 via-purple-500 to-pink-500 rounded-full px-4 md:px-6 py-2.5 md:py-3 shadow-xl shadow-purple-500/20 border border-white/20">
         {/* Lou mascot */}
-        <div className="relative flex-shrink-0">
+        <div className="relative flex-shrink-0 h-12 w-12 overflow-visible">
           <img
             src={louContact}
             alt="Lou"
-            className="h-28 w-28 md:h-32 md:w-32 object-contain animate-bounce"
-            style={{ animationDuration: '2s' }}
+            className="h-28 w-28 md:h-32 md:w-32 object-contain absolute -top-16 -left-10"
           />
         </div>
 

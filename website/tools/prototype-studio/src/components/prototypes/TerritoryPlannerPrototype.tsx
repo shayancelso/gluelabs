@@ -1863,7 +1863,7 @@ export function TerritoryPlannerPrototype({ onClose, initialBrandConfig }: Terri
           open={showContactDialog}
           onClose={() => setShowContactDialog(false)}
           brandConfig={brandConfig}
-          toolInterest="e6fef09a-ac05-4f2f-bfd7-557691d8b2ae"
+          toolInterest="territory-planner"
         />
 
         {/* Onboarding */}

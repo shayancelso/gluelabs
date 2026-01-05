@@ -1163,7 +1163,7 @@ export function NPSHubPrototype({ onClose, initialBrandConfig }: NPSHubPrototype
         open={showContactDialog}
         onClose={() => setShowContactDialog(false)}
         brandConfig={brandConfig}
-        toolInterest="b5c6d7e8-f9a0-1234-bcde-567890abcdef"
+        toolInterest="nps-tracker"
       />
     </div>
   );

@@ -1721,7 +1721,7 @@ export function DiscoveryPrototype({ onClose, initialBrandConfig, isTemplateMode
           open={showContactDialog}
           onClose={() => setShowContactDialog(false)}
           brandConfig={initialBrandConfig}
-          toolInterest="af13a426-8af2-4f05-8bf8-79da6c96a80f"
+          toolInterest="discovery"
         />
       )}
 

@@ -35,6 +35,7 @@ const TOOL_CATEGORIES = [
     tools: [
       { id: 'roi', name: 'ROI Calculator' },
       { id: 'success-plan', name: 'Mutual Success Plan' },
+      { id: 'saas-pricing', name: 'SaaS Pricing Calculator' },
       { id: 'business-case', name: 'Business Case Builder' },
       { id: 'competitive-battle-cards', name: 'Competitive Battle Cards' },
     ],
@@ -92,6 +93,13 @@ const TOOL_CATEGORIES = [
       { id: 'resource-calculator', name: 'Resource Calculator' },
       { id: 'solution-mapper', name: 'Solution Mapper' },
       { id: 'use-case-library', name: 'Use Case Library' },
+    ],
+  },
+  {
+    key: 'planning',
+    label: 'Planning & Strategy',
+    tools: [
+      { id: 'territory-planner', name: 'Territory Planner' },
     ],
   },
 ];
