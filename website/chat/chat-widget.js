@@ -285,7 +285,7 @@
       <div class="gloo-chat-window">
         <div class="gloo-chat-header">
           <div class="gloo-chat-header-avatar">
-            <img src="/images/gloo-logo.png" alt="Gloo" onerror="this.style.display='none'">
+            <img src="/images/lou-chat.png" alt="Lou" onerror="this.style.display='none'">
           </div>
           <div class="gloo-chat-header-info">
             <h4>Gloo Support</h4>
