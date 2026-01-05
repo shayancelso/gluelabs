@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
-import louMascot from '@/assets/lou-mascot.png';
+import louContact from '@/assets/lou-contact.png';
 
 export type BannerState = 'hidden' | 'expanded' | 'minimized';
 
@@ -31,7 +31,7 @@ export function LikeWhatYouSeeBanner({
         aria-label="Open contact banner"
       >
         <img 
-          src={louMascot} 
+          src={louContact} 
           alt="Lou" 
           className="h-10 w-10 object-contain"
           style={{ animation: 'bounce 2s ease-in-out infinite' }}
@@ -49,7 +49,7 @@ export function LikeWhatYouSeeBanner({
         {/* Lou mascot */}
         <div className="relative flex-shrink-0">
           <img 
-            src={louMascot} 
+            src={louContact} 
             alt="Lou" 
             className="h-10 w-10 md:h-12 md:w-12 object-contain animate-bounce"
             style={{ animationDuration: '2s' }}
