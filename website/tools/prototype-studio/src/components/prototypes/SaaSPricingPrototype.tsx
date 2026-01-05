@@ -94,30 +94,50 @@ const ONBOARDING_STEPS = [
     title: 'Welcome to the SaaS Pricing Calculator',
     description: 'Optimized pricing strategies can increase revenue by 12-40%. Use this tool to model your pricing tiers and forecast growth.',
     position: 'bottom' as const,
+    action: () => {
+      const el = document.querySelector('[data-onboarding="saas-pricing-header"]');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
   },
   {
     targetSelector: '[data-onboarding="pricing-tiers"]',
     title: 'Pricing Model',
     description: 'Define your pricing tiers and customer distribution. Each tier shows price, features, and expected customer split.',
     position: 'right' as const,
+    action: () => {
+      const el = document.querySelector('[data-onboarding="pricing-tiers"]');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
   },
   {
     targetSelector: '[data-onboarding="revenue-inputs"]',
     title: 'Revenue & Business Inputs',
     description: 'Set your ARR target and key business metrics like churn, CAC, and growth rate. These drive your projections.',
     position: 'right' as const,
+    action: () => {
+      const el = document.querySelector('[data-onboarding="revenue-inputs"]');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
   },
   {
     targetSelector: '[data-onboarding="projections-chart"]',
     title: 'Revenue Projections',
     description: 'See how your revenue grows over time based on your pricing and metrics. The chart updates live as you make changes.',
     position: 'left' as const,
+    action: () => {
+      const el = document.querySelector('[data-onboarding="projections-chart"]');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
   },
   {
     targetSelector: '[data-onboarding="outputs-panel"]',
     title: 'Outputs & Exports',
     description: 'View time-to-goal, LTV:CAC ratio, and other key metrics. Export your model as a PDF to share with stakeholders.',
     position: 'left' as const,
+    action: () => {
+      const el = document.querySelector('[data-onboarding="outputs-panel"]');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
   },
 ];
 

@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef, useMemo, useEffect } from 'react';
 import { X, FileDown, ClipboardList, Building2, Users, Wrench, Target, MessageSquare, ChevronDown, ChevronRight, Plus, Trash2, GripVertical, Check, Edit3, Eye, ArrowUp, ArrowDown, Settings2, CheckCircle2, ArrowLeft } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -25,6 +26,7 @@ import { DiscoveryPdfSummary } from './pdf/DiscoveryPdfSummary';
 interface DiscoveryPrototypeProps {
   onClose: () => void;
   initialBrandConfig: BrandConfig;
+  isTemplateMode?: boolean;
 }
 
 type QuestionType = 'multi-select' | 'single-select' | 'short-text' | 'long-text' | 'number' | 'scale' | 'dropdown' | 'slider';
@@ -378,7 +380,7 @@ const ICON_MAP = {
   message: MessageSquare,
 };
 
-export function DiscoveryPrototype({ onClose, initialBrandConfig }: DiscoveryPrototypeProps) {
+export function DiscoveryPrototype({ onClose, initialBrandConfig, isTemplateMode = false }: DiscoveryPrototypeProps) {
   const [brandConfig] = useState<BrandConfig>(initialBrandConfig);
   const [isExporting, setIsExporting] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -418,9 +420,9 @@ export function DiscoveryPrototype({ onClose, initialBrandConfig }: DiscoveryPro
     },
     {
       targetSelector: '[data-onboarding="mode-toggle"]',
-      title: 'Edit vs Live Preview',
+      title: 'Preview vs Configure',
       description:
-        'Use Live Preview to see the prospect experience, and Edit Questions to customize the questionnaire. Click Next to jump into Edit mode.',
+        'Use Preview Questionnaire to see the prospect experience, and Configure to customize sections and questions. Click Next to jump into Configure mode.',
       position: 'bottom',
       action: switchToEdit,
     },
@@ -437,6 +439,10 @@ export function DiscoveryPrototype({ onClose, initialBrandConfig }: DiscoveryPro
       description:
         'Click any question to edit it. Choose from multiple types: dropdowns, sliders, text fields, and more.',
       position: 'left',
+      action: () => {
+        const el = document.querySelector('[data-onboarding="question-area"]');
+        el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      },
     },
     {
       targetSelector: '[data-onboarding="question-options"]',
@@ -444,38 +450,43 @@ export function DiscoveryPrototype({ onClose, initialBrandConfig }: DiscoveryPro
       description:
         'For choice-based questions, add or edit available options with the + button.',
       position: 'left',
+      action: () => {
+        const el = document.querySelector('[data-onboarding="question-options"]');
+        el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      },
     },
     {
       targetSelector: '[data-onboarding="mode-toggle"]',
       title: 'Preview Your Work',
       description:
-        'Switch to Preview to see exactly what your prospect will experience.',
+        'Switch to Preview Questionnaire to see exactly what your prospect will experience.',
       position: 'bottom',
       action: switchToPreview,
     },
   ], [switchToEdit, switchToPreview]);
 
-  // Onboarding
+  // Onboarding - skip in template mode
   const onboarding = useOnboarding({
     toolId: 'discovery',
-    steps: onboardingSteps,
+    steps: isTemplateMode ? [] : onboardingSteps,
     onComplete: () => {
       // Show banner after onboarding completes
-      if (bannerState === 'hidden') {
+      if (!isTemplateMode && bannerState === 'hidden') {
         setTimeout(() => setBannerState('expanded'), 500);
       }
     },
   });
 
-  // Also show banner after 30 seconds if not already shown
+  // Also show banner after 30 seconds if not already shown - skip in template mode
   useEffect(() => {
+    if (isTemplateMode) return;
     const timer = setTimeout(() => {
       if (bannerState === 'hidden' && !onboarding.isActive) {
         setBannerState('expanded');
       }
     }, 30000);
     return () => clearTimeout(timer);
-  }, [bannerState, onboarding.isActive]);
+  }, [bannerState, onboarding.isActive, isTemplateMode]);
 
   // Handle PDF export using html2canvas/jsPDF for auto-download
   const handleExportPdf = async () => {
@@ -852,11 +863,12 @@ export function DiscoveryPrototype({ onClose, initialBrandConfig }: DiscoveryPro
     return (
       <div 
         key={question.id} 
-        className="p-3 rounded-lg border border-border/50 bg-card/30 space-y-3"
+        className="p-2.5 md:p-3 rounded-lg border border-border/50 bg-card/30 space-y-2.5 md:space-y-3"
         data-onboarding={idx === 0 ? "question-area" : undefined}
       >
-        <div className="flex items-start gap-2">
-          <div className="flex flex-col gap-0.5">
+        <div className="flex items-start gap-1.5 md:gap-2">
+          {/* Move arrows - hidden on very small screens */}
+          <div className="hidden sm:flex flex-col gap-0.5 shrink-0">
             <Button
               variant="ghost"
               size="sm"
@@ -876,22 +888,22 @@ export function DiscoveryPrototype({ onClose, initialBrandConfig }: DiscoveryPro
               <ArrowDown className="h-3 w-3" />
             </Button>
           </div>
-          <div className="flex-1 space-y-2">
+          <div className="flex-1 space-y-2 min-w-0 overflow-hidden">
             <Input
               value={question.question}
               onChange={(e) => updateQuestionText(sectionId, question.id, e.target.value)}
-              className="text-sm font-medium h-8"
+              className="text-xs md:text-sm font-medium h-8"
               placeholder="Question text..."
             />
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-1.5 md:gap-2">
               <Select
                 value={question.type}
                 onValueChange={(value) => updateQuestionType(sectionId, question.id, value as QuestionType)}
               >
-                <SelectTrigger className="h-7 text-xs w-[140px] bg-background">
+                <SelectTrigger className="h-7 text-[10px] md:text-xs w-[110px] md:w-[140px] bg-background">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-popover">
+                <SelectContent className="bg-popover z-[60]">
                   {QUESTION_TYPES.map((type) => (
                     <SelectItem key={type.value} value={type.value} className="text-xs">
                       {type.label}
@@ -910,36 +922,37 @@ export function DiscoveryPrototype({ onClose, initialBrandConfig }: DiscoveryPro
                         : s
                     ));
                   }}
+                  className="h-3.5 w-3.5"
                 />
-                <Label htmlFor={`required-${question.id}`} className="text-xs text-muted-foreground">Required</Label>
+                <Label htmlFor={`required-${question.id}`} className="text-[10px] md:text-xs text-muted-foreground">Req</Label>
               </div>
             </div>
           </div>
           <Button
             variant="ghost"
             size="sm"
-            className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive shrink-0"
+            className="h-6 w-6 md:h-7 md:w-7 p-0 text-muted-foreground hover:text-destructive shrink-0"
             onClick={() => deleteQuestion(sectionId, question.id)}
           >
-            <Trash2 className="h-3.5 w-3.5" />
+            <Trash2 className="h-3 w-3 md:h-3.5 md:w-3.5" />
           </Button>
         </div>
 
-        {/* Option editor for select types */}
+        {/* Option editor for select types - Mobile optimized */}
         {['multi-select', 'single-select', 'dropdown'].includes(question.type) && question.options && (
-          <div className="pl-8 space-y-2" data-onboarding="question-options">
+          <div className="pl-0 sm:pl-8 space-y-1.5 md:space-y-2" data-onboarding="question-options">
             {question.options.map((option) => (
-              <div key={option.id} className="flex items-center gap-2">
-                <GripVertical className="h-3 w-3 text-muted-foreground" />
+              <div key={option.id} className="flex items-center gap-1.5 md:gap-2">
+                <GripVertical className="h-3 w-3 text-muted-foreground hidden sm:block shrink-0" />
                 <Input
                   value={option.label}
                   onChange={(e) => updateQuestionOption(sectionId, question.id, option.id, e.target.value)}
-                  className="h-7 text-xs flex-1"
+                  className="h-7 text-[10px] md:text-xs flex-1 min-w-0"
                 />
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-6 w-6 p-0 text-muted-foreground hover:text-destructive"
+                  className="h-6 w-6 p-0 text-muted-foreground hover:text-destructive shrink-0"
                   onClick={() => removeQuestionOption(sectionId, question.id, option.id)}
                 >
                   <X className="h-3 w-3" />
@@ -949,7 +962,7 @@ export function DiscoveryPrototype({ onClose, initialBrandConfig }: DiscoveryPro
             <Button
               variant="ghost"
               size="sm"
-              className="h-7 text-xs gap-1"
+              className="h-7 text-[10px] md:text-xs gap-1"
               onClick={() => addQuestionOption(sectionId, question.id)}
             >
               <Plus className="h-3 w-3" />
@@ -1034,8 +1047,8 @@ export function DiscoveryPrototype({ onClose, initialBrandConfig }: DiscoveryPro
   // This keeps OnboardingTooltip mounted across all view modes
   // =====================
   return (
-    <div
-      className="fixed top-[120px] md:top-[150px] inset-x-0 bottom-0 z-50 flex flex-col"
+    <div 
+      className="fixed inset-0 z-50 flex flex-col"
       style={backgroundStyle}
     >
       {/* Dot grid overlay */}
@@ -1262,173 +1275,9 @@ export function DiscoveryPrototype({ onClose, initialBrandConfig }: DiscoveryPro
         </>
       )}
 
-      {/* ==================== EDIT VIEW ==================== */}
-      {viewMode === 'edit' && (
-        <>
-          {/* Header */}
-          <div className="relative z-10 p-6 pb-0">
-            <div 
-              data-onboarding="discovery-header"
-              className="rounded-2xl p-6"
-              style={{
-                background: `linear-gradient(135deg, ${brandConfig.primaryColor}, ${brandConfig.secondaryColor})`,
-              }}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  {brandConfig.logoUrl ? (
-                    <div className="bg-white/20 p-2 rounded-xl backdrop-blur-sm">
-                      <img src={brandConfig.logoUrl} alt="Logo" className="h-10 w-auto object-contain" />
-                    </div>
-                  ) : (
-                    <div className="bg-white/20 p-3 rounded-xl backdrop-blur-sm">
-                      <Edit3 className="h-8 w-8 text-white" />
-                    </div>
-                  )}
-                  <div>
-                    <h1 className="text-xl font-bold text-white flex items-center gap-2">
-                      <Edit3 className="h-5 w-5" />
-                      Edit Questionnaire
-                    </h1>
-                    <p className="text-white/80 text-sm">
-                      Configure sections, questions, and options
-                    </p>
-                  </div>
-                </div>
-                <div data-onboarding="mode-toggle" className="flex items-center gap-3">
-                  <Button 
-                    variant="secondary" 
-                    size="sm" 
-                    className="gap-2 bg-white/20 hover:bg-white/30 text-white border-white/30"
-                    onClick={() => setViewMode('preview')}
-                  >
-                    <Eye className="h-4 w-4" />
-                    Live Preview
-                  </Button>
-                  <Button 
-                    variant="secondary" 
-                    size="sm" 
-                    onClick={onClose}
-                    className="bg-white/20 hover:bg-white/30 border-0 text-white"
-                  >
-                    <X className="h-4 w-4" />
-                    <span className="ml-2">Close</span>
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
 
-          {/* Edit Content */}
-          <ScrollArea className="relative z-10 flex-1 p-6">
-            <div className="max-w-4xl mx-auto space-y-4" data-onboarding="sections-nav">
-              {sections.map((section, sectionIdx) => {
-                const Icon = ICON_MAP[section.icon];
-                
-                return (
-                  <div 
-                    key={section.id}
-                    className="rounded-xl border border-border/50 overflow-hidden bg-card/80 backdrop-blur-sm"
-                  >
-                    <div className="flex items-center gap-3 p-4 border-b border-border/50 bg-muted/30">
-                      <div className="flex flex-col gap-0.5">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-5 w-5 p-0"
-                          onClick={() => moveSection(section.id, 'up')}
-                          disabled={sectionIdx === 0}
-                        >
-                          <ArrowUp className="h-3 w-3" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-5 w-5 p-0"
-                          onClick={() => moveSection(section.id, 'down')}
-                          disabled={sectionIdx === sections.length - 1}
-                        >
-                          <ArrowDown className="h-3 w-3" />
-                        </Button>
-                      </div>
-                      <div 
-                        className="h-10 w-10 rounded-xl flex items-center justify-center shrink-0"
-                        style={{ backgroundColor: brandConfig.primaryColor + '15' }}
-                      >
-                        <Icon className="h-5 w-5" style={{ color: brandConfig.primaryColor }} />
-                      </div>
-                      <Input
-                        value={section.title}
-                        onChange={(e) => updateSectionTitle(section.id, e.target.value)}
-                        className="flex-1 text-lg font-semibold h-10 bg-background"
-                      />
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
-                        onClick={() => deleteSection(section.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    <div className="p-4 space-y-3">
-                      {section.questions.map((q, idx) => renderEditableQuestion(q, section.id, idx, section.questions.length))}
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="w-full gap-1 border-dashed"
-                        onClick={() => addQuestion(section.id)}
-                      >
-                        <Plus className="h-4 w-4" />
-                        Add Question
-                      </Button>
-                    </div>
-                  </div>
-                );
-              })}
-
-              <Button
-                variant="outline"
-                className="w-full gap-2 h-14 border-dashed text-muted-foreground hover:text-foreground"
-                onClick={addSection}
-              >
-                <Plus className="h-5 w-5" />
-                Add New Section
-              </Button>
-
-              {/* Process Editor */}
-              <div className="rounded-xl border border-border/50 overflow-hidden bg-card/80 backdrop-blur-sm mt-6">
-                <div className="p-4 border-b border-border/50 bg-muted/30">
-                  <h3 className="font-semibold flex items-center gap-2">
-                    <Target className="h-5 w-5" style={{ color: brandConfig.secondaryColor }} />
-                    Process Follow-up Questions
-                  </h3>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Configure additional questions based on selected process
-                  </p>
-                </div>
-                <div className="p-4 space-y-3">
-                  {processes.map((process) => (
-                    <div key={process.processId} className="p-3 rounded-lg border border-border/50 bg-muted/20">
-                      <Input
-                        value={process.processName}
-                        onChange={(e) => updateProcessName(process.processId, e.target.value)}
-                        className="font-medium mb-2 h-8"
-                      />
-                      <p className="text-xs text-muted-foreground">
-                        {process.questions.length} follow-up questions
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </ScrollArea>
-        </>
-      )}
-
-      {/* ==================== PREVIEW VIEW (default) ==================== */}
-      {viewMode === 'preview' && (
+      {/* ==================== PREVIEW & EDIT VIEWS (using Tabs) ==================== */}
+      {(viewMode === 'preview' || viewMode === 'edit') && (
         <>
           {/* Header */}
           <div className="relative z-10 p-3 md:p-6 pb-0">
@@ -1456,20 +1305,11 @@ export function DiscoveryPrototype({ onClose, initialBrandConfig }: DiscoveryPro
                       <span className="truncate">{brandConfig.companyName || 'Company'} Discovery</span>
                     </h1>
                     <p className="text-white/80 text-xs md:text-sm truncate hidden sm:block">
-                      Help us understand your needs
+                      {viewMode === 'edit' ? 'Configure sections, questions, and options' : 'Help us understand your needs'}
                     </p>
                   </div>
                 </div>
-                <div data-onboarding="mode-toggle" className="flex items-center gap-1.5 md:gap-3 shrink-0">
-                  <Button 
-                    variant="secondary" 
-                    size="sm" 
-                    className="gap-1 md:gap-2 bg-white/20 hover:bg-white/30 text-white border-white/30 h-8 px-2 md:px-3 text-xs md:text-sm"
-                    onClick={() => setViewMode('edit')}
-                  >
-                    <Edit3 className="h-3.5 w-3.5 md:h-4 md:w-4" />
-                    <span className="hidden md:inline">Edit Questions</span><span className="md:hidden">Edit</span>
-                  </Button>
+                <div className="flex items-center gap-1.5 md:gap-3 shrink-0">
                   <Button 
                     variant="secondary" 
                     size="sm" 
@@ -1494,27 +1334,48 @@ export function DiscoveryPrototype({ onClose, initialBrandConfig }: DiscoveryPro
             </div>
           </div>
 
-          {/* Progress bar */}
-          <div className="relative z-10 px-3 md:px-6 py-2 md:py-4">
-            <div className="flex items-center justify-between mb-1 md:mb-2">
-              <span className="text-xs md:text-sm text-muted-foreground">Progress</span>
-              <span className="text-xs md:text-sm font-medium" style={{ color: brandConfig.primaryColor }}>
-                {progressPercent}%
-              </span>
-            </div>
-            <div className="h-1.5 md:h-2 rounded-full bg-muted overflow-hidden">
-              <div 
-                className="h-full rounded-full transition-all duration-500"
-                style={{ 
-                  width: `${progressPercent}%`,
-                  background: `linear-gradient(90deg, ${brandConfig.primaryColor}, ${brandConfig.secondaryColor})`,
-                }}
-              />
+          {/* TabsList for Preview/Configure toggle */}
+          <div className="relative z-10 px-3 md:px-6 pt-4 md:pt-6">
+            <div data-onboarding="mode-toggle">
+              <Tabs value={viewMode === 'edit' ? 'configure' : 'preview'} onValueChange={(val) => setViewMode(val === 'configure' ? 'edit' : 'preview')}>
+                <TabsList className="mb-0">
+                  <TabsTrigger value="preview" className="flex items-center gap-2">
+                    <Eye className="h-4 w-4" />
+                    Preview Questionnaire
+                  </TabsTrigger>
+                  <TabsTrigger value="configure" className="flex items-center gap-2">
+                    <Settings2 className="h-4 w-4" />
+                    Configure
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
             </div>
           </div>
 
-          {/* Main content */}
-          <div ref={contentRef} className="relative z-10 flex-1 flex flex-col md:flex-row gap-3 md:gap-6 px-3 md:px-6 pb-3 md:pb-6 overflow-hidden">
+          {/* Progress bar - only in preview mode */}
+          {viewMode === 'preview' && (
+            <div className="relative z-10 px-3 md:px-6 py-2 md:py-4">
+              <div className="flex items-center justify-between mb-1 md:mb-2">
+                <span className="text-xs md:text-sm text-muted-foreground">Progress</span>
+                <span className="text-xs md:text-sm font-medium" style={{ color: brandConfig.primaryColor }}>
+                  {progressPercent}%
+                </span>
+              </div>
+              <div className="h-1.5 md:h-2 rounded-full bg-muted overflow-hidden">
+                <div 
+                  className="h-full rounded-full transition-all duration-500"
+                  style={{ 
+                    width: `${progressPercent}%`,
+                    background: `linear-gradient(90deg, ${brandConfig.primaryColor}, ${brandConfig.secondaryColor})`,
+                  }}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* ==================== PREVIEW CONTENT ==================== */}
+          {viewMode === 'preview' && (
+            <div ref={contentRef} className="relative z-10 flex-1 flex flex-col md:flex-row gap-3 md:gap-6 px-3 md:px-6 pb-3 md:pb-6 overflow-hidden">
             {/* Mobile Section Navigation */}
             <div className="md:hidden">
               <ScrollArea className="w-full">
@@ -1584,7 +1445,7 @@ export function DiscoveryPrototype({ onClose, initialBrandConfig }: DiscoveryPro
                           <Icon className="h-4 w-4" style={{ color: section.isOpen ? brandConfig.primaryColor : 'hsl(var(--muted-foreground))' }} />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="text-sm font-medium truncate">{section.title}</div>
+                          <div className="text-sm font-medium">{section.title}</div>
                           <div className="text-xs text-muted-foreground">
                             {answeredInSection} / {section.questions.length}
                           </div>
@@ -1685,6 +1546,117 @@ export function DiscoveryPrototype({ onClose, initialBrandConfig }: DiscoveryPro
               </div>
             </ScrollArea>
           </div>
+          )}
+
+          {/* ==================== CONFIGURE/EDIT CONTENT ==================== */}
+          {viewMode === 'edit' && (
+            <ScrollArea className="relative z-10 flex-1 p-3 md:p-6 overflow-x-hidden">
+              <div className="max-w-4xl mx-auto space-y-3 md:space-y-4" data-onboarding="sections-nav">
+                {sections.map((section, sectionIdx) => {
+                  const Icon = ICON_MAP[section.icon];
+                  
+                  return (
+                    <div 
+                      key={section.id}
+                      className="rounded-xl border border-border/50 overflow-hidden bg-card/80 backdrop-blur-sm"
+                    >
+                      <div className="flex items-center gap-2 md:gap-3 p-2.5 md:p-4 border-b border-border/50 bg-muted/30">
+                        {/* Move arrows - hidden on very small screens */}
+                        <div className="hidden sm:flex flex-col gap-0.5 shrink-0">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-5 w-5 p-0"
+                            onClick={() => moveSection(section.id, 'up')}
+                            disabled={sectionIdx === 0}
+                          >
+                            <ArrowUp className="h-3 w-3" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-5 w-5 p-0"
+                            onClick={() => moveSection(section.id, 'down')}
+                            disabled={sectionIdx === sections.length - 1}
+                          >
+                            <ArrowDown className="h-3 w-3" />
+                          </Button>
+                        </div>
+                        <div 
+                          className="h-8 w-8 md:h-10 md:w-10 rounded-lg md:rounded-xl flex items-center justify-center shrink-0"
+                          style={{ backgroundColor: brandConfig.primaryColor + '15' }}
+                        >
+                          <Icon className="h-4 w-4 md:h-5 md:w-5" style={{ color: brandConfig.primaryColor }} />
+                        </div>
+                        <Input
+                          value={section.title}
+                          onChange={(e) => updateSectionTitle(section.id, e.target.value)}
+                          className="flex-1 text-sm md:text-lg font-semibold h-8 md:h-10 bg-background min-w-0"
+                        />
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-7 w-7 md:h-8 md:w-8 p-0 text-muted-foreground hover:text-destructive shrink-0"
+                          onClick={() => deleteSection(section.id)}
+                        >
+                          <Trash2 className="h-3.5 w-3.5 md:h-4 md:w-4" />
+                        </Button>
+                      </div>
+                      <div className="p-2.5 md:p-4 space-y-2.5 md:space-y-3">
+                        {section.questions.map((q, idx) => renderEditableQuestion(q, section.id, idx, section.questions.length))}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="w-full gap-1 border-dashed text-xs md:text-sm"
+                          onClick={() => addQuestion(section.id)}
+                        >
+                          <Plus className="h-3.5 w-3.5 md:h-4 md:w-4" />
+                          Add Question
+                        </Button>
+                      </div>
+                    </div>
+                  );
+                })}
+
+                <Button
+                  variant="outline"
+                  className="w-full gap-2 h-12 md:h-14 border-dashed text-muted-foreground hover:text-foreground text-xs md:text-sm"
+                  onClick={addSection}
+                >
+                  <Plus className="h-4 w-4 md:h-5 md:w-5" />
+                  Add New Section
+                </Button>
+
+                {/* Process Editor */}
+                <div className="rounded-xl border border-border/50 overflow-hidden bg-card/80 backdrop-blur-sm mt-4 md:mt-6">
+                  <div className="p-2.5 md:p-4 border-b border-border/50 bg-muted/30">
+                    <h3 className="font-semibold flex items-center gap-2 text-sm md:text-base">
+                      <Target className="h-4 w-4 md:h-5 md:w-5" style={{ color: brandConfig.secondaryColor }} />
+                      <span className="hidden sm:inline">Process Follow-up Questions</span>
+                      <span className="sm:hidden">Follow-up Questions</span>
+                    </h3>
+                    <p className="text-xs md:text-sm text-muted-foreground mt-1 hidden sm:block">
+                      Configure additional questions based on selected process
+                    </p>
+                  </div>
+                  <div className="p-2.5 md:p-4 space-y-2 md:space-y-3">
+                    {processes.map((process) => (
+                      <div key={process.processId} className="p-2.5 md:p-3 rounded-lg border border-border/50 bg-muted/20">
+                        <Input
+                          value={process.processName}
+                          onChange={(e) => updateProcessName(process.processId, e.target.value)}
+                          className="font-medium mb-2 h-8 text-xs md:text-sm"
+                        />
+                        <p className="text-[10px] md:text-xs text-muted-foreground">
+                          {process.questions.length} follow-up questions
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </ScrollArea>
+          )}
         </>
       )}
 
@@ -1713,10 +1685,10 @@ export function DiscoveryPrototype({ onClose, initialBrandConfig }: DiscoveryPro
         }
       `}</style>
 
-      {/* ==================== ALWAYS MOUNTED: Onboarding + Banner + Dialog ==================== */}
+      {/* ==================== ALWAYS MOUNTED: Onboarding + Banner + Dialog (prototype mode only) ==================== */}
       
-      {/* Onboarding Tooltip - always rendered so it persists across view mode changes */}
-      {onboarding.isActive && onboarding.currentStepData && (
+      {/* Onboarding Tooltip - only in prototype mode */}
+      {!isTemplateMode && onboarding.isActive && onboarding.currentStepData && (
         <OnboardingTooltip
           step={onboarding.currentStepData}
           currentStep={onboarding.currentStep}
@@ -1729,25 +1701,29 @@ export function DiscoveryPrototype({ onClose, initialBrandConfig }: DiscoveryPro
         />
       )}
 
-      {/* Like What You See Banner */}
-      <LikeWhatYouSeeBanner
-        state={bannerState}
-        companyName={initialBrandConfig.companyName}
-        onContact={() => {
-          setBannerState('minimized');
-          setShowContactDialog(true);
-        }}
-        onMinimize={() => setBannerState('minimized')}
-        onExpand={() => setBannerState('expanded')}
-      />
+      {/* Like What You See Banner - only in prototype mode */}
+      {!isTemplateMode && (
+        <LikeWhatYouSeeBanner
+          state={bannerState}
+          companyName={initialBrandConfig.companyName}
+          onContact={() => {
+            setBannerState('minimized');
+            setShowContactDialog(true);
+          }}
+          onMinimize={() => setBannerState('minimized')}
+          onExpand={() => setBannerState('expanded')}
+        />
+      )}
 
-      {/* Contact Dialog */}
-      <ContactDialog
-        open={showContactDialog}
-        onClose={() => setShowContactDialog(false)}
-        brandConfig={initialBrandConfig}
-        toolInterest="discovery"
-      />
+      {/* Contact Dialog - only in prototype mode */}
+      {!isTemplateMode && (
+        <ContactDialog
+          open={showContactDialog}
+          onClose={() => setShowContactDialog(false)}
+          brandConfig={initialBrandConfig}
+          toolInterest="af13a426-8af2-4f05-8bf8-79da6c96a80f"
+        />
+      )}
 
       {/* Hidden PDF Pages for Export - 3 pages: overview + 2 sections each on pages 2 & 3 */}
       <PdfPage

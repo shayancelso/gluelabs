@@ -63,36 +63,60 @@ const ONBOARDING_STEPS: OnboardingStep[] = [
     title: 'Welcome to Territory Planner',
     description: 'Balanced territories can improve sales performance by up to 15%. Explore how this tool helps optimize your team coverage.',
     position: 'bottom',
+    action: () => {
+      const el = document.querySelector('[data-onboarding="territory-header"]');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
   },
   {
     targetSelector: '[data-onboarding="team-capacity"]',
     title: 'Team Capacity Overview',
     description: 'This shows how work and revenue are distributed across the team, including capacity, whitespace, risk, and health.',
     position: 'top',
+    action: () => {
+      const el = document.querySelector('[data-onboarding="team-capacity"]');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
   },
   {
     targetSelector: '[data-onboarding="equity-section"]',
     title: 'Equity Analysis',
     description: 'Equity scores measure fairness of distribution across ARR, whitespace, capacity, and churn risk.',
     position: 'bottom',
+    action: () => {
+      const el = document.querySelector('[data-onboarding="equity-section"]');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
   },
   {
     targetSelector: '[data-onboarding="recommendations-section"]',
     title: 'Smart Recommendations',
     description: 'AI-generated suggestions to rebalance territories and improve equity and capacity.',
     position: 'bottom',
+    action: () => {
+      const el = document.querySelector('[data-onboarding="recommendations-section"]');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
   },
   {
     targetSelector: '[data-onboarding="projection-section"]',
     title: 'Projection Engine',
     description: 'Model future growth, churn, and hiring needs based on your inputs.',
     position: 'bottom',
+    action: () => {
+      const el = document.querySelector('[data-onboarding="projection-section"]');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
   },
   {
     targetSelector: '[data-onboarding="scenario-section"]',
     title: 'Scenario Planner & New Account Allocator',
     description: 'A sandbox to test reassignments, headcount changes, and routing new accounts.',
     position: 'bottom',
+    action: () => {
+      const el = document.querySelector('[data-onboarding="scenario-section"]');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
   },
 ];
 

@@ -31,30 +31,50 @@ const SUCCESS_PLAN_ONBOARDING_STEPS: OnboardingStep[] = [
     title: 'Welcome to Mutual Success Plan',
     description: 'Align your sales team with your prospect\'s buying process. Research shows deals with mutual action plans have 32% higher win rates and 20% shorter sales cycles. Let\'s build your roadmap.',
     position: 'bottom',
+    action: () => {
+      const el = document.querySelector('[data-onboarding="msp-header"]');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
   },
   {
     targetSelector: '[data-onboarding="timeline-section"]',
     title: 'Set Your Timeline',
     description: 'Choose a target close date or sales cycle length. All stages work backwards from here.',
     position: 'right',
+    action: () => {
+      const el = document.querySelector('[data-onboarding="timeline-section"]');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
   },
   {
     targetSelector: '[data-onboarding="team-section"]',
     title: 'Define Your Teams',
     description: 'Add people from both sides. This enables assigning accountability for each stage.',
     position: 'right',
+    action: () => {
+      const el = document.querySelector('[data-onboarding="team-section"]');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
   },
   {
     targetSelector: '[data-onboarding="stages-section"]',
     title: 'Configure Stages',
     description: 'Each stage has a name, duration, and owner. Add custom stages or adjust durations as needed.',
     position: 'right',
+    action: () => {
+      const el = document.querySelector('[data-onboarding="stages-section"]');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
   },
   {
     targetSelector: '[data-onboarding="gantt-chart"]',
     title: 'Visualize the Timeline',
     description: 'The timeline updates automatically. Export to PDF to share with your prospect.',
     position: 'left',
+    action: () => {
+      const el = document.querySelector('[data-onboarding="gantt-chart"]');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
   },
 ];
 
@@ -76,6 +96,7 @@ interface SuccessPlanPrototypeProps {
   initialBrandConfig: BrandConfig;
   discoveryData?: MSPDiscoveryConfig;
   onEditDiscovery?: () => void;
+  isTemplateMode?: boolean;
 }
 
 const defaultPeople: Person[] = [
@@ -100,7 +121,7 @@ const CYCLE_OPTIONS = [
   { label: '12 weeks', days: 84 },
 ];
 
-export function SuccessPlanPrototype({ onClose, initialBrandConfig, discoveryData, onEditDiscovery }: SuccessPlanPrototypeProps) {
+export function SuccessPlanPrototype({ onClose, initialBrandConfig, discoveryData, onEditDiscovery, isTemplateMode = false }: SuccessPlanPrototypeProps) {
   const [brandConfig] = useState<BrandConfig>(initialBrandConfig);
   const [isExporting, setIsExporting] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -114,26 +135,27 @@ export function SuccessPlanPrototype({ onClose, initialBrandConfig, discoveryDat
   const [showContactDialog, setShowContactDialog] = useState(false);
   const [bannerState, setBannerState] = useState<'hidden' | 'expanded' | 'minimized'>('hidden');
 
-  // Onboarding
+  // Onboarding - skip in template mode
   const onboarding = useOnboarding({
     toolId: 'success_plan',
-    steps: SUCCESS_PLAN_ONBOARDING_STEPS,
+    steps: isTemplateMode ? [] : SUCCESS_PLAN_ONBOARDING_STEPS,
     onComplete: () => {
-      if (bannerState === 'hidden') {
+      if (!isTemplateMode && bannerState === 'hidden') {
         setTimeout(() => setBannerState('expanded'), 500);
       }
     },
   });
 
-  // Show banner after 30 seconds if not already shown
+  // Show banner after 30 seconds if not already shown - skip in template mode
   useEffect(() => {
+    if (isTemplateMode) return;
     const timer = setTimeout(() => {
       if (bannerState === 'hidden' && !onboarding.isActive) {
         setBannerState('expanded');
       }
     }, 30000);
     return () => clearTimeout(timer);
-  }, [bannerState, onboarding.isActive]);
+  }, [bannerState, onboarding.isActive, isTemplateMode]);
 
   // Apply discovery data on mount
   useEffect(() => {
@@ -374,9 +396,9 @@ export function SuccessPlanPrototype({ onClose, initialBrandConfig, discoveryDat
   };
 
   return (
-    <div
+    <div 
       ref={contentRef}
-      className="flex flex-col min-h-[600px] relative pt-6 md:pt-8"
+      className="flex flex-col min-h-[600px] max-h-[80vh] relative"
       style={{
         background: `
           radial-gradient(ellipse 80% 60% at 85% 80%, ${brandConfig.accentColor}15 0%, transparent 50%),
@@ -783,8 +805,8 @@ export function SuccessPlanPrototype({ onClose, initialBrandConfig, discoveryDat
                 </div>
               </div>
 
-              {/* Stage List Summary */}
-              <div className="bg-background/80 rounded-lg md:rounded-xl border border-border/50 p-3 md:p-6">
+              {/* Stage List Summary - Desktop only */}
+              <div className="hidden md:block bg-background/80 rounded-lg md:rounded-xl border border-border/50 p-3 md:p-6">
                 <h3 className="font-semibold mb-2 md:mb-4 text-xs md:text-base" style={{ color: brandConfig.textColor }}>
                   Stage Details
                 </h3>
@@ -817,6 +839,97 @@ export function SuccessPlanPrototype({ onClose, initialBrandConfig, discoveryDat
                       </div>
                     );
                   })}
+                </div>
+              </div>
+
+              {/* Mobile Stage Editor - Only visible on mobile */}
+              <div className="md:hidden bg-background/80 rounded-xl border border-border/50 p-4 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-semibold text-sm" style={{ color: brandConfig.textColor }}>
+                    Edit Stages
+                  </h3>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={handleAddStage}
+                    className="h-7 gap-1 text-xs px-2"
+                    style={{ color: brandConfig.primaryColor }}
+                  >
+                    <Plus className="h-3 w-3" />
+                    Add
+                  </Button>
+                </div>
+
+                <div className="space-y-4">
+                  {stages.map((stage) => (
+                    <div 
+                      key={stage.id} 
+                      className="p-3 rounded-lg space-y-3 bg-muted/20 border border-border/30"
+                    >
+                      <div className="flex items-center gap-2">
+                        <div 
+                          className="w-2 h-2 rounded-full shrink-0"
+                          style={getStageStyle(stage)}
+                        />
+                        <Input
+                          value={stage.name}
+                          onChange={(e) => handleUpdateStage(stage.id, { name: e.target.value })}
+                          className="h-8 text-sm flex-1 border-none bg-transparent p-0 focus-visible:ring-0 font-medium"
+                        />
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeleteStage(stage.id)}
+                          className="h-6 w-6 p-0 text-muted-foreground hover:text-destructive shrink-0"
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      </div>
+
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between text-xs text-muted-foreground">
+                          <span>Duration</span>
+                          <span className="font-medium">{stage.durationDays} days</span>
+                        </div>
+                        <Slider
+                          value={[stage.durationDays]}
+                          onValueChange={([value]) => handleUpdateStage(stage.id, { durationDays: value })}
+                          min={1}
+                          max={14}
+                          step={1}
+                          className={`success-plan-slider ${hasSharedOwnership(stage) ? 'success-plan-slider-shared' : stage.owners.some(id => people.find(p => p.id === id)?.side === 'buyer') ? 'success-plan-slider-buyer' : 'success-plan-slider-seller'}`}
+                        />
+                      </div>
+
+                      {/* Owner selection */}
+                      <div className="space-y-2">
+                        <span className="text-xs text-muted-foreground">Owners:</span>
+                        <div className="flex flex-wrap gap-1.5">
+                          {people.map((person) => (
+                            <label
+                              key={person.id}
+                              className={cn(
+                                "flex items-center gap-1 px-2 py-1 rounded text-xs cursor-pointer transition-colors",
+                                stage.owners.includes(person.id)
+                                  ? "text-white"
+                                  : "bg-muted/30 text-muted-foreground hover:bg-muted/50"
+                              )}
+                              style={stage.owners.includes(person.id) ? {
+                                backgroundColor: person.side === 'seller' ? brandConfig.primaryColor : brandConfig.secondaryColor,
+                              } : undefined}
+                            >
+                              <Checkbox
+                                checked={stage.owners.includes(person.id)}
+                                onCheckedChange={() => handleToggleStageOwner(stage.id, person.id)}
+                                className="h-3 w-3 border-current"
+                              />
+                              <span className="truncate max-w-[80px]">{person.name || (person.side === 'seller' ? 'Sales' : 'Buyer')}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
 
@@ -907,8 +1020,8 @@ export function SuccessPlanPrototype({ onClose, initialBrandConfig, discoveryDat
         }
       `}</style>
 
-      {/* Onboarding Tooltip */}
-      {onboarding.isActive && onboarding.currentStepData && (
+      {/* Onboarding Tooltip - only in prototype mode */}
+      {!isTemplateMode && onboarding.isActive && onboarding.currentStepData && (
         <OnboardingTooltip
           step={onboarding.currentStepData}
           currentStep={onboarding.currentStep}
@@ -921,25 +1034,29 @@ export function SuccessPlanPrototype({ onClose, initialBrandConfig, discoveryDat
         />
       )}
 
-      {/* Like What You See Banner */}
-      <LikeWhatYouSeeBanner
-        state={bannerState}
-        companyName={brandConfig.companyName}
-        onContact={() => {
-          setBannerState('minimized');
-          setShowContactDialog(true);
-        }}
-        onMinimize={() => setBannerState('minimized')}
-        onExpand={() => setBannerState('expanded')}
-      />
+      {/* Like What You See Banner - only in prototype mode */}
+      {!isTemplateMode && (
+        <LikeWhatYouSeeBanner
+          state={bannerState}
+          companyName={brandConfig.companyName}
+          onContact={() => {
+            setBannerState('minimized');
+            setShowContactDialog(true);
+          }}
+          onMinimize={() => setBannerState('minimized')}
+          onExpand={() => setBannerState('expanded')}
+        />
+      )}
 
-      {/* Contact Dialog */}
-      <ContactDialog
-        open={showContactDialog}
-        onClose={() => setShowContactDialog(false)}
-        brandConfig={brandConfig}
-        toolInterest="success-plan"
-      />
+      {/* Contact Dialog - only in prototype mode */}
+      {!isTemplateMode && (
+        <ContactDialog
+          open={showContactDialog}
+          onClose={() => setShowContactDialog(false)}
+          brandConfig={brandConfig}
+          toolInterest="4b10fb29-f178-45aa-b90f-4c75750430fb"
+        />
+      )}
 
       {/* Hidden PDF Export - Portrait Single Page */}
       <PdfPage

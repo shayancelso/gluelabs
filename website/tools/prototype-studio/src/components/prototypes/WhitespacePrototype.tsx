@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
-import { 
+import {
   Grid3X3, 
   Plus, 
   Trash2, 
@@ -24,10 +24,13 @@ import {
   Activity,
   Star,
   Lightbulb,
-  Factory
+  Factory,
+  ChevronUp,
+  ChevronDown
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
@@ -169,45 +172,86 @@ export function WhitespacePrototype({ brandConfig, onClose }: WhitespacePrototyp
   const pdfPage2Ref = useRef<HTMLDivElement>(null);
   const [showContactDialog, setShowContactDialog] = useState(false);
   const [bannerState, setBannerState] = useState<'hidden' | 'expanded' | 'minimized'>('hidden');
-  // Define onboarding steps with tab navigation
+  const [showCsvReference, setShowCsvReference] = useState(false);
+  // Define onboarding steps with tab navigation and scroll
   const onboardingSteps: OnboardingStep[] = useMemo(() => [
     {
       targetSelector: '[data-onboarding="whitespace-header"]',
       title: 'Welcome to Whitespace Analyzer',
       description: 'Cross-sell and upsell opportunities represent 60-70% of revenue growth potential. Companies using structured whitespace analysis see 25-30% higher expansion revenue. Let\'s explore how it works.',
       position: 'bottom',
+      action: () => {
+        setActiveTab('preview');
+        setTimeout(() => {
+          const el = document.querySelector('[data-onboarding="whitespace-header"]');
+          el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+      },
     },
     {
       targetSelector: '[data-onboarding="customer-column"]',
       title: 'Your Customer Base',
       description: 'Add your customers here. Click the + button to add new ones, or click a name to edit.',
       position: 'right',
+      action: () => {
+        setActiveTab('preview');
+        setTimeout(() => {
+          const el = document.querySelector('[data-onboarding="customer-column"]');
+          el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+      },
     },
     {
       targetSelector: '[data-onboarding="product-row"]',
       title: 'Your Product Catalog',
       description: 'Define your products along the top. Click a product header to see details like price and category.',
       position: 'bottom',
+      action: () => {
+        setActiveTab('preview');
+        setTimeout(() => {
+          const el = document.querySelector('[data-onboarding="product-row"]');
+          el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+      },
     },
     {
       targetSelector: '[data-onboarding="grid-cell"]',
       title: 'Click for Details',
       description: 'Click any cell to see detailed analysis including opportunity score, growth drivers, and next best action.',
       position: 'bottom',
+      action: () => {
+        setActiveTab('preview');
+        setTimeout(() => {
+          const el = document.querySelector('[data-onboarding="grid-cell"]');
+          el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+      },
     },
     {
       targetSelector: '[data-onboarding="configure-tab"]',
       title: 'Configure Your Data',
       description: 'Switch to Configure to add your own customers and products. In a full implementation, this syncs with your CRM automatically. For now, enter sample data to see the tool in action.',
       position: 'bottom',
-      action: () => setActiveTab('configure'),
+      action: () => {
+        setActiveTab('configure');
+        setTimeout(() => {
+          const el = document.querySelector('[data-onboarding="configure-tab"]');
+          el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+      },
     },
     {
       targetSelector: '[data-onboarding="stats-cards"]',
       title: 'Export Your Analysis',
       description: 'These metrics update in real-time. Export to PDF when ready to share with your team.',
       position: 'bottom',
-      action: () => setActiveTab('preview'),
+      action: () => {
+        setActiveTab('preview');
+        setTimeout(() => {
+          const el = document.querySelector('[data-onboarding="stats-cards"]');
+          el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+      },
     },
   ], []);
   
@@ -537,12 +581,12 @@ export function WhitespacePrototype({ brandConfig, onClose }: WhitespacePrototyp
         `}</style>
 
         {/* Header with branding */}
-        <div
+        <div 
           data-onboarding="whitespace-header"
           className="rounded-xl md:rounded-2xl p-4 md:p-6 print:rounded-none print:p-4"
-          style={{
+          style={{ 
             background: `linear-gradient(135deg, ${brandConfig.primaryColor}, ${brandConfig.secondaryColor})`,
-            color: '#ffffff'
+            color: getContrastColor(brandConfig.primaryColor)
           }}
         >
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-0">
@@ -551,11 +595,11 @@ export function WhitespacePrototype({ brandConfig, onClose }: WhitespacePrototyp
                 <img src={brandConfig.logoUrl} alt="Logo" className="h-8 md:h-10 object-contain bg-white/20 rounded-lg p-1" />
               )}
               <div className="min-w-0">
-                <h1 className="text-lg md:text-2xl font-bold flex items-center gap-2 text-white">
+                <h1 className="text-lg md:text-2xl font-bold flex items-center gap-2">
                   <Grid3X3 className="h-5 w-5 md:h-6 md:w-6 shrink-0" />
                   <span className="truncate">{brandConfig.companyName} Whitespace</span>
                 </h1>
-                <p className="opacity-80 text-xs md:text-sm flex items-center gap-2 text-white">
+                <p className="opacity-80 text-xs md:text-sm flex items-center gap-2">
                   {brandConfig.industry && (
                     <>
                       <Factory className="h-3 w-3 shrink-0" />
@@ -569,22 +613,24 @@ export function WhitespacePrototype({ brandConfig, onClose }: WhitespacePrototyp
               </div>
             </div>
             <div className="flex items-center gap-2 no-print self-end md:self-auto">
-              <Button
-                variant="secondary"
-                size="sm"
+              <Button 
+                variant="secondary" 
+                size="sm" 
                 onClick={handleExportPdf}
                 disabled={isExporting}
-                className="bg-white/20 hover:bg-white/30 border-0 text-xs md:text-sm h-8 md:h-9 text-white"
+                className="bg-white/20 hover:bg-white/30 border-0 text-xs md:text-sm h-8 md:h-9"
+                style={{ color: getContrastColor(brandConfig.primaryColor) }}
               >
                 <Download className="h-4 w-4 mr-1.5 md:mr-2" />
                 <span className="hidden md:inline">{isExporting ? 'Exporting...' : 'Export PDF'}</span>
                 <span className="md:hidden">{isExporting ? '...' : 'PDF'}</span>
               </Button>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={onClose}
-                className="bg-white/20 hover:bg-white/30 border-0 h-8 md:h-9 text-white"
+              <Button 
+                variant="secondary" 
+                size="sm" 
+                onClick={onClose} 
+                className="bg-white/20 hover:bg-white/30 border-0 h-8 md:h-9"
+                style={{ color: getContrastColor(brandConfig.primaryColor) }}
               >
                 <X className="h-4 w-4" />
                 <span className="hidden md:inline ml-2">Close</span>
@@ -985,6 +1031,51 @@ export function WhitespacePrototype({ brandConfig, onClose }: WhitespacePrototyp
                   </div>
                 </CardContent>
               </Card>
+
+              {/* Import/Export Reference - accordion style */}
+              <Collapsible open={showCsvReference} onOpenChange={setShowCsvReference}>
+                <Card>
+                  <CollapsibleTrigger asChild>
+                    <CardHeader className="cursor-pointer hover:bg-muted/30 pb-3">
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="text-base">Import/Export Reference</CardTitle>
+                        {showCsvReference ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+                      </div>
+                    </CardHeader>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <CardContent className="pt-0">
+                      <p className="text-sm text-muted-foreground mb-4">
+                        Connect to your CRM (Salesforce, HubSpot, etc.) or import from CSV with these fields:
+                      </p>
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <div>
+                          <h4 className="font-medium mb-2">Customer Fields</h4>
+                          <ul className="space-y-1 text-sm">
+                            <li className="font-mono text-xs bg-muted px-2 py-1 rounded">customer_name</li>
+                            <li className="font-mono text-xs bg-muted px-2 py-1 rounded">segment</li>
+                            <li className="font-mono text-xs bg-muted px-2 py-1 rounded">tier</li>
+                            <li className="font-mono text-xs bg-muted px-2 py-1 rounded">arr</li>
+                            <li className="font-mono text-xs bg-muted px-2 py-1 rounded">growth_stage</li>
+                          </ul>
+                        </div>
+                        <div>
+                          <h4 className="font-medium mb-2">Product Fields</h4>
+                          <ul className="space-y-1 text-sm">
+                            <li className="font-mono text-xs bg-muted px-2 py-1 rounded">product_name</li>
+                            <li className="font-mono text-xs bg-muted px-2 py-1 rounded">category</li>
+                            <li className="font-mono text-xs bg-muted px-2 py-1 rounded">list_price</li>
+                            <li className="font-mono text-xs bg-muted px-2 py-1 rounded text-amber-600 font-medium">status</li>
+                          </ul>
+                        </div>
+                      </div>
+                      <p className="text-xs text-muted-foreground italic mt-4">
+                        Include <span className="text-amber-600 font-medium">status</span> (adopted, in_progress, opportunity) to pre-populate ownership data.
+                      </p>
+                    </CardContent>
+                  </CollapsibleContent>
+                </Card>
+              </Collapsible>
             </div>
           </TabsContent>
         </Tabs>
@@ -1370,7 +1461,7 @@ export function WhitespacePrototype({ brandConfig, onClose }: WhitespacePrototyp
           open={showContactDialog}
           onClose={() => setShowContactDialog(false)}
           brandConfig={brandConfig}
-          toolInterest="whitespace"
+          toolInterest="046e63a3-82fd-4dba-b58b-c3ae253d85d1"
         />
 
         {/* Hidden PDF Export - Page 1: Summary with KPIs */}

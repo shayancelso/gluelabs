@@ -52,51 +52,66 @@ import { exportToPortraitPdf, formatPdfNumber } from '@/lib/exportPdf';
 import { PdfPage } from './pdf/PdfPage';
 import { ROIPdfChart } from './pdf/ROIPdfChart';
 
-// Scroll action for toggles section
-const scrollToToggles = () => {
-  const target = document.querySelector('[data-onboarding="toggles-section"]');
-  if (target) {
-    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-};
-
 const ROI_ONBOARDING_STEPS: OnboardingStep[] = [
   {
     targetSelector: '[data-onboarding="roi-header"]',
     title: 'Welcome to ROI Calculator',
     description: '74% of B2B buyers say demonstrating clear ROI is the most important factor in their purchase decision. Deals with quantified value propositions close 50% faster. Let\'s build your business case.',
     position: 'bottom',
+    action: () => {
+      const el = document.querySelector('[data-onboarding="roi-header"]');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
   },
   {
     targetSelector: '[data-onboarding="investment-section"]',
     title: 'Set Investment Details',
     description: 'Enter the upfront cost and monthly fee for your solution.',
     position: 'right',
+    action: () => {
+      const el = document.querySelector('[data-onboarding="investment-section"]');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
   },
   {
     targetSelector: '[data-onboarding="roles-section"]',
     title: 'Add Team Roles',
     description: 'Add roles that will benefit from time savings. Adjust hourly rates and hours saved per week.',
     position: 'right',
+    action: () => {
+      const el = document.querySelector('[data-onboarding="roles-section"]');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
   },
   {
     targetSelector: '[data-onboarding="toggles-section"]',
     title: 'Customize Value Drivers',
     description: 'Toggle Incremental Revenue and Tool Replacement sections on or off to customize the ROI calculation for your specific use case.',
     position: 'right',
-    action: scrollToToggles,
+    action: () => {
+      const el = document.querySelector('[data-onboarding="toggles-section"]');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
   },
   {
     targetSelector: '[data-onboarding="scenario-buttons"]',
     title: 'Choose a Scenario',
     description: 'Toggle between Conservative, Realistic, and Aggressive projections.',
     position: 'right',
+    action: () => {
+      const el = document.querySelector('[data-onboarding="scenario-buttons"]');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
   },
   {
     targetSelector: '[data-onboarding="roi-chart"]',
     title: 'See the Results',
     description: 'The ROI updates instantly. Export to PDF to share with your prospect.',
     position: 'left',
+    action: () => {
+      const el = document.querySelector('[data-onboarding="roi-chart"]');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
   },
 ];
 
@@ -148,6 +163,7 @@ interface ROIPrototypeProps {
   initialBrandConfig: BrandConfig;
   discoveryData?: ROIDiscoveryConfig;
   onEditDiscovery?: () => void;
+  isTemplateMode?: boolean;
 }
 
 // Helper function to determine if a color is light or dark
@@ -160,7 +176,7 @@ const getContrastColor = (hexColor: string): string => {
   return luminance > 0.5 ? '#1a1a2e' : '#ffffff';
 };
 
-export function ROIPrototype({ onClose, initialBrandConfig, discoveryData, onEditDiscovery }: ROIPrototypeProps) {
+export function ROIPrototype({ onClose, initialBrandConfig, discoveryData, onEditDiscovery, isTemplateMode = false }: ROIPrototypeProps) {
   const [brandConfig] = useState(initialBrandConfig);
   const [isExporting, setIsExporting] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -169,26 +185,27 @@ export function ROIPrototype({ onClose, initialBrandConfig, discoveryData, onEdi
   const [showContactDialog, setShowContactDialog] = useState(false);
   const [bannerState, setBannerState] = useState<'hidden' | 'expanded' | 'minimized'>('hidden');
   
-  // Onboarding
+  // Onboarding - skip in template mode
   const onboarding = useOnboarding({
     toolId: 'roi',
-    steps: ROI_ONBOARDING_STEPS,
+    steps: isTemplateMode ? [] : ROI_ONBOARDING_STEPS,
     onComplete: () => {
-      if (bannerState === 'hidden') {
+      if (!isTemplateMode && bannerState === 'hidden') {
         setTimeout(() => setBannerState('expanded'), 500);
       }
     },
   });
 
-  // Show banner after 30 seconds if not already shown
+  // Show banner after 30 seconds if not already shown - skip in template mode
   useEffect(() => {
+    if (isTemplateMode) return;
     const timer = setTimeout(() => {
       if (bannerState === 'hidden' && !onboarding.isActive) {
         setBannerState('expanded');
       }
     }, 30000);
     return () => clearTimeout(timer);
-  }, [bannerState, onboarding.isActive]);
+  }, [bannerState, onboarding.isActive, isTemplateMode]);
   
   // Initialize state from discovery data or use defaults
   const getInitialRoles = (): Role[] => {
@@ -421,13 +438,12 @@ export function ROIPrototype({ onClose, initialBrandConfig, discoveryData, onEdi
     setToolReplacements(toolReplacements.filter(tool => tool.id !== id));
   };
 
-  // Force white text on gradient headers for better visibility
-  const textColor = '#ffffff';
+  const textColor = getContrastColor(brandConfig.primaryColor);
 
   return (
-    <div
+    <div 
       ref={contentRef}
-      className="min-h-screen px-4 pb-4 pt-6 md:px-6 md:pb-6 md:pt-8"
+      className="min-h-screen p-4 md:p-6"
       style={{
         backgroundImage: `radial-gradient(circle, ${brandConfig.primaryColor}08 1px, transparent 1px)`,
         backgroundSize: '24px 24px',
@@ -455,11 +471,11 @@ export function ROIPrototype({ onClose, initialBrandConfig, discoveryData, onEdi
                 </div>
               )}
               <div className="min-w-0">
-                <h1 className="text-lg md:text-2xl font-bold flex items-center gap-2 text-white">
+                <h1 className="text-lg md:text-2xl font-bold flex items-center gap-2">
                   <Calculator className="h-5 w-5 md:h-6 md:w-6 shrink-0" />
                   <span className="truncate">{brandConfig.companyName} ROI</span>
                 </h1>
-                <p className="opacity-80 text-xs md:text-sm flex items-center gap-2 mt-0.5 md:mt-1 text-white">
+                <p className="opacity-80 text-xs md:text-sm flex items-center gap-2 mt-0.5 md:mt-1">
                   {brandConfig.industry && (
                     <>
                       <Building2 className="h-3 w-3 md:h-4 md:w-4 shrink-0" />
@@ -512,11 +528,11 @@ export function ROIPrototype({ onClose, initialBrandConfig, discoveryData, onEdi
         </div>
 
         {/* Side-by-Side Layout - Stacked on Mobile */}
-        <div className="flex flex-col md:flex-row gap-4 md:gap-6">
-          {/* Left: Configuration Panel */}
-          <div className="w-full md:w-[380px] md:shrink-0">
-            <ScrollArea className="md:h-[calc(100vh-220px)]">
-              <div className="space-y-3 md:space-y-4 md:pr-4">
+        <div className="flex flex-col md:flex-row gap-4 md:gap-6 flex-1 min-h-0">
+          {/* Left: Configuration Panel - More visible space on desktop */}
+          <div className="w-full md:w-[380px] md:shrink-0 md:flex md:flex-col">
+            <ScrollArea className="flex-1 md:max-h-[calc(100vh-180px)]">
+              <div className="space-y-3 md:space-y-4 md:pr-4 pb-4">
                 {/* Prospect Name */}
                 <Card className="border-border/50">
                   <CardHeader className="pb-2 md:pb-3 p-3 md:p-6 md:pt-4">
@@ -857,8 +873,8 @@ export function ROIPrototype({ onClose, initialBrandConfig, discoveryData, onEdi
             </ScrollArea>
           </div>
 
-          {/* Right: Live Preview */}
-          <div data-onboarding="roi-chart" className="flex-1 space-y-4 md:space-y-6">
+          {/* Right: Live Preview - fills remaining space */}
+          <div data-onboarding="roi-chart" className="flex-1 space-y-4 md:space-y-6 min-w-0">
             {/* Summary Cards */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
               <Card className="border-border/50">
@@ -939,8 +955,8 @@ export function ROIPrototype({ onClose, initialBrandConfig, discoveryData, onEdi
                           <stop offset="95%" stopColor={brandConfig.accentColor} stopOpacity={0}/>
                         </linearGradient>
                         <linearGradient id="investmentGradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor={brandConfig.primaryColor} stopOpacity={0.3}/>
-                          <stop offset="95%" stopColor={brandConfig.primaryColor} stopOpacity={0}/>
+                          <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3}/>
+                          <stop offset="95%" stopColor="#22c55e" stopOpacity={0}/>
                         </linearGradient>
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
@@ -965,7 +981,7 @@ export function ROIPrototype({ onClose, initialBrandConfig, discoveryData, onEdi
                             <div className="bg-background border border-border rounded-lg shadow-lg p-3 text-sm">
                               <p className="font-medium mb-2">Month {label}</p>
                               <p className="text-muted-foreground">
-                                Investment: <span style={{ color: brandConfig.primaryColor }} className="font-medium">{formatCurrency(investmentValue)}</span>
+                                Investment: <span className="font-medium text-green-600">{formatCurrency(investmentValue)}</span>
                               </p>
                               <p className="text-muted-foreground">
                                 Benefits: <span style={{ color: brandConfig.accentColor }} className="font-medium">{formatCurrency(benefitsValue)}</span>
@@ -988,7 +1004,7 @@ export function ROIPrototype({ onClose, initialBrandConfig, discoveryData, onEdi
                       <Area
                         type="monotone"
                         dataKey="investment"
-                        stroke={brandConfig.primaryColor}
+                        stroke="#22c55e"
                         fill="url(#investmentGradient)"
                         strokeWidth={2}
                         name="Investment"
@@ -1140,8 +1156,8 @@ export function ROIPrototype({ onClose, initialBrandConfig, discoveryData, onEdi
         }
       `}</style>
 
-      {/* Onboarding Tooltip */}
-      {onboarding.isActive && onboarding.currentStepData && (
+      {/* Onboarding Tooltip - only in prototype mode */}
+      {!isTemplateMode && onboarding.isActive && onboarding.currentStepData && (
         <OnboardingTooltip
           step={onboarding.currentStepData}
           currentStep={onboarding.currentStep}
@@ -1154,25 +1170,29 @@ export function ROIPrototype({ onClose, initialBrandConfig, discoveryData, onEdi
         />
       )}
 
-      {/* Like What You See Banner */}
-      <LikeWhatYouSeeBanner
-        state={bannerState}
-        companyName={brandConfig.companyName}
-        onContact={() => {
-          setBannerState('minimized');
-          setShowContactDialog(true);
-        }}
-        onMinimize={() => setBannerState('minimized')}
-        onExpand={() => setBannerState('expanded')}
-      />
+      {/* Like What You See Banner - only in prototype mode */}
+      {!isTemplateMode && (
+        <LikeWhatYouSeeBanner
+          state={bannerState}
+          companyName={brandConfig.companyName}
+          onContact={() => {
+            setBannerState('minimized');
+            setShowContactDialog(true);
+          }}
+          onMinimize={() => setBannerState('minimized')}
+          onExpand={() => setBannerState('expanded')}
+        />
+      )}
 
-      {/* Contact Dialog */}
-      <ContactDialog
-        open={showContactDialog}
-        onClose={() => setShowContactDialog(false)}
-        brandConfig={brandConfig}
-        toolInterest="roi"
-      />
+      {/* Contact Dialog - only in prototype mode */}
+      {!isTemplateMode && (
+        <ContactDialog
+          open={showContactDialog}
+          onClose={() => setShowContactDialog(false)}
+          brandConfig={brandConfig}
+          toolInterest="1a17eb71-c5ba-4e6b-a1f0-4f848c36b333"
+        />
+      )}
 
       {/* Hidden PDF Export - Portrait Single Page */}
       <PdfPage

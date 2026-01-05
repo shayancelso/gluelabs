@@ -16,7 +16,7 @@ import { Loader2, Send, CheckCircle2, Plus, X } from 'lucide-react';
 // Formspree form ID for Prototype Studio leads
 import { toast } from 'sonner';
 import type { BrandConfig } from './PrototypeBrandingBar';
-import louMascot from '@/assets/lou-mascot.png';
+import louContact from '@/assets/lou-contact.png';
 
 // Categorized tools grouped by business function
 const TOOL_CATEGORIES = [
@@ -237,18 +237,20 @@ export function ContactDialog({ open, onClose, brandConfig, toolInterest, sessio
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="flex flex-row items-start gap-3">
-          <img src={louMascot} alt="" className="h-12 w-12 object-contain" />
-          <div>
-            <DialogTitle className="text-xl">Like what you see?</DialogTitle>
-            <DialogDescription>
-              Let's chat about building custom tools for {brandConfig.companyName || 'your team'}.
-            </DialogDescription>
+      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto p-0">
+        <DialogHeader className="bg-gradient-to-r from-purple-500 to-purple-600 p-6 rounded-t-lg">
+          <div className="flex flex-row items-start gap-3">
+            <img src={louContact} alt="" className="h-12 w-12 object-contain" />
+            <div>
+              <DialogTitle className="text-xl text-white">Like what you see?</DialogTitle>
+              <DialogDescription className="text-white/80">
+                Let's chat about building custom tools for {brandConfig.companyName || 'your team'}.
+              </DialogDescription>
+            </div>
           </div>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+        <form onSubmit={handleSubmit} className="space-y-4 p-6 pt-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="contactName">Your Name *</Label>
@@ -326,6 +328,31 @@ export function ContactDialog({ open, onClose, brandConfig, toolInterest, sessio
                 ))}
               </div>
             </ScrollArea>
+
+            {/* Selected tools as purple bubbles */}
+            {selectedTools.length > 0 && (
+              <div className="flex flex-wrap gap-2 pt-2 border-t">
+                <span className="text-xs text-muted-foreground w-full mb-1">Selected:</span>
+                {selectedTools.map((toolId) => {
+                  const tool = ALL_TOOLS.find(t => t.id === toolId);
+                  return tool ? (
+                    <div
+                      key={toolId}
+                      className="flex items-center gap-1 px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs"
+                    >
+                      <span>{tool.name}</span>
+                      <button
+                        type="button"
+                        onClick={() => handleToolToggle(toolId)}
+                        className="hover:text-purple-900"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ) : null;
+                })}
+              </div>
+            )}
 
             {/* Custom tools */}
             {customTools.length > 0 && (

@@ -145,6 +145,31 @@ export function getSmartTextColor(
 }
 
 /**
+ * Ensure a color has sufficient contrast for text
+ * Returns the original color or a darker variant
+ */
+export function ensureReadableColor(
+  color: string,
+  backgroundColor: string
+): string {
+  const colorLuminance = getLuminance(color);
+  const bgLuminance = getLuminance(backgroundColor);
+
+  // Calculate contrast ratio
+  const lighter = Math.max(colorLuminance, bgLuminance);
+  const darker = Math.min(colorLuminance, bgLuminance);
+  const contrastRatio = (lighter + 0.05) / (darker + 0.05);
+
+  // WCAG AA requires 4.5:1 for normal text
+  if (contrastRatio >= 4.5) {
+    return color;
+  }
+
+  // Return a safe fallback
+  return isLightColor(backgroundColor) ? '#1a1a1a' : '#ffffff';
+}
+
+/**
  * Calculate a score color (green to red gradient based on score 0-100)
  */
 export function getScoreColor(score: number): string {

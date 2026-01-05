@@ -67,42 +67,70 @@ const ONBOARDING_STEPS: OnboardingStep[] = [
     title: 'Welcome to NPS Account Hub',
     description: 'Companies with the highest customer loyalty grow revenue 2.5x faster. Track and act on your NPS data to drive retention.',
     position: 'bottom',
+    action: () => {
+      const el = document.querySelector('[data-onboarding="nps-header"]');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
   },
   {
     targetSelector: '[data-onboarding="nps-kpis"]',
     title: 'Key NPS Metrics',
     description: 'At a glance: overall NPS score, response counts, and category breakdowns.',
     position: 'bottom',
+    action: () => {
+      const el = document.querySelector('[data-onboarding="nps-kpis"]');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
   },
   {
     targetSelector: '[data-onboarding="nps-distribution"]',
     title: 'NPS Distribution',
     description: 'See how your accounts break down across promoters, passives, and detractors.',
     position: 'bottom',
+    action: () => {
+      const el = document.querySelector('[data-onboarding="nps-distribution"]');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
   },
   {
     targetSelector: '[data-onboarding="nps-trend"]',
     title: 'NPS Trend Over Time',
     description: 'Track how your NPS score changes month over month.',
     position: 'bottom',
+    action: () => {
+      const el = document.querySelector('[data-onboarding="nps-trend"]');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
   },
   {
     targetSelector: '[data-onboarding="nps-analysis"]',
     title: 'Action-Focused Analysis',
     description: 'Review at-risk accounts, detractors, and declining scores to prioritize your follow-up actions.',
     position: 'top',
+    action: () => {
+      const el = document.querySelector('[data-onboarding="nps-analysis"]');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
   },
   {
     targetSelector: '[data-onboarding="nps-accounts"]',
     title: 'Account List',
     description: 'Filter and search through all accounts. Click any row to see details.',
     position: 'top',
+    action: () => {
+      const el = document.querySelector('[data-onboarding="nps-accounts"]');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
   },
   {
     targetSelector: '[data-onboarding="nps-configure"]',
     title: 'Configure Data',
     description: 'Switch to the Configure tab to customize demo data for your presentation.',
     position: 'bottom',
+    action: () => {
+      const el = document.querySelector('[data-onboarding="nps-configure"]');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
   },
 ];
 
