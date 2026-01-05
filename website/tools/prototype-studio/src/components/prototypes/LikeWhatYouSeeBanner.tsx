@@ -50,7 +50,7 @@ export function LikeWhatYouSeeBanner({
           <img
             src={louContact}
             alt="Lou"
-            className="h-12 w-12 md:h-14 md:w-14 object-contain"
+            className="h-10 w-10 md:h-12 md:w-12 object-contain"
           />
         </div>
 
