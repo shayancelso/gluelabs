@@ -58,8 +58,8 @@ export function LikeWhatYouSeeBanner({
 
         {/* Text */}
         <div className="text-white">
-          <p className="font-semibold text-sm md:text-base whitespace-nowrap text-white">Like what you see?</p>
-          <p className="text-xs text-white/80 hidden sm:block">Let's build something custom for {companyName || 'you'}</p>
+          <p className="font-semibold text-sm md:text-base whitespace-nowrap" style={{ color: '#ffffff' }}>Like what you see?</p>
+          <p className="text-xs hidden sm:block" style={{ color: 'rgba(255,255,255,0.8)' }}>Let's build something custom for {companyName || 'you'}</p>
         </div>
 
         {/* CTA Button */}
