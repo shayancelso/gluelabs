@@ -397,10 +397,10 @@ export function NPSHubPrototype({ onClose, initialBrandConfig }: NPSHubPrototype
                 />
               )}
               <div>
-                <h1 className="text-xl md:text-2xl font-bold text-white">
+                <h1 className="text-xl md:text-2xl font-bold text-white" style={{ color: '#ffffff' }}>
                   {brandConfig.companyName} NPS Account Hub
                 </h1>
-                <p className="text-white/80 text-sm">
+                <p className="text-white/80 text-sm" style={{ color: 'rgba(255,255,255,0.8)' }}>
                   Track NPS scores, identify at-risk accounts, and manage follow-up actions
                 </p>
               </div>

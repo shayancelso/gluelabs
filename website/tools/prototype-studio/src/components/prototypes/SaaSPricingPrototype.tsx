@@ -387,11 +387,11 @@ export function SaaSPricingPrototype({ onClose, initialBrandConfig }: SaaSPricin
                   </div>
                 )}
                 <div className="min-w-0">
-                  <h1 className="text-lg md:text-2xl font-bold flex items-center gap-2 text-white">
+                  <h1 className="text-lg md:text-2xl font-bold flex items-center gap-2 text-white" style={{ color: '#ffffff' }}>
                     <Calculator className="h-5 w-5 md:h-6 md:w-6 shrink-0" />
                     <span className="truncate">{brandConfig.companyName} SaaS Pricing Calculator</span>
                   </h1>
-                  <p className="text-xs md:text-sm mt-1 text-white/80">
+                  <p className="text-xs md:text-sm mt-1 text-white/80" style={{ color: 'rgba(255,255,255,0.8)' }}>
                     Strategic Revenue Modeling
                   </p>
                 </div>

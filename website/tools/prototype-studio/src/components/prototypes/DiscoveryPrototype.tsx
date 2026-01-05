@@ -1080,11 +1080,11 @@ export function DiscoveryPrototype({ onClose, initialBrandConfig, isTemplateMode
                     </div>
                   )}
                   <div>
-                    <h1 className="text-xl font-bold text-white flex items-center gap-2">
+                    <h1 className="text-xl font-bold text-white flex items-center gap-2" style={{ color: '#ffffff' }}>
                       <CheckCircle2 className="h-5 w-5" />
                       Discovery Document
                     </h1>
-                    <p className="text-white/80 text-sm">
+                    <p className="text-white/80 text-sm" style={{ color: 'rgba(255,255,255,0.8)' }}>
                       {brandConfig.companyName || 'Company'} • Completed {new Date().toLocaleDateString()}
                     </p>
                   </div>
@@ -1300,11 +1300,11 @@ export function DiscoveryPrototype({ onClose, initialBrandConfig, isTemplateMode
                     </div>
                   )}
                   <div className="min-w-0">
-                    <h1 className="text-sm md:text-xl font-bold text-white flex items-center gap-1 md:gap-2">
+                    <h1 className="text-sm md:text-xl font-bold text-white flex items-center gap-1 md:gap-2" style={{ color: '#ffffff' }}>
                       <ClipboardList className="h-4 w-4 md:h-5 md:w-5 shrink-0 hidden md:block" />
                       <span className="truncate">{brandConfig.companyName || 'Company'} Discovery</span>
                     </h1>
-                    <p className="text-white/80 text-xs md:text-sm truncate hidden sm:block">
+                    <p className="text-white/80 text-xs md:text-sm truncate hidden sm:block" style={{ color: 'rgba(255,255,255,0.8)' }}>
                       {viewMode === 'edit' ? 'Configure sections, questions, and options' : 'Help us understand your needs'}
                     </p>
                   </div>

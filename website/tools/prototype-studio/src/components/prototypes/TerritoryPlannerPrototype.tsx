@@ -558,11 +558,11 @@ export function TerritoryPlannerPrototype({ onClose, initialBrandConfig }: Terri
                   </div>
                 )}
                 <div className="min-w-0">
-                  <h1 className="text-lg md:text-2xl font-bold flex items-center gap-2 text-white">
+                  <h1 className="text-lg md:text-2xl font-bold flex items-center gap-2 text-white" style={{ color: '#ffffff' }}>
                     <Map className="h-5 w-5 md:h-6 md:w-6 shrink-0" />
                     <span className="truncate">{brandConfig.companyName} Territory Planner</span>
                   </h1>
-                  <p className="text-xs md:text-sm mt-1 text-white/80">
+                  <p className="text-xs md:text-sm mt-1 text-white/80" style={{ color: 'rgba(255,255,255,0.8)' }}>
                     Capacity, equity, and hiring needs analysis
                   </p>
                 </div>

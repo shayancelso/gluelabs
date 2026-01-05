@@ -470,11 +470,11 @@ export function ROIPrototype({ onClose, initialBrandConfig, discoveryData, onEdi
                 </div>
               )}
               <div className="min-w-0">
-                <h1 className="text-lg md:text-2xl font-bold flex items-center gap-2">
+                <h1 className="text-lg md:text-2xl font-bold flex items-center gap-2" style={{ color: '#ffffff' }}>
                   <Calculator className="h-5 w-5 md:h-6 md:w-6 shrink-0" />
                   <span className="truncate">{brandConfig.companyName} ROI</span>
                 </h1>
-                <p className="opacity-80 text-xs md:text-sm flex items-center gap-2 mt-0.5 md:mt-1">
+                <p className="opacity-80 text-xs md:text-sm flex items-center gap-2 mt-0.5 md:mt-1" style={{ color: 'rgba(255,255,255,0.8)' }}>
                   {brandConfig.industry && (
                     <>
                       <Building2 className="h-3 w-3 md:h-4 md:w-4 shrink-0" />

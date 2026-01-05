@@ -437,11 +437,11 @@ export function SuccessPlanPrototype({ onClose, initialBrandConfig, discoveryDat
                 </div>
               )}
               <div className="min-w-0">
-                <h1 className="text-sm md:text-xl font-bold text-white flex items-center gap-1 md:gap-2">
+                <h1 className="text-sm md:text-xl font-bold text-white flex items-center gap-1 md:gap-2" style={{ color: '#ffffff' }}>
                   <Target className="h-4 w-4 md:h-5 md:w-5 shrink-0 hidden md:block" />
                   <span className="truncate">{brandConfig.companyName || 'Company'} <span className="hidden sm:inline">Mutual </span>Success Plan</span>
                 </h1>
-                <p className="text-white/80 text-xs md:text-sm truncate">
+                <p className="text-white/80 text-xs md:text-sm truncate" style={{ color: 'rgba(255,255,255,0.8)' }}>
                   Target: {format(targetDate, 'MMM d, yyyy')}
                 </p>
               </div>
