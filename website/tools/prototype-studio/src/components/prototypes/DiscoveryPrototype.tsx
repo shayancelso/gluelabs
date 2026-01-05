@@ -1047,8 +1047,8 @@ export function DiscoveryPrototype({ onClose, initialBrandConfig, isTemplateMode
   // This keeps OnboardingTooltip mounted across all view modes
   // =====================
   return (
-    <div 
-      className="fixed inset-0 z-50 flex flex-col"
+    <div
+      className="fixed inset-0 z-[10000] flex flex-col"
       style={backgroundStyle}
     >
       {/* Dot grid overlay */}
