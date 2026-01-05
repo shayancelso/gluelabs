@@ -387,40 +387,32 @@ export function SaaSPricingPrototype({ onClose, initialBrandConfig }: SaaSPricin
                   </div>
                 )}
                 <div className="min-w-0">
-                  <h1 
-                    className="text-lg md:text-2xl font-bold flex items-center gap-2"
-                    style={{ color: getContrastColor(brandConfig.primaryColor) }}
-                  >
+                  <h1 className="text-lg md:text-2xl font-bold flex items-center gap-2 text-white">
                     <Calculator className="h-5 w-5 md:h-6 md:w-6 shrink-0" />
                     <span className="truncate">{brandConfig.companyName} SaaS Pricing Calculator</span>
                   </h1>
-                  <p 
-                    className="text-xs md:text-sm mt-1"
-                    style={{ color: `${getContrastColor(brandConfig.primaryColor)}CC` }}
-                  >
+                  <p className="text-xs md:text-sm mt-1 text-white/80">
                     Strategic Revenue Modeling
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-2 self-end md:self-auto">
-                <Button 
-                  variant="secondary" 
-                  size="sm" 
+                <Button
+                  variant="secondary"
+                  size="sm"
                   onClick={handleExportPdf}
                   disabled={isExporting}
-                  className="bg-white/20 hover:bg-white/30 border-white/30 text-xs md:text-sm h-8 md:h-9"
-                  style={{ color: getContrastColor(brandConfig.primaryColor) }}
+                  className="bg-white/20 hover:bg-white/30 border-white/30 text-xs md:text-sm h-8 md:h-9 text-white"
                 >
                   <Download className="h-4 w-4 mr-1.5 md:mr-2" />
                   <span className="hidden md:inline">{isExporting ? 'Exporting...' : 'Export PDF'}</span>
                   <span className="md:hidden">{isExporting ? '...' : 'PDF'}</span>
                 </Button>
-                <Button 
-                  variant="secondary" 
-                  size="sm" 
-                  onClick={onClose} 
-                  className="bg-white/20 hover:bg-white/30 border-white/30 h-8 md:h-9"
-                  style={{ color: getContrastColor(brandConfig.primaryColor) }}
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={onClose}
+                  className="bg-white/20 hover:bg-white/30 border-white/30 h-8 md:h-9 text-white"
                 >
                   <X className="h-4 w-4" />
                   <span className="hidden md:inline ml-2">Close</span>

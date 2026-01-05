@@ -1048,7 +1048,7 @@ export function DiscoveryPrototype({ onClose, initialBrandConfig, isTemplateMode
   // =====================
   return (
     <div
-      className="fixed inset-0 z-[10000] flex flex-col"
+      className="min-h-screen flex flex-col"
       style={backgroundStyle}
     >
       {/* Dot grid overlay */}

@@ -451,12 +451,11 @@ export function ROIPrototype({ onClose, initialBrandConfig, discoveryData, onEdi
     >
       <div className="max-w-[1600px] mx-auto space-y-4 md:space-y-6">
         {/* Clean Branded Header - Matching Whitespace Style */}
-        <div 
+        <div
           data-onboarding="roi-header"
-          className="rounded-xl md:rounded-2xl p-4 md:p-6 shadow-lg"
-          style={{ 
+          className="rounded-xl md:rounded-2xl p-4 md:p-6 shadow-lg text-white"
+          style={{
             background: `linear-gradient(135deg, ${brandConfig.primaryColor}, ${brandConfig.secondaryColor || brandConfig.primaryColor})`,
-            color: textColor,
           }}
         >
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
@@ -489,36 +488,33 @@ export function ROIPrototype({ onClose, initialBrandConfig, discoveryData, onEdi
             </div>
             <div className="flex items-center gap-2 md:gap-3 self-end md:self-auto">
               {onEditDiscovery && (
-                <Button 
-                  variant="secondary" 
+                <Button
+                  variant="secondary"
                   size="sm"
                   onClick={onEditDiscovery}
-                  className="bg-white/20 hover:bg-white/30 border-0 no-print h-8 md:h-9 text-xs md:text-sm"
-                  style={{ color: textColor }}
+                  className="bg-white/20 hover:bg-white/30 border-0 no-print h-8 md:h-9 text-xs md:text-sm text-white"
                 >
                   <ClipboardList className="h-4 w-4 mr-1 md:mr-2" />
                   <span className="hidden md:inline">Edit Discovery</span>
                   <span className="md:hidden">Discovery</span>
                 </Button>
               )}
-              <Button 
-                variant="secondary" 
+              <Button
+                variant="secondary"
                 size="sm"
                 onClick={handleExportPdf}
                 disabled={isExporting}
-                className="bg-white/20 hover:bg-white/30 border-0 no-print h-8 md:h-9 text-xs md:text-sm"
-                style={{ color: textColor }}
+                className="bg-white/20 hover:bg-white/30 border-0 no-print h-8 md:h-9 text-xs md:text-sm text-white"
               >
                 <FileDown className="h-4 w-4 mr-1 md:mr-2" />
                 <span className="hidden md:inline">{isExporting ? 'Exporting...' : 'Export PDF'}</span>
                 <span className="md:hidden">{isExporting ? '...' : 'PDF'}</span>
               </Button>
-              <Button 
-                variant="secondary" 
+              <Button
+                variant="secondary"
                 size="sm"
                 onClick={onClose}
-                className="bg-white/20 hover:bg-white/30 border-0 h-8 md:h-9"
-                style={{ color: textColor }}
+                className="bg-white/20 hover:bg-white/30 border-0 h-8 md:h-9 text-white"
               >
                 <X className="h-4 w-4" />
                 <span className="hidden md:inline ml-2">Close</span>
