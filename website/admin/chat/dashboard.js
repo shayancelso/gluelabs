@@ -8,7 +8,7 @@ const SUPABASE_URL = 'https://psfqgeomdtwbhdyjsmso.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzZnFnZW9tZHR3YmhkeWpzbXNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYxODEwMjAsImV4cCI6MjA4MTc1NzAyMH0.pDPTBYSDp622N-KUWpG8rJzpcpQI5vnV7dK2_bViRyM';
 
 // Initialize Supabase client
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // State
 let conversations = [];
@@ -37,7 +37,7 @@ async function init() {
 
 // Load all conversations
 async function loadConversations() {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
         .from('conversations')
         .select(`
             *,
@@ -140,7 +140,7 @@ async function selectConversation(id) {
 
 // Load messages for a conversation
 async function loadMessages(conversationId) {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
         .from('messages')
         .select('*')
         .eq('conversation_id', conversationId)
@@ -181,7 +181,7 @@ function subscribeToMessages(conversationId) {
         messageSubscription.unsubscribe();
     }
 
-    messageSubscription = supabase
+    messageSubscription = supabaseClient
         .channel('messages_' + conversationId)
         .on(
             'postgres_changes',
@@ -205,7 +205,7 @@ function subscribeToMessages(conversationId) {
 
 // Subscribe to new conversations
 function subscribeToNewConversations() {
-    conversationSubscription = supabase
+    conversationSubscription = supabaseClient
         .channel('conversations')
         .on(
             'postgres_changes',
@@ -276,7 +276,7 @@ async function sendMessage() {
     appendMessage(tempMessage);
 
     // Send to Supabase
-    const { error } = await supabase
+    const { error } = await supabaseClient
         .from('messages')
         .insert({
             conversation_id: currentConversationId,
@@ -293,7 +293,7 @@ async function sendMessage() {
     }
 
     // Update conversation timestamp
-    await supabase
+    await supabaseClient
         .from('conversations')
         .update({ updated_at: new Date().toISOString() })
         .eq('id', currentConversationId);
@@ -303,7 +303,7 @@ async function sendMessage() {
 async function closeCurrentConversation() {
     if (!currentConversationId) return;
 
-    const { error } = await supabase
+    const { error } = await supabaseClient
         .from('conversations')
         .update({ status: 'closed' })
         .eq('id', currentConversationId);
