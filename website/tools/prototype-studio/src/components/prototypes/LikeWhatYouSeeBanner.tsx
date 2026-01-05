@@ -58,7 +58,7 @@ export function LikeWhatYouSeeBanner({
 
         {/* Text */}
         <div className="text-white">
-          <p className="font-semibold text-sm md:text-base whitespace-nowrap">Like what you see?</p>
+          <p className="font-semibold text-sm md:text-base whitespace-nowrap text-white">Like what you see?</p>
           <p className="text-xs text-white/80 hidden sm:block">Let's build something custom for {companyName || 'you'}</p>
         </div>
 
