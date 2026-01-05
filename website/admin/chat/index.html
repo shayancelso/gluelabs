@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Dashboard | Gloo Admin</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar: Conversation List -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="/images/gloo-logo.png" alt="Gloo" class="logo">
+                <h1>Chat Dashboard</h1>
+            </div>
+            <div class="sidebar-search">
+                <input type="text" placeholder="Search conversations..." id="searchInput">
+            </div>
+            <div class="conversation-list" id="conversationList">
+                <div class="loading">Loading conversations...</div>
+            </div>
+            <div class="sidebar-footer">
+                <div class="status-indicator online"></div>
+                <span>Online</span>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="chat-area">
+            <div class="chat-placeholder" id="chatPlaceholder">
+                <div class="placeholder-content">
+                    <svg viewBox="0 0 24 24" width="64" height="64">
+                        <path fill="#551d84" d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+                    </svg>
+                    <h2>Select a conversation</h2>
+                    <p>Choose a conversation from the sidebar to start chatting</p>
+                </div>
+            </div>
+
+            <div class="chat-container" id="chatContainer" style="display: none;">
+                <div class="chat-header" id="chatHeader">
+                    <div class="visitor-info">
+                        <div class="visitor-avatar">V</div>
+                        <div class="visitor-details">
+                            <h3 id="visitorName">Visitor</h3>
+                            <span id="visitorStatus" class="visitor-status">Active</span>
+                        </div>
+                    </div>
+                    <div class="chat-actions">
+                        <button class="btn-close" id="closeConversation" title="Close conversation">
+                            <svg viewBox="0 0 24 24" width="20" height="20">
+                                <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                            </svg>
+                            Mark Resolved
+                        </button>
+                    </div>
+                </div>
+
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Messages will be loaded here -->
+                </div>
+
+                <div class="chat-input-area">
+                    <textarea
+                        id="messageInput"
+                        placeholder="Type your reply... (Press Enter to send, Shift+Enter for new line)"
+                        rows="1"
+                    ></textarea>
+                    <button class="btn-send" id="sendButton" disabled>
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="currentColor" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Notification Sound -->
+    <audio id="notificationSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU" type="audio/wav">
+    </audio>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>
