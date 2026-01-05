@@ -27,13 +27,13 @@ export function LikeWhatYouSeeBanner({
     return (
       <button
         onClick={onExpand}
-        className="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 shadow-xl shadow-purple-500/30 flex items-center justify-center transition-all duration-300 hover:scale-110 animate-fade-in"
+        className="fixed bottom-6 right-6 z-50 h-12 w-12 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 shadow-xl shadow-purple-500/30 flex items-center justify-center transition-all duration-300 hover:scale-110 animate-fade-in"
         aria-label="Open contact banner"
       >
         <img
           src={louContact}
           alt="Lou"
-          className="h-12 w-12 object-contain"
+          className="h-10 w-10 object-contain -ml-0.5 -mt-0.5"
         />
       </button>
     );
@@ -50,7 +50,7 @@ export function LikeWhatYouSeeBanner({
           <img
             src={louContact}
             alt="Lou"
-            className="h-12 w-12 md:h-14 md:w-14 object-contain"
+            className="h-10 w-10 md:h-12 md:w-12 object-contain"
           />
         </div>
 
