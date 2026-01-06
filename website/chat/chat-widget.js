@@ -269,11 +269,19 @@
     chatWindow.classList.toggle('open', isOpen);
     chatButton.classList.toggle('open', isOpen);
 
+    // Update inline styles (needed because inline styles override CSS)
     if (isOpen) {
+      chatWindow.style.opacity = '1';
+      chatWindow.style.visibility = 'visible';
+      chatWindow.style.transform = 'translateY(0) scale(1)';
       unreadCount = 0;
       updateBadge();
       inputField.focus();
       scrollToBottom();
+    } else {
+      chatWindow.style.opacity = '0';
+      chatWindow.style.visibility = 'hidden';
+      chatWindow.style.transform = 'translateY(20px) scale(0.95)';
     }
   }
 
@@ -281,8 +289,9 @@
   function createWidget() {
     widget = document.createElement('div');
     widget.className = 'gloo-chat-widget';
+    // Inline critical styles to prevent flash before CSS loads
     widget.innerHTML = `
-      <div class="gloo-chat-window">
+      <div class="gloo-chat-window" style="opacity:0;visibility:hidden;transform:translateY(20px) scale(0.95)">
         <div class="gloo-chat-header">
           <div class="gloo-chat-header-avatar">
             <img src="/images/lou-chat.png" alt="Lou" onerror="this.style.display='none'">
