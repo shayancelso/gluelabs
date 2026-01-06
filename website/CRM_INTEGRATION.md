@@ -70,9 +70,61 @@ Sync the website when:
    - Edit `tools/prototype-studio/src/components/prototypes/ContactDialog.tsx`
    - Update the `TOOL_CATEGORIES` constant to match
 
-4. **Deploy:**
-   - Commit changes to the website repo
-   - Vercel will auto-deploy
+4. **Build and Deploy** (see detailed steps below)
+
+## Prototype Studio Build Process
+
+The prototype-studio is a **React/Vite app** that must be built before deployment. The `dist/` folder is gitignored, so built assets must be manually copied to the committed `assets/` folder.
+
+### Important: Two HTML Files Load the App
+
+There are **two entry points** that load the prototype-studio React app:
+
+| URL | File | Purpose |
+|-----|------|---------|
+| `/tools/` | `tools/index.html` | Main tools page |
+| `/tools/prototype-studio/` | `tools/prototype-studio/index.html` | Direct prototype-studio access |
+
+**Both files must reference the same JS bundle.** If you update one and not the other, users will see different versions depending on which URL they visit.
+
+### Build & Deploy Steps
+
+After editing any prototype-studio source files:
+
+```bash
+# 1. Navigate to prototype-studio
+cd tools/prototype-studio
+
+# 2. Build the React app
+npm run build
+
+# 3. Copy the new bundle to the committed assets folder
+# (Check dist/index.html for the new filename)
+cp dist/assets/index-*.js assets/
+cp dist/assets/index-*.css assets/
+
+# 4. Update BOTH HTML files with the new bundle filename
+# - tools/index.html
+# - tools/prototype-studio/index.html
+# Look for the <script type="module" src="..."> tag
+
+# 5. Commit and push
+git add .
+git commit -m "Update prototype-studio build"
+git push
+```
+
+### Verifying the Update
+
+After pushing, verify both entry points show the same content:
+- `https://buildwithgloo.com/tools/` - Click "Get in Touch" on any tool
+- `https://buildwithgloo.com/tools/prototype-studio/` - Click "Get in Touch"
+
+Both should show identical tools of interest lists.
+
+### Common Pitfall
+
+If you only update `tools/prototype-studio/index.html` but forget `tools/index.html`, users visiting `/tools/` will see the old content while `/tools/prototype-studio/` shows the new content. Always update both files.
 
 ## Current Tool Categories
 
