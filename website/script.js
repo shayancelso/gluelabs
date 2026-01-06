@@ -93,6 +93,22 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Handle hash on page load (e.g., navigating from /tools/ to /#contact)
+    if (window.location.hash) {
+        // Small delay to ensure the page has rendered
+        setTimeout(() => {
+            const target = document.querySelector(window.location.hash);
+            if (target) {
+                const navHeight = nav ? nav.offsetHeight : 0;
+                const targetPosition = target.offsetTop - navHeight - 20;
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        }, 100);
+    }
+
     // ==========================================================================
     // Scroll Animations
     // ==========================================================================
