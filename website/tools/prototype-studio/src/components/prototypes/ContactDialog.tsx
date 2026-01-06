@@ -143,6 +143,18 @@ const TOOL_CATEGORIES = [
 // Flatten for lookup
 const ALL_TOOLS = TOOL_CATEGORIES.flatMap(cat => cat.tools);
 
+// Map prototype tool names to CRM tool IDs
+// This allows prototypes to pass friendly names while we use CRM IDs internally
+const PROTOTYPE_TO_CRM_ID: Record<string, string> = {
+  'discovery': 'a-01',           // Discovery Question Builder
+  'roi': 'a-06',                 // ROI & Business Case Calculator
+  'success-plan': 'b-01',        // Implementation Success Plan
+  'whitespace': 'c-04',          // White Space Analysis Grid
+  'territory-planner': 'i-01',   // Territory Planning & Assignment
+  'saas-pricing': 'i-06',        // Compensation & Commission Modeling (closest match)
+  'nps-tracker': 'h-03',         // Sentiment & Risk Detection (closest match)
+};
+
 interface ContactDialogProps {
   open: boolean;
   onClose: () => void;
@@ -170,8 +182,10 @@ export function ContactDialog({ open, onClose, brandConfig, toolInterest, sessio
   // When dialog opens, ensure the current tool is selected
   useEffect(() => {
     if (open && toolInterest) {
-      setSelectedTools(prev => 
-        prev.includes(toolInterest) ? prev : [...prev, toolInterest]
+      // Map prototype tool name to CRM ID, or use as-is if already a CRM ID
+      const crmId = PROTOTYPE_TO_CRM_ID[toolInterest] || toolInterest;
+      setSelectedTools(prev =>
+        prev.includes(crmId) ? prev : [...prev, crmId]
       );
     }
   }, [open, toolInterest]);
