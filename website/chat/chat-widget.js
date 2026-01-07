@@ -201,12 +201,81 @@
       minute: '2-digit'
     });
 
-    div.innerHTML = `
-      <div class="gloo-chat-message-content">${escapeHtml(message.content)}</div>
-      <div class="gloo-chat-message-time">${time}</div>
-    `;
+    // Check if this is a contact form message
+    if (message.message_type === 'contact_form') {
+      div.innerHTML = `
+        <div class="gloo-chat-message-content">${escapeHtml(message.content)}</div>
+        <form class="gloo-chat-contact-form" id="contact-form-${message.id}">
+          <input type="text" name="name" placeholder="Your name" required class="gloo-chat-form-input">
+          <input type="email" name="email" placeholder="Your email" required class="gloo-chat-form-input">
+          <button type="submit" class="gloo-chat-form-submit">Submit</button>
+        </form>
+        <div class="gloo-chat-message-time">${time}</div>
+      `;
+
+      // Bind form submit handler after appending
+      setTimeout(() => {
+        const form = document.getElementById(`contact-form-${message.id}`);
+        if (form) {
+          form.addEventListener('submit', (e) => handleContactFormSubmit(e, message.id));
+        }
+      }, 0);
+    } else {
+      div.innerHTML = `
+        <div class="gloo-chat-message-content">${escapeHtml(message.content)}</div>
+        <div class="gloo-chat-message-time">${time}</div>
+      `;
+    }
 
     messagesContainer.appendChild(div);
+  }
+
+  // Handle contact form submission
+  async function handleContactFormSubmit(e, messageId) {
+    e.preventDefault();
+
+    const form = e.target;
+    const name = form.querySelector('input[name="name"]').value.trim();
+    const email = form.querySelector('input[name="email"]').value.trim();
+
+    if (!name || !email) return;
+
+    // Disable form while submitting
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const inputs = form.querySelectorAll('input');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting...';
+    inputs.forEach(input => input.disabled = true);
+
+    try {
+      // Update conversation with visitor info
+      const { error } = await supabase
+        .from('conversations')
+        .update({
+          visitor_name: name,
+          visitor_email: email,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', conversationId);
+
+      if (error) throw error;
+
+      // Replace form with success message
+      form.innerHTML = `
+        <div class="gloo-chat-form-success">
+          <svg viewBox="0 0 24 24" width="20" height="20">
+            <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+          </svg>
+          Thanks, ${escapeHtml(name)}! We'll be in touch.
+        </div>
+      `;
+    } catch (error) {
+      console.error('Error submitting contact form:', error);
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit';
+      inputs.forEach(input => input.disabled = false);
+      alert('Failed to submit. Please try again.');
+    }
   }
 
   // Show welcome message

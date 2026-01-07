@@ -313,6 +313,77 @@
   transform: scale(1);
 }
 
+/* Contact Form in Chat */
+.gloo-chat-contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--chat-border);
+}
+
+.gloo-chat-form-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--chat-border);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+}
+
+.gloo-chat-form-input:focus {
+  border-color: var(--chat-primary);
+  box-shadow: 0 0 0 3px rgba(85, 29, 132, 0.1);
+}
+
+.gloo-chat-form-input::placeholder {
+  color: var(--chat-text-light);
+}
+
+.gloo-chat-form-submit {
+  padding: 10px 20px;
+  background: var(--chat-primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.gloo-chat-form-submit:hover {
+  background: var(--chat-primary-light);
+  transform: translateY(-1px);
+}
+
+.gloo-chat-form-submit:disabled {
+  background: var(--chat-text-light);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.gloo-chat-form-success {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: #ecfdf5;
+  color: #059669;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.gloo-chat-form-success svg {
+  flex-shrink: 0;
+}
+
 /* Mobile Responsive */
 @media (max-width: 480px) {
   .gloo-chat-widget {
