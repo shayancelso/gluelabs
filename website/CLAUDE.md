@@ -126,6 +126,88 @@ All following tools are conceptualized with defined purposes:
 - Matrix table implementation could benefit from virtualization for large datasets
 - Mobile touch interactions need enhancement for better UX
 
+## CRM & Mobile App (Gloo Admin)
+
+The CRM is a separate codebase managed by **Lovable** at `/CRM/glooadmin/`. It's a Capacitor-based app that runs on iOS and loads from `admin.buildwithgloo.com`.
+
+### Key Components
+- **Frontend**: React + TypeScript + Tailwind CSS (hosted on Lovable)
+- **Backend**: Supabase (PostgreSQL, Edge Functions, Realtime)
+- **Mobile**: Capacitor iOS app (Xcode project at `ios/App/`)
+- **Push Notifications**: APNs via Supabase Edge Functions
+
+### iOS Push Notification Architecture (WORKING ✅)
+
+**Flow:**
+1. iOS app registers with APNs → gets device token
+2. Token saved to `push_tokens` table in Supabase
+3. Events trigger database functions → call Edge Function
+4. Edge Function sends to APNs → notification appears on iPhone
+
+**Key Files:**
+- `ios/App/App/AppDelegate.swift` - Native push registration, forwards to Capacitor via NotificationCenter
+- `ios/App/App/App.entitlements` - Must have `aps-environment: production` for TestFlight
+- `supabase/functions/send-push-notification/index.ts` - Sends to APNs
+- `src/components/NotificationHandler.tsx` - Handles notification taps, routes to correct screen
+
+**Important Notes:**
+- TestFlight requires **Distribution provisioning profile** + `aps-environment: production`
+- APNs topic must match bundle ID: `com.buildwithgloo.crm`
+- Token forwarding uses `NotificationCenter.default.post(name: .capacitorDidRegisterForRemoteNotifications, ...)`
+
+### Deep Linking
+When user taps a push notification, `NotificationHandler.tsx` routes based on `data.type`:
+- `chat_message` → `/live-chat`
+- `task_assigned` → `/tasks`
+- `mention` → `data.link` or `/dashboard`
+
+## Live Chat System (WORKING ✅)
+
+### Website Chat Widget
+**Location:** `/chat/chat-widget.js` and `/chat/chat-widget.css`
+
+**Features:**
+1. Real-time messaging via Supabase Realtime
+2. Auto-reply on first message (1 second delay)
+3. Contact form (name + email) appears after auto-reply
+4. Form submission saves to `conversations` table
+5. Push notification sent when visitor submits contact info
+
+**Data Flow:**
+```
+Visitor sends message
+    ↓
+Message saved to `messages` table
+    ↓
+Database trigger `notify_on_visitor_message()` fires
+    ↓
+Trigger inserts auto-reply with `message_type: 'contact_form'`
+    ↓
+Trigger calls Edge Function → Push notification to team
+    ↓
+Chat widget renders form for name/email
+    ↓
+Visitor submits → saves to `conversations` + inserts message → another push notification
+```
+
+**Key Database Tables:**
+- `conversations` - visitor_id, visitor_name, visitor_email, status
+- `messages` - conversation_id, sender_type ('visitor' | 'agent'), content, message_type
+- `push_tokens` - user_id, token, is_active
+
+**Key Files:**
+- `/chat/chat-widget.js` - Widget logic, form handling
+- `/chat/chat-widget.css` - Widget styling
+- `supabase/migrations/20260106180000_chat_push_notification_trigger.sql` - Auto-reply trigger
+
+### Future Enhancements (Planned)
+- [ ] Follow-up reminder if no agent reply in X minutes
+- [ ] Business hours auto-reply (different message outside hours)
+- [ ] Conversation assignment notifications
+- [ ] Email backup if push fails
+- [ ] Typing indicators
+- [ ] Read receipts
+
 ## AI Assistant Guidelines
 
 **After completing a task that involves tool use, provide a quick summary of the work you've done.**
