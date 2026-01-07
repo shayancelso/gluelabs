@@ -1,0 +1,494 @@
+{
+  "company": {
+    "domain": "ramp.com",
+    "name": "Ramp Business Corporation",
+    "description": "Ramp is a financial operations platform that helps companies achieve more by spending less. With Ramp, companies make payments, issue cards, manage vendors and procurement workflows, book travel, and automate bookkeeping all on one platform.",
+    "industry": "Fintech / Financial Services",
+    "businessModel": "B2B SaaS / Fintech Platform",
+    "founded": "2019",
+    "headquarters": {
+      "city": "New York",
+      "state": "NY",
+      "country": "USA"
+    },
+    "subsidiaries": [
+      {
+        "name": "Cohere.io",
+        "acquiredYear": "2023",
+        "purpose": "AI-powered customer support"
+      },
+      {
+        "name": "Venue",
+        "acquiredYear": "2024",
+        "purpose": "AI-powered procurement platform"
+      },
+      {
+        "name": "Jolt AI",
+        "acquiredYear": "2025",
+        "purpose": "Software engineering productivity"
+      }
+    ],
+    "parentCompany": null
+  },
+  "financials": {
+    "estimatedRevenue": {
+      "value": "$1B+ ARR",
+      "confidence": "high",
+      "sources": ["Company press release September 2025", "TechCrunch"]
+    },
+    "funding": {
+      "totalRaised": "$2.43B",
+      "lastRound": {
+        "type": "Series E-3",
+        "amount": "$300M",
+        "date": "2025-11",
+        "investors": ["Lightspeed Venture Partners", "Alpha Wave Global", "Bessemer Venture Partners", "Robinhood Ventures"]
+      },
+      "confidence": "high"
+    },
+    "headcount": {
+      "current": 1209,
+      "trend": "growing",
+      "growthRate": "7.2% YoY",
+      "confidence": "high"
+    },
+    "valuation": {
+      "value": "$32B",
+      "confidence": "high"
+    }
+  },
+  "technographics": {
+    "crm": {
+      "value": "Salesforce",
+      "confidence": "high",
+      "source": "job_posting"
+    },
+    "customerSuccess": {
+      "value": "Unknown - likely custom",
+      "confidence": "low",
+      "source": "inferred"
+    },
+    "marketing": {
+      "value": "Unknown",
+      "confidence": "low",
+      "source": "inferred"
+    },
+    "dataWarehouse": {
+      "value": "AWS / PostgreSQL",
+      "confidence": "medium",
+      "source": "engineering_blog"
+    },
+    "engineering": [
+      "Python",
+      "Flask",
+      "JavaScript",
+      "TypeScript",
+      "React",
+      "Elixir",
+      "AWS",
+      "Terraform",
+      "Amazon ECS",
+      "Fargate",
+      "PostgreSQL",
+      "RabbitMQ",
+      "Dagster"
+    ],
+    "integrations": [
+      "Slack",
+      "NetSuite",
+      "QuickBooks",
+      "Xero",
+      "Sage Intacct",
+      "Workday",
+      "Stripe"
+    ],
+    "salesTools": [
+      "Salesforce",
+      "Outreach",
+      "LinkedIn Sales Navigator",
+      "Gong",
+      "Clearbit",
+      "Looker"
+    ],
+    "allTools": []
+  },
+  "marketPosition": {
+    "competitors": [
+      {
+        "name": "Brex",
+        "relationship": "direct"
+      },
+      {
+        "name": "BILL Spend & Expense (Divvy)",
+        "relationship": "direct"
+      },
+      {
+        "name": "SAP Concur",
+        "relationship": "direct"
+      },
+      {
+        "name": "Expensify",
+        "relationship": "direct"
+      },
+      {
+        "name": "Navan (TripActions)",
+        "relationship": "direct"
+      },
+      {
+        "name": "Spendesk",
+        "relationship": "direct"
+      },
+      {
+        "name": "Coupa",
+        "relationship": "indirect"
+      }
+    ],
+    "marketShare": {
+      "value": "1.5% of US businesses use Ramp",
+      "confidence": "high"
+    },
+    "growthStage": "scale-up",
+    "recentNews": [
+      {
+        "title": "Ramp hits $32B valuation after $300M raise",
+        "date": "2025-11",
+        "summary": "Lightspeed led Series E-3 round, fourth raise in 2025"
+      },
+      {
+        "title": "Ramp reaches $1B in annualized revenue",
+        "date": "2025-09",
+        "summary": "Milestone reached just 5 years after launching first product"
+      },
+      {
+        "title": "Ramp launches AI Policy Agent",
+        "date": "2025-06",
+        "summary": "Tool applies company expense policies using AI for automated reviews"
+      },
+      {
+        "title": "Ramp Treasury product launch",
+        "date": "2025-01",
+        "summary": "New cash management solution expanding into digital bank territory"
+      },
+      {
+        "title": "Ramp acquires Jolt AI",
+        "date": "2025-09",
+        "summary": "Acquisition to accelerate engineering productivity with AI"
+      }
+    ]
+  },
+  "contacts": [
+    {
+      "name": "Eric Glyman",
+      "title": "Co-founder & CEO",
+      "tier": 1,
+      "linkedIn": "linkedin.com/in/ericglyman",
+      "email": {
+        "address": null,
+        "pattern": "eglyman@ramp.com",
+        "confidence": "high"
+      },
+      "phone": null,
+      "verification": {
+        "confidence": "high",
+        "lastVerified": "2026-01-07",
+        "sources": ["company_website", "wikipedia", "press_releases"],
+        "notes": "Active founder, leads company strategy"
+      },
+      "relevance": "Ultimate decision maker, company visionary"
+    },
+    {
+      "name": "Megan Yen",
+      "title": "VP Customer Success & Activation",
+      "tier": 1,
+      "linkedIn": "linkedin.com/in/meganyen",
+      "email": {
+        "address": null,
+        "pattern": "myen@ramp.com",
+        "confidence": "high"
+      },
+      "phone": null,
+      "verification": {
+        "confidence": "high",
+        "lastVerified": "2026-01-07",
+        "sources": ["clay_dossier", "ramp_blog"],
+        "notes": "Owns customer success and activation strategy"
+      },
+      "relevance": "Budget owner for CS tools, directly relevant for Glue solutions"
+    },
+    {
+      "name": "Max Freeman",
+      "title": "VP of Sales",
+      "tier": 1,
+      "linkedIn": "linkedin.com/in/maxwellfreeman",
+      "email": {
+        "address": null,
+        "pattern": "mfreeman@ramp.com",
+        "confidence": "high"
+      },
+      "phone": null,
+      "verification": {
+        "confidence": "high",
+        "lastVerified": "2026-01-07",
+        "sources": ["linkedin"],
+        "notes": "Active on LinkedIn, currently hiring"
+      },
+      "relevance": "Owns sales strategy, expansion revenue"
+    },
+    {
+      "name": "Colin Kennedy",
+      "title": "Chief Business Officer",
+      "tier": 1,
+      "linkedIn": "linkedin.com/in/colinkennedypartnerships",
+      "email": {
+        "address": null,
+        "pattern": "ckennedy@ramp.com",
+        "confidence": "high"
+      },
+      "phone": null,
+      "verification": {
+        "confidence": "medium",
+        "lastVerified": "2026-01-07",
+        "sources": ["linkedin"],
+        "notes": "Harvard alum, oversees business partnerships"
+      },
+      "relevance": "Strategic partnerships and business development"
+    },
+    {
+      "name": "Will Petrie",
+      "title": "Chief Financial Officer",
+      "tier": 2,
+      "linkedIn": "linkedin.com/in/willpetrie",
+      "email": {
+        "address": null,
+        "pattern": "wpetrie@ramp.com",
+        "confidence": "high"
+      },
+      "phone": null,
+      "verification": {
+        "confidence": "high",
+        "lastVerified": "2026-01-07",
+        "sources": ["company_announcement", "press_releases"],
+        "notes": "Promoted to CFO in 2025"
+      },
+      "relevance": "Financial strategy, may influence operational tool purchases"
+    },
+    {
+      "name": "Geoff Charles",
+      "title": "Chief Product Officer",
+      "tier": 2,
+      "linkedIn": "linkedin.com/in/geoffrey-charles",
+      "email": {
+        "address": null,
+        "pattern": "gcharles@ramp.com",
+        "confidence": "high"
+      },
+      "phone": null,
+      "verification": {
+        "confidence": "high",
+        "lastVerified": "2026-01-07",
+        "sources": ["company_announcement", "linkedin"],
+        "notes": "Promoted to CPO in 2025"
+      },
+      "relevance": "Product strategy, works closely with CS on customer needs"
+    }
+  ],
+  "painPoints": [
+    {
+      "id": "pp1",
+      "title": "Scaling Customer Success Across 50,000+ Customers",
+      "description": "Ramp has grown from startup to serving 50,000+ businesses. Managing activation, retention, and expansion at scale while maintaining personalized service for enterprise accounts is a significant operational challenge.",
+      "confidence": "high",
+      "score": 10,
+      "validation": {
+        "directEvidence": 3,
+        "quantifiedImpact": 2,
+        "recency": 3,
+        "sourceDiversity": 2
+      },
+      "evidence": [
+        {
+          "type": "PRIMARY",
+          "source": "job_posting",
+          "text": "Scaled Customer Success owns the activation, growth, and retention of Ramp's self-service customers. They are placing a big bet on the belief that there is significant untapped potential in their self-service accounts.",
+          "date": "2025-12",
+          "url": "linkedin.com/jobs"
+        },
+        {
+          "type": "PRIMARY",
+          "source": "job_posting",
+          "text": "As an early member of the team, you will have the opportunity to help build and refine Ramp's Customer Success organization",
+          "date": "2025-12",
+          "url": "linkedin.com/jobs"
+        }
+      ],
+      "glueToolFit": "account-health-dashboard",
+      "opportunity": "Account Health Dashboard can provide visibility into health signals across thousands of accounts, enabling proactive intervention"
+    },
+    {
+      "id": "pp2",
+      "title": "Multi-Product Expansion Visibility",
+      "description": "Ramp has 6 distinct product lines (cards, expense management, bill pay, procurement, travel, treasury). Identifying which existing customers are candidates for additional products is critical for their land-and-expand model.",
+      "confidence": "high",
+      "score": 11,
+      "validation": {
+        "directEvidence": 3,
+        "quantifiedImpact": 3,
+        "recency": 3,
+        "sourceDiversity": 2
+      },
+      "evidence": [
+        {
+          "type": "PRIMARY",
+          "source": "company_press",
+          "text": "Ramp's 200%+ net dollar retention driven by combination of growth in underlying customer spend and launch of additional products",
+          "date": "2024-03",
+          "url": "research.contrary.com"
+        },
+        {
+          "type": "SECONDARY",
+          "source": "job_posting",
+          "text": "As a member of the Growth Account Management team, you will deliver value to customers and revenue by owning expansion and retention",
+          "date": "2025-12",
+          "url": "jobs.technyc.org"
+        }
+      ],
+      "glueToolFit": "whitespace-visualizer",
+      "opportunity": "Whitespace Visualizer can map which products each customer has adopted and surface expansion opportunities across the 6 product lines"
+    },
+    {
+      "id": "pp3",
+      "title": "Enterprise Customer Complexity",
+      "description": "Ramp is moving upmarket aggressively - enterprise customers doubled YoY to 2,200+. These accounts have complex buying committees and require multi-threaded relationships.",
+      "confidence": "high",
+      "score": 9,
+      "validation": {
+        "directEvidence": 2,
+        "quantifiedImpact": 3,
+        "recency": 3,
+        "sourceDiversity": 1
+      },
+      "evidence": [
+        {
+          "type": "PRIMARY",
+          "source": "company_press",
+          "text": "Ramp generates $100K+ annual recurring revenue from 2,200+ enterprise accounts",
+          "date": "2025-09",
+          "url": "prnewswire.com"
+        },
+        {
+          "type": "SECONDARY",
+          "source": "industry_analysis",
+          "text": "As Ramp pushes further upmarket, customer acquisition costs and retention will likely come under more pressure",
+          "date": "2025-11",
+          "url": "sacra.com"
+        }
+      ],
+      "glueToolFit": "stakeholder-map",
+      "opportunity": "Stakeholder Map can help visualize relationships across enterprise buying committees and identify gaps in coverage"
+    },
+    {
+      "id": "pp4",
+      "title": "Renewal Pipeline Management at Scale",
+      "description": "With 50,000+ customers on annual contracts, managing renewal pipeline and ensuring proactive outreach at the right time is operationally challenging.",
+      "confidence": "medium",
+      "score": 8,
+      "validation": {
+        "directEvidence": 2,
+        "quantifiedImpact": 2,
+        "recency": 3,
+        "sourceDiversity": 1
+      },
+      "evidence": [
+        {
+          "type": "PRIMARY",
+          "source": "job_posting",
+          "text": "Customer Success Managers each manage a book of ~50-70 customers in Ramp's SMB and Mid-Market portfolio",
+          "date": "2025-12",
+          "url": "linkedin.com/jobs"
+        },
+        {
+          "type": "INFERRED",
+          "source": "business_model",
+          "text": "Annual contract model with high customer volume requires systematic renewal tracking",
+          "date": "2025-12",
+          "url": null
+        }
+      ],
+      "glueToolFit": "renewal-tracker",
+      "opportunity": "Renewal Tracker provides 90/60/30 day pipeline view to ensure no renewal falls through the cracks"
+    },
+    {
+      "id": "pp5",
+      "title": "Competitive Pressure from Well-Funded Rivals",
+      "description": "Ramp competes against Brex, SAP Concur, Coupa, and others. Demonstrating differentiated value and ROI to customers is critical for retention.",
+      "confidence": "high",
+      "score": 8,
+      "validation": {
+        "directEvidence": 2,
+        "quantifiedImpact": 2,
+        "recency": 3,
+        "sourceDiversity": 1
+      },
+      "evidence": [
+        {
+          "type": "SECONDARY",
+          "source": "industry_analysis",
+          "text": "The spend-management market has become crowded with well-capitalized peers like Brex and Airbase, as well as established enterprise players such as SAP Concur and Coupa",
+          "date": "2025-11",
+          "url": "sacra.com"
+        }
+      ],
+      "glueToolFit": "roi-calculator",
+      "opportunity": "ROI Calculator helps demonstrate concrete value to customers during competitive situations and renewals"
+    }
+  ],
+  "pocRecommendations": [
+    {
+      "rank": 1,
+      "tool": "whitespace-visualizer",
+      "relevanceScore": 9,
+      "difficultyScore": 3,
+      "rationale": "With 6 product lines and 200%+ NDR driven by expansion, visualizing cross-sell opportunities across 50,000+ accounts is high-value. Directly addresses their land-and-expand model.",
+      "painPointIds": ["pp2"]
+    },
+    {
+      "rank": 2,
+      "tool": "account-health-dashboard",
+      "relevanceScore": 9,
+      "difficultyScore": 3,
+      "rationale": "Ramp's focus on 'activation and retention' with scaled CS motion makes health visibility critical. Job posts explicitly mention building CS org and activation strategy.",
+      "painPointIds": ["pp1"]
+    },
+    {
+      "rank": 3,
+      "tool": "renewal-tracker",
+      "relevanceScore": 8,
+      "difficultyScore": 2,
+      "rationale": "50,000+ customers on annual contracts means massive renewal volume. Simple to build and immediately valuable for pipeline management.",
+      "painPointIds": ["pp4"]
+    },
+    {
+      "rank": 4,
+      "tool": "stakeholder-map",
+      "relevanceScore": 8,
+      "difficultyScore": 3,
+      "rationale": "Enterprise customer doubling YoY creates need for relationship visibility across complex buying committees. Critical for upmarket push.",
+      "painPointIds": ["pp3"]
+    },
+    {
+      "rank": 5,
+      "tool": "roi-calculator",
+      "relevanceScore": 7,
+      "difficultyScore": 2,
+      "rationale": "Competitive pressure from Brex, Concur makes value demonstration important. Ramp already emphasizes 'save time and money' - ROI tool reinforces this.",
+      "painPointIds": ["pp5"]
+    }
+  ],
+  "metadata": {
+    "researchDate": "2026-01-07",
+    "researchDuration": null,
+    "skillVersion": "2.0",
+    "dataFreshness": "2026-01-07",
+    "overallConfidence": "high"
+  }
+}
