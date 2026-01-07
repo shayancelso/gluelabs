@@ -260,6 +260,15 @@
 
       if (error) throw error;
 
+      // Insert a message to trigger push notification to team
+      await supabase
+        .from('messages')
+        .insert({
+          conversation_id: conversationId,
+          sender_type: 'visitor',
+          content: `📋 Contact info shared: ${name} (${email})`
+        });
+
       // Replace form with success message
       form.innerHTML = `
         <div class="gloo-chat-form-success">
