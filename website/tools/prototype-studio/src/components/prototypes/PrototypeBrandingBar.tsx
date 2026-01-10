@@ -388,18 +388,74 @@ function scoreBrandColor(r: number, g: number, b: number): number {
 // Color distance
 function colorDistance(r1: number, g1: number, b1: number, r2: number, g2: number, b2: number): number {
   return Math.sqrt(
-    2 * Math.pow(r1 - r2, 2) + 
-    4 * Math.pow(g1 - g2, 2) + 
+    2 * Math.pow(r1 - r2, 2) +
+    4 * Math.pow(g1 - g2, 2) +
     3 * Math.pow(b1 - b2, 2)
   );
 }
 
+// Generate a sophisticated neutral palette for monochrome logos
+function generateMonochromePalette(dominantLuminance: number): {
+  primary: string;
+  secondary: string;
+  accent: string;
+} {
+  const isLightDominant = dominantLuminance > 128;
+
+  if (isLightDominant) {
+    // White/light dominant - use high contrast range
+    return {
+      primary: '#0f172a',      // Very dark slate
+      secondary: '#475569',    // Medium slate
+      accent: '#94a3b8',       // Light slate for charts
+    };
+  } else {
+    // Black/dark dominant - use distinct grays with more spread
+    return {
+      primary: '#0a0a0a',      // Near black
+      secondary: '#3f3f46',    // Medium zinc
+      accent: '#a1a1aa',       // Light zinc for visibility
+    };
+  }
+}
+
+// Generate harmony colors from a single chromatic color
+function generateHarmonyColors(baseHex: string): {
+  primary: string;
+  secondary: string;
+  accent: string
+} {
+  const rgb = hexToRgb(baseHex);
+  if (!rgb) return { primary: baseHex, secondary: baseHex, accent: baseHex };
+
+  const [h, s, v] = rgbToHsv(rgb[0], rgb[1], rgb[2]);
+
+  const secondaryV = Math.max(0.15, v - 0.25);
+  const secondaryS = Math.min(1, s + 0.1);
+  const [sr, sg, sb] = hsvToRgb(h, secondaryS, secondaryV);
+
+  const accentV = Math.min(1, v + 0.15);
+  const accentS = Math.max(0.2, s - 0.2);
+  const [ar, ag, ab] = hsvToRgb(h, accentS, accentV);
+
+  return {
+    primary: baseHex,
+    secondary: rgbToHex(sr, sg, sb),
+    accent: rgbToHex(ar, ag, ab),
+  };
+}
+
 // Extract colors from an image
-async function extractColorsFromImage(imageUrl: string): Promise<{ primary: string; secondary: string; accent: string } | null> {
+async function extractColorsFromImage(imageUrl: string): Promise<{
+  primary: string;
+  secondary: string;
+  accent: string;
+  isMonochrome?: boolean;
+} | null> {
   return new Promise((resolve) => {
     const img = new Image();
     img.crossOrigin = 'anonymous';
-    
+
     img.onload = () => {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
@@ -419,6 +475,10 @@ async function extractColorsFromImage(imageUrl: string): Promise<{ primary: stri
 
         const colorCounts: Map<string, { count: number; r: number; g: number; b: number; score: number }> = new Map();
 
+        let achromaticCount = 0;
+        let achromaticLuminanceSum = 0;
+        let totalPixelsProcessed = 0;
+
         for (let i = 0; i < pixels.length; i += 4) {
           const r = pixels[i];
           const g = pixels[i + 1];
@@ -426,14 +486,18 @@ async function extractColorsFromImage(imageUrl: string): Promise<{ primary: stri
           const a = pixels[i + 3];
 
           if (a < 128) continue;
+          totalPixelsProcessed++;
 
           const luminance = (0.299 * r + 0.587 * g + 0.114 * b);
-          if (luminance < 15 || luminance > 245) continue;
-
           const max = Math.max(r, g, b);
           const min = Math.min(r, g, b);
           const saturation = max === 0 ? 0 : (max - min) / max;
-          if (saturation < 0.08) continue;
+
+          if (saturation < 0.08 || luminance < 15 || luminance > 245) {
+            achromaticCount++;
+            achromaticLuminanceSum += luminance;
+            continue;
+          }
 
           const qr = Math.round(r / 16) * 16;
           const qg = Math.round(g / 16) * 16;
@@ -456,16 +520,42 @@ async function extractColorsFromImage(imageUrl: string): Promise<{ primary: stri
           .sort((a, b) => b.weightedScore - a.weightedScore)
           .slice(0, 15);
 
-        if (sortedColors.length === 0) {
-          resolve(null);
+        const achromaticRatio = totalPixelsProcessed > 0
+          ? achromaticCount / totalPixelsProcessed
+          : 0;
+
+        // Handle monochrome logos (>85% achromatic pixels)
+        if (sortedColors.length === 0 || achromaticRatio > 0.85) {
+          const avgLuminance = achromaticCount > 0
+            ? achromaticLuminanceSum / achromaticCount
+            : 128;
+
+          const palette = generateMonochromePalette(avgLuminance);
+          resolve({
+            ...palette,
+            isMonochrome: true,
+          });
           return;
         }
 
-        const toHex = (r: number, g: number, b: number) => 
+        // Handle single-color logos
+        if (sortedColors.length === 1) {
+          const toHex = (r: number, g: number, b: number) =>
+            '#' + [r, g, b].map(x => Math.min(255, Math.max(0, x)).toString(16).padStart(2, '0')).join('');
+          const baseColor = toHex(sortedColors[0].r, sortedColors[0].g, sortedColors[0].b);
+          const harmony = generateHarmonyColors(baseColor);
+          resolve({
+            ...harmony,
+            isMonochrome: false,
+          });
+          return;
+        }
+
+        const toHex = (r: number, g: number, b: number) =>
           '#' + [r, g, b].map(x => Math.min(255, Math.max(0, x)).toString(16).padStart(2, '0')).join('');
 
         const primary = sortedColors[0];
-        
+
         let secondary = sortedColors[1] || primary;
         for (const color of sortedColors.slice(1)) {
           const diff = colorDistance(color.r, color.g, color.b, primary.r, primary.g, primary.b);
@@ -489,6 +579,7 @@ async function extractColorsFromImage(imageUrl: string): Promise<{ primary: stri
           primary: toHex(primary.r, primary.g, primary.b),
           secondary: toHex(secondary.r, secondary.g, secondary.b),
           accent: toHex(accent.r, accent.g, accent.b),
+          isMonochrome: false,
         });
       } catch (e) {
         console.error('Error extracting colors:', e);
@@ -522,64 +613,116 @@ export function PrototypeBrandingBar({ brandConfig, onBrandChange, onReset, comp
     }
 
     setIsLoading(true);
-    
+
     try {
-      // Format the input - check if it looks like a domain/URL
+      // Format the input
       const inputTrimmed = companyInput.trim();
       let formattedUrl = inputTrimmed;
       let domain = '';
-      let companyName = inputTrimmed; // Keep original input as company name
+      let companyName = inputTrimmed;
 
-      // Check if input looks like a domain/URL (contains a dot or starts with http)
       const looksLikeDomain = inputTrimmed.includes('.') || inputTrimmed.startsWith('http');
 
       if (looksLikeDomain) {
-        // It's a domain/URL - extract domain and derive company name
         domain = extractDomain(inputTrimmed);
         companyName = getCompanyNameFromDomain(domain);
       } else {
-        // It's a brand name - create a slug for domain lookup
         const companySlug = inputTrimmed.toLowerCase().replace(/[^a-z0-9]/g, '');
         formattedUrl = `https://${companySlug}.com`;
         domain = companySlug + '.com';
-        // Keep original input as company name (e.g., "Air Canada" not "Aircanada")
       }
 
-      // Try to fetch logo from logo.dev API
-      const logoDevUrl = await fetchLogoForDomain(domain || formattedUrl);
-      
-      let logoUrl = logoDevUrl;
-      let extractedColors = null;
-      let companyData = null;
+      let logoUrl: string | null = null;
+      let brandColors: { primary: string | null; secondary: string | null; accent: string | null } | null = null;
+      let companyData: { company_name?: string; description?: string; industry?: string } | null = null;
+      let brandSource: 'brandfetch' | 'extracted' | null = null;
 
-      // If logo.dev found a logo, use it and extract colors
-      if (logoDevUrl) {
+      // Step 1: Try BrandFetch API first for official brand colors
+      try {
+        const { data: brandfetchData, error: brandfetchError } = await supabase.functions.invoke('brandfetch-lookup', {
+          body: { domain: domain || formattedUrl }
+        });
+
+        if (!brandfetchError && brandfetchData && !brandfetchData.fallback) {
+          console.log('Brandfetch returned data:', brandfetchData);
+
+          if (brandfetchData.colors?.primary || brandfetchData.colors?.secondary) {
+            brandColors = {
+              primary: brandfetchData.colors.primary,
+              secondary: brandfetchData.colors.secondary,
+              accent: brandfetchData.colors.accent,
+            };
+            brandSource = 'brandfetch';
+          }
+
+          if (brandfetchData.logo_url) {
+            logoUrl = brandfetchData.logo_url;
+          }
+
+          if (brandfetchData.company_name || brandfetchData.description) {
+            companyData = {
+              company_name: brandfetchData.company_name,
+              description: brandfetchData.description,
+            };
+          }
+        }
+      } catch (e) {
+        console.error('Brandfetch lookup error (will fallback):', e);
+      }
+
+      // Step 2: Fallback to logo.dev if no logo from BrandFetch
+      if (!logoUrl) {
+        const logoDevUrl = await fetchLogoForDomain(domain || formattedUrl);
+        if (logoDevUrl) {
+          logoUrl = logoDevUrl;
+        }
+      }
+
+      // Step 3: If no BrandFetch colors, extract from logo pixels
+      if (!brandColors && logoUrl) {
         try {
-          extractedColors = await extractColorsFromImage(logoDevUrl);
+          const extractedColors = await extractColorsFromImage(logoUrl);
+          if (extractedColors) {
+            brandColors = {
+              primary: extractedColors.primary,
+              secondary: extractedColors.secondary,
+              accent: extractedColors.accent,
+            };
+            brandSource = 'extracted';
+
+            if (extractedColors.isMonochrome) {
+              toast({
+                title: 'Monochrome logo detected',
+                description: 'A professional neutral palette has been generated.',
+              });
+            }
+          }
         } catch (e) {
           console.error('Error extracting colors from logo:', e);
         }
       }
 
-      // Also try the company-research edge function for additional data
-      try {
-        const { data, error } = await supabase.functions.invoke('company-research', {
-          body: { companyName: companyName, website: formattedUrl }
-        });
+      // Step 4: Also try company-research for additional metadata (if not from BrandFetch)
+      if (!companyData) {
+        try {
+          const { data, error } = await supabase.functions.invoke('company-research', {
+            body: { companyName: companyName, website: formattedUrl }
+          });
 
-        if (!error && data) {
-          companyData = data;
-          if (!logoUrl && data.logo_url) {
-            logoUrl = data.logo_url;
-            try {
-              extractedColors = await extractColorsFromImage(data.logo_url);
-            } catch (e) {
-              console.error('Error extracting colors from research logo:', e);
+          if (!error && data) {
+            companyData = {
+              company_name: data.company_name,
+              description: data.description,
+              industry: data.industry,
+            };
+            // Use research logo if still no logo
+            if (!logoUrl && data.logo_url) {
+              logoUrl = data.logo_url;
             }
           }
+        } catch (e) {
+          console.error('Company research error (non-fatal):', e);
         }
-      } catch (e) {
-        console.error('Company research error (non-fatal):', e);
       }
 
       // Update brand config
@@ -589,35 +732,39 @@ export function PrototypeBrandingBar({ brandConfig, onBrandChange, onReset, comp
         logoUrl: logoUrl || brandConfig.logoUrl,
         industry: companyData?.industry || brandConfig.industry,
         companyDescription: companyData?.description || brandConfig.companyDescription,
-        primaryColor: extractedColors?.primary || companyData?.primary_color || brandConfig.primaryColor,
-        secondaryColor: extractedColors?.secondary || companyData?.secondary_color || brandConfig.secondaryColor,
-        accentColor: extractedColors?.accent || brandConfig.accentColor,
+        primaryColor: brandColors?.primary || brandConfig.primaryColor,
+        secondaryColor: brandColors?.secondary || brandConfig.secondaryColor,
+        accentColor: brandColors?.accent || brandConfig.accentColor,
       });
 
-      if (logoUrl && extractedColors) {
+      // Show appropriate toast based on source
+      if (brandColors && brandSource === 'brandfetch') {
         toast({
-          title: 'Branding loaded!',
-          description: `Logo and colors applied for ${companyData?.company_name || companyName}.`,
+          title: 'Official branding loaded!',
+          description: `Brand colors from ${companyData?.company_name || companyName}.`,
+        });
+      } else if (logoUrl && brandColors && brandSource === 'extracted') {
+        toast({
+          title: 'Branding extracted',
+          description: 'Colors extracted from logo. Adjust as needed.',
         });
       } else if (logoUrl) {
         toast({
           title: 'Logo found',
-          description: 'Logo applied. Adjust colors as needed.',
+          description: 'Logo applied. Set colors manually.',
         });
       } else {
         toast({
-          title: 'Company info loaded',
+          title: 'Company not found',
           description: 'Upload a logo to auto-detect brand colors.',
         });
       }
     } catch (error) {
-      // Fallback: extract company name from input
-      const companyName = getCompanyNameFromDomain(companyInput) || companyInput;
+      // Fallback
       onBrandChange({
         ...brandConfig,
-        companyName: companyName,
+        companyName: companyInput.trim(),
       });
-      
       toast({
         title: 'Partial match',
         description: 'Company name extracted. Upload a logo for brand colors.',
@@ -633,23 +780,30 @@ export function PrototypeBrandingBar({ brandConfig, onBrandChange, onReset, comp
 
     const url = URL.createObjectURL(file);
     const extractedColors = await extractColorsFromImage(url);
-    
+
     if (extractedColors) {
-      onBrandChange({ 
-        ...brandConfig, 
+      onBrandChange({
+        ...brandConfig,
         logoUrl: url,
         primaryColor: extractedColors.primary,
         secondaryColor: extractedColors.secondary,
         accentColor: extractedColors.accent,
       });
-      
-      toast({
-        title: 'Logo uploaded & colors extracted',
-        description: 'Colors were automatically extracted from your logo.',
-      });
+
+      if (extractedColors.isMonochrome) {
+        toast({
+          title: 'Monochrome logo detected',
+          description: 'A professional neutral palette has been generated. Adjust colors as needed.',
+        });
+      } else {
+        toast({
+          title: 'Logo uploaded & colors extracted',
+          description: 'Colors were automatically extracted from your logo.',
+        });
+      }
     } else {
       onBrandChange({ ...brandConfig, logoUrl: url });
-      
+
       toast({
         title: 'Logo uploaded',
         description: 'Could not extract colors. Set them manually below.',
