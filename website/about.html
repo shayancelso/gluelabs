@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XLGY974WHR"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XLGY974WHR');
+    </script>
+    <!-- Microsoft Clarity -->
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "uvf6e7zngw");
+    </script>
+    <!-- Lucky Orange -->
+    <script async defer src="https://tools.luckyorange.com/core/lo.js?site-id=89540764"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Story — From Frustration to Solution | Gloo</title>
+    <meta name="description" content="The founding journey of Gloo: how four account managers turned years of spreadsheet frustration into tools that actually work.">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://buildwithgloo.com/about">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://buildwithgloo.com/about">
+    <meta property="og:title" content="Our Story — From Frustration to Solution | Gloo">
+    <meta property="og:description" content="The founding journey of Gloo: how four account managers turned years of spreadsheet frustration into tools that actually work.">
+    <meta property="og:image" content="https://buildwithgloo.com/images/og-image.png">
+    <meta property="og:site_name" content="Gloo">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://buildwithgloo.com/about">
+    <meta name="twitter:title" content="Our Story — From Frustration to Solution | Gloo">
+    <meta name="twitter:description" content="The founding journey of Gloo: how four account managers turned years of spreadsheet frustration into tools that actually work.">
+    <meta name="twitter:image" content="https://buildwithgloo.com/images/og-image.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/favicon.png?v=3">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Vercel Analytics -->
+    <script defer src="/_vercel/insights/script.js"></script>
+
+    <style>
+        /* =====================================================
+           ABOUT PAGE - VISUAL TIMELINE JOURNEY
+           ===================================================== */
+
+        /* =====================================================
+           HERO SECTION
+           ===================================================== */
+        .about-hero {
+            padding: 180px 0 100px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.04) 0%, rgba(236, 72, 153, 0.04) 100%);
+            z-index: -1;
+        }
+
+        /* Floating orbs in hero */
+        .hero-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.5;
+            z-index: -1;
+            animation: orbFloat 20s ease-in-out infinite;
+        }
+
+        .hero-orb-1 {
+            width: 400px;
+            height: 400px;
+            background: rgba(99, 102, 241, 0.3);
+            top: -100px;
+            right: -100px;
+            animation-delay: 0s;
+        }
+
+        .hero-orb-2 {
+            width: 300px;
+            height: 300px;
+            background: rgba(236, 72, 153, 0.2);
+            bottom: -50px;
+            left: -50px;
+            animation-delay: -7s;
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.05); }
+            66% { transform: translate(-20px, 20px) scale(0.95); }
+        }
+
+        .about-hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .about-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-full);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: 24px;
+            backdrop-filter: blur(10px);
+            letter-spacing: 0.5px;
+        }
+
+        .about-hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            color: var(--color-text);
+        }
+
+        .about-hero h1 .text-gradient {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .about-hero .lead {
+            font-size: 1.25rem;
+            color: var(--color-text-secondary);
+            line-height: 1.7;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* =====================================================
+           PROBLEM TIMELINE - "SOUND FAMILIAR?"
+           ===================================================== */
+        .timeline-section {
+            padding: 100px 0;
+            background: var(--color-bg-alt);
+            overflow: hidden;
+        }
+
+        .section-label {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--color-primary);
+            margin-bottom: 12px;
+        }
+
+        .timeline-header {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 60px;
+        }
+
+        .timeline-header h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.75rem, 3vw, 2.5rem);
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--color-text);
+        }
+
+        .timeline-header p {
+            color: var(--color-text-secondary);
+            font-size: 1.125rem;
+            line-height: 1.6;
+        }
+
+        /* Timeline with connector */
+        .timeline-track {
+            position: relative;
+            padding: 20px 0 40px;
+        }
+
+        .timeline-connector {
+            position: absolute;
+            top: 50%;
+            left: 50px;
+            right: 50px;
+            height: 3px;
+            background: rgba(99, 102, 241, 0.15);
+            border-radius: 2px;
+            transform: translateY(-50%);
+            z-index: 0;
+        }
+
+        .timeline-connector-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0%;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .timeline-scroll {
+            display: flex;
+            gap: 24px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            padding: 20px 0 40px;
+            margin: 0 -20px;
+            padding-left: 20px;
+            padding-right: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .timeline-scroll::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .timeline-scroll::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 3px;
+        }
+
+        .timeline-scroll::-webkit-scrollbar-thumb {
+            background: var(--gradient-primary);
+            border-radius: 3px;
+        }
+
+        .timeline-card {
+            flex: 0 0 280px;
+            scroll-snap-align: start;
+            padding: 32px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .timeline-card::before {
+            content: '';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 24px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+        }
+
+        .timeline-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .timeline-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--gradient-subtle);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .timeline-icon svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .timeline-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--color-text);
+        }
+
+        .timeline-card p {
+            color: var(--color-text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        /* Desktop: Center the cards with connector visible */
+        @media (min-width: 1400px) {
+            .timeline-scroll {
+                justify-content: center;
+                overflow-x: visible;
+                flex-wrap: nowrap;
+                gap: 32px;
+            }
+
+            .timeline-connector {
+                display: block;
+            }
+        }
+
+        /* =====================================================
+           AHA MOMENT SECTION
+           ===================================================== */
+        .aha-section {
+            padding: 120px 0;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.06) 0%, rgba(236, 72, 153, 0.06) 100%);
+        }
+
+        .aha-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* CSS Lightbulb Illustration */
+        .aha-illustration {
+            width: 160px;
+            height: 200px;
+            margin: 0 auto 48px;
+            position: relative;
+        }
+
+        .lightbulb {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 140px;
+        }
+
+        .bulb-glass {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(236, 72, 153, 0.15) 100%);
+            border-radius: 50% 50% 45% 45%;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 3px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .bulb-glow {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.4) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: bulbPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes bulbPulse {
+            0%, 100% { opacity: 0.5; transform: translateX(-50%) scale(1); }
+            50% { opacity: 1; transform: translateX(-50%) scale(1.2); }
+        }
+
+        .bulb-base {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 30px;
+            background: linear-gradient(to bottom, #94a3b8 0%, #64748b 100%);
+            border-radius: 5px 5px 10px 10px;
+        }
+
+        .bulb-base::before,
+        .bulb-base::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            right: 5px;
+            height: 4px;
+            background: #475569;
+            border-radius: 2px;
+        }
+
+        .bulb-base::before { top: 6px; }
+        .bulb-base::after { top: 14px; }
+
+        /* Spark rays */
+        .spark-rays {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+        }
+
+        .spark-ray {
+            position: absolute;
+            width: 4px;
+            height: 30px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+            opacity: 0;
+            animation: sparkRay 3s ease-in-out infinite;
+        }
+
+        .spark-ray:nth-child(1) { top: -20px; left: 50%; transform: translateX(-50%); animation-delay: 0s; }
+        .spark-ray:nth-child(2) { top: 10px; right: -10px; transform: rotate(45deg); animation-delay: 0.2s; }
+        .spark-ray:nth-child(3) { top: 50%; right: -25px; transform: translateY(-50%) rotate(90deg); animation-delay: 0.4s; }
+        .spark-ray:nth-child(4) { bottom: 10px; right: -10px; transform: rotate(135deg); animation-delay: 0.6s; }
+        .spark-ray:nth-child(5) { top: 10px; left: -10px; transform: rotate(-45deg); animation-delay: 0.3s; }
+        .spark-ray:nth-child(6) { top: 50%; left: -25px; transform: translateY(-50%) rotate(-90deg); animation-delay: 0.5s; }
+        .spark-ray:nth-child(7) { bottom: 10px; left: -10px; transform: rotate(-135deg); animation-delay: 0.7s; }
+
+        @keyframes sparkRay {
+            0%, 100% { opacity: 0; height: 20px; }
+            50% { opacity: 0.8; height: 35px; }
+        }
+
+        .aha-quote {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: 24px;
+            line-height: 1.2;
+        }
+
+        .aha-quote .text-gradient {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .aha-subtext {
+            font-size: 1.125rem;
+            color: var(--color-text-secondary);
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* =====================================================
+           BUILD JOURNEY TIMELINE
+           ===================================================== */
+        .journey-section {
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .journey-header {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 80px;
+        }
+
+        .journey-header h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.75rem, 3vw, 2.5rem);
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--color-text);
+        }
+
+        .journey-header p {
+            color: var(--color-text-secondary);
+            font-size: 1.125rem;
+            line-height: 1.6;
+        }
+
+        /* Vertical Timeline */
+        .journey-timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Center connector line */
+        .journey-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 4px;
+            background: rgba(99, 102, 241, 0.15);
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .journey-line-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 0%;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+            transition: height 0.1s linear;
+        }
+
+        /* Milestone */
+        .journey-milestone {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 60px;
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .journey-milestone.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .journey-milestone:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Alternating layout */
+        .journey-milestone:nth-child(odd) {
+            flex-direction: row;
+        }
+
+        .journey-milestone:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .journey-milestone:nth-child(odd) .journey-card {
+            margin-right: 80px;
+            text-align: right;
+        }
+
+        .journey-milestone:nth-child(even) .journey-card {
+            margin-left: 80px;
+            text-align: left;
+        }
+
+        /* Marker in center */
+        .journey-marker {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 56px;
+            height: 56px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 0 6px rgba(99, 102, 241, 0.15), 0 4px 20px rgba(99, 102, 241, 0.3);
+            z-index: 2;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .journey-milestone:hover .journey-marker {
+            transform: translateX(-50%) scale(1.1);
+            box-shadow: 0 0 0 8px rgba(99, 102, 241, 0.2), 0 8px 30px rgba(99, 102, 241, 0.4);
+        }
+
+        .journey-marker svg {
+            width: 24px;
+            height: 24px;
+            color: white;
+        }
+
+        /* Card content */
+        .journey-card {
+            flex: 1;
+            max-width: calc(50% - 60px);
+        }
+
+        .journey-phase {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--color-primary);
+            margin-bottom: 8px;
+        }
+
+        .journey-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.375rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--color-text);
+        }
+
+        .journey-card p {
+            color: var(--color-text-secondary);
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        /* Mobile: Left-aligned timeline */
+        @media (max-width: 768px) {
+            .journey-line {
+                left: 28px;
+                transform: none;
+            }
+
+            .journey-milestone,
+            .journey-milestone:nth-child(odd),
+            .journey-milestone:nth-child(even) {
+                flex-direction: row;
+            }
+
+            .journey-marker {
+                position: relative;
+                left: 0;
+                transform: none;
+                flex-shrink: 0;
+                width: 48px;
+                height: 48px;
+            }
+
+            .journey-milestone:hover .journey-marker {
+                transform: scale(1.1);
+            }
+
+            .journey-card,
+            .journey-milestone:nth-child(odd) .journey-card,
+            .journey-milestone:nth-child(even) .journey-card {
+                max-width: none;
+                margin: 0 0 0 24px;
+                text-align: left;
+            }
+        }
+
+        /* =====================================================
+           THE COLLECTIVE - ABSTRACT AVATARS
+           ===================================================== */
+        .collective-section {
+            padding: 100px 0;
+            background: var(--color-bg-alt);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .collective-header {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 60px;
+        }
+
+        .collective-header h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.75rem, 3vw, 2.5rem);
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--color-text);
+        }
+
+        .collective-header p {
+            color: var(--color-text-secondary);
+            font-size: 1.125rem;
+            line-height: 1.7;
+        }
+
+        /* Team grid with abstract avatars */
+        .collective-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+            max-width: 900px;
+            margin: 0 auto 60px;
+        }
+
+        .collective-member {
+            text-align: center;
+        }
+
+        /* Abstract avatars */
+        .member-avatar {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .collective-member:hover .member-avatar {
+            transform: scale(1.05);
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.2);
+        }
+
+        /* Avatar pattern variations */
+        .avatar-wave {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        }
+
+        .avatar-wave::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 8px,
+                rgba(255, 255, 255, 0.1) 8px,
+                rgba(255, 255, 255, 0.1) 16px
+            );
+            animation: waveMove 8s linear infinite;
+        }
+
+        @keyframes waveMove {
+            0% { transform: translateY(-50%) rotate(0deg); }
+            100% { transform: translateY(-50%) rotate(360deg); }
+        }
+
+        .avatar-grid {
+            background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+        }
+
+        .avatar-grid::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px),
+                linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            animation: gridPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes gridPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .avatar-circuit {
+            background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+        }
+
+        .avatar-circuit::before {
+            content: '';
+            position: absolute;
+            inset: 20px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+        }
+
+        .avatar-circuit::after {
+            content: '';
+            position: absolute;
+            inset: 35px;
+            border: 2px solid rgba(255,255,255,0.15);
+            border-radius: 50%;
+            animation: circuitRotate 10s linear infinite;
+        }
+
+        @keyframes circuitRotate {
+            0% { transform: rotate(0deg); border-style: dashed; }
+            100% { transform: rotate(360deg); border-style: dashed; }
+        }
+
+        .avatar-radial {
+            background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+        }
+
+        .avatar-radial::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 80%;
+            height: 80%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            animation: radialPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes radialPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
+            50% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        .member-role {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: 8px;
+        }
+
+        .member-creds {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .cred-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: var(--gradient-subtle);
+            border-radius: var(--radius-full);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        .cred-years {
+            font-size: 12px;
+            color: var(--color-text-muted);
+        }
+
+        /* Stats row */
+        .collective-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            max-width: 600px;
+            margin: 0 auto;
+            padding-top: 40px;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .collective-stat {
+            text-align: center;
+        }
+
+        .collective-stat-value {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .collective-stat-label {
+            font-size: 0.875rem;
+            color: var(--color-text-muted);
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .collective-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 40px 24px;
+            }
+
+            .member-avatar {
+                width: 100px;
+                height: 100px;
+            }
+
+            .collective-stats {
+                gap: 20px;
+            }
+
+            .collective-stat-value {
+                font-size: 2rem;
+            }
+        }
+
+        /* =====================================================
+           WHAT WE BELIEVE
+           ===================================================== */
+        .beliefs-section {
+            padding: 100px 0;
+        }
+
+        .beliefs-header {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 60px;
+        }
+
+        .beliefs-header h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.75rem, 3vw, 2.5rem);
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .beliefs-header p {
+            color: var(--color-text-secondary);
+            font-size: 1.125rem;
+        }
+
+        .beliefs-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .belief-card {
+            padding: 40px 32px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+        }
+
+        .belief-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .belief-number {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .belief-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--color-text);
+            line-height: 1.3;
+        }
+
+        .belief-card p {
+            color: var(--color-text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        @media (max-width: 900px) {
+            .beliefs-grid {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+            }
+        }
+
+        /* =====================================================
+           THE PROMISE - QUOTE CALLOUT
+           ===================================================== */
+        .promise-section {
+            padding: 100px 0;
+            background: var(--color-bg-alt);
+        }
+
+        .promise-callout {
+            background: var(--gradient-primary);
+            padding: 80px 60px;
+            border-radius: var(--radius-xl);
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .promise-callout::before {
+            content: '"';
+            position: absolute;
+            top: 20px;
+            left: 40px;
+            font-size: 200px;
+            font-family: Georgia, serif;
+            color: rgba(255, 255, 255, 0.1);
+            line-height: 1;
+        }
+
+        .promise-callout p {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 500;
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .promise-callout p:not(:last-child) {
+            margin-bottom: 24px;
+        }
+
+        .promise-callout .emphasis {
+            font-size: 1.75rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .promise-callout {
+                padding: 60px 32px;
+            }
+
+            .promise-callout p {
+                font-size: 1.25rem;
+            }
+
+            .promise-callout .emphasis {
+                font-size: 1.5rem;
+            }
+
+            .promise-callout::before {
+                font-size: 120px;
+                top: 10px;
+                left: 20px;
+            }
+        }
+
+        /* =====================================================
+           CTA SECTION
+           ===================================================== */
+        .about-cta {
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .about-cta h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.75rem, 3vw, 2.5rem);
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .about-cta p {
+            color: var(--color-text-secondary);
+            font-size: 1.125rem;
+            margin-bottom: 32px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .about-cta .btn {
+            display: inline-flex;
+        }
+
+        /* =====================================================
+           MOBILE RESPONSIVE
+           ===================================================== */
+        @media (max-width: 768px) {
+            .about-hero {
+                padding: 140px 0 60px;
+            }
+
+            .timeline-section,
+            .aha-section,
+            .journey-section,
+            .collective-section,
+            .beliefs-section,
+            .promise-section,
+            .about-cta {
+                padding: 60px 0;
+            }
+
+            .aha-illustration {
+                transform: scale(0.85);
+                margin-bottom: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Noise Overlay for texture -->
+    <div class="noise-overlay"></div>
+
+    <!-- Navigation -->
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <a href="/" class="logo" aria-label="Gloo - Go to homepage">
+                <img src="/images/gloo-logo.png" alt="Gloo" class="logo-img">
+            </a>
+            <div class="nav-links" role="menubar">
+                <a href="/#what-we-do" class="nav-link" role="menuitem">What We Do</a>
+                <a href="/about" class="nav-link active" role="menuitem">About</a>
+                <a href="/#contact" class="btn btn-nav" role="menuitem"><span>Book a Call</span></a>
+            </div>
+            <button class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <main role="main">
+        <!-- =====================================================
+             HERO SECTION
+             ===================================================== -->
+        <section class="about-hero">
+            <div class="about-hero-bg"></div>
+            <div class="hero-orb hero-orb-1"></div>
+            <div class="hero-orb hero-orb-2"></div>
+            <div class="container">
+                <div class="about-hero-content" data-animate="fade-up">
+                    <div class="about-badge">
+                        Our Story
+                    </div>
+                    <h1>From Frustration to <span class="text-gradient">Solution</span></h1>
+                    <p class="lead">
+                        This is how four account managers stopped complaining about their tools and started building better ones.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             PROBLEM TIMELINE - "THE DAILY GRIND"
+             ===================================================== -->
+        <section class="timeline-section">
+            <div class="container">
+                <div class="timeline-header" data-animate="fade-up">
+                    <span class="section-label">The Daily Grind</span>
+                    <h2>Sound Familiar?</h2>
+                    <p>We've lived these moments. Probably more times than we'd like to admit.</p>
+                </div>
+
+                <div class="timeline-track">
+                    <div class="timeline-connector">
+                        <div class="timeline-connector-fill"></div>
+                    </div>
+                    <div class="timeline-scroll">
+                        <div class="timeline-card" data-animate="fade-up" data-delay="100">
+                            <div class="timeline-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="url(#timelineGrad1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <defs><linearGradient id="timelineGrad1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#6366f1"/><stop offset="100%" style="stop-color:#ec4899"/></linearGradient></defs>
+                                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                            </div>
+                            <h3>The 3AM QBR Scramble</h3>
+                            <p>"Pulling data from five different systems the night before a board meeting. Again."</p>
+                        </div>
+
+                        <div class="timeline-card" data-animate="fade-up" data-delay="200">
+                            <div class="timeline-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="url(#timelineGrad2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <defs><linearGradient id="timelineGrad2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#6366f1"/><stop offset="100%" style="stop-color:#ec4899"/></linearGradient></defs>
+                                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+                                </svg>
+                            </div>
+                            <h3>The Spreadsheet Graveyard</h3>
+                            <p>"Account_tracker_v47_FINAL_FINAL_USE_THIS_ONE.xlsx"</p>
+                        </div>
+
+                        <div class="timeline-card" data-animate="fade-up" data-delay="300">
+                            <div class="timeline-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="url(#timelineGrad3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <defs><linearGradient id="timelineGrad3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#6366f1"/><stop offset="100%" style="stop-color:#ec4899"/></linearGradient></defs>
+                                    <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+                                </svg>
+                            </div>
+                            <h3>The Missed Expansion</h3>
+                            <p>"Finding out a competitor closed a deal in your account. From LinkedIn."</p>
+                        </div>
+
+                        <div class="timeline-card" data-animate="fade-up" data-delay="400">
+                            <div class="timeline-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="url(#timelineGrad4)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <defs><linearGradient id="timelineGrad4" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#6366f1"/><stop offset="100%" style="stop-color:#ec4899"/></linearGradient></defs>
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                                </svg>
+                            </div>
+                            <h3>The Renewal Surprise</h3>
+                            <p>"Your biggest account is renewing next month. You found out today."</p>
+                        </div>
+
+                        <div class="timeline-card" data-animate="fade-up" data-delay="500">
+                            <div class="timeline-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="url(#timelineGrad5)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <defs><linearGradient id="timelineGrad5" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#6366f1"/><stop offset="100%" style="stop-color:#ec4899"/></linearGradient></defs>
+                                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                                </svg>
+                            </div>
+                            <h3>The Breaking Point</h3>
+                            <p>"There's got to be something better than this..."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             AHA MOMENT
+             ===================================================== -->
+        <section class="aha-section">
+            <div class="container">
+                <div class="aha-content" data-animate="fade-up">
+                    <div class="aha-illustration">
+                        <div class="lightbulb">
+                            <div class="bulb-glow"></div>
+                            <div class="bulb-glass"></div>
+                            <div class="bulb-base"></div>
+                        </div>
+                        <div class="spark-rays">
+                            <div class="spark-ray"></div>
+                            <div class="spark-ray"></div>
+                            <div class="spark-ray"></div>
+                            <div class="spark-ray"></div>
+                            <div class="spark-ray"></div>
+                            <div class="spark-ray"></div>
+                            <div class="spark-ray"></div>
+                        </div>
+                    </div>
+                    <h2 class="aha-quote">"What if we just <span class="text-gradient">built it ourselves?</span>"</h2>
+                    <p class="aha-subtext">
+                        A late-night conversation became the start of something bigger. We knew the problems. We had the skills. The only question was: why hadn't we done this sooner?
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             BUILD JOURNEY TIMELINE
+             ===================================================== -->
+        <section class="journey-section">
+            <div class="container">
+                <div class="journey-header" data-animate="fade-up">
+                    <span class="section-label">Our Journey</span>
+                    <h2>From Idea to <span class="text-gradient">Reality</span></h2>
+                    <p>Six moments that turned frustration into focus.</p>
+                </div>
+
+                <div class="journey-timeline">
+                    <div class="journey-line">
+                        <div class="journey-line-fill"></div>
+                    </div>
+
+                    <!-- Milestone 1 -->
+                    <div class="journey-milestone">
+                        <div class="journey-marker">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+                                <path d="M12 6v6l4 2"/>
+                            </svg>
+                        </div>
+                        <div class="journey-card">
+                            <div class="journey-phase">The Spark</div>
+                            <h3>Late Night, Big Idea</h3>
+                            <p>A group chat rant about broken tools became "what if we just built it ourselves?" Four hours later, we had a plan.</p>
+                        </div>
+                    </div>
+
+                    <!-- Milestone 2 -->
+                    <div class="journey-milestone">
+                        <div class="journey-marker">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+                            </svg>
+                        </div>
+                        <div class="journey-card">
+                            <div class="journey-phase">First Lines</div>
+                            <h3>Weekend Project</h3>
+                            <p>What started as a Saturday afternoon experiment became a working prototype by Sunday night. It was ugly. But it worked.</p>
+                        </div>
+                    </div>
+
+                    <!-- Milestone 3 -->
+                    <div class="journey-milestone">
+                        <div class="journey-marker">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                        </div>
+                        <div class="journey-card">
+                            <div class="journey-phase">Real Users</div>
+                            <h3>Friends as Guinea Pigs</h3>
+                            <p>Former colleagues became our first testers. Their feedback was honest, sometimes brutal, and exactly what we needed.</p>
+                        </div>
+                    </div>
+
+                    <!-- Milestone 4 -->
+                    <div class="journey-milestone">
+                        <div class="journey-marker">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                            </svg>
+                        </div>
+                        <div class="journey-card">
+                            <div class="journey-phase">Iterate</div>
+                            <h3>47 Versions Later</h3>
+                            <p>Every conversation taught us something new. We rebuilt, refined, and rethought. The tool got better. So did we.</p>
+                        </div>
+                    </div>
+
+                    <!-- Milestone 5 -->
+                    <div class="journey-milestone">
+                        <div class="journey-marker">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/>
+                            </svg>
+                        </div>
+                        <div class="journey-card">
+                            <div class="journey-phase">First Win</div>
+                            <h3>$200K on Day One</h3>
+                            <p>Our first real customer found over $200K in hidden expansion opportunities. In their first session. That's when we knew.</p>
+                        </div>
+                    </div>
+
+                    <!-- Milestone 6 -->
+                    <div class="journey-milestone">
+                        <div class="journey-marker">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
+                            </svg>
+                        </div>
+                        <div class="journey-card">
+                            <div class="journey-phase">Launch</div>
+                            <h3>This Isn't a Side Project Anymore</h3>
+                            <p>What started as "wouldn't it be nice if..." became our mission. We're building the tools we wished we had. And we're just getting started.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             THE COLLECTIVE - ABSTRACT AVATARS
+             ===================================================== -->
+        <section class="collective-section">
+            <div class="container">
+                <div class="collective-header" data-animate="fade-up">
+                    <span class="section-label">The Collective</span>
+                    <h2>We're a Team of Four</h2>
+                    <p>We don't show our faces here — not yet. But we'll show you results.</p>
+                </div>
+
+                <div class="collective-grid" data-animate="fade-up" data-delay="200">
+                    <div class="collective-member">
+                        <div class="member-avatar avatar-wave"></div>
+                        <div class="member-role">Revenue Strategist</div>
+                        <div class="member-creds">
+                            <span class="cred-badge">CPA</span>
+                            <span class="cred-years">15+ years</span>
+                        </div>
+                    </div>
+
+                    <div class="collective-member">
+                        <div class="member-avatar avatar-grid"></div>
+                        <div class="member-role">Operations Architect</div>
+                        <div class="member-creds">
+                            <span class="cred-badge">CA</span>
+                            <span class="cred-years">12+ years</span>
+                        </div>
+                    </div>
+
+                    <div class="collective-member">
+                        <div class="member-avatar avatar-circuit"></div>
+                        <div class="member-role">Growth Engineer</div>
+                        <div class="member-creds">
+                            <span class="cred-years">10+ years</span>
+                        </div>
+                    </div>
+
+                    <div class="collective-member">
+                        <div class="member-avatar avatar-radial"></div>
+                        <div class="member-role">Success Lead</div>
+                        <div class="member-creds">
+                            <span class="cred-badge">CPA</span>
+                            <span class="cred-years">13+ years</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collective-stats" data-animate="fade-up" data-delay="400">
+                    <div class="collective-stat">
+                        <div class="collective-stat-value">280%</div>
+                        <div class="collective-stat-label">Average Quota Attainment</div>
+                    </div>
+                    <div class="collective-stat">
+                        <div class="collective-stat-value">100%</div>
+                        <div class="collective-stat-label">Client Retention</div>
+                    </div>
+                    <div class="collective-stat">
+                        <div class="collective-stat-value">50+</div>
+                        <div class="collective-stat-label">Years Combined Experience</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             WHAT WE BELIEVE
+             ===================================================== -->
+        <section class="beliefs-section">
+            <div class="container">
+                <div class="beliefs-header" data-animate="fade-up">
+                    <span class="section-label">Our Philosophy</span>
+                    <h2>What We Believe</h2>
+                    <p>The principles that guide everything we build</p>
+                </div>
+
+                <div class="beliefs-grid">
+                    <div class="belief-card" data-animate="fade-up" data-delay="100">
+                        <div class="belief-number">01</div>
+                        <h3>Account Management is the Most Underleveraged Revenue Function</h3>
+                        <p>The people protecting and growing 70% of your ARR shouldn't be managing it in spreadsheets.</p>
+                    </div>
+
+                    <div class="belief-card" data-animate="fade-up" data-delay="200">
+                        <div class="belief-number">02</div>
+                        <h3>Tools Should Work the Way You Work</h3>
+                        <p>We've spent years configuring platforms that were never built for how we actually operate. Never again.</p>
+                    </div>
+
+                    <div class="belief-card" data-animate="fade-up" data-delay="300">
+                        <div class="belief-number">03</div>
+                        <h3>If It Doesn't Help You Hit Your Number, We Don't Build It</h3>
+                        <p>Every feature answers one question: "Would this have helped me close that deal?"</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             THE PROMISE
+             ===================================================== -->
+        <section class="promise-section">
+            <div class="container">
+                <div class="promise-callout" data-animate="fade-up">
+                    <p>
+                        We're building the tools we wished we had when we were the ones carrying quota and fighting for every renewal.
+                    </p>
+                    <p>
+                        We know what it's like to walk into a QBR with incomplete data. To watch expansion slip through the cracks. To manage millions in spreadsheets.
+                    </p>
+                    <p class="emphasis">
+                        You deserve better. We built it.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             CTA
+             ===================================================== -->
+        <section class="about-cta">
+            <div class="container" data-animate="fade-up">
+                <h2>Ready to Work with Practitioners?</h2>
+                <p>Let's talk about what you're trying to solve. No pitch deck — just a real conversation.</p>
+                <a href="/#contact" class="btn btn-primary btn-large">
+                    <span>Book a Conversation</span>
+                    <svg class="btn-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-main">
+                <div class="footer-brand">
+                    <a href="/" class="footer-logo">
+                        <img src="/images/gloo-logo.png" alt="Gloo" class="logo-img">
+                    </a>
+                    <p class="footer-tagline">Custom software for go-to-market teams</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Product</h4>
+                        <a href="/#what-we-do">What We Do</a>
+                        <a href="/#how-it-works">How It Works</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <a href="/about">About</a>
+                        <a href="/#contact">Contact</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Gloo. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+
+    <!-- Journey Timeline Scroll Animation -->
+    <script>
+        // Journey milestone reveal on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const milestones = document.querySelectorAll('.journey-milestone');
+            const journeyLine = document.querySelector('.journey-line-fill');
+            const journeySection = document.querySelector('.journey-section');
+
+            if (!milestones.length || !journeyLine || !journeySection) return;
+
+            // Intersection Observer for milestones
+            const milestoneObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.2,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            milestones.forEach(milestone => {
+                milestoneObserver.observe(milestone);
+            });
+
+            // Journey line fill on scroll
+            function updateJourneyLine() {
+                const rect = journeySection.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                const sectionTop = rect.top;
+                const sectionHeight = rect.height;
+
+                // Calculate progress through section
+                const scrolled = windowHeight - sectionTop;
+                const totalScrollable = sectionHeight + windowHeight;
+                let progress = (scrolled / totalScrollable) * 100;
+
+                // Clamp between 0 and 100
+                progress = Math.max(0, Math.min(100, progress));
+
+                journeyLine.style.height = progress + '%';
+            }
+
+            // Throttle scroll handler
+            let ticking = false;
+            window.addEventListener('scroll', function() {
+                if (!ticking) {
+                    window.requestAnimationFrame(function() {
+                        updateJourneyLine();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }, { passive: true });
+
+            // Initial call
+            updateJourneyLine();
+        });
+    </script>
+
+    <!-- Gloo Chat Widget -->
+    <script src="/chat/chat-widget.js" defer></script>
+</body>
+</html>

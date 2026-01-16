@@ -138,7 +138,6 @@
             <div class="nav-links" role="menubar">
                 <a href="#what-we-do" class="nav-link" role="menuitem">What We Do</a>
                 <a href="#about" class="nav-link" role="menuitem">Why Gloo</a>
-                <a href="/tools/" class="nav-link" role="menuitem">Tools</a>
                 <a href="#contact" class="btn btn-nav" role="menuitem"><span>Book a Call</span></a>
             </div>
             <button class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">
@@ -202,12 +201,208 @@
             </div>
             <div class="hero-visual" data-animate="fade-up" data-delay="200">
                 <div class="hero-cube-container">
-                    <iframe
-                        src="tools/whitespace-visualizer/cube-demo.html?embed=true"
-                        class="hero-cube-iframe"
-                        title="Gloo Tools 3D Demo"
-                        loading="lazy"
-                    ></iframe>
+                    <div class="cube-scene">
+                        <div class="cube-orbit">
+                            <div class="cube">
+                                <!-- Front: Whitespace Visualizer -->
+                                <div class="cube-face cube-face-front">
+                                    <div class="face-header">
+                                        <div class="face-indicator"></div>
+                                        <div class="face-title">Whitespace Visualizer</div>
+                                    </div>
+                                    <div class="face-content">
+                                        <div class="whitespace-grid">
+                                            <div class="grid-cell"></div><div class="grid-cell i3"></div><div class="grid-cell i2"></div><div class="grid-cell i1"></div><div class="grid-cell i4"></div>
+                                            <div class="grid-cell i2"></div><div class="grid-cell i4"></div><div class="grid-cell i3"></div><div class="grid-cell i2"></div><div class="grid-cell i1"></div>
+                                            <div class="grid-cell i1"></div><div class="grid-cell i2"></div><div class="grid-cell"></div><div class="grid-cell i3"></div><div class="grid-cell i2"></div>
+                                            <div class="grid-cell i3"></div><div class="grid-cell i1"></div><div class="grid-cell i2"></div><div class="grid-cell i4"></div><div class="grid-cell"></div>
+                                        </div>
+                                    </div>
+                                    <div class="face-footer">
+                                        <span class="cube-metric-label">Whitespace Found</span>
+                                        <span class="cube-metric-value">$2.4M</span>
+                                    </div>
+                                </div>
+
+                                <!-- Right: Account Health -->
+                                <div class="cube-face cube-face-right">
+                                    <div class="face-header">
+                                        <div class="face-indicator success"></div>
+                                        <div class="face-title">Account Health</div>
+                                    </div>
+                                    <div class="face-content">
+                                        <div class="health-grid">
+                                            <div class="health-card">
+                                                <div class="health-gauge excellent"><span class="health-value">90</span></div>
+                                                <span class="health-label">Acme</span>
+                                            </div>
+                                            <div class="health-card">
+                                                <div class="health-gauge good"><span class="health-value">75</span></div>
+                                                <span class="health-label">Tech</span>
+                                            </div>
+                                            <div class="health-card">
+                                                <div class="health-gauge warning"><span class="health-value">50</span></div>
+                                                <span class="health-label">Data</span>
+                                            </div>
+                                            <div class="health-card">
+                                                <div class="health-gauge critical"><span class="health-value">25</span></div>
+                                                <span class="health-label">Cloud</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="face-footer">
+                                        <span class="cube-metric-label">Avg Health</span>
+                                        <span class="cube-metric-value success">72</span>
+                                    </div>
+                                </div>
+
+                                <!-- Back: ROI Calculator -->
+                                <div class="cube-face cube-face-back">
+                                    <div class="face-header">
+                                        <div class="face-indicator success"></div>
+                                        <div class="face-title">ROI Calculator</div>
+                                    </div>
+                                    <div class="face-content">
+                                        <div class="roi-content">
+                                            <div class="chart-area">
+                                                <svg class="chart-svg" viewBox="0 0 200 100" preserveAspectRatio="none">
+                                                    <polyline class="chart-line revenue" points="10,70 50,55 90,45 130,30 170,15" />
+                                                    <polyline class="chart-line profit" points="10,80 50,70 90,55 130,40 170,25" />
+                                                </svg>
+                                            </div>
+                                            <div class="roi-badge">
+                                                <span>Projected ROI</span>
+                                                <span>+340%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="face-footer">
+                                        <span class="cube-metric-label">Annual Savings</span>
+                                        <span class="cube-metric-value success">$1.2M</span>
+                                    </div>
+                                </div>
+
+                                <!-- Left: Churn Predictor -->
+                                <div class="cube-face cube-face-left">
+                                    <div class="face-header">
+                                        <div class="face-indicator warning"></div>
+                                        <div class="face-title">Churn Predictor</div>
+                                    </div>
+                                    <div class="face-content">
+                                        <div class="churn-list">
+                                            <div class="risk-item">
+                                                <div class="risk-avatar">AC</div>
+                                                <div class="risk-info">
+                                                    <div class="risk-name">Acme Corp</div>
+                                                    <div class="risk-bar"><div class="risk-fill low" style="width: 15%;"></div></div>
+                                                </div>
+                                                <span class="risk-score low">15%</span>
+                                            </div>
+                                            <div class="risk-item">
+                                                <div class="risk-avatar">DF</div>
+                                                <div class="risk-info">
+                                                    <div class="risk-name">DataFlow</div>
+                                                    <div class="risk-bar"><div class="risk-fill medium" style="width: 45%;"></div></div>
+                                                </div>
+                                                <span class="risk-score medium">45%</span>
+                                            </div>
+                                            <div class="risk-item">
+                                                <div class="risk-avatar">CN</div>
+                                                <div class="risk-info">
+                                                    <div class="risk-name">CloudNine</div>
+                                                    <div class="risk-bar"><div class="risk-fill high" style="width: 78%;"></div></div>
+                                                </div>
+                                                <span class="risk-score high">78%</span>
+                                            </div>
+                                            <div class="risk-item">
+                                                <div class="risk-avatar">TS</div>
+                                                <div class="risk-info">
+                                                    <div class="risk-name">TechStart</div>
+                                                    <div class="risk-bar"><div class="risk-fill low" style="width: 22%;"></div></div>
+                                                </div>
+                                                <span class="risk-score low">22%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="face-footer">
+                                        <span class="cube-metric-label">At Risk</span>
+                                        <span class="cube-metric-value warning">$340K</span>
+                                    </div>
+                                </div>
+
+                                <!-- Top: Renewal Tracker -->
+                                <div class="cube-face cube-face-top">
+                                    <div class="face-header">
+                                        <div class="face-indicator"></div>
+                                        <div class="face-title">Renewal Tracker</div>
+                                    </div>
+                                    <div class="face-content">
+                                        <div class="timeline-list">
+                                            <div class="timeline-item">
+                                                <div class="timeline-dot urgent"></div>
+                                                <div class="timeline-info">
+                                                    <div class="timeline-company">CloudNine</div>
+                                                    <div class="timeline-date">3 days</div>
+                                                </div>
+                                                <span class="timeline-value">$89K</span>
+                                            </div>
+                                            <div class="timeline-item">
+                                                <div class="timeline-dot soon"></div>
+                                                <div class="timeline-info">
+                                                    <div class="timeline-company">DataFlow</div>
+                                                    <div class="timeline-date">2 weeks</div>
+                                                </div>
+                                                <span class="timeline-value">$156K</span>
+                                            </div>
+                                            <div class="timeline-item">
+                                                <div class="timeline-dot upcoming"></div>
+                                                <div class="timeline-info">
+                                                    <div class="timeline-company">Acme Corp</div>
+                                                    <div class="timeline-date">45 days</div>
+                                                </div>
+                                                <span class="timeline-value">$420K</span>
+                                            </div>
+                                            <div class="timeline-item">
+                                                <div class="timeline-dot done"></div>
+                                                <div class="timeline-info">
+                                                    <div class="timeline-company">TechStart</div>
+                                                    <div class="timeline-date">Renewed</div>
+                                                </div>
+                                                <span class="timeline-value">$67K</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="face-footer">
+                                        <span class="cube-metric-label">Pipeline</span>
+                                        <span class="cube-metric-value">$732K</span>
+                                    </div>
+                                </div>
+
+                                <!-- Bottom: Stakeholder Map -->
+                                <div class="cube-face cube-face-bottom">
+                                    <div class="face-header">
+                                        <div class="face-indicator pink"></div>
+                                        <div class="face-title">Stakeholder Map</div>
+                                    </div>
+                                    <div class="face-content">
+                                        <div class="stakeholder-map">
+                                            <div class="map-node primary">CEO</div>
+                                            <div class="map-node secondary" style="top: 18%; left: 22%;">VP</div>
+                                            <div class="map-node secondary" style="top: 22%; right: 18%;">CTO</div>
+                                            <div class="map-node tertiary" style="bottom: 22%; left: 12%;">PM</div>
+                                            <div class="map-node tertiary" style="bottom: 18%; right: 22%;">Dev</div>
+                                            <div class="map-node tertiary" style="top: 55%; left: 18%;">Ops</div>
+                                            <div class="map-node tertiary" style="top: 60%; right: 12%;">QA</div>
+                                        </div>
+                                    </div>
+                                    <div class="face-footer">
+                                        <span class="cube-metric-label">Key Contacts</span>
+                                        <span class="cube-metric-value pink">7</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="hero-cube-glow"></div>
                 </div>
             </div>
@@ -1291,7 +1486,6 @@
                 <div class="footer-nav">
                     <div class="footer-nav-col">
                         <h4>Product</h4>
-                        <a href="/tools/">Prototype Studio</a>
                         <a href="#case-study">Results</a>
                     </div>
                     <div class="footer-nav-col">
@@ -1308,8 +1502,6 @@
     </footer>
 
     <!-- GSAP Animation Libraries -->
-    <!-- Chart.js for ROI Calculator -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js" integrity="sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" integrity="sha384-d+vyQ0dYcymoP8ndq2hW7FGC50nqGdXUEgoOUGxbbkAJwZqL7h+jKN0GGgn9hFDS" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" integrity="sha384-poC0r6usQOX2Ayt/VGA+t81H6V3iN9L+Irz9iO8o+s0X20tLpzc9DOOtnKxhaQSE" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js" integrity="sha384-/vEpeVnzTqj9iyeckUnHYYHuNlY2ZAMT89Qjv+m6/YhFfkjWjd4WIFgXyXFs0lcx" crossorigin="anonymous"></script>
