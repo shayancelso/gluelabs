@@ -7315,6 +7315,12 @@ p {
         padding: 0.375rem 1rem;
         border-radius: var(--radius-lg);
         margin: 0 0.25rem;
+        border: none;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .nav.scrolled .nav-container::before {
+        opacity: 0;
     }
 
     .logo-img {
