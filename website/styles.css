@@ -9264,34 +9264,22 @@ p {
     background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
 }
 
-/* Responsive cube - Mobile hero uses 80px cube positioned between subtitle and CTA */
+/* Responsive hero - Hide cube and fix margins on mobile */
 @media (max-width: 768px) {
-    .cube-scene {
-        --cube-size: 80px;
+    .hero-cube-container {
+        display: none;
     }
 
-    .cube-face-front  { transform: rotateY(0deg) translateZ(40px); }
-    .cube-face-back   { transform: rotateY(180deg) translateZ(40px); }
-    .cube-face-right  { transform: rotateY(90deg) translateZ(40px); }
-    .cube-face-left   { transform: rotateY(-90deg) translateZ(40px); }
-    .cube-face-top    { transform: rotateX(90deg) translateZ(40px); }
-    .cube-face-bottom { transform: rotateX(-90deg) translateZ(40px); }
-}
-
-@media (max-width: 480px) {
-    .cube-scene {
-        --cube-size: 80px;
+    .hero-content {
+        padding-left: 0;
+        padding-right: 0;
     }
 
-    .cube-face-front  { transform: rotateY(0deg) translateZ(40px); }
-    .cube-face-back   { transform: rotateY(180deg) translateZ(40px); }
-    .cube-face-right  { transform: rotateY(90deg) translateZ(40px); }
-    .cube-face-left   { transform: rotateY(-90deg) translateZ(40px); }
-    .cube-face-top    { transform: rotateX(90deg) translateZ(40px); }
-    .cube-face-bottom { transform: rotateX(-90deg) translateZ(40px); }
-
-    .cube-face {
-        padding: 4px;
-        border-radius: 6px;
+    .hero-visual {
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: 0;
     }
 }
+
+/* Cube styles for 480px removed - cube is hidden on mobile */
