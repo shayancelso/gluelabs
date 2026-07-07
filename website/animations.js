@@ -34,7 +34,7 @@
     // ========================================
 
     const HeroTypewriter = {
-        phrases: ['whitespace', 'ROI calculator', 'account health'],
+        phrases: ['the way you work', 'your workflow', 'your operations', 'your team'],
         currentIndex: 0,
         textElement: null,
         isTyping: false,

@@ -766,10 +766,13 @@ p {
     margin-bottom: var(--space-md);
     letter-spacing: -0.03em;
     font-weight: 700;
+    /* Sized so "Custom AI tools for" + longest typewriter phrase each hold one line — H1 stays exactly 2 lines */
+    font-size: clamp(2.5rem, 3.9vw, 3.4rem);
 }
 
 .hero-line {
     display: block;
+    white-space: nowrap;
 }
 
 .hero-line:first-child {

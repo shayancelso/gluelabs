@@ -1,5 +1,5 @@
 /**
- * Glue Website — Premium Interactions
+ * Gloo Website — Premium Interactions
  * Interactive demos, counters, FAQ accordion, and smooth animations
  */
 
@@ -667,9 +667,8 @@ function throttle(func, limit) {
 
     const sections = [
         { id: 'hero', el: document.querySelector('.hero') },
-        { id: 'demo', el: document.getElementById('demo') },
         { id: 'about', el: document.getElementById('about') },
-        { id: 'how-it-works', el: document.getElementById('how-it-works') },
+        { id: 'what-we-do', el: document.getElementById('what-we-do') },
         { id: 'case-study', el: document.getElementById('case-study') },
         { id: 'contact', el: document.getElementById('contact') }
     ].filter(s => s.el);
