@@ -860,6 +860,15 @@ function throttle(func, limit) {
 
     if (!form) return;
 
+    // Supabase project — the anon key authenticates calls to the public
+    // (verify_jwt = false) send-prototype-inquiry Edge Function, which emails the
+    // enquiry to hello@buildwithgloo.com via Resend with the visitor's address as
+    // reply-to. Direct anon inserts into the CRM tables are blocked by RLS, so
+    // email is the lead channel here.
+    const SUPABASE_URL = 'https://psfqgeomdtwbhdyjsmso.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzZnFnZW9tZHR3YmhkeWpzbXNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYxODEwMjAsImV4cCI6MjA4MTc1NzAyMH0.pDPTBYSDp622N-KUWpG8rJzpcpQI5vnV7dK2_bViRyM';
+    const EMAIL_FN_URL = SUPABASE_URL + '/functions/v1/send-prototype-inquiry';
+
     // Handle form submission with AJAX
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -873,15 +882,33 @@ function throttle(func, limit) {
 
         try {
             const formData = new FormData(form);
-            const response = await fetch(form.action, {
+            const lead = {
+                name: (formData.get('name') || '').toString().trim(),
+                email: (formData.get('email') || '').toString().trim(),
+                company: (formData.get('company') || '').toString().trim(),
+                message: (formData.get('message') || '').toString().trim()
+            };
+
+            // Email the enquiry to hello@buildwithgloo.com via the Resend-backed
+            // Edge Function. If the email sends, we show the confirmation.
+            const response = await fetch(EMAIL_FN_URL, {
                 method: 'POST',
-                body: formData,
                 headers: {
-                    'Accept': 'application/json'
-                }
+                    'Content-Type': 'application/json',
+                    'apikey': SUPABASE_ANON_KEY,
+                    'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
+                },
+                body: JSON.stringify({
+                    contactName: lead.name,
+                    email: lead.email,
+                    companyName: lead.company,
+                    message: lead.message
+                })
             });
 
-            if (response.ok) {
+            const result = await response.json().catch(() => ({}));
+
+            if (response.ok && result.success !== false) {
                 // Track form submission in Google Analytics
                 if (typeof gtag !== 'undefined') {
                     gtag('event', 'generate_lead', {

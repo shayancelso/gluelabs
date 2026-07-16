@@ -9292,3 +9292,113 @@ p {
 }
 
 /* Cube styles for 480px removed - cube is hidden on mobile */
+
+/* ==========================================================================
+   Lovable Certified Partner Badge
+   ========================================================================== */
+.partner-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    text-decoration: none;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.partner-badge:hover {
+    transform: translateY(-2px);
+}
+
+.partner-badge__img {
+    height: 58px;
+    width: auto;
+    display: block;
+    flex-shrink: 0;
+}
+
+.partner-badge__caption {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+    text-align: left;
+}
+
+.partner-badge__eyebrow {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+}
+
+.partner-badge__name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+/* Light variant for dark backgrounds (footer) */
+.partner-badge--light .partner-badge__name {
+    color: #fff;
+}
+
+.partner-badge--light .partner-badge__eyebrow {
+    color: rgba(255, 255, 255, 0.55);
+}
+
+/* Hero placement */
+.hero-partner {
+    margin-top: var(--space-xl);
+}
+
+/* Footer placement */
+.footer-partner {
+    margin-top: var(--space-lg);
+}
+
+.footer-partner__eyebrow {
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+    margin-bottom: 12px;
+}
+
+.footer-partner__badges {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.footer-badge-link {
+    display: inline-flex;
+    transition: transform 0.25s ease;
+}
+
+.footer-badge-link:hover {
+    transform: translateY(-2px);
+}
+
+.footer-badge-img {
+    height: 52px;
+    width: auto;
+    display: block;
+}
+
+/* About page placement */
+.about-partner {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+@media (max-width: 480px) {
+    .partner-badge__img {
+        height: 48px;
+    }
+    .partner-badge {
+        gap: 12px;
+    }
+}

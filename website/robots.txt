@@ -4,5 +4,15 @@
 User-agent: *
 Allow: /
 
+# Private client demos, internal tools & staging — keep out of the index
+Disallow: /prospects/
+Disallow: /bridge/
+Disallow: /video-ad/
+Disallow: /Logo/
+Disallow: /Zoominfo/
+Disallow: /hero-options.html
+Disallow: /glue-pricing-calculator.html
+Disallow: /glue-pricing-logic.html
+
 # Sitemap location
 Sitemap: https://buildwithgloo.com/sitemap.xml
