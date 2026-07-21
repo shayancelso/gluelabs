@@ -6343,8 +6343,11 @@ p {
     display: inline-block;
     animation: cursorBlink 0.8s step-end infinite;
     color: var(--color-primary);
+    /* Opt out of the parent gradient text-clip so the cursor renders as a solid bar */
+    -webkit-text-fill-color: var(--color-primary);
+    background: none;
     font-weight: 300;
-    margin-left: 2px;
+    margin-left: 3px;
 }
 
 @keyframes cursorBlink {
@@ -6353,8 +6356,7 @@ p {
 }
 
 .typewriter-text {
-    display: inline-block;
-    min-width: 200px;
+    display: inline;
 }
 
 /* Hero Mockup Parallax */
