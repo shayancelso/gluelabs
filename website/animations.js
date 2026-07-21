@@ -34,7 +34,7 @@
     // ========================================
 
     const HeroTypewriter = {
-        phrases: ['the way you work', 'your workflow', 'your operations', 'your team'],
+        phrases: ['wishes it had', 'actually needs', 'has been asking for', 'wishes existed'],
         currentIndex: 0,
         textElement: null,
         isTyping: false,
