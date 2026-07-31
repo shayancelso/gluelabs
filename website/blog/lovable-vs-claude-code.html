@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XLGY974WHR"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XLGY974WHR');
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lovable vs Claude Code: Which Should Build Your Internal Tool? | Gloo</title>
+    <meta name="description" content="Lovable and Claude Code solve different problems for different people. A practical breakdown of when to build in Lovable, when to reach for Claude Code, and how teams use both on one project.">
+    <link rel="canonical" href="https://buildwithgloo.com/blog/lovable-vs-claude-code">
+
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://buildwithgloo.com/blog/lovable-vs-claude-code">
+    <meta property="og:title" content="Lovable vs Claude Code: Which Should Build Your Internal Tool?">
+    <meta property="og:description" content="Lovable and Claude Code solve different problems for different people. A practical breakdown of when to build in Lovable, when to reach for Claude Code, and how teams use both on one project.">
+    <meta property="og:image" content="https://buildwithgloo.com/images/og-image.png">
+    <meta property="og:site_name" content="Gloo">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Lovable vs Claude Code: Which Should Build Your Internal Tool?">
+    <meta name="twitter:description" content="Lovable and Claude Code solve different problems for different people. A practical breakdown of when to build in Lovable, when to reach for Claude Code, and how teams use both on one project.">
+    <meta name="twitter:image" content="https://buildwithgloo.com/images/og-image.png">
+
+    <link rel="icon" type="image/png" href="/favicon.png?v=3">
+    <link rel="alternate" type="application/rss+xml" title="Gloo Blog" href="/feed.xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/blog/blog.css">
+    <meta name="keywords" content="lovable vs claude code, lovable or claude code, claude code internal tools, lovable production ready">
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Lovable vs Claude Code: Which Should Build Your Internal Tool?",
+    "description": "Lovable and Claude Code solve different problems for different people. A practical breakdown of when to build in Lovable, when to reach for Claude Code, and how teams use both on one project.",
+    "keywords": "lovable vs claude code, lovable or claude code, claude code internal tools, lovable production ready",
+    "datePublished": "2026-07-31",
+    "dateModified": "2026-07-31",
+    "wordCount": 783,
+    "inLanguage": "en",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://buildwithgloo.com/blog/lovable-vs-claude-code"
+    },
+    "image": "https://buildwithgloo.com/images/og-image.png",
+    "author": {
+        "@type": "Organization",
+        "name": "Gloo",
+        "url": "https://buildwithgloo.com"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Gloo",
+        "url": "https://buildwithgloo.com",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://buildwithgloo.com/images/gloo-logo.png"
+        }
+    }
+}
+    </script>
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://buildwithgloo.com/"
+        },
+        {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Blog",
+            "item": "https://buildwithgloo.com/blog/"
+        },
+        {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Lovable vs Claude Code: Which Should Build Your Internal Tool?",
+            "item": "https://buildwithgloo.com/blog/lovable-vs-claude-code"
+        }
+    ]
+}
+    </script>
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "Is Lovable or Claude Code better?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Neither is better; they serve different users. Lovable is for business users building a whole application from nothing, with no setup and no repository. Claude Code is for engineers making changes inside an existing codebase. Teams often use both on the same project."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can Lovable build production software?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. Lovable applications include a real database, authentication, and deployment, and projects can be exported to a codebase you self-host. The parts that need engineering attention are usually permissions, unusual integrations, and performance at scale."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "When should I switch from Lovable to Claude Code?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "When you start describing changes in terms of code and architecture rather than outcomes. Requests like moving a check into middleware, restructuring the data model, or optimising a slow query are the signal to export the project and continue in the repository."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Do I have to choose between Lovable and Claude Code?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. A common and effective pattern is to build and validate in Lovable for the first weeks, export once the screens and data model settle, then use Claude Code for permissions, integrations, and performance work."
+            }
+        }
+    ]
+}
+    </script>
+</head>
+<body class="blog-page">
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <a href="/" class="logo" aria-label="Gloo - Go to homepage">
+                <img src="/images/gloo-logo.png" alt="Gloo" class="logo-img">
+            </a>
+            <div class="nav-links" role="menubar">
+                <a href="/#what-we-do" class="nav-link" role="menuitem">What We Do</a>
+                <a href="/blog/" class="nav-link" role="menuitem">Blog</a>
+                <a href="/about" class="nav-link" role="menuitem">About</a>
+                <a href="/#contact" class="btn btn-nav" role="menuitem"><span>Book a Call</span></a>
+            </div>
+            <button class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <main role="main" id="main-content">
+    <div class="container blog-shell">
+        <article class="blog-narrow">
+            <nav class="crumbs" aria-label="Breadcrumb">
+                <a href="/">Home</a>
+                <span aria-hidden="true">/</span>
+                <a href="/blog/">Blog</a>
+                <span aria-hidden="true">/</span>
+                <span aria-current="page">Lovable</span>
+            </nav>
+
+            <header class="article-head">
+                <span class="eyebrow">Lovable</span>
+                <h1>Lovable vs Claude Code: which should build your internal tool?</h1>
+                <div class="article-byline">
+                    <span>By the Gloo team</span>
+                    <span aria-hidden="true">&middot;</span>
+                    <time datetime="2026-07-31">31 July 2026</time>
+                    <span aria-hidden="true">&middot;</span>
+                    <span>4 min read</span>
+                </div>
+            </header>
+
+            <div class="lede">
+<p><strong>They are not competitors, they are different jobs.</strong> Lovable is for business users who need a whole working application and have no setup, no repository, and no engineer. Claude Code is for engineers working inside an existing codebase: refactors, integrations, infrastructure, and anything that lives in a terminal.</p>
+    <p>If you cannot name the file you want changed, you want Lovable. If you can, you want Claude Code. Most real projects eventually use both.</p>
+            </div>
+
+            <div class="prose">
+
+<h2>The short answer</h2>
+<div class="table-scroll">
+<table>
+    <thead><tr><th></th><th>Lovable</th><th>Claude Code</th></tr></thead>
+    <tbody>
+        <tr><th>Built for</th><td>Business users and builders</td><td>Engineers</td></tr>
+        <tr><th>Starting point</th><td>Nothing. A blank prompt</td><td>An existing codebase</td></tr>
+        <tr><th>Scope</th><td>A whole app: UI, data, auth, deploy</td><td>Changes inside a project, at any depth</td></tr>
+        <tr><th>Where it runs</th><td>The browser</td><td>Terminal or IDE</td></tr>
+        <tr><th>Time to first working screen</th><td>Minutes</td><td>Depends on the repo</td></tr>
+        <tr><th>Weak spot</th><td>Deep refactors, unusual infrastructure</td><td>Needs someone who can read the diff</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h2>Where Lovable wins</h2>
+<p>Lovable's real advantage is not code generation, it is <strong>the elimination of setup</strong>. A traditional project spends its first days on decisions that produce nothing a user can see: framework, hosting, auth provider, database, deployment. Lovable starts you past all of that, with a deployed URL from the first prompt.</p>
+<p>That changes who gets to build. An ops manager who knows exactly how their process works can produce a working tool without waiting for engineering capacity. In organisations where the AI budget sits with IT but the process knowledge sits in the business, this is the whole game.</p>
+<p>Lovable is also deliberately not locked to one model, so the underlying engine can change as the frontier moves, and projects can be exported and self-hosted, which matters for anyone with data-residency requirements.</p>
+<p><strong>Choose Lovable when:</strong> nothing exists yet; the people who understand the workflow are not engineers; you need something in front of real users this week; the app is a dashboard, an internal tool, a portal, or a form-and-data workflow.</p>
+
+<h2>Where Claude Code wins</h2>
+<p>Claude Code operates on a repository. It reads across files, runs tests and commands, and makes changes an engineer reviews as a diff. It is the right tool when the work is <em>inside</em> something that already exists.</p>
+<p><strong>Choose Claude Code when:</strong> the codebase is already large; the task is a refactor, a migration, or a subtle bug; the work touches infrastructure, CI, or libraries; you need to run and inspect code, not just render it; an engineer will own the result.</p>
+<p>The trade-off is real: Claude Code assumes someone can evaluate what it produced. Handed to someone who cannot read the diff, its power becomes a liability rather than a speed-up.</p>
+
+<h2>The honest boundary</h2>
+<p>Ask anyone who ships on both and you get the same answer: there <em>is</em> a ceiling on building conversationally, and pretending otherwise is how projects get stuck.</p>
+<p>You are near the ceiling when you find yourself describing a change in terms of the code rather than the outcome. "Move the tenant check into middleware so it applies to every route" is not a prompt about your business, it is a prompt about architecture. That is the signal to export the project and continue in the repository with engineering tools.</p>
+<p>The good news is that this is a handoff, not a restart. The code Lovable produced is real code in a real repository.</p>
+
+<h2>How they combine on one project</h2>
+<p>The pattern we use most often:</p>
+<ol>
+    <li><strong>Lovable for the first two weeks.</strong> Get a working tool in front of the people who will use it, with their real data. Iterate on what they actually complain about, which is never what the spec said.</li>
+    <li><strong>Export once the shape stops changing.</strong> When the screens and the data model settle, the project becomes a normal codebase.</li>
+    <li><strong>Claude Code for the hard tail.</strong> Permissions, a stubborn integration with an old ERP, scheduled jobs, performance on a table with a million rows.</li>
+    <li><strong>Back to Lovable for surface changes.</strong> New view, new filter, new report.</li>
+</ol>
+<p>Sequencing this way means the expensive engineering work happens after the requirements have been proven by real usage, not before.</p>
+
+<h2>A worked example</h2>
+<p>A franchise operator with 150+ stores had a finance manager rebuilding the same report by hand every week: export order data, convert pack sizes, compute compliance ratios, email static spreadsheets to five district managers.</p>
+<ul>
+    <li><strong>Lovable's half:</strong> the upload flow, the parsing and unit conversion, the dashboards, the deployment. A district manager was looking at real numbers in days.</li>
+    <li><strong>The engineering half:</strong> scoping data so each manager sees only their own stores, and making the weekly import survive a source file whose format drifts.</li>
+</ul>
+<p>Neither tool would have been the wrong choice. Using only one would have been.</p>
+
+<h2>What this means when hiring an agency</h2>
+<p>An agency that only knows Lovable will build you the 80% and stall on permissions. An agency that only knows traditional engineering will spend your first three weeks on scaffolding before anyone sees a screen.</p>
+<p>Ask directly: <em>what happens when we hit the limit of what you can build in the platform?</em> The answer you want is a specific, unbothered description of the export-and-continue path. Our full list of questions is in <a href="/blog/how-to-hire-a-lovable-agency">how to hire a Lovable agency</a>.</p>
+
+            </div>
+
+        <section class="faq" aria-labelledby="faq-heading">
+            <h2 id="faq-heading" style="font-family:var(--font-display);font-size:1.375rem;font-weight:600;margin-bottom:var(--space-sm);">Frequently asked questions</h2>
+            <div class="faq-item">
+                <h3>Is Lovable or Claude Code better?</h3>
+                <p>Neither is better; they serve different users. Lovable is for business users building a whole application from nothing, with no setup and no repository. Claude Code is for engineers making changes inside an existing codebase. Teams often use both on the same project.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Can Lovable build production software?</h3>
+                <p>Yes. Lovable applications include a real database, authentication, and deployment, and projects can be exported to a codebase you self-host. The parts that need engineering attention are usually permissions, unusual integrations, and performance at scale.</p>
+            </div>
+            <div class="faq-item">
+                <h3>When should I switch from Lovable to Claude Code?</h3>
+                <p>When you start describing changes in terms of code and architecture rather than outcomes. Requests like moving a check into middleware, restructuring the data model, or optimising a slow query are the signal to export the project and continue in the repository.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Do I have to choose between Lovable and Claude Code?</h3>
+                <p>No. A common and effective pattern is to build and validate in Lovable for the first weeks, export once the screens and data model settle, then use Claude Code for permissions, integrations, and performance work.</p>
+            </div>
+        </section>
+
+        <section class="blog-cta">
+            <h2>Not sure which half of this you need?</h2>
+            <p>Tell us the workflow you&#x27;re trying to fix and we&#x27;ll tell you honestly which approach fits, even if it isn&#x27;t us.</p>
+            <a href="/#contact" class="btn btn-glass btn-large"><span>Book a 30-minute call</span></a>
+        </section>
+
+        <section class="related" aria-labelledby="rel-heading">
+            <h2 id="rel-heading">Keep reading</h2>
+            <div class="related-list">
+                <a href="/blog/how-to-hire-a-lovable-agency">How to hire a Lovable agency: 7 questions to ask first <span aria-hidden="true">&rarr;</span></a>
+                <a href="/blog/build-vs-buy-sales-tools">Build vs buy: when custom sales tools beat another platform <span aria-hidden="true">&rarr;</span></a>
+            </div>
+        </section>
+
+        </article>
+    </div>
+    </main>
+    <footer class="footer" role="contentinfo">
+        <div class="footer-gradient"></div>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="lou-footer-mascot">
+                        <img src="/Logo/Lou.png" alt="Lou - Gloo mascot" class="lou-img">
+                    </div>
+                    <p>One size fits none. Solutions custom to you.</p>
+                    <div class="footer-partner">
+                        <span class="footer-partner__eyebrow">Official Lovable Partner</span>
+                        <div class="footer-partner__badges">
+                            <a href="https://lovable.dev" target="_blank" rel="noopener" class="footer-badge-link" aria-label="Gloo is a Lovable Select Partner">
+                                <img src="/images/lovable-select-partner-white.png" alt="Lovable Select Partner badge" class="footer-badge-img" width="732" height="676">
+                            </a>
+                            <a href="https://lovable.dev" target="_blank" rel="noopener" class="footer-badge-link" aria-label="Gloo is a Lovable Certified Partner">
+                                <img src="/images/lovable-certified-partner-white.png" alt="Lovable Certified Partner badge" class="footer-badge-img" width="732" height="676">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-nav">
+                    <div class="footer-nav-col">
+                        <h4>Product</h4>
+                        <a href="/#case-study">Results</a>
+                        <a href="/#tools">Example Builds</a>
+                        <a href="https://tools.buildwithgloo.com" target="_blank" rel="noopener">Tool Demos</a>
+                    </div>
+                    <div class="footer-nav-col">
+                        <h4>Company</h4>
+                        <a href="/blog/">Blog</a>
+                        <a href="/about">About</a>
+                        <a href="/#contact">Contact</a>
+                    </div>
+                    <div class="footer-nav-col">
+                        <h4>Legal</h4>
+                        <a href="/privacy">Privacy Policy</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Gloo. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="/script.js"></script>
+
+</body>
+</html>

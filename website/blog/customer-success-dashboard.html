@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XLGY974WHR"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XLGY974WHR');
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Belongs in a Customer Success Dashboard (and What Doesn't) | Gloo</title>
+    <meta name="description" content="The five metrics that earn a place on a CS dashboard, the ones wasting space, how to build a health score that isn't fiction, and how to get CSMs to open it daily.">
+    <link rel="canonical" href="https://buildwithgloo.com/blog/customer-success-dashboard">
+
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://buildwithgloo.com/blog/customer-success-dashboard">
+    <meta property="og:title" content="What Belongs in a Customer Success Dashboard (and What Doesn't)">
+    <meta property="og:description" content="The five metrics that earn a place on a CS dashboard, the ones wasting space, how to build a health score that isn't fiction, and how to get CSMs to open it daily.">
+    <meta property="og:image" content="https://buildwithgloo.com/images/og-image.png">
+    <meta property="og:site_name" content="Gloo">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="What Belongs in a Customer Success Dashboard (and What Doesn't)">
+    <meta name="twitter:description" content="The five metrics that earn a place on a CS dashboard, the ones wasting space, how to build a health score that isn't fiction, and how to get CSMs to open it daily.">
+    <meta name="twitter:image" content="https://buildwithgloo.com/images/og-image.png">
+
+    <link rel="icon" type="image/png" href="/favicon.png?v=3">
+    <link rel="alternate" type="application/rss+xml" title="Gloo Blog" href="/feed.xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/blog/blog.css">
+    <meta name="keywords" content="customer success dashboard, cs dashboard metrics, customer health score, churn risk dashboard, renewal tracking dashboard">
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "What Belongs in a Customer Success Dashboard (and What Doesn't)",
+    "description": "The five metrics that earn a place on a CS dashboard, the ones wasting space, how to build a health score that isn't fiction, and how to get CSMs to open it daily.",
+    "keywords": "customer success dashboard, cs dashboard metrics, customer health score, churn risk dashboard, renewal tracking dashboard",
+    "datePublished": "2026-07-31",
+    "dateModified": "2026-07-31",
+    "wordCount": 975,
+    "inLanguage": "en",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://buildwithgloo.com/blog/customer-success-dashboard"
+    },
+    "image": "https://buildwithgloo.com/images/og-image.png",
+    "author": {
+        "@type": "Organization",
+        "name": "Gloo",
+        "url": "https://buildwithgloo.com"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Gloo",
+        "url": "https://buildwithgloo.com",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://buildwithgloo.com/images/gloo-logo.png"
+        }
+    }
+}
+    </script>
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://buildwithgloo.com/"
+        },
+        {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Blog",
+            "item": "https://buildwithgloo.com/blog/"
+        },
+        {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "What Belongs in a Customer Success Dashboard (and What Doesn't)",
+            "item": "https://buildwithgloo.com/blog/customer-success-dashboard"
+        }
+    ]
+}
+    </script>
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "What metrics should a customer success dashboard include?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Five earn their place: a health score with its contributing factors attached, renewal runway with the work required before each date, engagement change against the account's own baseline, open risk consolidated in one place, and a single expansion signal matched to how your product grows."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "How do you build a customer health score?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Start from accounts that churned and look at what was observable 90 days before they gave notice. Identify the two or three signals that reliably preceded churn, weight them by observed predictive power rather than opinion, test the false-positive rate against accounts that renewed, and publish the formula so CSMs can argue with it."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What should you leave off a CS dashboard?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "NPS as a headline number, raw ticket volume without context, login counts, and anything a CSM cannot act on. Also resist widget sprawl: if a metric has not changed a decision in three months, remove it."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "How often should a customer success dashboard refresh?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Daily is sufficient for nearly all customer success decisions. Real-time refresh adds meaningful cost and complexity without changing what a CSM does differently that day."
+            }
+        }
+    ]
+}
+    </script>
+</head>
+<body class="blog-page">
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <a href="/" class="logo" aria-label="Gloo - Go to homepage">
+                <img src="/images/gloo-logo.png" alt="Gloo" class="logo-img">
+            </a>
+            <div class="nav-links" role="menubar">
+                <a href="/#what-we-do" class="nav-link" role="menuitem">What We Do</a>
+                <a href="/blog/" class="nav-link" role="menuitem">Blog</a>
+                <a href="/about" class="nav-link" role="menuitem">About</a>
+                <a href="/#contact" class="btn btn-nav" role="menuitem"><span>Book a Call</span></a>
+            </div>
+            <button class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <main role="main" id="main-content">
+    <div class="container blog-shell">
+        <article class="blog-narrow">
+            <nav class="crumbs" aria-label="Breadcrumb">
+                <a href="/">Home</a>
+                <span aria-hidden="true">/</span>
+                <a href="/blog/">Blog</a>
+                <span aria-hidden="true">/</span>
+                <span aria-current="page">GTM tooling</span>
+            </nav>
+
+            <header class="article-head">
+                <span class="eyebrow">GTM tooling</span>
+                <h1>What belongs in a customer success dashboard (and what doesn&#x27;t)</h1>
+                <div class="article-byline">
+                    <span>By the Gloo team</span>
+                    <span aria-hidden="true">&middot;</span>
+                    <time datetime="2026-07-31">31 July 2026</time>
+                    <span aria-hidden="true">&middot;</span>
+                    <span>5 min read</span>
+                </div>
+            </header>
+
+            <div class="lede">
+<p><strong>A customer success dashboard should answer one question: which accounts need attention this week, and why.</strong> Everything that does not serve that question is decoration, no matter how good it looks in a board deck.</p>
+    <p>Most CS dashboards fail because they were designed as reports for leadership rather than tools for CSMs. A report is read monthly. A tool gets opened every morning. Build the second one.</p>
+            </div>
+
+            <div class="prose">
+
+<h2>Start with the decision, not the metric</h2>
+<p>The usual process is backwards: list the available metrics, put them on a screen, arrange them nicely. You get something that describes the past accurately and changes nobody's day.</p>
+<p>Invert it. Write down the decisions a CSM makes in a week: who to call, what to say, what to escalate, which renewal to worry about, where to push for expansion. Then work backwards to the smallest number of signals that inform those five decisions.</p>
+<p>You almost always end up with fewer widgets and a tool people actually use.</p>
+
+<h2>The five that earn their place</h2>
+
+<h3>1. Health, with the reason attached</h3>
+<p>A score on its own is useless. "Acme: 62" tells a CSM nothing actionable. "Acme: 62, down 14 since the admin left and weekly active users fell by a third" tells them who to call and what to open with. <strong>Always ship the score with its top contributing factors.</strong></p>
+
+<h3>2. Renewal runway, with the work required</h3>
+<p>Not a list of dates. A view that shows what needs to happen before each date and whether it has happened: has the business review been booked, is the economic buyer engaged, are there open escalations. A renewal date without the work attached is a calendar, not a dashboard.</p>
+
+<h3>3. Engagement change, not engagement level</h3>
+<p>Absolute usage tells you how big an account is. <strong>The derivative tells you what is happening.</strong> A heavy user dropping 30% in three weeks is the most valuable signal in customer success, and it is invisible on any dashboard showing only current totals. Show the delta, and show it against the account's own baseline rather than a global average.</p>
+
+<h3>4. Open risk, in one place</h3>
+<p>Every unresolved thing that would embarrass you in a renewal conversation: escalated tickets past their expected resolution, unmet commitments, bugs affecting this account, unanswered exec emails. Scattered across four systems, these get missed. Together, they are a call list.</p>
+
+<h3>5. One expansion signal</h3>
+<p>Exactly one, chosen to match how your product actually grows: seat utilisation against entitlement, a module used by a neighbouring team, usage bumping a plan limit. CS teams are increasingly measured on growth, and one well-chosen signal beats a whitespace matrix nobody has time to read.</p>
+
+<h2>What to leave out</h2>
+<ul>
+    <li><strong>NPS as a headline number.</strong> Lagging, sparse, and easily moved by who happened to respond. Useful as a trend at company level, near-useless for deciding who to call on Tuesday.</li>
+    <li><strong>Raw ticket volume.</strong> A high-volume account might be deeply engaged or badly onboarded. Without context, the number causes wrong conclusions. Show tickets breaching expectations instead.</li>
+    <li><strong>Logins.</strong> Presence is not value. Someone logging in daily to export a CSV they need because your reporting is poor is not a healthy account.</li>
+    <li><strong>Anything nobody can act on.</strong> If a CSM cannot change it, it belongs in a leadership report, not a working dashboard.</li>
+    <li><strong>Fourteen widgets.</strong> Every additional tile costs attention. If a metric has not changed a decision in three months, remove it.</li>
+</ul>
+
+<h2>Building a health score that isn't fiction</h2>
+<p>Most health scores are invented weights on convenient data, which is why nobody trusts them and everyone keeps a private spreadsheet instead.</p>
+<p>A defensible one is built like this:</p>
+<ol>
+    <li><strong>Start from churned accounts.</strong> Take everyone who left in the past 12&ndash;18 months and look at what was observable 90 days before they gave notice. Not at the end, when it was obvious. Ninety days out, when it was still preventable.</li>
+    <li><strong>Find the two or three signals that actually preceded it.</strong> Usually a mix of usage decline, champion departure, and a support pattern. Rarely more than three that matter.</li>
+    <li><strong>Weight by observed predictive power, not opinion.</strong> If champion departure preceded churn far more reliably than ticket volume, it should dominate.</li>
+    <li><strong>Test against accounts that renewed.</strong> A score that flags everything is as useless as one that flags nothing. Check the false-positive rate before shipping.</li>
+    <li><strong>Publish the formula.</strong> CSMs trust a score they can explain and argue with. An opaque number gets ignored, and so does the dashboard around it.</li>
+</ol>
+<p>Recalibrate roughly annually. What predicted churn last year drifts as the product and the customer base change.</p>
+
+<h2>Getting it opened</h2>
+<p>A dashboard nobody opens is a failed project regardless of quality. What actually works:</p>
+<ul>
+    <li><strong>Replace something.</strong> If the dashboard sits alongside the spreadsheet the team already maintains, the spreadsheet wins. Make it strictly better and retire the spreadsheet deliberately.</li>
+    <li><strong>Push, don't wait.</strong> A Monday digest of accounts that changed status beats hoping people remember a URL.</li>
+    <li><strong>Sort into a call list.</strong> Default the view to "accounts needing attention, ranked", not an alphabetical account table.</li>
+    <li><strong>Let CSMs disagree with it.</strong> Let them dismiss a flag with a reason. You get better data and they stop resenting the score.</li>
+    <li><strong>Use it in the weekly meeting.</strong> If the manager runs pipeline review off the dashboard, adoption solves itself. If the manager keeps their own spreadsheet, nothing you build will get used.</li>
+</ul>
+
+<h2>Build notes</h2>
+<p>Practical constraints worth deciding early:</p>
+<ul>
+    <li><strong>Data sources.</strong> Typically CRM for the commercial picture, product analytics or the application database for usage, support desk for tickets, billing for contract values. Four sources is normal and is usually why a platform cannot do this out of the box.</li>
+    <li><strong>Refresh rate.</strong> Daily is almost always enough. Real-time is expensive and changes no CS decision.</li>
+    <li><strong>Permissions.</strong> CSMs see their book, managers see their team, executives see the roll-up. Decide this before building, because retrofitting per-user scoping is significantly harder than designing it in.</li>
+    <li><strong>Write-back.</strong> If a CSM logs a risk in the dashboard, it should land in the CRM. Otherwise you have created a second system of record and made the original problem worse.</li>
+</ul>
+<p>For how this fits alongside sales and AM tooling, see our <a href="/blog/custom-gtm-tools-guide">guide to custom GTM tools</a>. If you are weighing this against a health-scoring platform, our <a href="/blog/build-vs-buy-sales-tools">build-vs-buy framework</a> has the five tests.</p>
+
+            </div>
+
+        <section class="faq" aria-labelledby="faq-heading">
+            <h2 id="faq-heading" style="font-family:var(--font-display);font-size:1.375rem;font-weight:600;margin-bottom:var(--space-sm);">Frequently asked questions</h2>
+            <div class="faq-item">
+                <h3>What metrics should a customer success dashboard include?</h3>
+                <p>Five earn their place: a health score with its contributing factors attached, renewal runway with the work required before each date, engagement change against the account&#x27;s own baseline, open risk consolidated in one place, and a single expansion signal matched to how your product grows.</p>
+            </div>
+            <div class="faq-item">
+                <h3>How do you build a customer health score?</h3>
+                <p>Start from accounts that churned and look at what was observable 90 days before they gave notice. Identify the two or three signals that reliably preceded churn, weight them by observed predictive power rather than opinion, test the false-positive rate against accounts that renewed, and publish the formula so CSMs can argue with it.</p>
+            </div>
+            <div class="faq-item">
+                <h3>What should you leave off a CS dashboard?</h3>
+                <p>NPS as a headline number, raw ticket volume without context, login counts, and anything a CSM cannot act on. Also resist widget sprawl: if a metric has not changed a decision in three months, remove it.</p>
+            </div>
+            <div class="faq-item">
+                <h3>How often should a customer success dashboard refresh?</h3>
+                <p>Daily is sufficient for nearly all customer success decisions. Real-time refresh adds meaningful cost and complexity without changing what a CSM does differently that day.</p>
+            </div>
+        </section>
+
+        <section class="blog-cta">
+            <h2>Want a CS dashboard your team opens daily?</h2>
+            <p>We build these in two to three weeks, wired to your real data, with adoption as part of the job.</p>
+            <a href="/#contact" class="btn btn-glass btn-large"><span>Book a 30-minute call</span></a>
+        </section>
+
+        <section class="related" aria-labelledby="rel-heading">
+            <h2 id="rel-heading">Keep reading</h2>
+            <div class="related-list">
+                <a href="/blog/custom-gtm-tools-guide">Custom GTM tools: a buyer&#x27;s guide for sales, AM, and CS <span aria-hidden="true">&rarr;</span></a>
+                <a href="/blog/build-vs-buy-sales-tools">Build vs buy: when custom sales tools beat another platform <span aria-hidden="true">&rarr;</span></a>
+            </div>
+        </section>
+
+        </article>
+    </div>
+    </main>
+    <footer class="footer" role="contentinfo">
+        <div class="footer-gradient"></div>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="lou-footer-mascot">
+                        <img src="/Logo/Lou.png" alt="Lou - Gloo mascot" class="lou-img">
+                    </div>
+                    <p>One size fits none. Solutions custom to you.</p>
+                    <div class="footer-partner">
+                        <span class="footer-partner__eyebrow">Official Lovable Partner</span>
+                        <div class="footer-partner__badges">
+                            <a href="https://lovable.dev" target="_blank" rel="noopener" class="footer-badge-link" aria-label="Gloo is a Lovable Select Partner">
+                                <img src="/images/lovable-select-partner-white.png" alt="Lovable Select Partner badge" class="footer-badge-img" width="732" height="676">
+                            </a>
+                            <a href="https://lovable.dev" target="_blank" rel="noopener" class="footer-badge-link" aria-label="Gloo is a Lovable Certified Partner">
+                                <img src="/images/lovable-certified-partner-white.png" alt="Lovable Certified Partner badge" class="footer-badge-img" width="732" height="676">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-nav">
+                    <div class="footer-nav-col">
+                        <h4>Product</h4>
+                        <a href="/#case-study">Results</a>
+                        <a href="/#tools">Example Builds</a>
+                        <a href="https://tools.buildwithgloo.com" target="_blank" rel="noopener">Tool Demos</a>
+                    </div>
+                    <div class="footer-nav-col">
+                        <h4>Company</h4>
+                        <a href="/blog/">Blog</a>
+                        <a href="/about">About</a>
+                        <a href="/#contact">Contact</a>
+                    </div>
+                    <div class="footer-nav-col">
+                        <h4>Legal</h4>
+                        <a href="/privacy">Privacy Policy</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Gloo. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="/script.js"></script>
+
+</body>
+</html>

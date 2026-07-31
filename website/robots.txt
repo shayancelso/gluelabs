@@ -13,6 +13,41 @@ Disallow: /Zoominfo/
 Disallow: /hero-options.html
 Disallow: /glue-pricing-calculator.html
 Disallow: /glue-pricing-logic.html
+Disallow: /Gloo-One-Pager.html
+Disallow: /Gloo-One-Pager.pdf
+
+# --- AI search crawlers -------------------------------------------------
+# Explicitly allowed. A large share of "find me an agency" research now
+# happens inside AI assistants, and being citable there requires being
+# crawlable by them. Don't add Disallow rules here without reading
+# BLOG_SEO_STRATEGY.md first — blocking these removes us from AI answers.
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
 
 # Sitemap location
 Sitemap: https://buildwithgloo.com/sitemap.xml
