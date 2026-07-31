@@ -9404,3 +9404,15 @@ p {
         gap: 12px;
     }
 }
+
+/* Inline contextual links in body copy (case study, FAQ answers) */
+.body-link {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+    font-weight: 500;
+    transition: color var(--transition-fast);
+}
+.body-link:hover { color: var(--color-secondary); }
+.body-link:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
