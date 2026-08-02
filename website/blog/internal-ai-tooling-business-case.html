@@ -236,6 +236,16 @@
             </div>
         </div>
         <p class="proto-note">Assumes 46 working weeks and that the tool removes the manual work rather than reducing it. If you expect a partial saving, scale the hours down instead of arguing about the rate. Loaded cost means salary plus employment costs, not what lands in someone's bank account.</p>
+
+        <div class="lead-block" id="lead-block">
+            <p><strong>Taking this to the person who owns the budget?</strong> Get it as a clean one-pager with your numbers on it. We&#x27;ll also send a copy to your inbox with one suggestion for what to build first.</p>
+            <form class="lead-form" id="lead-form" novalidate>
+                <input type="text" id="lead-name" name="name" placeholder="Your name" autocomplete="name" required>
+                <input type="email" id="lead-email" name="email" placeholder="Work email" autocomplete="email" required>
+                <button type="submit" id="lead-submit">Get the one-pager</button>
+            </form>
+            <p class="lead-err" id="lead-err" hidden>That didn&#x27;t go through. Check the email and try again.</p>
+        </div>
     </div>
 </div>
 
@@ -310,6 +320,7 @@
         <section class="related" aria-labelledby="rel-heading">
             <h2 id="rel-heading">Keep reading</h2>
             <div class="related-list">
+                <a href="/blog/internal-tool-build-log">How long does a custom internal tool take? A real build log <span aria-hidden="true">&rarr;</span></a>
                 <a href="/blog/internal-ai-hackathon">How to run an internal AI hackathon that ships something <span aria-hidden="true">&rarr;</span></a>
                 <a href="/blog/build-vs-buy-sales-tools">Build vs buy: when custom sales tools beat another platform <span aria-hidden="true">&rarr;</span></a>
                 <a href="/blog/how-to-run-a-qbr">How to run a QBR in the age of AI <span aria-hidden="true">&rarr;</span></a>
@@ -428,8 +439,106 @@
 
         ids.forEach(function (k) { inputs[k].addEventListener('input', render); });
         render();
+
+        // ---- lead capture: one-pager + register in the Gloo pipeline ----
+        var SUPABASE_URL = 'https://psfqgeomdtwbhdyjsmso.supabase.co';
+        var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzZnFnZW9tZHR3YmhkeWpzbXNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYxODEwMjAsImV4cCI6MjA4MTc1NzAyMH0.pDPTBYSDp622N-KUWpG8rJzpcpQI5vnV7dK2_bViRyM';
+
+        function sb(path, method, body) {
+            return fetch(SUPABASE_URL + '/rest/v1/' + path, {
+                method: method,
+                headers: {
+                    'apikey': SUPABASE_ANON_KEY,
+                    'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+                    'Content-Type': 'application/json',
+                    'Prefer': 'return=representation'
+                },
+                body: JSON.stringify(body)
+            }).then(function (r) {
+                if (!r.ok) throw new Error('supabase ' + r.status);
+                return r.json();
+            });
+        }
+
+        function snapshot() {
+            return {
+                people: +inputs.people.value, hours: +inputs.hours.value,
+                rate: +inputs.rate.value, build: +inputs.build.value,
+                annual: out.annual.textContent, hoursYear: out.hours.textContent,
+                payback: out.payback.textContent, quarter: out.quarter.textContent,
+                net: out.net.textContent
+            };
+        }
+
+        function fillPrintSheet(s, name) {
+            document.getElementById('ps-lead').textContent = s.annual;
+            document.getElementById('ps-date').textContent = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+            document.getElementById('ps-for').textContent = name ? 'Prepared for ' + name : '';
+            document.getElementById('ps-t').innerHTML =
+                '<tr><th>People doing the work</th><td>' + s.people + '</td></tr>' +
+                '<tr><th>Hours each, per week</th><td>' + s.hours + '</td></tr>' +
+                '<tr><th>Loaded hourly cost</th><td>$' + s.rate + '</td></tr>' +
+                '<tr><th>Hours spent per year</th><td>' + s.hoursYear + '</td></tr>' +
+                '<tr><th>Estimated build cost</th><td>$' + s.build.toLocaleString('en-US') + '</td></tr>' +
+                '<tr><th>Payback period</th><td>' + s.payback + '</td></tr>' +
+                '<tr><th>Cost of waiting one quarter</th><td>' + s.quarter + '</td></tr>' +
+                '<tr><th>Year-one net saving</th><td>' + s.net + '</td></tr>';
+        }
+
+        function openPrint() {
+            document.body.classList.add('printing-onepager');
+            window.print();
+            setTimeout(function () { document.body.classList.remove('printing-onepager'); }, 500);
+        }
+
+        var form = document.getElementById('lead-form');
+        if (form) form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            var name = document.getElementById('lead-name').value.trim();
+            var email = document.getElementById('lead-email').value.trim();
+            var err = document.getElementById('lead-err');
+            if (!name || !/.+@.+\..+/.test(email)) { err.hidden = false; return; }
+            err.hidden = true;
+            var btn = document.getElementById('lead-submit');
+            btn.disabled = true; btn.textContent = 'One moment...';
+
+            var s = snapshot();
+            var content = '🧮 Calculator lead: ' + name + ' (' + email + '): ' +
+                s.people + ' people × ' + s.hours + 'h/wk × $' + s.rate + '/h → ' +
+                s.annual + '/yr. Build $' + s.build.toLocaleString('en-US') +
+                ', payback ' + s.payback + ', waiting a quarter costs ' + s.quarter + '.';
+
+            sb('conversations', 'POST', {
+                visitor_id: 'calc_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
+                status: 'active', visitor_name: name, visitor_email: email
+            }).then(function (rows) {
+                return sb('messages', 'POST', {
+                    conversation_id: rows[0].id, sender_type: 'visitor', content: content
+                });
+            }).then(function () {
+                fillPrintSheet(s, name);
+                document.getElementById('lead-block').innerHTML =
+                    '<div class="lead-success">Done. Check your inbox shortly. ' +
+                    '<button type="button" class="btn-print" id="btn-print">Print / save as PDF</button></div>';
+                document.getElementById('btn-print').addEventListener('click', openPrint);
+                openPrint();
+            }).catch(function () {
+                err.hidden = false;
+                btn.disabled = false; btn.textContent = 'Get the one-pager';
+            });
+        });
     })();
     </script>
+
+    <div class="print-sheet" aria-hidden="true">
+        <h1>What the manual version costs</h1>
+        <p class="ps-sub"><span id="ps-for"></span> &middot; <span id="ps-date"></span> &middot; buildwithgloo.com/blog/internal-ai-tooling-business-case</p>
+        <p class="ps-lead" id="ps-lead"></p>
+        <p class="ps-leadcap">per year, at current headcount and hours, for this one workflow</p>
+        <table><tbody id="ps-t"></tbody></table>
+        <p class="ps-note">Method: people &times; hours per week &times; loaded hourly cost &times; 46 working weeks. Assumes the tool removes the manual work rather than reducing it; for a partial saving, scale the hours down. Loaded cost = salary plus employment costs.</p>
+        <p class="ps-foot">Prepared with the Gloo internal tooling calculator &middot; Gloo builds custom GTM and operations tools &middot; buildwithgloo.com</p>
+    </div>
 
 </body>
 </html>

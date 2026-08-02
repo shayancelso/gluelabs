@@ -211,6 +211,7 @@
         <div class="proto-seg" role="tablist" aria-label="QBR format">
             <button type="button" role="tab" id="tab-deck" aria-controls="panel-deck" aria-selected="true">Static deck</button>
             <button type="button" role="tab" id="tab-live" aria-controls="panel-live" aria-selected="false">Live view</button>
+            <button type="button" role="tab" id="tab-mine" aria-controls="panel-mine" aria-selected="false">Your numbers</button>
         </div>
 
         <div class="proto-panel" id="panel-deck" role="tabpanel" aria-labelledby="tab-deck">
@@ -288,6 +289,38 @@
                 </div>
             </div>
             <p class="proto-note" id="qbr-narrative">Adoption is holding but concentrated. Two thirds of usage comes from one department, which is the number worth talking about today.</p>
+        </div>
+
+        <div class="proto-panel" id="panel-mine" role="tabpanel" aria-labelledby="tab-mine" hidden>
+            <label for="yn-in" style="display:block;font-size:0.875rem;font-weight:600;margin-bottom:8px;">Paste one line per team: <code>name, seats used, seats licensed</code></label>
+            <textarea class="yn-input" id="yn-in" spellcheck="false" placeholder="EMEA Sales, 71, 110&#10;Americas Sales, 157, 190&#10;Support, 12, 40"></textarea>
+            <div class="yn-actions">
+                <button type="button" id="yn-go">Read it</button>
+                <span class="proto-note" style="margin:0;">Parsed in your browser. Nothing is uploaded anywhere.</span>
+            </div>
+            <div id="yn-out" hidden>
+                <div class="proto-metrics" style="grid-template-columns:repeat(3,1fr);margin-bottom:var(--space-md);">
+                    <div class="metric">
+                        <span class="metric__k">Overall adoption</span>
+                        <span class="metric__v" id="yn-adopt">&ndash;</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric__k">Usage concentration</span>
+                        <span class="metric__v" id="yn-conc">&ndash;</span>
+                        <span class="metric__d" id="yn-conc-d"></span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric__k">Weakest team</span>
+                        <span class="metric__v" id="yn-weak">&ndash;</span>
+                        <span class="metric__d" id="yn-weak-d"></span>
+                    </div>
+                </div>
+                <div id="yn-rows"></div>
+                <div class="proto-result" style="margin-top:var(--space-md);">
+                    <p class="proto-result__sub" style="margin:0;font-size:1rem;" id="yn-sentence"></p>
+                </div>
+            </div>
+            <p class="lead-err" id="yn-err" hidden>Couldn&#x27;t read that. Each line needs a name and two numbers, like: <code>EMEA, 71, 110</code></p>
         </div>
     </div>
 </div>
@@ -429,9 +462,10 @@
     (function () {
         var tabs = [
             { btn: document.getElementById('tab-deck'), panel: document.getElementById('panel-deck') },
-            { btn: document.getElementById('tab-live'), panel: document.getElementById('panel-live') }
+            { btn: document.getElementById('tab-live'), panel: document.getElementById('panel-live') },
+            { btn: document.getElementById('tab-mine'), panel: document.getElementById('panel-mine') }
         ];
-        if (!tabs[0].btn || !tabs[1].btn) return;
+        if (!tabs[0].btn || !tabs[1].btn || !tabs[2].btn) return;
 
         function select(i) {
             tabs.forEach(function (t, j) {
@@ -499,6 +533,64 @@
         els.scenario.addEventListener('change', render);
         els.region.addEventListener('change', render);
         render();
+
+        // ---- your numbers: parsed locally, never uploaded ----
+        var ynGo = document.getElementById('yn-go');
+        if (ynGo) ynGo.addEventListener('click', function () {
+            var err = document.getElementById('yn-err');
+            var out = document.getElementById('yn-out');
+            var teams = [];
+            document.getElementById('yn-in').value.split(/\n+/).forEach(function (line) {
+                var parts = line.split(/[,\t;]/).map(function (p) { return p.trim(); });
+                if (parts.length < 3) return;
+                var used = parseFloat(parts[parts.length - 2].replace(/[^0-9.]/g, ''));
+                var lic = parseFloat(parts[parts.length - 1].replace(/[^0-9.]/g, ''));
+                var name = parts.slice(0, parts.length - 2).join(', ');
+                if (name && isFinite(used) && isFinite(lic) && lic > 0) {
+                    teams.push({ name: name, used: used, lic: lic });
+                }
+            });
+            if (teams.length < 2) { err.hidden = false; out.hidden = true; return; }
+            err.hidden = true;
+
+            var totUsed = 0, totLic = 0;
+            teams.forEach(function (t) { totUsed += t.used; totLic += t.lic; });
+            var adopt = Math.round(100 * totUsed / totLic);
+            var top = teams.slice().sort(function (a, b) { return b.used - a.used; })[0];
+            var conc = totUsed > 0 ? Math.round(100 * top.used / totUsed) : 0;
+            var weak = teams.slice().sort(function (a, b) { return (a.used / a.lic) - (b.used / b.lic); })[0];
+            var weakPct = Math.round(100 * weak.used / weak.lic);
+
+            document.getElementById('yn-adopt').textContent = adopt + '%';
+            document.getElementById('yn-conc').textContent = conc + '%';
+            document.getElementById('yn-conc-d').textContent = 'sits with ' + top.name;
+            document.getElementById('yn-weak').textContent = weakPct + '%';
+            document.getElementById('yn-weak-d').textContent = weak.name;
+
+            document.getElementById('yn-rows').innerHTML = teams.map(function (t) {
+                var pct = Math.min(100, Math.round(100 * t.used / t.lic));
+                var cls = pct >= 75 ? ' is-good' : pct <= 40 ? ' is-risk' : '';
+                var esc = t.name.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+                return '<div class="yn-row"><span class="yn-name">' + esc + '</span>' +
+                    '<div class="proto-bar" style="margin:0;"><div class="proto-bar__fill' + cls + '" style="width:' + pct + '%"></div></div>' +
+                    '<span class="yn-pct">' + t.used + '/' + t.lic + '</span></div>';
+            }).join('');
+
+            var sentence;
+            if (conc >= 50 && teams.length > 2) {
+                sentence = 'Overall adoption is ' + adopt + '%, but ' + conc + '% of all usage sits with ' + top.name +
+                    '. Concentration is the risk to raise: if that team’s champion leaves, the renewal goes with them. ' +
+                    weak.name + ' at ' + weakPct + '% is where the next seats come from.';
+            } else if (adopt >= 75) {
+                sentence = 'Adoption is ' + adopt + '% and reasonably spread. This is an expansion conversation, not a rescue: ' +
+                    weak.name + ' at ' + weakPct + '% is the gap worth a named commitment this quarter.';
+            } else {
+                sentence = 'Adoption is ' + adopt + '% of licensed seats. Before any expansion conversation, the question is why ' +
+                    weak.name + ' is at ' + weakPct + '%: onboarding never happened, or the tool doesn’t fit their week.';
+            }
+            document.getElementById('yn-sentence').textContent = sentence;
+            out.hidden = false;
+        });
     })();
     </script>
 

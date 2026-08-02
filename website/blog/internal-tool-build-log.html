@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XLGY974WHR"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XLGY974WHR');
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Long Does a Custom Internal Tool Take? A Real Build Log | Gloo</title>
+    <meta name="description" content="Two days to production, one week to daily use, one quarter of iteration. The commit-by-commit timeline of a real 150-store internal tool build.">
+    <link rel="canonical" href="https://buildwithgloo.com/blog/internal-tool-build-log">
+
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://buildwithgloo.com/blog/internal-tool-build-log">
+    <meta property="og:title" content="How Long Does a Custom Internal Tool Take? A Real Build Log">
+    <meta property="og:description" content="Two days to production, one week to daily use, one quarter of iteration. The commit-by-commit timeline of a real 150-store internal tool build.">
+    <meta property="og:image" content="https://buildwithgloo.com/images/og-image.png">
+    <meta property="og:site_name" content="Gloo">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="How Long Does a Custom Internal Tool Take? A Real Build Log">
+    <meta name="twitter:description" content="Two days to production, one week to daily use, one quarter of iteration. The commit-by-commit timeline of a real 150-store internal tool build.">
+    <meta name="twitter:image" content="https://buildwithgloo.com/images/og-image.png">
+
+    <link rel="icon" type="image/png" href="/favicon.png?v=3">
+    <link rel="alternate" type="application/rss+xml" title="Gloo Blog" href="/feed.xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/blog/blog.css">
+    <link rel="stylesheet" href="/blog/prototype.css">
+    <meta name="keywords" content="how long does it take to build an internal tool, internal tool case study, custom internal tool example, internal tool build timeline, custom dashboard build">
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "How Long Does a Custom Internal Tool Take? A Real Build Log",
+    "description": "Two days to production, one week to daily use, one quarter of iteration. The commit-by-commit timeline of a real 150-store internal tool build.",
+    "keywords": "how long does it take to build an internal tool, internal tool case study, custom internal tool example, internal tool build timeline",
+    "datePublished": "2026-08-02",
+    "dateModified": "2026-08-02",
+    "wordCount": 1310,
+    "inLanguage": "en",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://buildwithgloo.com/blog/internal-tool-build-log"
+    },
+    "image": "https://buildwithgloo.com/images/og-image.png",
+    "author": {
+        "@type": "Organization",
+        "name": "Gloo",
+        "url": "https://buildwithgloo.com"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Gloo",
+        "url": "https://buildwithgloo.com",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://buildwithgloo.com/images/gloo-logo.png"
+        }
+    }
+}
+    </script>
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://buildwithgloo.com/"
+        },
+        {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Blog",
+            "item": "https://buildwithgloo.com/blog/"
+        },
+        {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "How Long Does a Custom Internal Tool Take? A Real Build Log",
+            "item": "https://buildwithgloo.com/blog/internal-tool-build-log"
+        }
+    ]
+}
+    </script>
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "How long does it take to build a custom internal tool?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "On a real production build for a 150-store franchise group: two days from first commit to deployed in production, one week to a version the team used daily, then roughly a quarter of feedback-driven iteration. The two-day headline is real, but the iteration tail is where the tool becomes trustworthy."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What does the work after launch actually consist of?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Reality absorbing: a supplier changes a case size, a new packaging type appears in the data, a year-boundary week-numbering convention needs pinning, an API row limit silently truncates a dropdown. None of it is glamorous and all of it is why people either trust a tool or quietly go back to the spreadsheet."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "How many engineers does an internal tool need?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "This build shipped and is maintained without a full-time engineer on the client's side. It needs someone who owns the tool and a builder who can absorb changes quickly. The expensive version of this project is not more engineers, it is slower feedback loops."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What happens in the weeks when nothing is committed?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "The tool just runs. In this build there was a five-week stretch with almost no changes because none were needed. A healthy internal tool alternates between quiet operation and short bursts of change when the business shifts."
+            }
+        }
+    ]
+}
+    </script>
+</head>
+<body class="blog-page">
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <a href="/" class="logo" aria-label="Gloo - Go to homepage">
+                <img src="/images/gloo-logo.png" alt="Gloo" class="logo-img">
+            </a>
+            <div class="nav-links" role="menubar">
+                <a href="/#what-we-do" class="nav-link" role="menuitem">What We Do</a>
+                <a href="/blog/" class="nav-link" role="menuitem">Blog</a>
+                <a href="/about" class="nav-link" role="menuitem">About</a>
+                <a href="/#contact" class="btn btn-nav" role="menuitem"><span>Book a Call</span></a>
+            </div>
+            <button class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <main role="main" id="main-content">
+    <div class="container blog-shell">
+        <article class="blog-narrow">
+            <nav class="crumbs" aria-label="Breadcrumb">
+                <a href="/">Home</a>
+                <span aria-hidden="true">/</span>
+                <a href="/blog/">Blog</a>
+                <span aria-hidden="true">/</span>
+                <span aria-current="page">Build log</span>
+            </nav>
+
+            <header class="article-head">
+                <span class="eyebrow">Build log</span>
+                <h1>How long does a custom internal tool take? A real build log</h1>
+                <div class="article-byline">
+                    <span>By the Gloo team</span>
+                    <span aria-hidden="true">&middot;</span>
+                    <time datetime="2026-08-02">2 August 2026</time>
+                    <span aria-hidden="true">&middot;</span>
+                    <span>6 min read</span>
+                </div>
+            </header>
+
+            <div class="lede">
+<p><strong>Two days to production. One week to daily use. One quarter of iteration.</strong> That is the honest shape of a real internal tool build, taken from the commit history of one we shipped this year and still maintain.</p>
+    <p>Every date below comes from the actual git log. The client is anonymised; the timeline is not.</p>
+            </div>
+
+            <div class="prose">
+
+<h2>The build</h2>
+<p>The client is a franchise group with 150+ stores across several restaurant brands. Every week, their finance manager exported order data from the ordering system, rebuilt pivot tables in Excel, converted pack sizes into standard units, computed ingredient-compliance ratios, and emailed filtered spreadsheets to five district managers. The question the whole exercise answers is simple: <em>are stores ordering ingredients in proportion to what they sell, and if not, who and how bad?</em></p>
+<p>The replacement: a web dashboard. The finance manager uploads the weekly export; the system parses, classifies, converts, and scores every store; each district manager logs in and sees only their own stores; anomalies get flagged automatically, with AI summaries on demand. Stack: Next.js, Supabase, Vercel, with AI calls metered per request.</p>
+<p>Here is what building it actually looked like, week by week.</p>
+
+<div class="proto">
+    <div class="proto-head">
+        <span class="proto-label">The receipt</span>
+        <p class="proto-title">98 commits, 30 April to 31 July</p>
+    </div>
+    <div class="proto-body">
+        <div class="bl-chart" role="img" aria-label="Bar chart of commits per week: 25 commits in week one, 9 in week two, five quiet weeks, then bursts of 3, 2, 3, 27, 10, 12 and 7 commits through July.">
+            <div class="bl-col"><div class="bl-bar" style="height:100%"></div><span class="bl-n">25</span><span class="bl-w">W1</span></div>
+            <div class="bl-col"><div class="bl-bar" style="height:36%"></div><span class="bl-n">9</span><span class="bl-w">W2</span></div>
+            <div class="bl-col is-quiet"><div class="bl-bar" style="height:0%"></div><span class="bl-n">0</span><span class="bl-w">W3</span></div>
+            <div class="bl-col is-quiet"><div class="bl-bar" style="height:0%"></div><span class="bl-n">0</span><span class="bl-w">W4</span></div>
+            <div class="bl-col is-quiet"><div class="bl-bar" style="height:0%"></div><span class="bl-n">0</span><span class="bl-w">W5</span></div>
+            <div class="bl-col is-quiet"><div class="bl-bar" style="height:0%"></div><span class="bl-n">0</span><span class="bl-w">W6</span></div>
+            <div class="bl-col is-quiet"><div class="bl-bar" style="height:0%"></div><span class="bl-n">0</span><span class="bl-w">W7</span></div>
+            <div class="bl-col"><div class="bl-bar" style="height:12%"></div><span class="bl-n">3</span><span class="bl-w">W8</span></div>
+            <div class="bl-col"><div class="bl-bar" style="height:8%"></div><span class="bl-n">2</span><span class="bl-w">W9</span></div>
+            <div class="bl-col"><div class="bl-bar" style="height:12%"></div><span class="bl-n">3</span><span class="bl-w">W10</span></div>
+            <div class="bl-col"><div class="bl-bar" style="height:100%"></div><span class="bl-n">27</span><span class="bl-w">W11</span></div>
+            <div class="bl-col"><div class="bl-bar" style="height:37%"></div><span class="bl-n">10</span><span class="bl-w">W12</span></div>
+            <div class="bl-col"><div class="bl-bar" style="height:44%"></div><span class="bl-n">12</span><span class="bl-w">W13</span></div>
+            <div class="bl-col"><div class="bl-bar" style="height:26%"></div><span class="bl-n">7</span><span class="bl-w">W14</span></div>
+        </div>
+        <div class="bl-legend">
+            <span><strong>Weeks 1&ndash;2:</strong> build and launch</span>
+            <span><strong>Weeks 3&ndash;7:</strong> nothing. It just ran</span>
+            <span><strong>Weeks 8&ndash;14:</strong> reality absorbing</span>
+        </div>
+    </div>
+</div>
+
+<h2>Day 0 to day 2: in production</h2>
+<p>First commit on 30 April. On 1 May, the deploy-breaking bug was fixed and the app was live on the client's own URL, with login, role-based access, the upload flow, the scoring engine, dashboards, and a mobile layout, because district managers live on their phones. By 4 May, day five, the permission model was enforced everywhere: five district managers, each seeing only their own 9 to 50 stores, three admins seeing everything.</p>
+<p>Speed like this is the part AI genuinely changed, and it would be dishonest to pretend otherwise. It is also the least important part of this story.</p>
+
+<h2>Weeks 3 to 7: the tool just ran</h2>
+<p>Five weeks, near-zero commits. Weekly uploads went in, district managers checked their stores, nobody needed us. If you are evaluating a builder, this stretch matters more than the fast start: <strong>a tool that needs constant attention to stay upright was not finished, it was demoed.</strong></p>
+
+<h2>Weeks 8 to 14: what maintenance actually is</h2>
+<p>Then the business moved, as businesses do, and the commit log records exactly what it looks like when reality hits an internal tool:</p>
+<div class="commit-log" aria-label="Excerpt from the actual commit log, lightly redacted">
+    <div class="cl-row"><span class="cl-d">30 Apr</span><span class="cl-m">Initial commit &mdash; inventory &amp; compliance dashboard</span></div>
+    <div class="cl-row"><span class="cl-d">01 May</span><span class="cl-m">Fix deploy 404 &mdash; first production release</span></div>
+    <div class="cl-row"><span class="cl-d">01 May</span><span class="cl-m">Make entire dashboard mobile-responsive</span></div>
+    <div class="cl-row"><span class="cl-d">01 May</span><span class="cl-m">Add anomaly detection on overview and store detail pages</span></div>
+    <div class="cl-row"><span class="cl-d">02 May</span><span class="cl-m">Fix week dropdowns truncated by a 1,000-row API limit</span></div>
+    <div class="cl-row"><span class="cl-d">04 May</span><span class="cl-m">Enforce district-level data filtering across all pages</span></div>
+    <div class="cl-row"><span class="cl-d">04 May</span><span class="cl-m">Add per-call cost tracking to every AI request</span></div>
+    <div class="cl-row"><span class="cl-d">18 Jun</span><span class="cl-m">AI accuracy eval + multi-week anomaly detection</span></div>
+    <div class="cl-row"><span class="cl-d">25 Jun</span><span class="cl-m">Apply 4-week rolling average to uploads + re-score history</span></div>
+    <div class="cl-row"><span class="cl-d">03 Jul</span><span class="cl-m">Map new packaging SKUs so ingredient estimates stay right</span></div>
+    <div class="cl-row"><span class="cl-d">28 Jul</span><span class="cl-m">Fix supplier case-size change that skewed one ratio</span></div>
+    <div class="cl-row"><span class="cl-d">31 Jul</span><span class="cl-m">Pin the week 0 / 52 year-boundary convention</span></div>
+</div>
+<p>Look at what these are. A supplier changed a case size, which silently skewed a ratio. A new packaging type appeared in the sales data and had to be mapped before the ingredient estimates drifted. The year boundary raised the question of whether a year has a week zero. An API returned at most 1,000 rows and quietly truncated a dropdown.</p>
+<p>No feature list would ever contain these, and they are the entire difference between a tool people trust and a tool people quietly stop opening. When we say the demo is the easy half, this log is what the hard half looks like.</p>
+
+<h2>The part worth copying</h2>
+<p>Notice also what the client did right, because it is repeatable:</p>
+<ul>
+    <li><strong>One named owner.</strong> The finance manager who owned the spreadsheet owns the tool. Every rule in the scoring engine traces to a decision they confirmed, in writing.</li>
+    <li><strong>Feedback in batches.</strong> The week-11 spike of 27 commits is a single feedback session applied all at once: thresholds, rolling averages, label changes. Ten scattered requests cost more than one honest hour of "here is everything that annoys me."</li>
+    <li><strong>The AI is metered and tested.</strong> Every AI call has per-request cost tracking, and the anomaly summaries have an accuracy eval behind them. If a builder cannot tell you what their AI features cost to run or how often they are right, they do not know.</li>
+</ul>
+
+<h2>What this means if you are scoping one</h2>
+<p>Budget the calendar in three phases, because they are different products. Days for a working version. A week or two to real daily use. Then a quarter at low intensity while the tool absorbs the business, which is where the trust gets built. The <a href="/blog/internal-ai-tooling-business-case">business case calculator</a> prices the status quo this replaces; the number is usually not close.</p>
+<p>And when a vendor shows you their two-day demo, ask them the question this post answers with a git log: <em>show me week eleven.</em></p>
+
+            </div>
+
+        <section class="faq" aria-labelledby="faq-heading">
+            <h2 id="faq-heading" style="font-family:var(--font-display);font-size:1.375rem;font-weight:600;margin-bottom:var(--space-sm);">Frequently asked questions</h2>
+            <div class="faq-item">
+                <h3>How long does it take to build a custom internal tool?</h3>
+                <p>On this real production build for a 150-store franchise group: two days from first commit to deployed in production, one week to a version the team used daily, then roughly a quarter of feedback-driven iteration. The two-day headline is real, but the iteration tail is where the tool becomes trustworthy.</p>
+            </div>
+            <div class="faq-item">
+                <h3>What does the work after launch actually consist of?</h3>
+                <p>Reality absorbing: a supplier changes a case size, a new packaging type appears in the data, a year-boundary week-numbering convention needs pinning, an API row limit silently truncates a dropdown. None of it is glamorous and all of it is why people either trust a tool or quietly go back to the spreadsheet.</p>
+            </div>
+            <div class="faq-item">
+                <h3>How many engineers does an internal tool need?</h3>
+                <p>This build shipped and is maintained without a full-time engineer on the client's side. It needs someone who owns the tool and a builder who can absorb changes quickly. The expensive version of this project is not more engineers, it is slower feedback loops.</p>
+            </div>
+            <div class="faq-item">
+                <h3>What happens in the weeks when nothing is committed?</h3>
+                <p>The tool just runs. In this build there was a five-week stretch with almost no changes because none were needed. A healthy internal tool alternates between quiet operation and short bursts of change when the business shifts.</p>
+            </div>
+        </section>
+
+        <section class="blog-cta">
+            <h2>Want to see week one on your workflow?</h2>
+            <p>Bring the spreadsheet that eats someone's Thursday. We&#x27;ll tell you what days one, seven, and ninety look like, honestly.</p>
+            <a href="/#contact" class="btn btn-glass btn-large"><span>Book a 30-minute call</span></a>
+        </section>
+
+        <section class="related" aria-labelledby="rel-heading">
+            <h2 id="rel-heading">Keep reading</h2>
+            <div class="related-list">
+                <a href="/blog/internal-ai-tooling-business-case">The business case for internal AI tooling, in numbers <span aria-hidden="true">&rarr;</span></a>
+                <a href="/blog/lovable-vs-claude-code">Lovable vs Claude Code: which should build your internal tool? <span aria-hidden="true">&rarr;</span></a>
+                <a href="/blog/custom-gtm-tools-guide">Custom GTM tools: a buyer's guide for sales, AM, and CS teams <span aria-hidden="true">&rarr;</span></a>
+            </div>
+        </section>
+
+        </article>
+    </div>
+    </main>
+    <footer class="footer" role="contentinfo">
+        <div class="footer-gradient"></div>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="lou-footer-mascot">
+                        <img src="/Logo/Lou.png" alt="Lou - Gloo mascot" class="lou-img">
+                    </div>
+                    <p>One size fits none. Solutions custom to you.</p>
+                    <div class="footer-partner">
+                        <span class="footer-partner__eyebrow">Official Lovable Partner</span>
+                        <div class="footer-partner__badges">
+                            <a href="https://lovable.dev" target="_blank" rel="noopener" class="footer-badge-link" aria-label="Gloo is a Lovable Select Partner">
+                                <img src="/images/lovable-select-partner-white.png" alt="Lovable Select Partner badge" class="footer-badge-img" width="732" height="676">
+                            </a>
+                            <a href="https://lovable.dev" target="_blank" rel="noopener" class="footer-badge-link" aria-label="Gloo is a Lovable Certified Partner">
+                                <img src="/images/lovable-certified-partner-white.png" alt="Lovable Certified Partner badge" class="footer-badge-img" width="732" height="676">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-nav">
+                    <div class="footer-nav-col">
+                        <h4>Product</h4>
+                        <a href="/#case-study">Results</a>
+                        <a href="/#tools">Example Builds</a>
+                        <a href="https://tools.buildwithgloo.com" target="_blank" rel="noopener">Tool Demos</a>
+                    </div>
+                    <div class="footer-nav-col">
+                        <h4>Company</h4>
+                        <a href="/blog/">Blog</a>
+                        <a href="/about">About</a>
+                        <a href="/#contact">Contact</a>
+                    </div>
+                    <div class="footer-nav-col">
+                        <h4>Legal</h4>
+                        <a href="/privacy">Privacy Policy</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Gloo. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="/script.js"></script>
+
+</body>
+</html>

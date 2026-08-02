@@ -100,6 +100,18 @@
 .tag-lovable { background: rgba(236, 72, 153, 0.10); color: #db2777; }
 .tag-gtm { background: rgba(99, 102, 241, 0.10); color: #4f46e5; }
 .tag-playbook { background: rgba(139, 92, 246, 0.10); color: #7c3aed; }
+.tag-build { background: rgba(16, 185, 129, 0.10); color: #059669; }
+
+/* posts that ship a working tool, not just prose */
+.chip-demo {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase;
+    color: #059669;
+}
+.chip-demo::before {
+    content: ""; width: 7px; height: 7px; border-radius: 50%;
+    background: #10b981;
+}
 
 .post-card h2 {
     font-family: var(--font-display);

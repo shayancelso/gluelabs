@@ -8,6 +8,13 @@
     <language>en</language>
     <lastBuildDate>Sun, 02 Aug 2026 09:00:00 GMT</lastBuildDate>
     <item>
+      <title>How Long Does a Custom Internal Tool Take? A Real Build Log</title>
+      <link>https://buildwithgloo.com/blog/internal-tool-build-log</link>
+      <guid isPermaLink="true">https://buildwithgloo.com/blog/internal-tool-build-log</guid>
+      <description>Two days to production, one week to daily use, one quarter of iteration. The commit-by-commit timeline of a real 150-store internal tool build.</description>
+      <pubDate>Sun, 02 Aug 2026 09:00:00 GMT</pubDate>
+    </item>
+    <item>
       <title>How to Run a QBR in the Age of AI (With a Live Demo)</title>
       <link>https://buildwithgloo.com/blog/how-to-run-a-qbr</link>
       <guid isPermaLink="true">https://buildwithgloo.com/blog/how-to-run-a-qbr</guid>
