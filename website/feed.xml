@@ -6,26 +6,47 @@
     <atom:link href="https://buildwithgloo.com/feed.xml" rel="self" type="application/rss+xml"/>
     <description>Field notes on building custom go-to-market tools for sales, account management, and customer success teams.</description>
     <language>en</language>
-    <lastBuildDate>Fri, 31 Jul 2026 09:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Sun, 02 Aug 2026 09:00:00 GMT</lastBuildDate>
+    <item>
+      <title>How to Run a QBR in the Age of AI (With a Live Demo)</title>
+      <link>https://buildwithgloo.com/blog/how-to-run-a-qbr</link>
+      <guid isPermaLink="true">https://buildwithgloo.com/blog/how-to-run-a-qbr</guid>
+      <description>A QBR agenda that survives contact with the customer, the five slides worth keeping, and why the static deck is the problem. Includes a live interactive demo.</description>
+      <pubDate>Sun, 02 Aug 2026 09:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>The Business Case for Internal AI Tooling, in Numbers</title>
+      <link>https://buildwithgloo.com/blog/internal-ai-tooling-business-case</link>
+      <guid isPermaLink="true">https://buildwithgloo.com/blog/internal-ai-tooling-business-case</guid>
+      <description>How to get your organisation to fund internal AI tooling: the number that moves budget, who to convince first, and a calculator for the cost of waiting.</description>
+      <pubDate>Sun, 02 Aug 2026 09:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>How to Run an Internal AI Hackathon That Ships Something</title>
+      <link>https://buildwithgloo.com/blog/internal-ai-hackathon</link>
+      <guid isPermaLink="true">https://buildwithgloo.com/blog/internal-ai-hackathon</guid>
+      <description>A run sheet for an internal AI hackathon aimed at operators, not engineers: the rules that make things ship, who to invite, and what to do the week after.</description>
+      <pubDate>Sun, 02 Aug 2026 09:00:00 GMT</pubDate>
+    </item>
     <item>
       <title>How to Hire a Lovable Agency: 7 Questions to Ask First</title>
       <link>https://buildwithgloo.com/blog/how-to-hire-a-lovable-agency</link>
       <guid isPermaLink="true">https://buildwithgloo.com/blog/how-to-hire-a-lovable-agency</guid>
-      <description>What to check before you hire a Lovable agency: partner tiers, code ownership, production readiness, and the seven questions that separate builders who ship from ones who demo.</description>
+      <description>What to check before hiring a Lovable agency: partner status, code ownership, and the seven questions that separate builders who ship from ones who demo.</description>
       <pubDate>Fri, 31 Jul 2026 09:00:00 GMT</pubDate>
     </item>
     <item>
       <title>Lovable vs Claude Code: Which Should Build Your Internal Tool?</title>
       <link>https://buildwithgloo.com/blog/lovable-vs-claude-code</link>
       <guid isPermaLink="true">https://buildwithgloo.com/blog/lovable-vs-claude-code</guid>
-      <description>Lovable and Claude Code solve different problems for different people. A practical breakdown of when to build in Lovable, when to reach for Claude Code, and how teams use both on one project.</description>
+      <description>When to build in Lovable, when to reach for Claude Code, and how teams use both on one project. A practical breakdown for internal tools.</description>
       <pubDate>Fri, 31 Jul 2026 09:00:00 GMT</pubDate>
     </item>
     <item>
       <title>Custom GTM Tools: A Buyer&#x27;s Guide for Sales, AM, and CS Teams</title>
       <link>https://buildwithgloo.com/blog/custom-gtm-tools-guide</link>
       <guid isPermaLink="true">https://buildwithgloo.com/blog/custom-gtm-tools-guide</guid>
-      <description>What custom go-to-market tooling is, the tools sales, account management, and customer success teams actually ask for, when custom beats a platform, and what it costs to build.</description>
+      <description>What custom GTM tooling is, what sales, AM, and CS teams actually ask for, when custom beats a platform, and what it costs to build.</description>
       <pubDate>Fri, 31 Jul 2026 09:00:00 GMT</pubDate>
     </item>
     <item>
@@ -39,7 +60,7 @@
       <title>What Belongs in a Customer Success Dashboard (and What Doesn&#x27;t)</title>
       <link>https://buildwithgloo.com/blog/customer-success-dashboard</link>
       <guid isPermaLink="true">https://buildwithgloo.com/blog/customer-success-dashboard</guid>
-      <description>The five metrics that earn a place on a CS dashboard, the ones wasting space, how to build a health score that isn&#x27;t fiction, and how to get CSMs to open it daily.</description>
+      <description>The five metrics that earn a place on a CS dashboard, the ones wasting space, and how to build a health score your CSMs actually trust.</description>
       <pubDate>Fri, 31 Jul 2026 09:00:00 GMT</pubDate>
     </item>
   </channel>

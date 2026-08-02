@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XLGY974WHR"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XLGY974WHR');
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Business Case for Internal AI Tooling, in Numbers | Gloo</title>
+    <meta name="description" content="How to get your organisation to fund internal AI tooling: the number that moves budget, who to convince first, and a calculator for the cost of waiting.">
+    <link rel="canonical" href="https://buildwithgloo.com/blog/internal-ai-tooling-business-case">
+
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://buildwithgloo.com/blog/internal-ai-tooling-business-case">
+    <meta property="og:title" content="The Business Case for Internal AI Tooling, in Numbers">
+    <meta property="og:description" content="How to get your organisation to fund internal AI tooling: the number that moves budget, who to convince first, and a calculator for the cost of waiting.">
+    <meta property="og:image" content="https://buildwithgloo.com/images/og-image.png">
+    <meta property="og:site_name" content="Gloo">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="The Business Case for Internal AI Tooling, in Numbers">
+    <meta name="twitter:description" content="How to get your organisation to fund internal AI tooling: the number that moves budget, who to convince first, and a calculator for the cost of waiting.">
+    <meta name="twitter:image" content="https://buildwithgloo.com/images/og-image.png">
+
+    <link rel="icon" type="image/png" href="/favicon.png?v=3">
+    <link rel="alternate" type="application/rss+xml" title="Gloo Blog" href="/feed.xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/blog/blog.css">
+    <link rel="stylesheet" href="/blog/prototype.css">
+    <meta name="keywords" content="internal tooling business case, internal ai tooling, build internal tools, internal tools roi, get budget for internal tools, ai adoption enterprise">
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "The Business Case for Internal AI Tooling, in Numbers",
+    "description": "How to get your organisation to fund internal AI tooling: the number that moves budget, who to convince first, and a calculator for the cost of waiting.",
+    "keywords": "internal tooling business case, internal ai tooling, build internal tools, internal tools roi, get budget for internal tools, ai adoption enterprise",
+    "datePublished": "2026-08-02",
+    "dateModified": "2026-08-02",
+    "wordCount": 1280,
+    "inLanguage": "en",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://buildwithgloo.com/blog/internal-ai-tooling-business-case"
+    },
+    "image": "https://buildwithgloo.com/images/og-image.png",
+    "author": {
+        "@type": "Organization",
+        "name": "Gloo",
+        "url": "https://buildwithgloo.com"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Gloo",
+        "url": "https://buildwithgloo.com",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://buildwithgloo.com/images/gloo-logo.png"
+        }
+    }
+}
+    </script>
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://buildwithgloo.com/"
+        },
+        {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Blog",
+            "item": "https://buildwithgloo.com/blog/"
+        },
+        {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "The Business Case for Internal AI Tooling",
+            "item": "https://buildwithgloo.com/blog/internal-ai-tooling-business-case"
+        }
+    ]
+}
+    </script>
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "How do I build a business case for internal tooling?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Cost the status quo rather than the tool. Multiply the number of people doing the manual work by the hours it takes them each week, by their loaded hourly cost, by the working weeks in a year. That annual figure is the thing you are choosing to keep paying, and it is almost always larger than the build."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Who should approve an internal tooling project?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Whoever owns the budget the manual work is already consuming, which is usually the operational leader rather than IT. Internal tools that wait for a central platform team tend to die in a queue, because they are too small to prioritise and too specific to standardise."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What does an internal tool cost to build?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "A single workflow tool with real data, authentication, and permissions typically lands in the low five figures and takes weeks rather than quarters. The comparison that matters is not the build cost against zero, it is the build cost against a year of the manual process."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Why do internal tools fail after launch?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Almost always adoption rather than software. Nobody owned the rollout, nobody watched usage in the first month, and the two things that annoyed people on day one never got fixed. Budget for the twelve weeks after launch, not just the build."
+            }
+        }
+    ]
+}
+    </script>
+</head>
+<body class="blog-page">
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <a href="/" class="logo" aria-label="Gloo - Go to homepage">
+                <img src="/images/gloo-logo.png" alt="Gloo" class="logo-img">
+            </a>
+            <div class="nav-links" role="menubar">
+                <a href="/#what-we-do" class="nav-link" role="menuitem">What We Do</a>
+                <a href="/blog/" class="nav-link" role="menuitem">Blog</a>
+                <a href="/about" class="nav-link" role="menuitem">About</a>
+                <a href="/#contact" class="btn btn-nav" role="menuitem"><span>Book a Call</span></a>
+            </div>
+            <button class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <main role="main" id="main-content">
+    <div class="container blog-shell">
+        <article class="blog-narrow">
+            <nav class="crumbs" aria-label="Breadcrumb">
+                <a href="/">Home</a>
+                <span aria-hidden="true">/</span>
+                <a href="/blog/">Blog</a>
+                <span aria-hidden="true">/</span>
+                <span aria-current="page">Playbook</span>
+            </nav>
+
+            <header class="article-head">
+                <span class="eyebrow">Playbook</span>
+                <h1>The business case for internal AI tooling, in numbers</h1>
+                <div class="article-byline">
+                    <span>By the Gloo team</span>
+                    <span aria-hidden="true">&middot;</span>
+                    <time datetime="2026-08-02">2 August 2026</time>
+                    <span aria-hidden="true">&middot;</span>
+                    <span>6 min read</span>
+                </div>
+            </header>
+
+            <div class="lede">
+<p><strong>Stop pitching the tool and start costing the status quo.</strong> Nobody approves "we should build something." People approve "this process costs us $143,000 a year and the fix pays for itself in six weeks."</p>
+    <p>The calculator below produces that sentence for your workflow. The rest of this piece is about who to say it to, and in what order.</p>
+            </div>
+
+            <div class="prose">
+
+<h2>Why internal tooling proposals stall</h2>
+<p>The typical proposal argues that a tool would be good. It describes features, it mentions efficiency, and it asks for budget against a benefit nobody has quantified. It then joins a queue behind things that have numbers attached.</p>
+<p>Meanwhile the manual process it would replace is already being funded, in full, every single week. It just does not appear on any line item, because it is buried inside salaries. This is the entire trick: <strong>the expensive option is the one you are currently running, and it is invisible.</strong></p>
+<p>Your job is to make it visible.</p>
+
+<div class="proto" id="calculator">
+    <div class="proto-head">
+        <span class="proto-label">Calculator</span>
+        <p class="proto-title">What the manual version costs you</p>
+    </div>
+    <div class="proto-body">
+        <div class="proto-controls">
+            <div class="ctrl">
+                <label for="c-people">People doing it <span class="ctrl__val" id="v-people">12</span></label>
+                <input type="range" id="c-people" min="1" max="80" step="1" value="12">
+            </div>
+            <div class="ctrl">
+                <label for="c-hours">Hours each per week <span class="ctrl__val" id="v-hours">4</span></label>
+                <input type="range" id="c-hours" min="0.5" max="20" step="0.5" value="4">
+            </div>
+            <div class="ctrl">
+                <label for="c-rate">Loaded hourly cost <span class="ctrl__val" id="v-rate">$65</span></label>
+                <input type="range" id="c-rate" min="20" max="200" step="5" value="65">
+            </div>
+            <div class="ctrl">
+                <label for="c-build">Build cost <span class="ctrl__val" id="v-build">$18k</span></label>
+                <input type="range" id="c-build" min="2000" max="120000" step="1000" value="18000">
+            </div>
+        </div>
+
+        <div class="proto-result">
+            <div class="proto-result__lead" id="r-annual">$143,520</div>
+            <p class="proto-result__sub" id="r-sub">a year, spent on this one workflow, already approved and already invisible</p>
+            <div class="proto-splits">
+                <div class="split">
+                    <span class="split__k">Hours a year</span>
+                    <span class="split__v" id="r-hours">2,208</span>
+                </div>
+                <div class="split">
+                    <span class="split__k">Pays back in</span>
+                    <span class="split__v" id="r-payback">5.8 weeks</span>
+                </div>
+                <div class="split">
+                    <span class="split__k">Cost of waiting a quarter</span>
+                    <span class="split__v" id="r-quarter">$35,880</span>
+                </div>
+                <div class="split">
+                    <span class="split__k">Year one net</span>
+                    <span class="split__v" id="r-net">$125,520</span>
+                </div>
+            </div>
+        </div>
+        <p class="proto-note">Assumes 46 working weeks and that the tool removes the manual work rather than reducing it. If you expect a partial saving, scale the hours down instead of arguing about the rate. Loaded cost means salary plus employment costs, not what lands in someone's bank account.</p>
+    </div>
+</div>
+
+<p>The number people react to is rarely the annual one. It is <strong>the cost of waiting a quarter</strong>, because that is the decision actually on the table. Nobody is choosing between building and not building. They are choosing between building now and discussing it again in three months, and that second option has a price.</p>
+
+<h2>Who to convince, and in what order</h2>
+<p>The instinct is to take this to IT. Resist it. Not because IT is obstructive, but because a single-team workflow tool is the worst possible fit for a central platform backlog: too small to prioritise against the systems of record, too specific to standardise, and too tied to one team's process to survive a committee.</p>
+<p>Go to the person whose budget is already absorbing the cost. The operations lead, the revenue leader, the head of the team doing the work. They are paying the $143,000, and they are the only person who can approve stopping.</p>
+<table>
+    <thead><tr><th>Who</th><th>What they need to hear</th><th>What kills it</th></tr></thead>
+    <tbody>
+        <tr><td>The operator doing the work</td><td>This removes the Thursday afternoon you hate</td><td>Being told it will "free them up", which they hear as a headcount conversation</td></tr>
+        <tr><td>The budget owner</td><td>Annual cost, payback in weeks, cost of a quarter's delay</td><td>Feature lists, and any sentence containing the word platform</td></tr>
+        <tr><td>IT and security</td><td>Where the data sits, who can see it, that the code is owned and exportable</td><td>Finding out after the fact. Bring them in early as reviewers, not approvers</td></tr>
+        <tr><td>The executive sponsor</td><td>One number and one working screen</td><td>A twenty-page proposal for a five-figure decision</td></tr>
+    </tbody>
+</table>
+
+<h2>Show, do not propose</h2>
+<p>The single highest-leverage change to how these get approved: <strong>walk in with a working version instead of a document.</strong></p>
+<p>This used to be impossible, which is why the proposal culture exists. Getting to a demo meant scoping, then engineering time, then a month, all of which required the approval you were trying to obtain. The chicken and egg problem was real.</p>
+<p>It is not real any more. A rough but functioning version of a single-workflow tool, with the team's own data in it, is now days of work rather than a quarter. That inverts the entire conversation. You are no longer asking someone to imagine a benefit and fund a risk. You are showing them the thing, running on their numbers, and asking whether to finish it.</p>
+<div class="callout">
+    <span class="callout-label">What changed</span>
+    <p>The bottleneck on internal tools was never the idea, it was the cost of finding out whether the idea was any good. When a prototype costs days, you stop needing permission to try, and start needing a decision to keep.</p>
+</div>
+<p>This is the practical argument for building on something like <a href="/blog/lovable-vs-claude-code">Lovable rather than starting from a repository</a>. Not that the code is better, but that the first working screen arrives before the enthusiasm does, and the people who understand the workflow can drive it themselves. The engineering questions, permissions, integrations, and scale, arrive later and are answerable then.</p>
+
+<h2>Budget for the twelve weeks after launch</h2>
+<p>Most internal tools that fail do not fail technically. They launch, three people use them, and by month three everyone has drifted back to the spreadsheet. The build was fine. The rollout did not exist.</p>
+<p>So put it in the proposal explicitly:</p>
+<ul>
+    <li><strong>A named owner</strong> on the business side, not the build side, for the first quarter.</li>
+    <li><strong>Usage instrumented from day one.</strong> If you cannot see who used it last week, you cannot tell adoption from politeness.</li>
+    <li><strong>A fix window in weeks two and three.</strong> There will be two small things that irritate people. Fixing them fast is the difference between a tool and an anecdote.</li>
+    <li><strong>One retirement decision.</strong> Name the spreadsheet or the report that this replaces, and actually switch it off. Running both is how adoption dies quietly.</li>
+</ul>
+<p>If you want the same argument applied to whether you should build at all rather than buy a platform, that is <a href="/blog/build-vs-buy-sales-tools">a separate five-test framework</a>. And if the hard part in your organisation is getting people to care rather than getting the money, <a href="/blog/internal-ai-hackathon">run a hackathon instead of a pitch</a>.</p>
+
+<h2>The one-paragraph version</h2>
+<p>Take the workflow that annoys your team most. Put its real numbers into the calculator above. Take the annual figure and the quarter-delay figure to the person whose budget already carries it, with a working screen open on your laptop. Ask for a decision, not a discussion.</p>
+<p>That is the whole method. The numbers do the persuading, and they were always there.</p>
+
+            </div>
+
+        <section class="faq" aria-labelledby="faq-heading">
+            <h2 id="faq-heading" style="font-family:var(--font-display);font-size:1.375rem;font-weight:600;margin-bottom:var(--space-sm);">Frequently asked questions</h2>
+            <div class="faq-item">
+                <h3>How do I build a business case for internal tooling?</h3>
+                <p>Cost the status quo rather than the tool. Multiply the number of people doing the manual work by the hours it takes them each week, by their loaded hourly cost, by the working weeks in a year. That annual figure is the thing you are choosing to keep paying, and it is almost always larger than the build.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Who should approve an internal tooling project?</h3>
+                <p>Whoever owns the budget the manual work is already consuming, which is usually the operational leader rather than IT. Internal tools that wait for a central platform team tend to die in a queue, because they are too small to prioritise and too specific to standardise.</p>
+            </div>
+            <div class="faq-item">
+                <h3>What does an internal tool cost to build?</h3>
+                <p>A single workflow tool with real data, authentication, and permissions typically lands in the low five figures and takes weeks rather than quarters. The comparison that matters is not the build cost against zero, it is the build cost against a year of the manual process.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Why do internal tools fail after launch?</h3>
+                <p>Almost always adoption rather than software. Nobody owned the rollout, nobody watched usage in the first month, and the two things that annoyed people on day one never got fixed. Budget for the twelve weeks after launch, not just the build.</p>
+            </div>
+        </section>
+
+        <section class="blog-cta">
+            <h2>Got a number that surprised you?</h2>
+            <p>Tell us the workflow behind it. Thirty minutes, and we will tell you honestly whether it is worth building, even if the answer is no.</p>
+            <a href="/#contact" class="btn btn-glass btn-large"><span>Book a 30-minute call</span></a>
+        </section>
+
+        <section class="related" aria-labelledby="rel-heading">
+            <h2 id="rel-heading">Keep reading</h2>
+            <div class="related-list">
+                <a href="/blog/internal-ai-hackathon">How to run an internal AI hackathon that ships something <span aria-hidden="true">&rarr;</span></a>
+                <a href="/blog/build-vs-buy-sales-tools">Build vs buy: when custom sales tools beat another platform <span aria-hidden="true">&rarr;</span></a>
+                <a href="/blog/how-to-run-a-qbr">How to run a QBR in the age of AI <span aria-hidden="true">&rarr;</span></a>
+            </div>
+        </section>
+
+        </article>
+    </div>
+    </main>
+    <footer class="footer" role="contentinfo">
+        <div class="footer-gradient"></div>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="lou-footer-mascot">
+                        <img src="/Logo/Lou.png" alt="Lou - Gloo mascot" class="lou-img">
+                    </div>
+                    <p>One size fits none. Solutions custom to you.</p>
+                    <div class="footer-partner">
+                        <span class="footer-partner__eyebrow">Official Lovable Partner</span>
+                        <div class="footer-partner__badges">
+                            <a href="https://lovable.dev" target="_blank" rel="noopener" class="footer-badge-link" aria-label="Gloo is a Lovable Select Partner">
+                                <img src="/images/lovable-select-partner-white.png" alt="Lovable Select Partner badge" class="footer-badge-img" width="732" height="676">
+                            </a>
+                            <a href="https://lovable.dev" target="_blank" rel="noopener" class="footer-badge-link" aria-label="Gloo is a Lovable Certified Partner">
+                                <img src="/images/lovable-certified-partner-white.png" alt="Lovable Certified Partner badge" class="footer-badge-img" width="732" height="676">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-nav">
+                    <div class="footer-nav-col">
+                        <h4>Product</h4>
+                        <a href="/#case-study">Results</a>
+                        <a href="/#tools">Example Builds</a>
+                        <a href="https://tools.buildwithgloo.com" target="_blank" rel="noopener">Tool Demos</a>
+                    </div>
+                    <div class="footer-nav-col">
+                        <h4>Company</h4>
+                        <a href="/blog/">Blog</a>
+                        <a href="/about">About</a>
+                        <a href="/#contact">Contact</a>
+                    </div>
+                    <div class="footer-nav-col">
+                        <h4>Legal</h4>
+                        <a href="/privacy">Privacy Policy</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Gloo. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="/script.js"></script>
+    <script>
+    (function () {
+        var WORKING_WEEKS = 46;
+        var ids = ['people', 'hours', 'rate', 'build'];
+        var inputs = {};
+        var labels = {};
+        for (var i = 0; i < ids.length; i++) {
+            inputs[ids[i]] = document.getElementById('c-' + ids[i]);
+            labels[ids[i]] = document.getElementById('v-' + ids[i]);
+            if (!inputs[ids[i]]) return;
+        }
+        var out = {
+            annual: document.getElementById('r-annual'),
+            sub: document.getElementById('r-sub'),
+            hours: document.getElementById('r-hours'),
+            payback: document.getElementById('r-payback'),
+            quarter: document.getElementById('r-quarter'),
+            net: document.getElementById('r-net')
+        };
+
+        var money = function (n) { return '$' + Math.round(n).toLocaleString('en-US'); };
+        var compact = function (n) {
+            return n >= 1000 ? '$' + Math.round(n / 1000) + 'k' : '$' + n;
+        };
+
+        function render() {
+            var people = +inputs.people.value;
+            var hours = +inputs.hours.value;
+            var rate = +inputs.rate.value;
+            var build = +inputs.build.value;
+
+            labels.people.textContent = people;
+            labels.hours.textContent = hours;
+            labels.rate.textContent = '$' + rate;
+            labels.build.textContent = compact(build);
+
+            var weeklyCost = people * hours * rate;
+            var annualHours = people * hours * WORKING_WEEKS;
+            var annualCost = annualHours * rate;
+            var paybackWeeks = weeklyCost > 0 ? build / weeklyCost : Infinity;
+
+            out.annual.textContent = money(annualCost);
+            out.hours.textContent = Math.round(annualHours).toLocaleString('en-US');
+            out.quarter.textContent = money(annualCost / 4);
+            out.net.textContent = money(annualCost - build);
+
+            if (!isFinite(paybackWeeks)) {
+                out.payback.textContent = 'n/a';
+            } else if (paybackWeeks < 1) {
+                out.payback.textContent = 'under a week';
+            } else if (paybackWeeks > 52) {
+                out.payback.textContent = (paybackWeeks / 52).toFixed(1) + ' years';
+            } else {
+                out.payback.textContent = paybackWeeks.toFixed(1) + ' weeks';
+            }
+
+            out.sub.textContent = annualCost > build
+                ? 'a year, spent on this one workflow, already approved and already invisible'
+                : 'a year. Below the build cost, so this one is honestly not worth building yet';
+        }
+
+        ids.forEach(function (k) { inputs[k].addEventListener('input', render); });
+        render();
+    })();
+    </script>
+
+</body>
+</html>

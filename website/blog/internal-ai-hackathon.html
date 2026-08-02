@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XLGY974WHR"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XLGY974WHR');
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Run an Internal AI Hackathon That Ships Something | Gloo</title>
+    <meta name="description" content="A run sheet for an internal AI hackathon aimed at operators, not engineers: the rules that make things ship, who to invite, and what to do the week after.">
+    <link rel="canonical" href="https://buildwithgloo.com/blog/internal-ai-hackathon">
+
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://buildwithgloo.com/blog/internal-ai-hackathon">
+    <meta property="og:title" content="How to Run an Internal AI Hackathon That Ships Something">
+    <meta property="og:description" content="A run sheet for an internal AI hackathon aimed at operators, not engineers: the rules that make things ship, who to invite, and what to do the week after.">
+    <meta property="og:image" content="https://buildwithgloo.com/images/og-image.png">
+    <meta property="og:site_name" content="Gloo">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="How to Run an Internal AI Hackathon That Ships Something">
+    <meta name="twitter:description" content="A run sheet for an internal AI hackathon aimed at operators, not engineers: the rules that make things ship, who to invite, and what to do the week after.">
+    <meta name="twitter:image" content="https://buildwithgloo.com/images/og-image.png">
+
+    <link rel="icon" type="image/png" href="/favicon.png?v=3">
+    <link rel="alternate" type="application/rss+xml" title="Gloo Blog" href="/feed.xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/blog/blog.css">
+    <link rel="stylesheet" href="/blog/prototype.css">
+    <meta name="keywords" content="internal ai hackathon, run a hackathon, ai adoption, company hackathon agenda, hackathon run sheet, ai enablement">
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "How to Run an Internal AI Hackathon That Ships Something",
+    "description": "A run sheet for an internal AI hackathon aimed at operators, not engineers: the rules that make things ship, who to invite, and what to do the week after.",
+    "keywords": "internal ai hackathon, run a hackathon, ai adoption, company hackathon agenda, hackathon run sheet, ai enablement",
+    "datePublished": "2026-08-02",
+    "dateModified": "2026-08-02",
+    "wordCount": 1240,
+    "inLanguage": "en",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://buildwithgloo.com/blog/internal-ai-hackathon"
+    },
+    "image": "https://buildwithgloo.com/images/og-image.png",
+    "author": {
+        "@type": "Organization",
+        "name": "Gloo",
+        "url": "https://buildwithgloo.com"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Gloo",
+        "url": "https://buildwithgloo.com",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://buildwithgloo.com/images/gloo-logo.png"
+        }
+    }
+}
+    </script>
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://buildwithgloo.com/"
+        },
+        {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Blog",
+            "item": "https://buildwithgloo.com/blog/"
+        },
+        {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "How to Run an Internal AI Hackathon That Ships Something",
+            "item": "https://buildwithgloo.com/blog/internal-ai-hackathon"
+        }
+    ]
+}
+    </script>
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "How long should an internal AI hackathon be?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "One day is the sweet spot. A half day works if problems are collected in advance and teams are pre-formed. Two days produces better output but is much harder to staff, because you are asking operational teams to stop doing their job for two days rather than one."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Who should take part in an internal AI hackathon?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Mostly the people who do the work, not the engineering team. The point is that the person who understands the process builds the tool for it. Aim for teams of three to four with at least two operators, and use engineers as a floating clinic rather than as builders."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What should teams build at an AI hackathon?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "A tool for a real, named, recurring annoyance in their own week. Collect the problems from participants beforehand and reject anything that is a customer-facing product idea, needs a system of record changed, or has no obvious first user in the room."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "How do you stop a hackathon from producing nothing?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Decide before the event that exactly one build will be funded to completion, say so at kickoff, and end the day by picking it in the room. Then give it a two week finish window with a named owner. Without a commitment to finish something, a hackathon is a team-building exercise."
+            }
+        }
+    ]
+}
+    </script>
+</head>
+<body class="blog-page">
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <a href="/" class="logo" aria-label="Gloo - Go to homepage">
+                <img src="/images/gloo-logo.png" alt="Gloo" class="logo-img">
+            </a>
+            <div class="nav-links" role="menubar">
+                <a href="/#what-we-do" class="nav-link" role="menuitem">What We Do</a>
+                <a href="/blog/" class="nav-link" role="menuitem">Blog</a>
+                <a href="/about" class="nav-link" role="menuitem">About</a>
+                <a href="/#contact" class="btn btn-nav" role="menuitem"><span>Book a Call</span></a>
+            </div>
+            <button class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <main role="main" id="main-content">
+    <div class="container blog-shell">
+        <article class="blog-narrow">
+            <nav class="crumbs" aria-label="Breadcrumb">
+                <a href="/">Home</a>
+                <span aria-hidden="true">/</span>
+                <a href="/blog/">Blog</a>
+                <span aria-hidden="true">/</span>
+                <span aria-current="page">Playbook</span>
+            </nav>
+
+            <header class="article-head">
+                <span class="eyebrow">Playbook</span>
+                <h1>How to run an internal AI hackathon that ships something</h1>
+                <div class="article-byline">
+                    <span>By the Gloo team</span>
+                    <span aria-hidden="true">&middot;</span>
+                    <time datetime="2026-08-02">2 August 2026</time>
+                    <span aria-hidden="true">&middot;</span>
+                    <span>6 min read</span>
+                </div>
+            </header>
+
+            <div class="lede">
+<p><strong>Invite the operators, not the engineers.</strong> The value of an internal AI hackathon is not the software produced in a day. It is that twenty people who thought building was somebody else's job find out otherwise, using their own work as the material.</p>
+    <p>One rule separates the ones that matter from the ones that get a nice photo: decide in advance that exactly one build gets finished, and pick it before everyone goes home.</p>
+            </div>
+
+            <div class="prose">
+
+<h2>Why a hackathon beats training</h2>
+<p>Most organisations try to drive AI adoption with enablement sessions. Someone demonstrates a tool for an hour, everyone nods, and usage moves for about a week. The reason is not that the training was bad. It is that watching someone else solve their problem teaches you almost nothing about solving yours.</p>
+<p>The pattern we see repeatedly, and it is a strange one: teams have real appetite and no path in. People have heard what these tools can do, they believe it, and they still have not applied it to their own work, because there was never a protected block of time in which trying was the actual assignment.</p>
+<p>A hackathon is that block of time. Its real output is not a tool. It is <strong>a group of people who now know what is possible with their own data</strong>, which is the thing that keeps producing value in the months afterwards.</p>
+
+<h2>The failure mode to design against</h2>
+<p>Hackathon theatre is easy to produce and hard to spot from the inside. Everyone enjoys it, the demos get applause, leadership posts about innovation culture, and eight weeks later nothing exists.</p>
+<p>It fails for a predictable reason. Nobody decided beforehand what would happen to the winner. The event was framed as an exploration, so exploring is what it produced.</p>
+<div class="callout">
+    <span class="callout-label">The one non-negotiable</span>
+    <p>Before you send the invite, get a commitment that one build will be funded to completion, with a named owner and a two week window. Announce it at kickoff. It changes how people choose what to build within the first ten minutes.</p>
+</div>
+
+<h2>Build the run sheet</h2>
+<p>Pick a format and a team count. The demo block scales with the number of teams, which is the thing most schedules get wrong and then discover at four in the afternoon.</p>
+
+<div class="proto" id="runsheet">
+    <div class="proto-head">
+        <span class="proto-label">Generator</span>
+        <p class="proto-title">Your hackathon run sheet</p>
+    </div>
+    <div class="proto-body">
+        <div class="proto-controls">
+            <div class="ctrl">
+                <label for="h-format">Format</label>
+                <select id="h-format">
+                    <option value="half">Half day</option>
+                    <option value="one" selected>One day</option>
+                    <option value="two">Two days</option>
+                </select>
+            </div>
+            <div class="ctrl">
+                <label for="h-teams">Teams <span class="ctrl__val" id="v-teams">5</span></label>
+                <input type="range" id="h-teams" min="2" max="14" step="1" value="5">
+            </div>
+            <div class="ctrl">
+                <label for="h-start">Start time</label>
+                <select id="h-start">
+                    <option value="540">09:00</option>
+                    <option value="570">09:30</option>
+                    <option value="600">10:00</option>
+                    <option value="780">13:00</option>
+                </select>
+            </div>
+        </div>
+        <div class="run-sheet" id="h-sheet"></div>
+        <p class="proto-note" id="h-summary"></p>
+    </div>
+</div>
+
+<h2>Who is in the room</h2>
+<p>Aim for teams of three or four, with <strong>at least two people who actually do the work</strong> on every team. If a team is all engineers, it will build something technically interesting that nobody asked for. If a team is all operators, it will get stuck on a data question at eleven o'clock and never recover.</p>
+<p>The fix is to keep your engineers out of the teams entirely and run them as a clinic. One or two people who float, unblock, and answer questions, and who are explicitly forbidden from taking the keyboard. This is counterintuitive and it is the single biggest determinant of whether operators leave feeling capable or feeling like spectators.</p>
+<table>
+    <thead><tr><th>Role</th><th>How many</th><th>What they do on the day</th></tr></thead>
+    <tbody>
+        <tr><td>Operators</td><td>Two per team</td><td>Own the problem, drive the build, run the demo</td></tr>
+        <tr><td>Analysts or ops generalists</td><td>One per team</td><td>Know where the data lives and what it means</td></tr>
+        <tr><td>Engineers</td><td>One or two total</td><td>Floating clinic. Advise, never build</td></tr>
+        <tr><td>A decision maker</td><td>One</td><td>Present for demos, picks what ships, in the room</td></tr>
+    </tbody>
+</table>
+<p>That last row matters more than it looks. If the person who can say yes watches the demos over a recording next week, you have converted a decision into a follow-up, and the energy is gone by then.</p>
+
+<h2>Collect the problems in advance</h2>
+<p>Do not open with a blank page. A week before, ask every participant one question: <em>what is the most annoying recurring task in your week?</em> You will get thirty answers in two days, and they are the real backlog of the business.</p>
+<p>Then filter them. A good hackathon problem is:</p>
+<ul>
+    <li><strong>Recurring.</strong> It happens weekly or monthly, so a fix compounds.</li>
+    <li><strong>Owned by someone in the room.</strong> No proxies, no "the finance team would love this".</li>
+    <li><strong>Small enough to be wrong about.</strong> One screen, one workflow, one team.</li>
+    <li><strong>Not blocked on changing a system of record.</strong> Reading from the CRM is fine. Writing back to it is a different project.</li>
+</ul>
+<p>Reject customer-facing product ideas outright, however good they are. They belong in a product process, and they will swallow the day.</p>
+
+<h2>What "shipped" means at 4pm</h2>
+<p>Set the bar explicitly, because otherwise every team spends the last hour polishing. A demo qualifies if someone who was not on the team can do the task with it, using real or realistic data, without a narrator explaining what would happen if it worked.</p>
+<p>Three minutes each, hard stop, no slides. A team that needs slides did not build anything.</p>
+<p>Then pick, in the room, out loud. One build gets the two week finish window. Say why. The teams that were not picked should leave knowing exactly what would have made theirs the one, because that shapes what they attempt next time and there should be a next time.</p>
+
+<h2>The week after is the whole thing</h2>
+<p>A hackathon converts into value in the fortnight afterwards or not at all. Three things to have in the calendar before the event:</p>
+<ol>
+    <li><strong>A finish window.</strong> Two weeks, named owner, explicitly protected time. Not "as a stretch goal alongside their day job."</li>
+    <li><strong>A hardening pass.</strong> Whatever was built in a day has no permissions model and probably no error handling. Decide who takes it from working to trustworthy, which is where <a href="/blog/lovable-vs-claude-code">the handoff from prompt to engineering</a> usually happens.</li>
+    <li><strong>A number attached.</strong> Take the winning build and run its workflow through the <a href="/blog/internal-ai-tooling-business-case">cost of the manual version</a>. That figure is what funds the second hackathon, and it is far more persuasive than a demo video.</li>
+</ol>
+<p>Run the second one three months later. The compounding effect is real: the second event starts from a room that already knows what is possible, and the problems people bring get noticeably better.</p>
+
+            </div>
+
+        <section class="faq" aria-labelledby="faq-heading">
+            <h2 id="faq-heading" style="font-family:var(--font-display);font-size:1.375rem;font-weight:600;margin-bottom:var(--space-sm);">Frequently asked questions</h2>
+            <div class="faq-item">
+                <h3>How long should an internal AI hackathon be?</h3>
+                <p>One day is the sweet spot. A half day works if problems are collected in advance and teams are pre-formed. Two days produces better output but is much harder to staff, because you are asking operational teams to stop doing their job for two days rather than one.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Who should take part in an internal AI hackathon?</h3>
+                <p>Mostly the people who do the work, not the engineering team. The point is that the person who understands the process builds the tool for it. Aim for teams of three to four with at least two operators, and use engineers as a floating clinic rather than as builders.</p>
+            </div>
+            <div class="faq-item">
+                <h3>What should teams build at an AI hackathon?</h3>
+                <p>A tool for a real, named, recurring annoyance in their own week. Collect the problems from participants beforehand and reject anything that is a customer-facing product idea, needs a system of record changed, or has no obvious first user in the room.</p>
+            </div>
+            <div class="faq-item">
+                <h3>How do you stop a hackathon from producing nothing?</h3>
+                <p>Decide before the event that exactly one build will be funded to completion, say so at kickoff, and end the day by picking it in the room. Then give it a two week finish window with a named owner. Without a commitment to finish something, a hackathon is a team-building exercise.</p>
+            </div>
+        </section>
+
+        <section class="blog-cta">
+            <h2>Want us to run it with you?</h2>
+            <p>We facilitate these for GTM and operations teams: problem collection, the clinic on the day, and the finish window afterwards.</p>
+            <a href="/#contact" class="btn btn-glass btn-large"><span>Book a 30-minute call</span></a>
+        </section>
+
+        <section class="related" aria-labelledby="rel-heading">
+            <h2 id="rel-heading">Keep reading</h2>
+            <div class="related-list">
+                <a href="/blog/internal-ai-tooling-business-case">The business case for internal AI tooling, in numbers <span aria-hidden="true">&rarr;</span></a>
+                <a href="/blog/lovable-vs-claude-code">Lovable vs Claude Code: which should build your internal tool? <span aria-hidden="true">&rarr;</span></a>
+                <a href="/blog/how-to-run-a-qbr">How to run a QBR in the age of AI <span aria-hidden="true">&rarr;</span></a>
+            </div>
+        </section>
+
+        </article>
+    </div>
+    </main>
+    <footer class="footer" role="contentinfo">
+        <div class="footer-gradient"></div>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="lou-footer-mascot">
+                        <img src="/Logo/Lou.png" alt="Lou - Gloo mascot" class="lou-img">
+                    </div>
+                    <p>One size fits none. Solutions custom to you.</p>
+                    <div class="footer-partner">
+                        <span class="footer-partner__eyebrow">Official Lovable Partner</span>
+                        <div class="footer-partner__badges">
+                            <a href="https://lovable.dev" target="_blank" rel="noopener" class="footer-badge-link" aria-label="Gloo is a Lovable Select Partner">
+                                <img src="/images/lovable-select-partner-white.png" alt="Lovable Select Partner badge" class="footer-badge-img" width="732" height="676">
+                            </a>
+                            <a href="https://lovable.dev" target="_blank" rel="noopener" class="footer-badge-link" aria-label="Gloo is a Lovable Certified Partner">
+                                <img src="/images/lovable-certified-partner-white.png" alt="Lovable Certified Partner badge" class="footer-badge-img" width="732" height="676">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-nav">
+                    <div class="footer-nav-col">
+                        <h4>Product</h4>
+                        <a href="/#case-study">Results</a>
+                        <a href="/#tools">Example Builds</a>
+                        <a href="https://tools.buildwithgloo.com" target="_blank" rel="noopener">Tool Demos</a>
+                    </div>
+                    <div class="footer-nav-col">
+                        <h4>Company</h4>
+                        <a href="/blog/">Blog</a>
+                        <a href="/about">About</a>
+                        <a href="/#contact">Contact</a>
+                    </div>
+                    <div class="footer-nav-col">
+                        <h4>Legal</h4>
+                        <a href="/privacy">Privacy Policy</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Gloo. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="/script.js"></script>
+    <script>
+    (function () {
+        var fmtEl = document.getElementById('h-format');
+        var teamsEl = document.getElementById('h-teams');
+        var startEl = document.getElementById('h-start');
+        var sheetEl = document.getElementById('h-sheet');
+        var sumEl = document.getElementById('h-summary');
+        var teamsLabel = document.getElementById('v-teams');
+        if (!fmtEl || !teamsEl || !startEl || !sheetEl) return;
+
+        // 'demo' duration is computed from team count; everything else is fixed.
+        var FORMATS = {
+            half: [
+                { m: 10, t: 'Kickoff and the one rule', d: 'State that one build gets finished. Name the owner of that decision.', key: true },
+                { m: 15, t: 'Problem shortlist', d: 'Read out the pre-collected problems. No new ideas from the floor.' },
+                { m: 10, t: 'Team formation', d: 'Pre-assign if you can. It saves twenty minutes of milling about.' },
+                { m: 105, t: 'Build block', d: 'Clinic open throughout. Engineers advise, never take the keyboard.' },
+                { m: 10, t: 'Freeze and demo prep', d: 'Hands off. Decide who speaks for each team.' },
+                { m: 'demo', t: 'Demos', d: 'Three minutes each, hard stop, no slides.', key: true },
+                { m: 20, t: 'Pick what ships', d: 'Out loud, in the room, with reasons.', key: true }
+            ],
+            one: [
+                { m: 15, t: 'Kickoff and the one rule', d: 'State that one build gets finished, with a named owner and a two week window.', key: true },
+                { m: 30, t: 'Problem pitches', d: 'Two minutes per problem from the pre-collected list. Owner must be present.' },
+                { m: 15, t: 'Team formation', d: 'Three to four people, at least two operators on every team.' },
+                { m: 150, t: 'Build block one', d: 'Clinic open. The goal by lunch is something on screen, not something finished.' },
+                { m: 45, t: 'Lunch and unblock clinic', d: 'Eat at the desks. This is where the data questions get answered.' },
+                { m: 135, t: 'Build block two', d: 'Halfway through, ask every team what they are cutting. They are all overscoped.' },
+                { m: 15, t: 'Freeze and demo prep', d: 'Hands off keyboards. Rehearse the three minutes once.' },
+                { m: 'demo', t: 'Demos', d: 'Three minutes each, hard stop, no slides. Someone off the team drives.', key: true },
+                { m: 30, t: 'Pick what ships', d: 'Decision maker chooses in the room and says why. Losers learn more from the why than the result.', key: true },
+                { m: 10, t: 'Close', d: 'Confirm the owner, the window, and the date of the next one.' }
+            ],
+            two: [
+                { m: 15, t: 'Kickoff and the one rule', d: 'One build gets finished. Say it before anything else.', key: true },
+                { m: 40, t: 'Problem pitches', d: 'Longer format allows discussion. Still no new ideas invented on the spot.' },
+                { m: 20, t: 'Team formation and scoping', d: 'Each team writes one sentence describing who uses it and for what.' },
+                { m: 165, t: 'Build block one', d: 'Clinic open throughout.' },
+                { m: 45, t: 'Lunch', d: '' },
+                { m: 150, t: 'Build block two', d: 'End the day with every team demoing informally to one other team.' },
+                { m: 20, t: 'Day one close', d: 'Each team names the one thing they will cut tomorrow.', key: true },
+                { day: true },
+                { m: 10, t: 'Day two standup', d: 'Sixty seconds per team. What is left, what got cut.' },
+                { m: 180, t: 'Build block three', d: 'Real data replaces sample data today, or the demo will not hold up.' },
+                { m: 45, t: 'Lunch', d: '' },
+                { m: 120, t: 'Hardening block', d: 'Permissions, empty states, and the thing that breaks when two people open it.' },
+                { m: 20, t: 'Freeze and demo prep', d: 'Hands off. One rehearsal each.' },
+                { m: 'demo', t: 'Demos', d: 'Four minutes each at this format. Still no slides.', key: true },
+                { m: 40, t: 'Pick what ships', d: 'With two days invested, pick a first and a runner up worth finishing.', key: true },
+                { m: 10, t: 'Close', d: 'Owner, window, next date.' }
+            ]
+        };
+
+        function clock(mins) {
+            var m = ((mins % 1440) + 1440) % 1440;
+            return String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0');
+        }
+
+        function render() {
+            var teams = +teamsEl.value;
+            var perDemo = fmtEl.value === 'two' ? 4 : 3;
+            var demoMins = teams * (perDemo + 1);
+            teamsLabel.textContent = teams;
+
+            var t = +startEl.value;
+            var rows = '';
+            var dayNo = 1;
+            var totalBuild = 0;
+
+            FORMATS[fmtEl.value].forEach(function (seg) {
+                if (seg.day) {
+                    dayNo++;
+                    t = +startEl.value;
+                    rows += '<div class="run-row is-key"><div class="run-row__t">Day ' + dayNo +
+                            '</div><div class="run-row__b"><strong>Overnight</strong>' +
+                            '<span>Nobody builds tonight. Say so, and mean it.</span></div></div>';
+                    return;
+                }
+                var mins = seg.m === 'demo' ? demoMins : seg.m;
+                if (/^Build|^Hardening/.test(seg.t)) totalBuild += mins;
+                rows += '<div class="run-row' + (seg.key ? ' is-key' : '') + '">' +
+                        '<div class="run-row__t">' + clock(t) + '</div>' +
+                        '<div class="run-row__b"><strong>' + seg.t +
+                        (seg.m === 'demo' ? ' (' + teams + ' teams, ' + demoMins + ' min)' : '') +
+                        '</strong>' + (seg.d ? '<span>' + seg.d + '</span>' : '') + '</div></div>';
+                t += mins;
+            });
+
+            sheetEl.innerHTML = rows;
+            sumEl.textContent = 'Ends at ' + clock(t) + '. ' +
+                Math.round(totalBuild / 60 * 10) / 10 + ' hours of build time, ' +
+                demoMins + ' minutes of demos for ' + teams + ' teams. ' +
+                'Add a team and the demo block grows by ' + (perDemo + 1) + ' minutes, which is the part that overruns.';
+        }
+
+        fmtEl.addEventListener('change', render);
+        startEl.addEventListener('change', render);
+        teamsEl.addEventListener('input', render);
+        render();
+    })();
+    </script>
+
+</body>
+</html>
