@@ -141,3 +141,27 @@ The blog then links up into both, passing topical relevance. Recommend building 
 3. Complete the `lovable.dev/experts` listing (rate, minimum, portfolio, categories).
 4. Publishing cadence: one post per week beats five posts then silence. The P2 list is the queue.
 5. Get the case study client to allow a named logo. "One of Canada's largest pizza chains" converts far worse than a name.
+
+---
+
+## 6. Cluster C — Forward Deployed Engineer (added 2026-08-01)
+
+Live SERP checked, not estimated. This cluster behaves differently from A and B, and the difference decides the strategy.
+
+**The head term is a trap.** `forward deployed engineer` is owned by Wikipedia, the Pragmatic Engineer newsletter, a16z's *services-led growth* essay, fde.academy, MindStudio and Perspective AI. Extremely high authority, and — more importantly — **the intent is mostly job-seekers**: salary, interviews, "should I go for it". Ranking there brings traffic that will never buy. Do not chase it head-on.
+
+**The buyer-intent slice is owned by staffing, not agencies.** Search `hire forward deployed engineers` and you get WorkGenius, Uplers, ISHIR, HireOverseas, Betts, Paraform. Every one of them sells **a person** — "vetted profile in 48 hours", "90% less overseas". None sells the outcome.
+
+**The gap is the comparison.** Nobody credibly owns *FDE vs agency* — the query a buyer types immediately before choosing, where Gloo is literally one side of the comparison. One thin page exists on it today.
+
+| Query | Intent | Target URL | P |
+|---|---|---|---|
+| forward deployed engineer vs agency | comparison, decision-stage | `/blog/forward-deployed-engineer-vs-agency` | **P1** |
+| what is a forward deployed engineer | definitional (AI Overview bait) | same, via the direct-answer lede | P1 |
+| should we hire a forward deployed engineer | commercial | same | P1 |
+| forward deployed engineer as a service | commercial | future service page | P2 |
+| forward deployed engineering for GTM teams | long-tail, uncontested | future | P2 |
+
+**Honest expectation:** this cluster converts worse than A and B because the term's gravity is career content. It earns its place for two other reasons — the a16z framing legitimises the model with the founders and GTM leaders Gloo sells to, and the term is rising fast enough that ranking early is cheap. Treat it as top-of-funnel that feeds the pillar, not as a money page.
+
+**Positioning note worth keeping straight:** Gloo is *not* an FDE shop in Palantir's original sense, because FDEs deploy their employer's own product into a customer. Gloo uses the same method for a different purpose: the client's internal tools. The post says this explicitly, and it should stay that way — claiming the label outright would be inaccurate and easy to pick apart.

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XLGY974WHR"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XLGY974WHR');
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forward Deployed Engineer: What It Is, and When to Hire One vs an Agency | Gloo</title>
+    <meta name="description" content="What a forward deployed engineer actually does, the three ways to buy forward-deployed engineering, and how to tell whether you need a hire or a team.">
+    <link rel="canonical" href="https://buildwithgloo.com/blog/forward-deployed-engineer-vs-agency">
+
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://buildwithgloo.com/blog/forward-deployed-engineer-vs-agency">
+    <meta property="og:title" content="Forward Deployed Engineer: What It Is, and When to Hire One vs an Agency">
+    <meta property="og:description" content="What a forward deployed engineer actually does, the three ways to buy forward-deployed engineering, and how to tell whether you need a hire or a team.">
+    <meta property="og:image" content="https://buildwithgloo.com/images/og-image.png">
+    <meta property="og:site_name" content="Gloo">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Forward Deployed Engineer: What It Is, and When to Hire One vs an Agency">
+    <meta name="twitter:description" content="What a forward deployed engineer actually does, the three ways to buy forward-deployed engineering, and how to tell whether you need a hire or a team.">
+    <meta name="twitter:image" content="https://buildwithgloo.com/images/og-image.png">
+
+    <link rel="icon" type="image/png" href="/favicon.png?v=3">
+    <link rel="alternate" type="application/rss+xml" title="Gloo Blog" href="/feed.xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/blog/blog.css">
+    <meta name="keywords" content="forward deployed engineer, what is a forward deployed engineer, forward deployed engineer vs agency, hire forward deployed engineer, forward deployed engineering, FDE">
+
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Forward Deployed Engineer: What It Is, and When to Hire One vs an Agency",
+    "description": "What a forward deployed engineer actually does, the three ways to buy forward-deployed engineering, and how to tell whether you need a hire or a team.",
+    "keywords": "forward deployed engineer, what is a forward deployed engineer, forward deployed engineer vs agency, hire forward deployed engineer, forward deployed engineering, FDE",
+    "datePublished": "2026-08-01",
+    "dateModified": "2026-08-01",
+    "wordCount": 1206,
+    "inLanguage": "en",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://buildwithgloo.com/blog/forward-deployed-engineer-vs-agency"
+    },
+    "image": "https://buildwithgloo.com/images/og-image.png",
+    "author": {
+        "@type": "Organization",
+        "name": "Gloo",
+        "url": "https://buildwithgloo.com"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Gloo",
+        "url": "https://buildwithgloo.com",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://buildwithgloo.com/images/gloo-logo.png"
+        }
+    }
+}
+    </script>
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://buildwithgloo.com/"
+        },
+        {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Blog",
+            "item": "https://buildwithgloo.com/blog/"
+        },
+        {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Forward Deployed Engineer: What It Is, and When to Hire One vs an Agency",
+            "item": "https://buildwithgloo.com/blog/forward-deployed-engineer-vs-agency"
+        }
+    ]
+}
+    </script>
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "What is a forward deployed engineer?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "A forward deployed engineer (FDE) is an engineer who embeds with a customer and owns a system end to end: scoping it with the people who will use it, writing production code against the customer's real data and systems, and keeping it running. Palantir created the role in 2005, and OpenAI, Anthropic and others now run FDE teams as part of enterprise go-to-market."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What is the difference between a forward deployed engineer and a consultant?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Delivery. A consultant hands over recommendations, a process map, or a strategy document. A forward deployed engineer hands over a running system built in your environment. If the engagement ends in a deck rather than something people log into, it was consulting regardless of the job title."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Should we hire a forward deployed engineer or an agency?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Hire an FDE if you are a software vendor who needs this capability repeatedly across many customers. Use a staffing marketplace if you already know exactly what to build and can direct the work. Hire a team that already works this way if the hard part is deciding what to build and you need one system shipped rather than a headcount added."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "How much does a forward deployed engineer cost?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Hiring one is a senior engineering hire with a scarcity premium on top, plus recruiting time measured in months. Staffing marketplaces advertise placements in as little as 48 hours, and offshore providers market steep discounts. A project-based team is priced per outcome instead of per head, which is usually cheaper when you need one system rather than ongoing capacity."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Do we need a forward deployed engineer if we are not a software company?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Probably not by that name. The role was invented by software vendors deploying their own product into customer environments. If you are not selling software, what you actually want is someone to build your internal tools using the same working style: embedded, in your real environment, shipping a running system. That is the same method under a different label."
+            }
+        }
+    ]
+}
+    </script>
+</head>
+<body class="blog-page">
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <a href="/" class="logo" aria-label="Gloo - Go to homepage">
+                <img src="/images/gloo-logo.png" alt="Gloo" class="logo-img">
+            </a>
+            <div class="nav-links" role="menubar">
+                <a href="/#what-we-do" class="nav-link" role="menuitem">What We Do</a>
+                <a href="/blog/" class="nav-link" role="menuitem">Blog</a>
+                <a href="/about" class="nav-link" role="menuitem">About</a>
+                <a href="/#contact" class="btn btn-nav" role="menuitem"><span>Book a Call</span></a>
+            </div>
+            <button class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <main role="main" id="main-content">
+    <div class="container blog-shell">
+        <article class="blog-narrow">
+            <nav class="crumbs" aria-label="Breadcrumb">
+                <a href="/">Home</a>
+                <span aria-hidden="true">/</span>
+                <a href="/blog/">Blog</a>
+                <span aria-hidden="true">/</span>
+                <span aria-current="page">Playbook</span>
+            </nav>
+
+            <header class="article-head">
+                <span class="eyebrow">Playbook</span>
+                <h1>Forward deployed engineer: what it is, and when to hire one vs an agency</h1>
+                <div class="article-byline">
+                    <span>By the Gloo team</span>
+                    <span aria-hidden="true">&middot;</span>
+                    <time datetime="2026-08-01">1 August 2026</time>
+                    <span aria-hidden="true">&middot;</span>
+                    <span>5 min read</span>
+                </div>
+            </header>
+
+            <div class="lede">
+                <p>A <strong>forward deployed engineer (FDE)</strong> is an engineer who embeds with a customer and owns a system end to end: scoping it with the people who will use it, writing production code against their real data, and keeping it running. The line separating it from consulting is delivery. <strong>A consultant hands over recommendations. An FDE hands over a running system.</strong></p>
+                <p>Palantir created the role in 2005. OpenAI, Anthropic and others now run FDE teams as enterprise go-to-market. But if you are on the buying side, the interesting question is not what an FDE is. It is whether you should hire one, staff one, or hire a team that already works this way.</p>
+            </div>
+
+            <div class="prose">
+
+<h2>Where the model came from</h2>
+<p>Palantir invented forward deployed engineering in 2005 because its first customers, US intelligence agencies, had problems that traditional consultants could not solve. The work required someone who understood the domain deeply <em>and</em> could write production code inside a classified environment. Splitting that across a consultant and an engineer did not work, so Palantir stopped splitting it.</p>
+<p>The model stayed niche for fifteen years. Then AI products arrived with the same shape of problem: enormous capability that produces no value until someone wires it into a specific company's messy reality. In early 2025 OpenAI stood up a Forward Deployed Engineering team, and Anthropic, Google Cloud and Stripe now staff comparable roles. <a href="https://a16z.com/services-led-growth/" target="_blank" rel="noopener">a16z calls the pattern services-led growth</a>: trading gross margin for a moat that competitors cannot copy from the outside. The <a href="https://newsletter.pragmaticengineer.com/p/forward-deployed-engineers" target="_blank" rel="noopener">Pragmatic Engineer</a> has the best account of what the job is like day to day.</p>
+<p>Worth naming the incentive, because it explains the whole category: a vendor deploys FDEs to make <em>their own product</em> succeed inside your company. That is the original meaning of the term, and it matters when you start shopping for one.</p>
+
+<h2>What the job actually involves</h2>
+<p>Three things, and they are usually done by the same person on purpose:</p>
+<ul>
+    <li><strong>Discovery and integration.</strong> Interviewing the people doing the work, mapping the actual workflow rather than the documented one, and getting into the real data pipelines.</li>
+    <li><strong>Hands-on building.</strong> Production code in the customer's environment, wired to their APIs, inside their security constraints.</li>
+    <li><strong>Feedback to the core product.</strong> Carrying friction back to the product team so the next customer needs less custom work.</li>
+</ul>
+<p>Notice that the third only exists if you are a software vendor with a core product. For everyone else it is irrelevant, which is the first clue that "hire an FDE" is often the wrong framing for a company that just needs better internal tools.</p>
+
+<h2>Three ways to buy forward-deployed engineering</h2>
+<p>The term has outrun its origin, and there are now three genuinely different things being sold under it.</p>
+<div class="table-scroll">
+<table>
+    <thead><tr><th>Route</th><th>What you get</th><th>Best when</th><th>The catch</th></tr></thead>
+    <tbody>
+        <tr>
+            <th>Hire an FDE</th>
+            <td>An employee who does this repeatedly</td>
+            <td>You sell software and need it across many customers</td>
+            <td>Scarce, expensive, months to recruit</td>
+        </tr>
+        <tr>
+            <th>Staff one</th>
+            <td>A vetted contractor, sometimes within 48 hours</td>
+            <td>You know exactly what to build and can direct it</td>
+            <td>You still own scoping, QA, and adoption</td>
+        </tr>
+        <tr>
+            <th>Hire a team that works this way</th>
+            <td>A scoped outcome: a running system</td>
+            <td>The hard part is deciding what to build</td>
+            <td>Less control over day-to-day sequencing</td>
+        </tr>
+    </tbody>
+</table>
+</div>
+<p>Most of the market currently sells the middle option. Search "hire forward deployed engineers" and you will find staffing marketplaces promising vetted profiles in 48 hours and offshore providers advertising steep discounts. That is a real service and sometimes the right one. But note what is being sold: <strong>a person, not an outcome.</strong></p>
+
+<h2>The question that actually decides it</h2>
+<p>Are you buying capacity or an outcome?</p>
+<p>If you can already write the specification, you are buying capacity. Staffing is cheaper and you should use it. You will spend your own time on direction and review, and that is a fair trade.</p>
+<p>If the hard part is figuring out <em>what</em> to build, you are buying an outcome, and handing a contractor an underspecified problem is how six weeks disappear. The reason discovery matters is that the people who understand the workflow usually cannot describe it in a document. They can only show you, while doing it. That is a different skill from writing the code, and the whole point of the FDE model is that one person or one small team does both.</p>
+<div class="callout">
+    <span class="callout-label">A quick test</span>
+    <p>Could you write a one-page spec that a competent engineer could build from without asking your team any questions? If yes, staff it. If no, you need the discovery half, and that is what you should be shopping for.</p>
+</div>
+
+<h2>What "forward deployed" should mean in practice</h2>
+<p>The label is being applied to a lot of ordinary outsourcing. Six things separate the real thing, and every one of them is checkable before you sign:</p>
+<ol>
+    <li><strong>They work against your real data</strong>, in your environment, not a sandbox with sample rows.</li>
+    <li><strong>They talk to the people doing the job</strong>, not only the executive sponsor who approved the budget.</li>
+    <li><strong>Something usable exists in week one.</strong> Not a document about what will exist later.</li>
+    <li><strong>They own permissions and data scoping.</strong> "Each manager sees only their own accounts" is a data-model question and the most common place fast builds fail.</li>
+    <li><strong>They stay through adoption.</strong> Shipping is half the job; the other half is people actually using it in month three.</li>
+    <li><strong>You own the code at the end.</strong> Repository, environment access, and a written data model transfer to you.</li>
+</ol>
+
+<h2>Where it goes wrong</h2>
+<ul>
+    <li><strong>Sold as embedded, delivered as consulting.</strong> The engagement ends in a recommendation deck. If nobody logs into anything, it was consulting.</li>
+    <li><strong>An engineer with no access.</strong> Dropped into your company without a domain guide, real data, or the authority to talk to end users. Competent people fail at this reliably.</li>
+    <li><strong>The prototype that never becomes production.</strong> Impressive demo, no auth, no permissions, no error handling, quietly abandoned.</li>
+    <li><strong>Nobody owns adoption.</strong> The tool works and nobody uses it, because usage was never anyone's job.</li>
+</ul>
+<p>We wrote about the last one at length in <a href="/blog/custom-gtm-tools-guide">the buyer's guide to custom GTM tools</a>, because it is the single most common reason internal tooling dies.</p>
+
+<h2>How we work, for the sake of being concrete</h2>
+<p>Gloo is the third option, narrowed to one domain. We embed with go-to-market teams, sales, account management and customer success, build in their existing stack against their real data, ship a working tool in two to three weeks, and stay through adoption. We are not FDEs in Palantir's original sense, because we are not deploying our own product into your company. We use the same method for a different purpose: your internal tools instead of our software.</p>
+<p>If you want the unglamorous version of what that timeline really looks like, including the parts that took longer than expected, the <a href="/blog/internal-tool-build-log">build log</a> is a commit-by-commit account of one real project.</p>
+
+<h2>If you take one thing</h2>
+<p>The valuable part of the FDE model was never the job title. It was the decision to stop separating the person who understands the problem from the person who writes the code. You can buy that as an employee, as a contractor, or as a team. What you cannot do is buy it from anyone who wants to hand you a document at the end.</p>
+
+            </div>
+
+        <section class="faq" aria-labelledby="faq-heading">
+            <h2 id="faq-heading" style="font-family:var(--font-display);font-size:1.375rem;font-weight:600;margin-bottom:var(--space-sm);">Frequently asked questions</h2>
+            <div class="faq-item">
+                <h3>What is a forward deployed engineer?</h3>
+                <p>A forward deployed engineer (FDE) is an engineer who embeds with a customer and owns a system end to end: scoping it with the people who will use it, writing production code against the customer&#x27;s real data and systems, and keeping it running. Palantir created the role in 2005, and OpenAI, Anthropic and others now run FDE teams as part of enterprise go-to-market.</p>
+            </div>
+            <div class="faq-item">
+                <h3>What is the difference between a forward deployed engineer and a consultant?</h3>
+                <p>Delivery. A consultant hands over recommendations, a process map, or a strategy document. A forward deployed engineer hands over a running system built in your environment. If the engagement ends in a deck rather than something people log into, it was consulting regardless of the job title.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Should we hire a forward deployed engineer or an agency?</h3>
+                <p>Hire an FDE if you are a software vendor who needs this capability repeatedly across many customers. Use a staffing marketplace if you already know exactly what to build and can direct the work. Hire a team that already works this way if the hard part is deciding what to build and you need one system shipped rather than a headcount added.</p>
+            </div>
+            <div class="faq-item">
+                <h3>How much does a forward deployed engineer cost?</h3>
+                <p>Hiring one is a senior engineering hire with a scarcity premium on top, plus recruiting time measured in months. Staffing marketplaces advertise placements in as little as 48 hours, and offshore providers market steep discounts. A project-based team is priced per outcome instead of per head, which is usually cheaper when you need one system rather than ongoing capacity.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Do we need a forward deployed engineer if we are not a software company?</h3>
+                <p>Probably not by that name. The role was invented by software vendors deploying their own product into customer environments. If you are not selling software, what you actually want is someone to build your internal tools using the same working style: embedded, in your real environment, shipping a running system. That is the same method under a different label.</p>
+            </div>
+        </section>
+
+        <section class="blog-cta">
+            <h2>Need the discovery half, not just the code?</h2>
+            <p>That&#x27;s the part that decides whether the tool gets used. Bring the workflow and we&#x27;ll scope it with you on a 30-minute call.</p>
+            <a href="/#contact" class="btn btn-glass btn-large"><span>Book a 30-minute call</span></a>
+        </section>
+
+        <section class="related" aria-labelledby="rel-heading">
+            <h2 id="rel-heading">Keep reading</h2>
+            <div class="related-list">
+                <a href="/blog/custom-gtm-tools-guide">Custom GTM tools: a buyer&#x27;s guide for sales, AM, and CS <span aria-hidden="true">&rarr;</span></a>
+                <a href="/blog/internal-tool-build-log">How long does a custom internal tool take? A real build log <span aria-hidden="true">&rarr;</span></a>
+                <a href="/blog/build-vs-buy-sales-tools">Build vs buy: when custom sales tools beat another platform <span aria-hidden="true">&rarr;</span></a>
+            </div>
+        </section>
+        </article>
+    </div>
+    </main>
+
+    <footer class="footer" role="contentinfo">
+        <div class="footer-gradient"></div>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="lou-footer-mascot">
+                        <img src="/Logo/Lou.png" alt="Lou - Gloo mascot" class="lou-img">
+                    </div>
+                    <p>One size fits none. Solutions custom to you.</p>
+                    <div class="footer-partner">
+                        <span class="footer-partner__eyebrow">Official Lovable Partner</span>
+                        <div class="footer-partner__badges">
+                            <a href="https://lovable.dev" target="_blank" rel="noopener" class="footer-badge-link" aria-label="Gloo is a Lovable Select Partner">
+                                <img src="/images/lovable-select-partner-white.png" alt="Lovable Select Partner badge" class="footer-badge-img" width="732" height="676">
+                            </a>
+                            <a href="https://lovable.dev" target="_blank" rel="noopener" class="footer-badge-link" aria-label="Gloo is a Lovable Certified Partner">
+                                <img src="/images/lovable-certified-partner-white.png" alt="Lovable Certified Partner badge" class="footer-badge-img" width="732" height="676">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-nav">
+                    <div class="footer-nav-col">
+                        <h4>Product</h4>
+                        <a href="/#case-study">Results</a>
+                        <a href="/#tools">Example Builds</a>
+                        <a href="https://tools.buildwithgloo.com" target="_blank" rel="noopener">Tool Demos</a>
+                    </div>
+                    <div class="footer-nav-col">
+                        <h4>Company</h4>
+                        <a href="/blog/">Blog</a>
+                        <a href="/about">About</a>
+                        <a href="/#contact">Contact</a>
+                    </div>
+                    <div class="footer-nav-col">
+                        <h4>Legal</h4>
+                        <a href="/privacy">Privacy Policy</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Gloo. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="/script.js"></script>
+</body>
+</html>
