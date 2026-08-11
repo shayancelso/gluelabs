@@ -281,14 +281,58 @@
 
 /* ---------- responsive ---------- */
 @media (max-width: 768px) {
-    .blog-shell { padding: 120px 0 var(--space-2xl); }
+    /* padding-top/bottom ONLY — a `padding` shorthand here wipes .container's
+       horizontal padding and puts body copy flush against the screen edges. */
+    .blog-shell { padding-top: 120px; padding-bottom: var(--space-2xl); }
     .lede { padding: var(--space-md); font-size: 1.0625rem; }
     .post-grid { grid-template-columns: 1fr; }
-    .blog-shell { padding-top: 120px; }
     .prose { font-size: 1rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
     .post-card, .related-list a { transition: none; }
     .post-card:hover, .related-list a:hover { transform: none; }
+}
+
+/* ---------- /contact ----------
+   Reuses .cta-layout / .cta-copy / .cta-form-card from styles.css so the form
+   looks and behaves exactly like the homepage one. These only fill the gaps. */
+.contact-layout { align-items: start; gap: var(--space-2xl); }
+.contact-copy h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4.5vw, 2.875rem);
+    font-weight: 700; line-height: 1.12; letter-spacing: -0.02em;
+    margin-bottom: var(--space-md); text-wrap: balance;
+}
+.contact-copy h1 .text-gradient {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.contact-copy > p {
+    font-size: 1.0625rem; line-height: 1.7; color: var(--color-text-secondary);
+}
+.contact-list {
+    list-style: none; padding: 0;
+    margin: var(--space-lg) 0;
+    display: flex; flex-direction: column; gap: var(--space-sm);
+}
+.contact-list li {
+    position: relative; padding-left: 1.75rem;
+    font-size: 1rem; line-height: 1.6; color: var(--color-text-secondary);
+}
+.contact-list li::before {
+    content: "\2713";
+    position: absolute; left: 0; top: 0;
+    color: var(--color-primary); font-weight: 700;
+}
+.contact-list strong { color: var(--color-text); font-weight: 600; }
+.contact-reading { margin-top: var(--space-3xl); }
+
+@media (max-width: 768px) {
+    .contact-layout { gap: var(--space-xl); }
+    .contact-copy h1 { font-size: 1.875rem; }
+    /* styles.css centres .cta-copy on mobile, which leaves the checklist's
+       hanging ticks orphaned. Keep this page's copy left-aligned. */
+    .contact-copy { text-align: left; }
 }
