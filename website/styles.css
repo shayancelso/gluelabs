@@ -9416,3 +9416,15 @@ p {
 }
 .body-link:hover { color: var(--color-secondary); }
 .body-link:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+
+/* The nav is position:fixed, so a hash landing would sit underneath it.
+   scroll-margin-top gives anchor targets room, and makes native hash
+   navigation land correctly even before script.js runs. */
+section[id],
+[id="contact"],
+[id="what-we-do"],
+[id="tools"],
+[id="case-study"],
+[id="about"] {
+    scroll-margin-top: 100px;
+}

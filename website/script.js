@@ -83,30 +83,45 @@ document.addEventListener('DOMContentLoaded', function() {
             if (target) {
                 e.preventDefault();
                 const navHeight = nav ? nav.offsetHeight : 0;
-                const targetPosition = target.offsetTop - navHeight - 20;
+                const targetPosition =
+                    target.getBoundingClientRect().top + window.scrollY - navHeight - 20;
 
                 window.scrollTo({
-                    top: targetPosition,
+                    top: Math.max(0, targetPosition),
                     behavior: 'smooth'
                 });
             }
         });
     });
 
-    // Handle hash on page load (e.g., navigating from /tools/ to /#contact)
+    // Handle hash on page load (e.g. arriving from /blog/... at /#contact).
+    // Deliberately an INSTANT jump, not a smooth one. html{scroll-behavior:smooth}
+    // turns a ~9000px landing into a long animation that any touch or layout shift
+    // cancels, which stranded people at the top of the homepage instead of the
+    // contact form. Re-runs on load and shortly after, so late-loading images
+    // and fonts can't leave us parked at the wrong offset.
     if (window.location.hash) {
-        // Small delay to ensure the page has rendered
-        setTimeout(() => {
-            const target = document.querySelector(window.location.hash);
-            if (target) {
-                const navHeight = nav ? nav.offsetHeight : 0;
-                const targetPosition = target.offsetTop - navHeight - 20;
-                window.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth'
-                });
+        const landOnHash = () => {
+            let target = null;
+            try {
+                target = document.querySelector(window.location.hash);
+            } catch (err) {
+                return; // hashes like #123 aren't valid selectors
             }
-        }, 100);
+            if (!target) return;
+
+            const navHeight = nav ? nav.offsetHeight : 0;
+            const top = target.getBoundingClientRect().top + window.scrollY - navHeight - 20;
+            const root = document.documentElement;
+            const previous = root.style.scrollBehavior;
+            root.style.scrollBehavior = 'auto';
+            window.scrollTo(0, Math.max(0, top));
+            root.style.scrollBehavior = previous;
+        };
+
+        landOnHash();
+        window.addEventListener('load', landOnHash);
+        setTimeout(landOnHash, 300);
     }
 
     // ==========================================================================
