@@ -6,7 +6,42 @@
     <atom:link href="https://buildwithgloo.com/feed.xml" rel="self" type="application/rss+xml"/>
     <description>Field notes on building custom go-to-market tools for sales, account management, and customer success teams.</description>
     <language>en</language>
-    <lastBuildDate>Sun, 02 Aug 2026 09:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 14 Aug 2026 09:00:00 GMT</lastBuildDate>
+    <item>
+      <title>How Much Does Custom Software Cost in 2026? Real Numbers</title>
+      <link>https://buildwithgloo.com/blog/custom-software-cost</link>
+      <guid isPermaLink="true">https://buildwithgloo.com/blog/custom-software-cost</guid>
+      <description>Real 2026 price bands for custom software, why quotes vary 10x for the same project, and how not to overpay. With a companion cost calculator.</description>
+      <pubDate>Fri, 14 Aug 2026 09:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Outgrown Excel? How to Move Your Business Off Spreadsheets</title>
+      <link>https://buildwithgloo.com/blog/outgrown-excel</link>
+      <guid isPermaLink="true">https://buildwithgloo.com/blog/outgrown-excel</guid>
+      <description>Five signs a spreadsheet has become load-bearing infrastructure, what replaces it (usually one small app, not a platform), and how to migrate without a big-bang rebuild.</description>
+      <pubDate>Fri, 14 Aug 2026 09:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>How to Build a Custom Client Portal: Options, Cost, Timeline</title>
+      <link>https://buildwithgloo.com/blog/custom-client-portal</link>
+      <guid isPermaLink="true">https://buildwithgloo.com/blog/custom-client-portal</guid>
+      <description>The three ways to get a client portal, the four features clients actually use, the security non-negotiables, and what it really costs in 2026.</description>
+      <pubDate>Fri, 14 Aug 2026 09:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>AI App Builders vs Hiring a Developer: Which Should You Use?</title>
+      <link>https://buildwithgloo.com/blog/ai-app-builder-vs-hiring-developer</link>
+      <guid isPermaLink="true">https://buildwithgloo.com/blog/ai-app-builder-vs-hiring-developer</guid>
+      <description>When an AI app builder is the right call, when to hire a developer or agency, and the hybrid path most businesses should actually take.</description>
+      <pubDate>Fri, 14 Aug 2026 09:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Is Your AI-Built App Production-Ready? A 10-Point Checklist</title>
+      <link>https://buildwithgloo.com/blog/ai-app-production-ready</link>
+      <guid isPermaLink="true">https://buildwithgloo.com/blog/ai-app-production-ready</guid>
+      <description>Ten checks that separate a demo from a production app: auth, data separation, backups, payments, and the regression loop.</description>
+      <pubDate>Fri, 14 Aug 2026 09:00:00 GMT</pubDate>
+    </item>
     <item>
       <title>Forward Deployed Engineer: What It Is, and When to Hire One vs an Agency</title>
       <link>https://buildwithgloo.com/blog/forward-deployed-engineer-vs-agency</link>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XLGY974WHR"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XLGY974WHR');
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Build a Custom Client Portal: Options, Cost, Timeline | Gloo</title>
+    <meta name="description" content="The three ways to get a client portal (feature, platform, or custom build), the four features clients actually use, the security non-negotiables, and what it really costs in 2026.">
+    <link rel="canonical" href="https://buildwithgloo.com/blog/custom-client-portal">
+
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://buildwithgloo.com/blog/custom-client-portal">
+    <meta property="og:title" content="How to Build a Custom Client Portal: Options, Cost, Timeline">
+    <meta property="og:description" content="The three ways to get a client portal, the four features clients actually use, the security non-negotiables, and what it really costs in 2026.">
+    <meta property="og:image" content="https://buildwithgloo.com/images/og-image.png">
+    <meta property="og:site_name" content="Gloo">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="How to Build a Custom Client Portal: Options, Cost, Timeline">
+    <meta name="twitter:description" content="The three ways to get a client portal, the four features clients actually use, the security non-negotiables, and what it really costs in 2026.">
+    <meta name="twitter:image" content="https://buildwithgloo.com/images/og-image.png">
+
+    <link rel="icon" type="image/png" href="/favicon.png?v=3">
+    <link rel="alternate" type="application/rss+xml" title="Gloo Blog" href="/feed.xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/blog/blog.css">
+    <meta name="keywords" content="custom client portal, build a client portal, client portal for accounting firm, client portal cost, secure document portal small business">
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "How to Build a Custom Client Portal: Options, Cost, Timeline",
+    "description": "The three ways to get a client portal (feature, platform, or custom build), the four features clients actually use, the security non-negotiables, and what it really costs in 2026.",
+    "keywords": "custom client portal, build a client portal, client portal for accounting firm, client portal cost, secure document portal small business",
+    "datePublished": "2026-08-14",
+    "dateModified": "2026-08-14",
+    "wordCount": 1000,
+    "inLanguage": "en",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://buildwithgloo.com/blog/custom-client-portal"
+    },
+    "image": "https://buildwithgloo.com/images/og-image.png",
+    "author": {
+        "@type": "Organization",
+        "name": "Gloo",
+        "url": "https://buildwithgloo.com"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Gloo",
+        "url": "https://buildwithgloo.com",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://buildwithgloo.com/images/gloo-logo.png"
+        }
+    }
+}
+    </script>
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://buildwithgloo.com/"
+        },
+        {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Blog",
+            "item": "https://buildwithgloo.com/blog/"
+        },
+        {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "How to Build a Custom Client Portal: Options, Cost, Timeline",
+            "item": "https://buildwithgloo.com/blog/custom-client-portal"
+        }
+    ]
+}
+    </script>
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "How much does a custom client portal cost?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "In 2026, a custom client portal - secure logins, document upload, status tracking, messaging - typically costs $15,000-$40,000 and takes three to six weeks. Portal-feature add-ons to software you already own cost little or nothing; off-the-shelf portal platforms run $50-$500 a month but force clients into their workflow and branding."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Should I buy a client portal platform or build a custom one?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Check the software you already use first - many practice-management and project tools include a basic portal, and free is hard to beat. Buy a portal platform if your workflow is standard and you can accept its shape. Build custom when the portal is part of how clients experience your firm: your branding, your process, your data model, and no per-client fees as you grow."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What features should a client portal have?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Four things account for nearly all real usage: secure login, document upload with a clear checklist of what is still missing, status visibility (where is my work), and a message thread that replaces email attachments. Most other features go unused. Build the four well before adding anything."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "How do I keep client data secure in a portal?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Non-negotiables: every query filtered by the authenticated client (row-level security, enforced in the database, not just hidden in the interface), files stored privately with expiring signed links, encryption in transit and at rest, and an audit trail of who accessed what. If a vendor cannot explain how client A is prevented from ever seeing client B's data, walk away."
+            }
+        }
+    ]
+}
+    </script>
+</head>
+<body class="blog-page">
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <a href="/" class="logo" aria-label="Gloo - Go to homepage">
+                <img src="/images/gloo-logo.png" alt="Gloo" class="logo-img">
+            </a>
+            <div class="nav-links" role="menubar">
+                <a href="/#what-we-do" class="nav-link" role="menuitem">What We Do</a>
+                <a href="/blog/" class="nav-link" role="menuitem">Blog</a>
+                <a href="/about" class="nav-link" role="menuitem">About</a>
+                <a href="/contact" class="btn btn-nav" role="menuitem"><span>Book a Call</span></a>
+            </div>
+            <button class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <main role="main" id="main-content">
+    <div class="container blog-shell">
+        <article class="blog-narrow">
+            <nav class="crumbs" aria-label="Breadcrumb">
+                <a href="/">Home</a>
+                <span aria-hidden="true">/</span>
+                <a href="/blog/">Blog</a>
+                <span aria-hidden="true">/</span>
+                <span aria-current="page">Playbook</span>
+            </nav>
+
+            <header class="article-head">
+                <span class="eyebrow">Playbook</span>
+                <h1>How to build a custom client portal: options, cost, timeline</h1>
+                <div class="article-byline">
+                    <span>By the Gloo team</span>
+                    <span aria-hidden="true">&middot;</span>
+                    <time datetime="2026-08-14">14 August 2026</time>
+                    <span aria-hidden="true">&middot;</span>
+                    <span>5 min read</span>
+                </div>
+            </header>
+
+            <div class="lede">
+<p><strong>There are three ways to get a client portal: switch on the one hiding inside software you already own, rent a portal platform for $50&ndash;$500 a month, or build your own for $15,000&ndash;$40,000 in three to six weeks.</strong> Which one is right depends on a single question: is the portal a filing cabinet, or is it how clients experience your firm?</p>
+    <p>This guide covers the four features clients actually use, the three routes with honest trade-offs, and the security lines you cannot cross when other people's documents are involved.</p>
+            </div>
+
+            <div class="prose">
+
+<h2>What a client portal actually is</h2>
+<p>Strip away the vendor language and a client portal is four features. A firm &mdash; accountants, lawyers, agencies, contractors, clinics &mdash; gives each client a login, and behind it the client can:</p>
+<p><strong>1. Upload documents</strong> &mdash; and, crucially, see a checklist of what you still need from them. The checklist is the feature: it is what ends the "just resending in case" email chain.</p>
+<p><strong>2. See status</strong> &mdash; where their work stands, without calling to ask. Half the inbound "quick question" emails a service firm receives are this.</p>
+<p><strong>3. Message you in context</strong> &mdash; a thread attached to their file, replacing email attachments and the compliance nightmare of documents in inboxes.</p>
+<p><strong>4. See their history</strong> &mdash; invoices, past deliverables, last year's return, in one place, forever.</p>
+<p>Everything else vendors demo &mdash; e-signatures, scheduling, payment collection &mdash; is sometimes useful and easily added later. Firms that try to launch with ten features ship none well. The four above account for nearly all real usage.</p>
+
+<h2>The three routes</h2>
+<div class="table-scroll">
+<table>
+    <thead><tr><th></th><th>Portal feature you already own</th><th>Portal platform</th><th>Custom build</th></tr></thead>
+    <tbody>
+        <tr><th>Cost</th><td>Usually included</td><td>$50&ndash;$500/month</td><td>$15k&ndash;$40k once</td></tr>
+        <tr><th>Time to live</th><td>This afternoon</td><td>Days</td><td>3&ndash;6 weeks</td></tr>
+        <tr><th>Fits your process</th><td>Its process, not yours</td><td>Configurable, to a point</td><td>Exactly yours</td></tr>
+        <tr><th>Branding</th><td>Theirs, mostly</td><td>Logo-on-their-frame</td><td>Fully yours</td></tr>
+        <tr><th>Cost as you grow</th><td>Flat</td><td>Per client or per user, forever</td><td>Flat &mdash; you own it</td></tr>
+    </tbody>
+</table>
+</div>
+<p><strong>Check what you own first.</strong> Practice-management and project tools often include a basic portal, and if all you need is the filing cabinet, free wins. This is the advice a portal vendor won't give you; it is also the honest starting point.</p>
+<p><strong>Rent a platform</strong> when your workflow is standard and you can accept working inside someone else's shape and sending clients to someone else's domain.</p>
+<p><strong>Build</strong> when the portal <em>is</em> the client experience: your process modelled properly (not approximated by someone's configuration options), your brand on your domain, integration with the systems you already run, and no per-client fee quietly compounding as you grow. A firm with 200 clients paying $3 per client per month is spending $7,200 a year renting something it could own.</p>
+
+<h2>The security non-negotiables</h2>
+<p>A portal holds other people's tax documents, contracts, and financial records. Whichever route you take, four things are not optional:</p>
+<p><strong>Data separation enforced in the database.</strong> Client A must be structurally unable to see client B's data &mdash; row-level security on every query, not links that are merely hard to guess or buttons that are merely hidden. This is the check most cheaply-built portals fail, and it is the difference between an embarrassing bug and a reportable breach.</p>
+<p><strong>Private file storage with expiring links.</strong> Documents live in a private bucket and are served through short-lived signed URLs. A document URL that works in an incognito window is a breach in waiting.</p>
+<p><strong>Encryption in transit and at rest.</strong> Table stakes, but ask anyway.</p>
+<p><strong>An audit trail.</strong> Who uploaded, viewed, downloaded, and when. The first time a client disputes what they sent you, this pays for itself.</p>
+
+<div class="callout">
+    <span class="callout-label">If you started one in an AI builder</span>
+    <p>Plenty of firms have half a portal built in Lovable or Bolt &mdash; and the visible half is often genuinely good. The four items above are exactly the invisible half AI builders skip. Before real client documents touch it, run it against our <a href="/blog/ai-app-production-ready">production-readiness checklist</a>.</p>
+</div>
+
+<h2>What a build looks like</h2>
+<p><strong>Week 1:</strong> map the actual workflow &mdash; what clients send, what they ask, what staff re-type where. The portal's spec is your inbox's greatest hits.</p>
+<p><strong>Weeks 2&ndash;4:</strong> build the four features against your real process, wire in the systems you already use, and load a handful of pilot clients.</p>
+<p><strong>Weeks 4&ndash;6:</strong> pilot feedback, hardening pass on the security items above, then invite clients in batches. The measure of success is boring and wonderful: the "where is my file?" emails stop.</p>
+<p>Cost lands in the $15,000&ndash;$40,000 band depending on integrations and scope &mdash; the drivers are broken down in our <a href="/blog/custom-software-cost">pricing post</a>, or get a range for your specific portal in two minutes with the <a href="/software-cost-calculator">cost calculator</a>.</p>
+
+            </div>
+
+        <section class="faq" aria-labelledby="faq-heading">
+            <h2 id="faq-heading" style="font-family:var(--font-display);font-size:1.375rem;font-weight:600;margin-bottom:var(--space-sm);">Frequently asked questions</h2>
+            <div class="faq-item">
+                <h3>How much does a custom client portal cost?</h3>
+                <p>In 2026, a custom client portal &mdash; secure logins, document upload, status tracking, messaging &mdash; typically costs $15,000&ndash;$40,000 and takes three to six weeks. Portal-feature add-ons to software you already own cost little or nothing; off-the-shelf portal platforms run $50&ndash;$500 a month but force clients into their workflow and branding.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Should I buy a client portal platform or build a custom one?</h3>
+                <p>Check the software you already use first &mdash; many practice-management and project tools include a basic portal, and free is hard to beat. Buy a portal platform if your workflow is standard and you can accept its shape. Build custom when the portal is part of how clients experience your firm: your branding, your process, your data model, and no per-client fees as you grow.</p>
+            </div>
+            <div class="faq-item">
+                <h3>What features should a client portal have?</h3>
+                <p>Four things account for nearly all real usage: secure login, document upload with a clear checklist of what is still missing, status visibility (where is my work), and a message thread that replaces email attachments. Most other features go unused. Build the four well before adding anything.</p>
+            </div>
+            <div class="faq-item">
+                <h3>How do I keep client data secure in a portal?</h3>
+                <p>Non-negotiables: every query filtered by the authenticated client (row-level security, enforced in the database, not just hidden in the interface), files stored privately with expiring signed links, encryption in transit and at rest, and an audit trail of who accessed what. If a vendor cannot explain how client A is prevented from ever seeing client B&rsquo;s data, walk away.</p>
+            </div>
+        </section>
+
+        <section class="blog-cta">
+            <h2>Thinking about a portal for your firm?</h2>
+            <p>Thirty minutes. If the portal hiding in software you already own would do the job, we&#x27;ll tell you that and save you the money.</p>
+            <a href="/contact" class="btn btn-glass btn-large"><span>Book a 30-minute call</span></a>
+        </section>
+
+        <section class="related" aria-labelledby="rel-heading">
+            <h2 id="rel-heading">Keep reading</h2>
+            <div class="related-list">
+                <a href="/blog/custom-software-cost">How much does custom software cost in 2026? Real numbers <span aria-hidden="true">&rarr;</span></a>
+                <a href="/blog/ai-app-production-ready">Is your AI-built app production-ready? A 10-point checklist <span aria-hidden="true">&rarr;</span></a>
+                <a href="/blog/build-vs-buy-sales-tools">Build vs buy: when custom tools beat another platform <span aria-hidden="true">&rarr;</span></a>
+            </div>
+        </section>
+
+        </article>
+    </div>
+    </main>
+    <footer class="footer" role="contentinfo">
+        <div class="footer-gradient"></div>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="lou-footer-mascot">
+                        <img src="/Logo/Lou.png" alt="Lou - Gloo mascot" class="lou-img">
+                    </div>
+                    <p>One size fits none. Solutions custom to you.</p>
+                    <div class="footer-partner">
+                        <span class="footer-partner__eyebrow">Official Lovable Partner</span>
+                        <div class="footer-partner__badges">
+                            <a href="https://lovable.dev" target="_blank" rel="noopener" class="footer-badge-link" aria-label="Gloo is a Lovable Select Partner">
+                                <img src="/images/lovable-select-partner-white.png" alt="Lovable Select Partner badge" class="footer-badge-img" width="732" height="676">
+                            </a>
+                            <a href="https://lovable.dev" target="_blank" rel="noopener" class="footer-badge-link" aria-label="Gloo is a Lovable Certified Partner">
+                                <img src="/images/lovable-certified-partner-white.png" alt="Lovable Certified Partner badge" class="footer-badge-img" width="732" height="676">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-nav">
+                    <div class="footer-nav-col">
+                        <h4>Product</h4>
+                        <a href="/#case-study">Results</a>
+                        <a href="/#tools">Example Builds</a>
+                        <a href="https://tools.buildwithgloo.com" target="_blank" rel="noopener">Tool Demos</a>
+                    </div>
+                    <div class="footer-nav-col">
+                        <h4>Company</h4>
+                        <a href="/blog/">Blog</a>
+                        <a href="/about">About</a>
+                        <a href="/contact">Contact</a>
+                    </div>
+                    <div class="footer-nav-col">
+                        <h4>Legal</h4>
+                        <a href="/privacy">Privacy Policy</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Gloo. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="/script.js"></script>
+
+</body>
+</html>

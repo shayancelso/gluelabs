@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XLGY974WHR"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XLGY974WHR');
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Is Your AI-Built App Production-Ready? A 10-Point Checklist | Gloo</title>
+    <meta name="description" content="Built with Lovable, Bolt, or Replit and have a nagging feeling? Ten checks that separate a demo from a production app: auth, data separation, backups, payments, and the regression loop.">
+    <link rel="canonical" href="https://buildwithgloo.com/blog/ai-app-production-ready">
+
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://buildwithgloo.com/blog/ai-app-production-ready">
+    <meta property="og:title" content="Is Your AI-Built App Production-Ready? A 10-Point Checklist">
+    <meta property="og:description" content="Ten checks that separate a demo from a production app: auth, data separation, backups, payments, and the regression loop.">
+    <meta property="og:image" content="https://buildwithgloo.com/images/og-image.png">
+    <meta property="og:site_name" content="Gloo">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Is Your AI-Built App Production-Ready? A 10-Point Checklist">
+    <meta name="twitter:description" content="Ten checks that separate a demo from a production app: auth, data separation, backups, payments, and the regression loop.">
+    <meta name="twitter:image" content="https://buildwithgloo.com/images/og-image.png">
+
+    <link rel="icon" type="image/png" href="/favicon.png?v=3">
+    <link rel="alternate" type="application/rss+xml" title="Gloo Blog" href="/feed.xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/blog/blog.css">
+    <meta name="keywords" content="is lovable production ready, ai built app security, lovable app audit, vibe coded app production, ai app security checklist">
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Is Your AI-Built App Production-Ready? A 10-Point Checklist",
+    "description": "Built with Lovable, Bolt, or Replit and have a nagging feeling? Ten checks that separate a demo from a production app: auth, data separation, backups, payments, and the regression loop.",
+    "keywords": "is lovable production ready, ai built app security, lovable app audit, vibe coded app production, ai app security checklist",
+    "datePublished": "2026-08-14",
+    "dateModified": "2026-08-14",
+    "wordCount": 1000,
+    "inLanguage": "en",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://buildwithgloo.com/blog/ai-app-production-ready"
+    },
+    "image": "https://buildwithgloo.com/images/og-image.png",
+    "author": {
+        "@type": "Organization",
+        "name": "Gloo",
+        "url": "https://buildwithgloo.com"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Gloo",
+        "url": "https://buildwithgloo.com",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://buildwithgloo.com/images/gloo-logo.png"
+        }
+    }
+}
+    </script>
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://buildwithgloo.com/"
+        },
+        {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Blog",
+            "item": "https://buildwithgloo.com/blog/"
+        },
+        {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Is Your AI-Built App Production-Ready? A 10-Point Checklist",
+            "item": "https://buildwithgloo.com/blog/ai-app-production-ready"
+        }
+    ]
+}
+    </script>
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "Is an app built with Lovable or Bolt safe to launch?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Sometimes - it depends on what the app holds. A tool with no logins and no sensitive data can ship as-is. Anything holding customer data, client documents, or payments needs the invisible layer verified first: server-enforced permissions, private file storage, backups, and payment reconciliation. AI builders generate the visible layer well and the invisible layer inconsistently."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What is the most common security gap in AI-built apps?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Missing or misconfigured row-level security: user A can query user B's data because permissions were enforced in the interface rather than the database. Industry scans have found roughly one in ten vibe-coded apps exposing data this way. It is invisible in normal use and trivially found by anyone who opens the browser's developer tools."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What does an audit of an AI-built app cost?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "A structured audit against a production checklist typically costs a low four-figure fixed fee and takes a few days, with the fee usually credited against any fixing work. Hardening an app that passes most checks runs $4,000-$15,000; a genuine rebuild of the invisible layer can reach $25,000. Distrust anyone who quotes a rebuild before auditing."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Do I need to rebuild my AI-built app from scratch?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Usually not. The frontend and data model of AI-built apps are often perfectly sound and worth keeping; the gaps concentrate in auth, permissions, and infrastructure. Keep what works, rebuild the invisible layer, and treat your prototype as the spec it is."
+            }
+        }
+    ]
+}
+    </script>
+</head>
+<body class="blog-page">
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <a href="/" class="logo" aria-label="Gloo - Go to homepage">
+                <img src="/images/gloo-logo.png" alt="Gloo" class="logo-img">
+            </a>
+            <div class="nav-links" role="menubar">
+                <a href="/#what-we-do" class="nav-link" role="menuitem">What We Do</a>
+                <a href="/blog/" class="nav-link" role="menuitem">Blog</a>
+                <a href="/about" class="nav-link" role="menuitem">About</a>
+                <a href="/contact" class="btn btn-nav" role="menuitem"><span>Book a Call</span></a>
+            </div>
+            <button class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <main role="main" id="main-content">
+    <div class="container blog-shell">
+        <article class="blog-narrow">
+            <nav class="crumbs" aria-label="Breadcrumb">
+                <a href="/">Home</a>
+                <span aria-hidden="true">/</span>
+                <a href="/blog/">Blog</a>
+                <span aria-hidden="true">/</span>
+                <span aria-current="page">Lovable</span>
+            </nav>
+
+            <header class="article-head">
+                <span class="eyebrow">Lovable</span>
+                <h1>Is your AI-built app production-ready? A 10-point checklist</h1>
+                <div class="article-byline">
+                    <span>By the Gloo team</span>
+                    <span aria-hidden="true">&middot;</span>
+                    <time datetime="2026-08-14">14 August 2026</time>
+                    <span aria-hidden="true">&middot;</span>
+                    <span>6 min read</span>
+                </div>
+            </header>
+
+            <div class="lede">
+<p><strong>If you built an app with Lovable, Bolt, or Replit &mdash; or paid someone who did &mdash; and you have a nagging feeling about it, that feeling is data.</strong> AI builders produce the visible layer brilliantly and the invisible layer inconsistently, and the gaps cluster in the same ten places every time.</p>
+    <p>Here is the checklist we run when a business brings us an AI-built app. Several checks you can do yourself in ten minutes, today, without reading code.</p>
+            </div>
+
+            <div class="prose">
+
+<h2>The ten checks</h2>
+
+<h3>1. Log in as two different users, side by side</h3>
+<p>Open your app in two browsers as two different users (or two clients). Can either see anything of the other's &mdash; records, files, names in a dropdown? This is the big one: permissions must be enforced <em>in the database</em> (row-level security), not just hidden in the interface. Industry scans have found roughly one in ten vibe-coded apps exposing data this way, and it is trivially found by anyone who opens the browser's developer tools.</p>
+
+<h3>2. Copy a file link into an incognito window</h3>
+<p>Open a document in your app, copy its URL, paste it into a private window with no login. If the file loads, every "private" document in your app is public to anyone holding a link. Files must live in private storage behind expiring, signed links.</p>
+
+<h3>3. Try to break login</h3>
+<p>Request a password reset &mdash; does the email arrive, and does the link expire? Sign up with the same email in different capitalisation. Stay idle for a day &mdash; does the session ever expire? Auth demos well and leaks at the edges; the edges are where your customers live.</p>
+
+<h3>4. Find out where your secrets are</h3>
+<p>API keys for Stripe, OpenAI, or your database must live on the server, never in the browser. Quick self-test: view your page source and search for "key". A finding here means anyone can run up bills on your accounts. This is the most common gap that costs actual money fastest.</p>
+
+<h3>5. Ask: "if the database vanished tonight, what happens?"</h3>
+<p>If the answer isn't "we restore this morning's backup", you don't have an app, you have a liability with a UI. Automated daily backups, tested at least once, are non-negotiable the day real business data enters the system.</p>
+
+<h3>6. Follow one payment all the way through</h3>
+<p>If you take money: what happens when a card fails mid-subscription? When a webhook doesn't arrive? When a refund is issued &mdash; does the customer keep access? Checkout is the easy half; reconciliation is the half AI builders skip.</p>
+
+<h3>7. Do something wrong on purpose</h3>
+<p>Submit a form with garbage, upload a 200MB file, double-click every button. A production app rejects bad input politely. A demo throws a white screen &mdash; and tells an attacker what's underneath.</p>
+
+<h3>8. Check who would know if it broke</h3>
+<p>If the app went down at 2am Saturday, would you find out from monitoring or from an angry client on Monday? Production means error tracking and an uptime check, both of which cost nearly nothing.</p>
+
+<h3>9. Confirm you actually own it</h3>
+<p>Can you export the code to your own GitHub? Do you hold the credentials to the database, hosting, and domain &mdash; or does a freelancer? The moment to fix this is now, not during a dispute. (This applies double if you paid someone to build it.)</p>
+
+<h3>10. Name the regression loop</h3>
+<p>If your recent history is "fixed one thing, broke another, credits burning" &mdash; that is not you failing; that is the codebase exceeding what the AI can hold in its head. It's the clearest signal the project has changed phases and further prompting will cost more than engineering would.</p>
+
+<div class="callout">
+    <span class="callout-label">Scoring</span>
+    <p><strong>8&ndash;10 passes:</strong> ship it &mdash; genuinely. <strong>5&ndash;7:</strong> harden before real client data arrives; typically $4,000&ndash;$15,000 of focused work. <strong>Under 5, with client data or payments live:</strong> stop adding features and fix the floor first. The good news in every case: your frontend and data model are probably fine. The gaps concentrate in the invisible layer, which is the cheaper part to fix.</p>
+</div>
+
+<h2>What to do with a bad score</h2>
+<p><strong>Don't start over.</strong> The reflex is shame followed by "we should rebuild properly". Usually wrong. The app you have is a working spec of exactly what you want &mdash; something no document achieves. A competent team keeps the sound parts and rebuilds the invisible layer. Anyone who quotes a full rewrite <em>before</em> auditing what you have is quoting their preference, not your need. (More on that hand-off in <a href="/blog/ai-app-builder-vs-hiring-developer">AI builders vs hiring a developer</a>.)</p>
+<p><strong>Get an audit, not a vibe.</strong> A structured audit against this checklist takes days and a low four-figure fixed fee &mdash; ours is credited against any fixing work, which keeps our incentives honest. What you should receive: a pass/fail on each point, what each failure means in plain business terms, and a fixed price to close the gaps. Costs for the fixing work itself are in our <a href="/blog/custom-software-cost">pricing breakdown</a>, or the <a href="/software-cost-calculator">calculator</a> has a "fix an AI-built app" mode.</p>
+<p><strong>Then set the maintenance answer.</strong> Whoever hardens it should also answer month four: who fixes it when an upstream API changes? A named owner or a small monthly arrangement. An app nobody owns fails this checklist again within a year.</p>
+
+            </div>
+
+        <section class="faq" aria-labelledby="faq-heading">
+            <h2 id="faq-heading" style="font-family:var(--font-display);font-size:1.375rem;font-weight:600;margin-bottom:var(--space-sm);">Frequently asked questions</h2>
+            <div class="faq-item">
+                <h3>Is an app built with Lovable or Bolt safe to launch?</h3>
+                <p>Sometimes &mdash; it depends on what the app holds. A tool with no logins and no sensitive data can ship as-is. Anything holding customer data, client documents, or payments needs the invisible layer verified first: server-enforced permissions, private file storage, backups, and payment reconciliation. AI builders generate the visible layer well and the invisible layer inconsistently.</p>
+            </div>
+            <div class="faq-item">
+                <h3>What is the most common security gap in AI-built apps?</h3>
+                <p>Missing or misconfigured row-level security: user A can query user B&rsquo;s data because permissions were enforced in the interface rather than the database. Industry scans have found roughly one in ten vibe-coded apps exposing data this way. It is invisible in normal use and trivially found by anyone who opens the browser&rsquo;s developer tools.</p>
+            </div>
+            <div class="faq-item">
+                <h3>What does an audit of an AI-built app cost?</h3>
+                <p>A structured audit against a production checklist typically costs a low four-figure fixed fee and takes a few days, with the fee usually credited against any fixing work. Hardening an app that passes most checks runs $4,000&ndash;$15,000; a genuine rebuild of the invisible layer can reach $25,000. Distrust anyone who quotes a rebuild before auditing.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Do I need to rebuild my AI-built app from scratch?</h3>
+                <p>Usually not. The frontend and data model of AI-built apps are often perfectly sound and worth keeping; the gaps concentrate in auth, permissions, and infrastructure. Keep what works, rebuild the invisible layer, and treat your prototype as the spec it is.</p>
+            </div>
+        </section>
+
+        <section class="blog-cta">
+            <h2>Want the checklist run properly?</h2>
+            <p>Fixed-fee audit, days not weeks, fee credited against any fixes. Worst case, you buy certainty that you&#x27;re fine.</p>
+            <a href="/contact" class="btn btn-glass btn-large"><span>Book an audit call</span></a>
+        </section>
+
+        <section class="related" aria-labelledby="rel-heading">
+            <h2 id="rel-heading">Keep reading</h2>
+            <div class="related-list">
+                <a href="/blog/ai-app-builder-vs-hiring-developer">AI app builders vs hiring a developer: which should you use? <span aria-hidden="true">&rarr;</span></a>
+                <a href="/blog/how-to-hire-a-lovable-agency">How to hire a Lovable agency: 7 questions to ask first <span aria-hidden="true">&rarr;</span></a>
+                <a href="/blog/custom-software-cost">How much does custom software cost in 2026? Real numbers <span aria-hidden="true">&rarr;</span></a>
+            </div>
+        </section>
+
+        </article>
+    </div>
+    </main>
+    <footer class="footer" role="contentinfo">
+        <div class="footer-gradient"></div>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="lou-footer-mascot">
+                        <img src="/Logo/Lou.png" alt="Lou - Gloo mascot" class="lou-img">
+                    </div>
+                    <p>One size fits none. Solutions custom to you.</p>
+                    <div class="footer-partner">
+                        <span class="footer-partner__eyebrow">Official Lovable Partner</span>
+                        <div class="footer-partner__badges">
+                            <a href="https://lovable.dev" target="_blank" rel="noopener" class="footer-badge-link" aria-label="Gloo is a Lovable Select Partner">
+                                <img src="/images/lovable-select-partner-white.png" alt="Lovable Select Partner badge" class="footer-badge-img" width="732" height="676">
+                            </a>
+                            <a href="https://lovable.dev" target="_blank" rel="noopener" class="footer-badge-link" aria-label="Gloo is a Lovable Certified Partner">
+                                <img src="/images/lovable-certified-partner-white.png" alt="Lovable Certified Partner badge" class="footer-badge-img" width="732" height="676">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-nav">
+                    <div class="footer-nav-col">
+                        <h4>Product</h4>
+                        <a href="/#case-study">Results</a>
+                        <a href="/#tools">Example Builds</a>
+                        <a href="https://tools.buildwithgloo.com" target="_blank" rel="noopener">Tool Demos</a>
+                    </div>
+                    <div class="footer-nav-col">
+                        <h4>Company</h4>
+                        <a href="/blog/">Blog</a>
+                        <a href="/about">About</a>
+                        <a href="/contact">Contact</a>
+                    </div>
+                    <div class="footer-nav-col">
+                        <h4>Legal</h4>
+                        <a href="/privacy">Privacy Policy</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Gloo. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="/script.js"></script>
+
+</body>
+</html>

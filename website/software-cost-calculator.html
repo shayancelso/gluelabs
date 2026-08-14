@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XLGY974WHR"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XLGY974WHR');
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Software Cost Calculator: Get a Realistic Estimate | Gloo</title>
+    <meta name="description" content="Free calculator: pick your project type, toggle the features you need, and get a realistic cost range and timeline for custom software in 2026. No email required.">
+    <link rel="canonical" href="https://buildwithgloo.com/software-cost-calculator">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://buildwithgloo.com/software-cost-calculator">
+    <meta property="og:title" content="Custom Software Cost Calculator">
+    <meta property="og:description" content="Pick your project type, toggle the features you need, and get a realistic cost range and timeline. No email required.">
+    <meta property="og:image" content="https://buildwithgloo.com/images/og-image.png">
+    <meta property="og:site_name" content="Gloo">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Custom Software Cost Calculator">
+    <meta name="twitter:description" content="Pick your project type, toggle the features you need, and get a realistic cost range and timeline. No email required.">
+    <meta name="twitter:image" content="https://buildwithgloo.com/images/og-image.png">
+
+    <link rel="icon" type="image/png" href="/favicon.png?v=3">
+    <link rel="alternate" type="application/rss+xml" title="Gloo Blog" href="/feed.xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/blog/blog.css">
+    <meta name="keywords" content="custom software cost calculator, how much does custom software cost, app development cost estimate, custom app cost small business">
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Custom Software Cost Calculator",
+    "url": "https://buildwithgloo.com/software-cost-calculator",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web",
+    "description": "Free interactive calculator that estimates the cost and timeline of a custom software project from project type, integrations, authentication, data migration, and AI features.",
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Gloo",
+        "url": "https://buildwithgloo.com"
+    }
+}
+    </script>
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://buildwithgloo.com/"
+        },
+        {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Software Cost Calculator",
+            "item": "https://buildwithgloo.com/software-cost-calculator"
+        }
+    ]
+}
+    </script>
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "How much does custom software cost for a small business?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "In 2026, a focused internal tool or dashboard typically costs $8,000-$20,000 and takes two to three weeks. A client portal or workflow app with logins and permissions runs $15,000-$40,000. A customer-facing product lands between $25,000 and $75,000. AI-assisted development collapsed these numbers from the $100,000+ quotes that were standard five years ago."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "How accurate is this calculator?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "It produces a realistic range, not a quote. The ranges come from real projects and real market rates, and the biggest cost drivers - integrations, permissions, data migration, and AI features - are the inputs. A 30-minute scoping call turns the range into a fixed number."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Why do custom software quotes vary so much?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Because agencies price on their delivery model, not the problem. A traditional agency staffing a project manager, designers, and offshore developers for three months must charge $75,000+ to break even. A small senior team using AI-assisted development delivers the same tool in weeks for a fraction of that. Same software, different cost structure."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Are there ongoing costs after the build?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes: hosting (usually $20-$100 a month at small-business scale) and maintenance. Budget for a maintenance arrangement or an internal owner - custom tools die when nobody fixes breakages or adds the field the team asks for in month four."
+            }
+        }
+    ]
+}
+    </script>
+    <style>
+        .calc-shell { max-width: 860px; margin: 0 auto; }
+        .calc-intro { max-width: 640px; }
+        .calc-intro p { color: var(--color-text-secondary); }
+
+        .calc-card {
+            background: var(--glass-bg, rgba(255,255,255,0.7));
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-xl);
+            padding: var(--space-lg);
+            margin-top: var(--space-lg);
+        }
+        .calc-step { margin-bottom: var(--space-lg); }
+        .calc-step > h2 {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: var(--space-sm);
+            color: var(--color-text);
+        }
+        .calc-step > h2 .step-num {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 1.5rem; height: 1.5rem; margin-right: 0.5rem;
+            border-radius: var(--radius-full);
+            background: var(--gradient-primary);
+            color: #fff; font-size: 0.8rem;
+        }
+        .opt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.6rem; }
+        .opt-grid.opt-wide { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+        .opt {
+            position: relative; display: block; cursor: pointer;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: 0.75rem 0.85rem;
+            background: rgba(255,255,255,0.55);
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+        }
+        .opt:hover { transform: translateY(-1px); border-color: var(--color-primary); }
+        .opt input { position: absolute; opacity: 0; pointer-events: none; }
+        .opt .opt-title { display: block; font-weight: 600; font-size: 0.92rem; color: var(--color-text); }
+        .opt .opt-sub { display: block; font-size: 0.78rem; color: var(--color-text-muted); margin-top: 0.15rem; line-height: 1.35; }
+        .opt:has(input:checked) {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) 25%, transparent);
+            background: color-mix(in srgb, var(--color-primary) 6%, #fff);
+        }
+        .opt:focus-within { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+
+        .calc-result {
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-border);
+            background: linear-gradient(160deg, rgba(99,102,241,0.06), rgba(16,185,129,0.05));
+            padding: var(--space-lg);
+            margin-top: var(--space-md);
+        }
+        .calc-result .result-label { font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-muted); }
+        .calc-result .result-range {
+            font-family: var(--font-display);
+            font-size: clamp(1.9rem, 4.5vw, 2.6rem);
+            font-weight: 700; line-height: 1.1;
+            color: var(--color-text);
+            margin: 0.25rem 0 0.35rem;
+        }
+        .calc-result .result-time { color: var(--color-text-secondary); font-size: 0.95rem; }
+        .result-lines { margin-top: var(--space-sm); border-top: 1px dashed var(--color-border); padding-top: var(--space-sm); }
+        .result-lines li { display: flex; justify-content: space-between; gap: 1rem; font-size: 0.86rem; color: var(--color-text-secondary); padding: 0.2rem 0; list-style: none; }
+        .result-lines li span:last-child { white-space: nowrap; color: var(--color-text); font-weight: 500; }
+        .result-note { font-size: 0.8rem; color: var(--color-text-muted); margin-top: var(--space-sm); }
+
+        .compare-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; margin-top: var(--space-md); }
+        .compare-cell {
+            border: 1px solid var(--color-border); border-radius: var(--radius-md);
+            padding: 0.9rem 1rem; background: rgba(255,255,255,0.6);
+        }
+        .compare-cell.is-gloo { border-color: var(--color-primary); box-shadow: 0 0 0 1px var(--color-primary); }
+        .compare-cell h3 { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.25rem; }
+        .compare-cell .compare-price { font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; }
+        .compare-cell p { font-size: 0.78rem; color: var(--color-text-muted); margin-top: 0.3rem; line-height: 1.4; }
+
+        .calc-form-wrap { margin-top: var(--space-xl); }
+        .calc-form-wrap .cta-form-card { max-width: 560px; margin: var(--space-md) auto 0; }
+        @media (max-width: 560px) {
+            .calc-card { padding: var(--space-md); }
+            .opt-grid, .opt-grid.opt-wide { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body class="blog-page">
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <a href="/" class="logo" aria-label="Gloo - Go to homepage">
+                <img src="/images/gloo-logo.png" alt="Gloo" class="logo-img">
+            </a>
+            <div class="nav-links" role="menubar">
+                <a href="/#what-we-do" class="nav-link" role="menuitem">What We Do</a>
+                <a href="/blog/" class="nav-link" role="menuitem">Blog</a>
+                <a href="/about" class="nav-link" role="menuitem">About</a>
+                <a href="/contact" class="btn btn-nav" role="menuitem"><span>Book a Call</span></a>
+            </div>
+            <button class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <main role="main" id="main-content">
+    <div class="container blog-shell calc-shell">
+        <nav class="crumbs" aria-label="Breadcrumb">
+            <a href="/">Home</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Software Cost Calculator</span>
+        </nav>
+
+        <header class="article-head calc-intro">
+            <span class="eyebrow">Free tool</span>
+            <h1>What will your <span class="text-gradient">custom software cost?</span></h1>
+            <p>Pick what you&rsquo;re building and toggle what it needs. You get a realistic range and timeline
+            based on real projects &mdash; not a &ldquo;from $999&rdquo; teaser or a $150k scare quote. No email required.</p>
+        </header>
+
+        <div class="calc-card" id="calculator">
+            <div class="calc-step">
+                <h2><span class="step-num" aria-hidden="true">1</span>What are you building?</h2>
+                <div class="opt-grid opt-wide" role="radiogroup" aria-label="Project type">
+                    <label class="opt"><input type="radio" name="ptype" value="dashboard" checked>
+                        <span class="opt-title">Internal dashboard</span>
+                        <span class="opt-sub">Reporting, KPIs, one view of data that lives in five places</span>
+                    </label>
+                    <label class="opt"><input type="radio" name="ptype" value="portal">
+                        <span class="opt-title">Client portal</span>
+                        <span class="opt-sub">Clients log in, upload documents, see status, message you</span>
+                    </label>
+                    <label class="opt"><input type="radio" name="ptype" value="workflow">
+                        <span class="opt-title">Workflow / ops app</span>
+                        <span class="opt-sub">Replace the spreadsheet your operations actually run on</span>
+                    </label>
+                    <label class="opt"><input type="radio" name="ptype" value="product">
+                        <span class="opt-title">Customer-facing product</span>
+                        <span class="opt-sub">An app or SaaS your customers use and possibly pay for</span>
+                    </label>
+                    <label class="opt"><input type="radio" name="ptype" value="rescue">
+                        <span class="opt-title">Fix an AI-built app</span>
+                        <span class="opt-sub">Built in Lovable, Bolt, or Replit &mdash; needs finishing or hardening</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="calc-step">
+                <h2><span class="step-num" aria-hidden="true">2</span>How many systems does it connect to?</h2>
+                <div class="opt-grid" role="radiogroup" aria-label="Integrations">
+                    <label class="opt"><input type="radio" name="integrations" value="0" checked>
+                        <span class="opt-title">None</span>
+                        <span class="opt-sub">Standalone, or CSV import is fine</span>
+                    </label>
+                    <label class="opt"><input type="radio" name="integrations" value="1">
+                        <span class="opt-title">1&ndash;2</span>
+                        <span class="opt-sub">e.g. CRM + accounting</span>
+                    </label>
+                    <label class="opt"><input type="radio" name="integrations" value="2">
+                        <span class="opt-title">3&ndash;4</span>
+                        <span class="opt-sub">Several systems in one view</span>
+                    </label>
+                    <label class="opt"><input type="radio" name="integrations" value="3">
+                        <span class="opt-title">5+</span>
+                        <span class="opt-sub">Or anything legacy / in-house</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="calc-step">
+                <h2><span class="step-num" aria-hidden="true">3</span>Who logs in?</h2>
+                <div class="opt-grid" role="radiogroup" aria-label="Authentication">
+                    <label class="opt"><input type="radio" name="auth" value="0" checked>
+                        <span class="opt-title">Just my team</span>
+                        <span class="opt-sub">Simple logins, everyone sees the same thing</span>
+                    </label>
+                    <label class="opt"><input type="radio" name="auth" value="1">
+                        <span class="opt-title">Roles &amp; permissions</span>
+                        <span class="opt-sub">Admins, managers, staff see different things</span>
+                    </label>
+                    <label class="opt"><input type="radio" name="auth" value="2">
+                        <span class="opt-title">Clients / external users</span>
+                        <span class="opt-sub">Outside users with strictly separated data</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="calc-step">
+                <h2><span class="step-num" aria-hidden="true">4</span>Anything else it needs?</h2>
+                <div class="opt-grid opt-wide" aria-label="Extras">
+                    <label class="opt"><input type="checkbox" name="migration" value="1">
+                        <span class="opt-title">Data migration</span>
+                        <span class="opt-sub">Move existing spreadsheets or a legacy database in</span>
+                    </label>
+                    <label class="opt"><input type="checkbox" name="ai" value="1">
+                        <span class="opt-title">AI features</span>
+                        <span class="opt-sub">Summaries, drafting, scoring, or chat over your data</span>
+                    </label>
+                    <label class="opt"><input type="checkbox" name="payments" value="1">
+                        <span class="opt-title">Payments</span>
+                        <span class="opt-sub">Stripe checkout, subscriptions, or invoicing</span>
+                    </label>
+                    <label class="opt"><input type="checkbox" name="design" value="1">
+                        <span class="opt-title">Custom design</span>
+                        <span class="opt-sub">Fully branded, not just clean and functional</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="calc-result" aria-live="polite">
+                <span class="result-label">Realistic range</span>
+                <div class="result-range" id="resultRange">$8,000 &ndash; $18,000</div>
+                <div class="result-time" id="resultTime">Typical timeline: 2&ndash;3 weeks to a working tool</div>
+                <ul class="result-lines" id="resultLines"></ul>
+                <p class="result-note" id="resultNote">A range, not a quote &mdash; a 30-minute scoping call turns it into a fixed number. You own the code either way.</p>
+            </div>
+
+            <div class="compare-grid" id="compareGrid">
+                <div class="compare-cell">
+                    <h3>DIY with an AI builder</h3>
+                    <div class="compare-price">$25&ndash;$300/mo</div>
+                    <p>Plus your evenings. Great for validating the idea; the last 20% (auth, permissions, production) is where it stalls.</p>
+                </div>
+                <div class="compare-cell is-gloo">
+                    <h3>Gloo</h3>
+                    <div class="compare-price" id="glooPrice">$8,000&ndash;$18,000</div>
+                    <p>Senior engineers using AI-grade speed. Fixed scope, weeks not months, and the code is yours.</p>
+                </div>
+                <div class="compare-cell">
+                    <h3>Traditional agency</h3>
+                    <div class="compare-price" id="agencyPrice">$30,000&ndash;$70,000+</div>
+                    <p>PM + designers + dev team, 3&ndash;6 months. The same software with a heavier cost structure.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="calc-form-wrap">
+            <header style="text-align:center; max-width: 560px; margin: 0 auto;">
+                <h2 style="font-family:var(--font-display); font-size:1.5rem; font-weight:600;">Want this estimate scoped properly?</h2>
+                <p style="color:var(--color-text-secondary); margin-top:0.4rem;">Send it over and we&rsquo;ll come back within 24 hours with
+                a fixed price and timeline &mdash; or an honest &ldquo;you don&rsquo;t need us, here&rsquo;s what to use instead.&rdquo;</p>
+            </header>
+            <div class="cta-form-card">
+                <!-- Same ids as the homepage form (#ctaForm / #ctaFormSuccess) so the
+                     existing handler in script.js picks it up: one lead pipeline, not two.
+                     The calculator selections are appended to the message on submit. -->
+                <form class="cta-form" id="ctaForm">
+                    <div class="form-group">
+                        <label for="name">Name*</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email*</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="company">Company</label>
+                        <input type="text" id="company" name="company">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Anything we should know?</label>
+                        <textarea id="message" name="message" rows="3" placeholder="Optional - your estimate details are attached automatically"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">
+                        <span>Send my estimate</span>
+                        <svg class="btn-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </form>
+                <div class="form-success" id="ctaFormSuccess" style="display: none;">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    <h4>Thanks! We&rsquo;ll be in touch.</h4>
+                    <p>Expect a scoped answer within 24 hours.</p>
+                </div>
+            </div>
+        </div>
+
+        <section class="faq" aria-labelledby="faq-heading" style="margin-top: var(--space-xl);">
+            <h2 id="faq-heading" style="font-family:var(--font-display);font-size:1.375rem;font-weight:600;margin-bottom:var(--space-sm);">Frequently asked questions</h2>
+            <div class="faq-item">
+                <h3>How much does custom software cost for a small business?</h3>
+                <p>In 2026, a focused internal tool or dashboard typically costs $8,000&ndash;$20,000 and takes two to three weeks. A client portal or workflow app with logins and permissions runs $15,000&ndash;$40,000. A customer-facing product lands between $25,000 and $75,000. AI-assisted development collapsed these numbers from the $100,000+ quotes that were standard five years ago.</p>
+            </div>
+            <div class="faq-item">
+                <h3>How accurate is this calculator?</h3>
+                <p>It produces a realistic range, not a quote. The ranges come from real projects and real market rates, and the biggest cost drivers &mdash; integrations, permissions, data migration, and AI features &mdash; are the inputs. A 30-minute scoping call turns the range into a fixed number.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Why do custom software quotes vary so much?</h3>
+                <p>Because agencies price on their delivery model, not the problem. A traditional agency staffing a project manager, designers, and offshore developers for three months must charge $75,000+ to break even. A small senior team using AI-assisted development delivers the same tool in weeks for a fraction of that. Same software, different cost structure.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Are there ongoing costs after the build?</h3>
+                <p>Yes: hosting (usually $20&ndash;$100 a month at small-business scale) and maintenance. Budget for a maintenance arrangement or an internal owner &mdash; custom tools die when nobody fixes breakages or adds the field the team asks for in month four.</p>
+            </div>
+        </section>
+
+        <section class="related" aria-labelledby="rel-heading">
+            <h2 id="rel-heading">The thinking behind these numbers</h2>
+            <div class="related-list">
+                <a href="/blog/custom-software-cost">How much does custom software cost in 2026? Real numbers <span aria-hidden="true">&rarr;</span></a>
+                <a href="/blog/build-vs-buy-sales-tools">Build vs buy: when custom tools beat another platform <span aria-hidden="true">&rarr;</span></a>
+                <a href="/blog/internal-tool-build-log">How long does a custom internal tool take? A real build log <span aria-hidden="true">&rarr;</span></a>
+            </div>
+        </section>
+    </div>
+    </main>
+
+    <footer class="footer" role="contentinfo">
+        <div class="footer-gradient"></div>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="lou-footer-mascot">
+                        <img src="/Logo/Lou.png" alt="Lou - Gloo mascot" class="lou-img">
+                    </div>
+                    <p>One size fits none. Solutions custom to you.</p>
+                    <div class="footer-partner">
+                        <span class="footer-partner__eyebrow">Official Lovable Partner</span>
+                        <div class="footer-partner__badges">
+                            <a href="https://lovable.dev" target="_blank" rel="noopener" class="footer-badge-link" aria-label="Gloo is a Lovable Select Partner">
+                                <img src="/images/lovable-select-partner-white.png" alt="Lovable Select Partner badge" class="footer-badge-img" width="732" height="676">
+                            </a>
+                            <a href="https://lovable.dev" target="_blank" rel="noopener" class="footer-badge-link" aria-label="Gloo is a Lovable Certified Partner">
+                                <img src="/images/lovable-certified-partner-white.png" alt="Lovable Certified Partner badge" class="footer-badge-img" width="732" height="676">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-nav">
+                    <div class="footer-nav-col">
+                        <h4>Product</h4>
+                        <a href="/#case-study">Results</a>
+                        <a href="/#tools">Example Builds</a>
+                        <a href="https://tools.buildwithgloo.com" target="_blank" rel="noopener">Tool Demos</a>
+                    </div>
+                    <div class="footer-nav-col">
+                        <h4>Company</h4>
+                        <a href="/blog/">Blog</a>
+                        <a href="/about">About</a>
+                        <a href="/contact">Contact</a>
+                    </div>
+                    <div class="footer-nav-col">
+                        <h4>Legal</h4>
+                        <a href="/privacy">Privacy Policy</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Gloo. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="/script.js"></script>
+    <script>
+    (function () {
+        // Base ranges per project type: [low, high, weeksLow, weeksHigh]
+        const BASES = {
+            dashboard: { label: 'Internal dashboard',        low: 8000,  high: 18000, wLow: 2, wHigh: 3 },
+            portal:    { label: 'Client portal',             low: 15000, high: 32000, wLow: 3, wHigh: 6 },
+            workflow:  { label: 'Workflow / ops app',        low: 12000, high: 28000, wLow: 3, wHigh: 5 },
+            product:   { label: 'Customer-facing product',   low: 25000, high: 60000, wLow: 6, wHigh: 10 },
+            rescue:    { label: 'Fix / harden an AI-built app', low: 4000, high: 15000, wLow: 1, wHigh: 4 }
+        };
+        // Modifiers: [lowAdd, highAdd, weeksAdd]
+        const INTEGRATIONS = [
+            { label: 'No integrations',            low: 0,     high: 0,     w: 0 },
+            { label: '1–2 integrations',      low: 2000,  high: 5000,  w: 0.5 },
+            { label: '3–4 integrations',      low: 5000,  high: 12000, w: 1 },
+            { label: '5+ or legacy integrations',  low: 10000, high: 20000, w: 2 }
+        ];
+        const AUTH = [
+            { label: 'Team logins',                low: 0,    high: 0,     w: 0 },
+            { label: 'Roles & permissions',        low: 2000, high: 6000,  w: 0.5 },
+            { label: 'External client accounts',   low: 4000, high: 9000,  w: 1 }
+        ];
+        const EXTRAS = {
+            migration: { label: 'Data migration',  low: 1500, high: 4000,  w: 0.5 },
+            ai:        { label: 'AI features',     low: 4000, high: 12000, w: 1 },
+            payments:  { label: 'Payments',        low: 2500, high: 6000,  w: 0.5 },
+            design:    { label: 'Custom design',   low: 2500, high: 7000,  w: 1 }
+        };
+
+        const $ = (sel) => document.querySelector(sel);
+        const fmt = (n) => '$' + (Math.round(n / 500) * 500).toLocaleString('en-US');
+
+        let lastSummary = '';
+        let trackedOnce = false;
+
+        function calc() {
+            const type = document.querySelector('input[name="ptype"]:checked').value;
+            const intIdx = parseInt(document.querySelector('input[name="integrations"]:checked').value, 10);
+            const authIdx = parseInt(document.querySelector('input[name="auth"]:checked').value, 10);
+            const base = BASES[type];
+
+            let low = base.low, high = base.high;
+            let wLow = base.wLow, wHigh = base.wHigh;
+            const lines = [{ label: base.label, text: fmt(base.low) + ' – ' + fmt(base.high) }];
+
+            // Client portals already include external accounts in their base.
+            const authRow = (type === 'portal' && authIdx === 2) ? AUTH[0] : AUTH[authIdx];
+            const mods = [INTEGRATIONS[intIdx], authRow];
+            for (const key of Object.keys(EXTRAS)) {
+                const box = document.querySelector('input[name="' + key + '"]');
+                if (box && box.checked) mods.push(EXTRAS[key]);
+            }
+            for (const m of mods) {
+                if (m.low === 0 && m.high === 0) continue;
+                low += m.low; high += m.high; wLow += m.w; wHigh += m.w;
+                lines.push({ label: m.label, text: '+' + fmt(m.low) + ' – ' + fmt(m.high) });
+            }
+
+            const wl = Math.round(wLow), wh = Math.max(Math.round(wHigh), wl + 1);
+            $('#resultRange').textContent = fmt(low) + ' – ' + fmt(high);
+            $('#resultTime').textContent = 'Typical timeline: ' + wl + '–' + wh + ' weeks to a working tool';
+            $('#resultLines').innerHTML = lines.map(l =>
+                '<li><span>' + l.label + '</span><span>' + l.text + '</span></li>').join('');
+            $('#glooPrice').textContent = fmt(low) + '–' + fmt(high);
+            $('#agencyPrice').textContent = fmt(low * 2.5) + '–' + fmt(high * 3) + '+';
+            $('#resultNote').textContent = type === 'rescue'
+                ? 'Rescues start with a fixed-price audit of what you have; the audit fee is credited against the fix. You own the code either way.'
+                : 'A range, not a quote — a 30-minute scoping call turns it into a fixed number. You own the code either way.';
+
+            lastSummary = '--- Cost calculator estimate ---\n'
+                + lines.map(l => l.label + ': ' + l.text.replace(/–/g, '-')).join('\n')
+                + '\nEstimated range: ' + fmt(low).replace(/–/g, '-') + ' - ' + fmt(high)
+                + '\nTimeline: ' + wl + '-' + wh + ' weeks';
+
+            if (!trackedOnce && typeof gtag !== 'undefined') {
+                trackedOnce = true;
+                gtag('event', 'estimate_calculated', { event_category: 'calculator', event_label: type });
+            }
+        }
+
+        document.querySelectorAll('#calculator input').forEach(el => el.addEventListener('change', calc));
+        calc();
+
+        // Attach the estimate to the lead message before script.js reads the form.
+        // Capture phase runs this before the submit handler in script.js.
+        const form = document.getElementById('ctaForm');
+        if (form) {
+            form.addEventListener('submit', function () {
+                const msg = document.getElementById('message');
+                if (msg && lastSummary && msg.value.indexOf('Cost calculator estimate') === -1) {
+                    msg.value = (msg.value ? msg.value + '\n\n' : '') + lastSummary;
+                }
+            }, true);
+        }
+    })();
+    </script>
+</body>
+</html>

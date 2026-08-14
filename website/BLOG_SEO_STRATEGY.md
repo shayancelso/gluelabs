@@ -165,3 +165,42 @@ Live SERP checked, not estimated. This cluster behaves differently from A and B,
 **Honest expectation:** this cluster converts worse than A and B because the term's gravity is career content. It earns its place for two other reasons — the a16z framing legitimises the model with the founders and GTM leaders Gloo sells to, and the term is rising fast enough that ranking early is cheap. Treat it as top-of-funnel that feeds the pillar, not as a money page.
 
 **Positioning note worth keeping straight:** Gloo is *not* an FDE shop in Palantir's original sense, because FDEs deploy their employer's own product into a customer. Gloo uses the same method for a different purpose: the client's internal tools. The post says this explicitly, and it should stay that way — claiming the label outright would be inaccurate and easy to pick apart.
+
+---
+
+## 7. Cluster D — Small-business owner queries (added 2026-08-14)
+
+Sourced from a live sweep of r/smallbusiness, r/hwstartups, r/CRM, and r/growmybusiness distress threads (last 30 days), not keyword tools. These are the questions owners type *before* they know an agency is the answer — the buyer is an owner/operator, not a RevOps leader, so the intent is earlier-stage but the competition is near zero and the language is exact.
+
+The five recurring thread archetypes (stable month over month, so they double as monitoring keywords for outbound):
+
+1. "how do I build a custom X for my business" (client portal, booking tool, job tracker)
+2. "we've outgrown Excel / running the business on Sheets"
+3. "what does custom software cost / got quotes spanning 10×"
+4. "AI app builder vs hiring a developer"
+5. "paid someone / built it with AI, now worried it isn't production-grade"
+
+| Query | Intent | Target URL | P |
+|---|---|---|---|
+| how much does custom software cost | commercial | `/blog/custom-software-cost` + `/software-cost-calculator` | **P1 — shipped** |
+| custom software cost calculator / app cost estimate | commercial, tool-seeking | `/software-cost-calculator` | **P1 — shipped** |
+| outgrown excel · replace spreadsheets with an app | commercial | `/blog/outgrown-excel` | **P1 — shipped** |
+| custom client portal (esp. professional services) | commercial, scoped project | `/blog/custom-client-portal` | **P1 — shipped** |
+| ai app builder vs hiring a developer | comparison, decision-stage | `/blog/ai-app-builder-vs-hiring-developer` | **P1 — shipped** |
+| is lovable production ready · ai app security audit | objection + rescue | `/blog/ai-app-production-ready` | **P1 — shipped** (closes the §2 P2 gap) |
+
+**The calculator is the hub.** Every Cluster D post links into `/software-cost-calculator`; the calculator's lead form reuses `#ctaForm` so estimates land in the same Supabase → email pipeline as the contact page, with the visitor's selections auto-appended to the message. It is also the artifact Reddit/community answers can link to without being spam ("free estimator, no email required").
+
+### Shipped 2026-08-14
+
+| File | Purpose |
+|---|---|
+| `software-cost-calculator.html` | Interactive estimator: 5 project types × integrations/auth/extras → range + timeline + DIY/Gloo/traditional-agency comparison; `WebApplication` + `FAQPage` schema; lead form wired to the existing pipeline |
+| `blog/custom-software-cost.html` | Cluster D money post (price bands, 10× quote spread, 4 vetting questions) |
+| `blog/outgrown-excel.html` | Spreadsheet-to-app archetype |
+| `blog/custom-client-portal.html` | Scoped-project archetype (portals; security non-negotiables) |
+| `blog/ai-app-builder-vs-hiring-developer.html` | Decision-stage comparison; validate-then-harden sequence |
+| `blog/ai-app-production-ready.html` | 10-point checklist; rescue/audit funnel entry |
+| `blog/index.html`, `sitemap.xml`, `feed.xml`, `contact.html` | Cards, schema, RSS items, calculator cross-link |
+
+**Open items for this cluster:** submit new URLs in Google Search Console + Bing Webmaster Tools (Bing still gates AI citation — see §3); consider a `/app-rescue` productised service page once the audit offer has a fixed public price (same logic as §5: blog posts rank for research, service pages rank for hiring).
